@@ -490,10 +490,10 @@ const methods = {
     txRequest.setGetattributesReq(getAttributesReq);
     return txRequest;
   },
-  openTx: function (keyspace, txType, credentials) {
+  openTx: function (session_id, txType, credentials) {
     const openRequest = new messages.Transaction.Open.Req();
     const txRequest = new messages.Transaction.Req();
-    openRequest.setKeyspace(keyspace);
+    openRequest.setSessionid(session_id);
     openRequest.setType(txType);
     if (credentials) {
       openRequest.setUsername(credentials.username);

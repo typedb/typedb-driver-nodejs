@@ -346,8 +346,8 @@ TransactionService.prototype.getAttributesByValue = function (value, dataType) {
         .then(response => this.respConverter.getAttributesByValue(response));
 }
 
-TransactionService.prototype.openTx = function (keyspace, txType, credentials) {
-    const txRequest = RequestBuilder.openTx(keyspace, txType, credentials);
+TransactionService.prototype.openTx = function (session_id, txType, credentials) {
+    const txRequest = RequestBuilder.openTx(session_id, txType, credentials);
     return this.communicator.send(txRequest);
 };
 

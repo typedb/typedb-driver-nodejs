@@ -18,6 +18,7 @@
  */
 
 const grpc = require("grpc");
+const messages = require("../../../client-nodejs-proto/protocol/session/Session_pb");
 const services = require("../../../client-nodejs-proto/protocol/session/Session_grpc_pb");
 const TxService = require("./TransactionService");
 
@@ -32,6 +33,30 @@ function SessionService(uri, keyspace, credentials) {
     this.stub = new services.SessionServiceClient(uri, grpc.credentials.createInsecure());
 }
 
+
+SessionService.prototype._open = function _open() {
+    const openSessionReq = new messages.Session.Open.Req();
+    openSessionReq.setKeyspace(this.keyspace);
+    return new Promise((resolve, reject) => {
+        this.stub.open(openSessionReq, (error, response) => {
+            if (error) { reject(error); }
+            resolve(response.getSessionid());
+        });
+    });
+};
+
+
+SessionService.prototype._close = function _close() {
+    const closeSessionReq = new messages.Session.Close.Req();
+    closeSessionReq.setSessionId(this.session_id);
+    return new Promise((resolve, reject) => {
+        this.stub.close(closeSessionReq, (error, response) => {
+            if (error) { reject(error); }
+            resolve(response);
+        });
+    });
+};
+
 /**
  * This method creates a new Duplex Stream (this.stub.transaction()) over which gRPC will communicate when
  * exchanging messages related to the Transaction service.
@@ -39,15 +64,20 @@ function SessionService(uri, keyspace, credentials) {
  * @param {Grakn.txType} txType type of transaction to be open
  */
 SessionService.prototype.transaction = async function create(txType) {
+    if (this.session_id === undefined) {
+        this.session_id = await this._open();
+    }
+
     const txService = new TxService(this.stub.transaction());
-    await txService.openTx(this.keyspace, txType, this.credentials);
+    await txService.openTx(this.session_id, txType, this.credentials);
     return txService;
 }
 
 /**
  * Closes connection to the server
  */
-SessionService.prototype.close = function close() {
+SessionService.prototype.close = async function close() {
+    await this._close();
     grpc.closeClient(this.stub);
 }
 
