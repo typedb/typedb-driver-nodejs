@@ -18,9 +18,9 @@
  */
 
 const grpc = require("grpc");
-const messages = require("../../../client-nodejs-proto/protocol/session/Session_pb");
 const services = require("../../../client-nodejs-proto/protocol/session/Session_grpc_pb");
 const TxService = require("./TransactionService");
+const RequestBuilder = require("./util/RequestBuilder");
 
 
 /**
@@ -35,10 +35,8 @@ function SessionService(uri, keyspace, credentials) {
 
 
 SessionService.prototype._open = function _open() {
-    const openSessionReq = new messages.Session.Open.Req();
-    openSessionReq.setKeyspace(this.keyspace);
     return new Promise((resolve, reject) => {
-        this.stub.open(openSessionReq, (error, response) => {
+        this.stub.open(RequestBuilder.openSession(this.keyspace), (error, response) => {
             if (error) { reject(error); }
             resolve(response.getSessionid());
         });
@@ -47,10 +45,8 @@ SessionService.prototype._open = function _open() {
 
 
 SessionService.prototype._close = function _close() {
-    const closeSessionReq = new messages.Session.Close.Req();
-    closeSessionReq.setSessionId(this.session_id);
     return new Promise((resolve, reject) => {
-        this.stub.close(closeSessionReq, (error, response) => {
+        this.stub.close(RequestBuilder.closeSession(this.sessionId), (error, response) => {
             if (error) { reject(error); }
             resolve(response);
         });
@@ -64,12 +60,12 @@ SessionService.prototype._close = function _close() {
  * @param {Grakn.txType} txType type of transaction to be open
  */
 SessionService.prototype.transaction = async function create(txType) {
-    if (this.session_id === undefined) {
-        this.session_id = await this._open();
+    if (this.sessionId === undefined) {
+        this.sessionId = await this._open();
     }
 
     const txService = new TxService(this.stub.transaction());
-    await txService.openTx(this.session_id, txType, this.credentials);
+    await txService.openTx(this.sessionId, txType, this.credentials);
     return txService;
 }
 

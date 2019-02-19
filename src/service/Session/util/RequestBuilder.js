@@ -490,6 +490,16 @@ const methods = {
     txRequest.setGetattributesReq(getAttributesReq);
     return txRequest;
   },
+  openSession: function(keyspace) {
+    const sessionRequest = new messages.Session.Open.Req();
+    sessionRequest.setKeyspace(keyspace);
+    return sessionRequest;
+  },
+  closeSession: function(sessionId) {
+    const sessionRequest = new messages.Session.Close.Req();
+    sessionRequest.setSessionid(sessionId);
+    return sessionRequest;
+  },
   openTx: function (session_id, txType, credentials) {
     const openRequest = new messages.Transaction.Open.Req();
     const txRequest = new messages.Transaction.Req();
