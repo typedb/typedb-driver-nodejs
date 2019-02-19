@@ -33,25 +33,14 @@ function SessionService(uri, keyspace, credentials) {
     this.stub = new services.SessionServiceClient(uri, grpc.credentials.createInsecure());
 }
 
-
-SessionService.prototype._open = function _open() {
+function wrapInPromise(fn, requestMessage){
     return new Promise((resolve, reject) => {
-        this.stub.open(RequestBuilder.openSession(this.keyspace), (error, response) => {
-            if (error) { reject(error); }
-            resolve(response.getSessionid());
-        });
-    });
-};
-
-
-SessionService.prototype._close = function _close() {
-    return new Promise((resolve, reject) => {
-        this.stub.close(RequestBuilder.closeSession(this.sessionId), (error, response) => {
+        fn.call(requestMessage, (error, response) => {
             if (error) { reject(error); }
             resolve(response);
         });
     });
-};
+}
 
 /**
  * This method creates a new Duplex Stream (this.stub.transaction()) over which gRPC will communicate when
@@ -61,7 +50,7 @@ SessionService.prototype._close = function _close() {
  */
 SessionService.prototype.transaction = async function create(txType) {
     if (this.sessionId === undefined) {
-        this.sessionId = await this._open();
+        this.sessionId = (await wrapInPromise(this.stub.open, RequestBuilder.openSession(this.keyspace))).getSessionid();
     }
 
     const txService = new TxService(this.stub.transaction());
@@ -73,7 +62,7 @@ SessionService.prototype.transaction = async function create(txType) {
  * Closes connection to the server
  */
 SessionService.prototype.close = async function close() {
-    await this._close();
+    await wrapInPromise(this.stub.close, RequestBuilder.closeSession(this.sessionId));
     grpc.closeClient(this.stub);
 }
 
