@@ -500,10 +500,10 @@ const methods = {
     sessionRequest.setSessionid(sessionId);
     return sessionRequest;
   },
-  openTx: function (session_id, txType, credentials) {
+  openTx: function (sessionId, txType, credentials) {
     const openRequest = new messages.Transaction.Open.Req();
     const txRequest = new messages.Transaction.Req();
-    openRequest.setSessionid(session_id);
+    openRequest.setSessionid(sessionId);
     openRequest.setType(txType);
     if (credentials) {
       openRequest.setUsername(credentials.username);
