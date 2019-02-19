@@ -33,9 +33,9 @@ function SessionService(uri, keyspace, credentials) {
     this.stub = new services.SessionServiceClient(uri, grpc.credentials.createInsecure());
 }
 
-function wrapInPromise(fn, requestMessage){
+function wrapInPromise(self, fn, requestMessage){
     return new Promise((resolve, reject) => {
-        fn.call(requestMessage, (error, response) => {
+        fn.call(self, requestMessage, (error, response) => {
             if (error) { reject(error); }
             resolve(response);
         });
@@ -50,7 +50,7 @@ function wrapInPromise(fn, requestMessage){
  */
 SessionService.prototype.transaction = async function create(txType) {
     if (this.sessionId === undefined) {
-        this.sessionId = (await wrapInPromise(this.stub.open, RequestBuilder.openSession(this.keyspace))).getSessionid();
+        this.sessionId = (await wrapInPromise(this.stub, this.stub.open, RequestBuilder.openSession(this.keyspace))).getSessionid();
     }
 
     const txService = new TxService(this.stub.transaction());
@@ -62,7 +62,7 @@ SessionService.prototype.transaction = async function create(txType) {
  * Closes connection to the server
  */
 SessionService.prototype.close = async function close() {
-    await wrapInPromise(this.stub.close, RequestBuilder.closeSession(this.sessionId));
+    await wrapInPromise(this.stub, this.stub.close, RequestBuilder.closeSession(this.sessionId));
     grpc.closeClient(this.stub);
 }
 
