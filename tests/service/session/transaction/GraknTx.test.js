@@ -30,7 +30,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  tx = await session.transaction(env.txType().WRITE);
+  tx = await session.transaction().write();
 })
 
 afterEach(() => {
@@ -103,9 +103,9 @@ describe("Transaction methods", () => {
 
   test("shortest path - Answer of conceptList", async ()=>{
     const localSession = await env.sessionForKeyspace('shortestpathks');
-    let localTx = await localSession.transaction(env.txType().WRITE);
+    let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
-    localTx = await localSession.transaction(env.txType.WRITE);
+    localTx = await localSession.transaction().write();
     const result = await localTx.query(`compute path from ${parentshipMap.parent}, to ${parentshipMap.child};`);
     const answer = await(result.next());
     expect(answer.list()).toHaveLength(3);
@@ -119,9 +119,9 @@ describe("Transaction methods", () => {
 
   test("cluster connected components - Answer of conceptSet", async ()=>{
     const localSession = await env.sessionForKeyspace('clusterkeyspace');
-    let localTx = await localSession.transaction(env.txType().WRITE);
+    let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
-    localTx = await localSession.transaction(env.txType.WRITE);
+    localTx = await localSession.transaction().write();
     const result = await localTx.query("compute cluster in [person, parentship], using connected-component;");
     const answer = await(result.next());
     expect(answer.set().size).toBe(3);
@@ -135,9 +135,9 @@ describe("Transaction methods", () => {
 
   test("compute centrality - Answer of conceptSetMeasure", async ()=>{
     const localSession = await env.sessionForKeyspace('computecentralityks');
-    let localTx = await localSession.transaction(env.txType().WRITE);
+    let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
-    localTx = await localSession.transaction(env.txType.WRITE);
+    localTx = await localSession.transaction().write();
     const result = await localTx.query("compute centrality in [person, parentship], using degree;");
     const answer = await(result.next());
     expect(answer.measurement()).toBe(1);
@@ -150,9 +150,9 @@ describe("Transaction methods", () => {
 
   test("group query - Answer of answerGroup", async ()=>{
     const localSession = await env.sessionForKeyspace('groupks');
-    let localTx = await localSession.transaction(env.txType().WRITE);
+    let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
-    localTx = await localSession.transaction(env.txType.WRITE);
+    localTx = await localSession.transaction().write();
     const result = await localTx.query("match $x isa person; $y isa person; (parent: $x, child: $y) isa parentship; get; group $x;");
     const answer = await(result.next());
     expect(answer.owner().id).toBe(parentshipMap.parent);

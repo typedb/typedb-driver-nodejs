@@ -46,6 +46,5 @@ module.exports = {
         graknClient.close();
     },
     dataType: () => GraknClient.dataType,
-    txType: () => GraknClient.txType,
     graknClient
 }

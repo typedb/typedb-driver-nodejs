@@ -19,7 +19,15 @@
 
 const Transaction = require("./Transaction");
 const SessionService = require("./service/Session/SessionService");
+const messages = require("../client-nodejs-proto/protocol/session/Session_pb");
 
+/**
+ * List of available transaction types supported by Grakn
+ */
+const txType = {
+    READ: messages.Transaction.Type.READ,
+    WRITE: messages.Transaction.Type.WRITE
+};
 
 /**
  * Session object that can be used to:
@@ -45,9 +53,18 @@ Session.prototype.open = function(keyspace){
  * @param {Grakn.txType} txType Type of transaction to open READ, WRITE or BATCH
  * @returns {Transaction}
  */
-Session.prototype.transaction = async function (txType) {
-  const transactionService = await this.sessionService.transaction(txType).catch(e => { throw e; });
-  return new Transaction(transactionService);
+Session.prototype.transaction = function () {
+  return {
+    read: async () => {
+      const transactionService = await this.sessionService.transaction(txType.READ).catch(e => { throw e; });
+      return new Transaction(transactionService);
+    },
+    write: async () => {
+      const transactionService = await this.sessionService.transaction(txType.WRITE).catch(e => { throw e; });
+      return new Transaction(transactionService);
+    }
+  }
+  
 }
 
 /**

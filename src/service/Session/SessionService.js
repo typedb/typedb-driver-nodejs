@@ -20,7 +20,6 @@
 const TxService = require("./TransactionService");
 const RequestBuilder = require("./util/RequestBuilder");
 
-
 /**
  * This creates a new connection to the server over HTTP2,
  * the connection will contain all the Transaction streams
@@ -47,11 +46,6 @@ SessionService.prototype.open = async function open(keyspace){
  */
 SessionService.prototype.transaction = async function create(txType) {
     const txService = new TxService(this.client.transaction());
-    // return {
-    //     read: async () => {},
-    //     write: async () => {}
-    // }
-
     await txService.openTx(this.sessionId, txType, this.credentials);
     return txService;
 }

@@ -72,12 +72,3 @@ module.exports.dataType = {
     DOUBLE: messages.AttributeType.DATA_TYPE.DOUBLE,
     DATE: messages.AttributeType.DATA_TYPE.DATE
 };
-
-/**
- * List of available transaction types supported by Grakn
- */
-module.exports.txType = {
-    READ: messages.Transaction.Type.READ,
-    WRITE: messages.Transaction.Type.WRITE,
-    BATCH: messages.Transaction.Type.BATCH
-};

@@ -30,7 +30,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-    tx = await session.transaction(env.txType().WRITE);
+    tx = await session.transaction().write();
 })
 
 afterEach(() => {
