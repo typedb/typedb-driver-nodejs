@@ -53,8 +53,8 @@ SessionService.prototype.transaction = async function create(txType) {
 /**
  * Closes connection to the server
  */
-SessionService.prototype.close = async function close() {
-    await wrapInPromise(this.client, this.client.close, RequestBuilder.closeSession(this.sessionId));
+SessionService.prototype.close = function close() {
+    return wrapInPromise(this.client, this.client.close, RequestBuilder.closeSession(this.sessionId));
 }
 
 

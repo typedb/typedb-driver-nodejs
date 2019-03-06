@@ -112,9 +112,9 @@ describe("Transaction methods", () => {
     expect(answer.list().includes(parentshipMap.child)).toBeTruthy();
     expect(answer.list().includes(parentshipMap.parent)).toBeTruthy();
     expect(answer.list().includes(parentshipMap.rel)).toBeTruthy();
-    localTx.close();
-    localSession.close();
-    env.graknClient.keyspaces().delete('shortestpathks');
+    await localTx.close();
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('shortestpathks');
   });
 
   test("cluster connected components - Answer of conceptSet", async ()=>{
@@ -128,9 +128,9 @@ describe("Transaction methods", () => {
     expect(answer.set().has(parentshipMap.child)).toBeTruthy();
     expect(answer.set().has(parentshipMap.parent)).toBeTruthy();
     expect(answer.set().has(parentshipMap.rel)).toBeTruthy();
-    localTx.close();
-    localSession.close();
-    env.graknClient.keyspaces().delete('clusterkeyspace');
+    await localTx.close();
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('clusterkeyspace');
   });
 
   test("compute centrality - Answer of conceptSetMeasure", async ()=>{
@@ -143,9 +143,9 @@ describe("Transaction methods", () => {
     expect(answer.measurement()).toBe(1);
     expect(answer.set().has(parentshipMap.child)).toBeTruthy();
     expect(answer.set().has(parentshipMap.parent)).toBeTruthy();
-    localTx.close();
-    localSession.close();
-    env.graknClient.keyspaces().delete('computecentralityks');
+    await localTx.close();
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('computecentralityks');
   });
 
   test("group query - Answer of answerGroup", async ()=>{
@@ -160,9 +160,9 @@ describe("Transaction methods", () => {
     expect(answer.answers()[0].map().get('x').id).toBe(parentshipMap.parent);
     expect(answer.answers()[0].map().get('y').id).toBe(parentshipMap.child);
 
-    localTx.close();
-    localSession.close();
-    env.graknClient.keyspaces().delete('groupks');
+    await localTx.close();
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('groupks');
   });
 
 
@@ -172,8 +172,8 @@ describe("Transaction methods", () => {
     const personType = await tx.getSchemaConcept("person");
     expect(personType.isSchemaConcept()).toBeTruthy();
 
-    // const nonPerson = await tx.getSchemaConcept("not-existing-label");
-    // expect(nonPerson).toBe(null);
+    const nonPerson = await tx.getSchemaConcept("not-existing-label");
+    expect(nonPerson).toBe(null);
 
   });
 

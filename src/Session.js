@@ -71,7 +71,7 @@ Session.prototype.transaction = function () {
  * Close stream connected to gRPC server
  */
 Session.prototype.close = function close() {
-  this.sessionService.close();
+  return this.sessionService.close();
 }
 
 module.exports = Session;
