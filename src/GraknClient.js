@@ -21,7 +21,8 @@ const grpc = require("grpc");
 const Session = require('./Session');
 const KeyspaceService = require('./service/Keyspace/KeyspaceService');
 const messages = require("../client-nodejs-proto/protocol/session/Session_pb");
-const services = require("../client-nodejs-proto/protocol/session/Session_grpc_pb");
+const sessionServices = require("../client-nodejs-proto/protocol/session/Session_grpc_pb");
+const keyspaceServices = require("../client-nodejs-proto/protocol/keyspace/Keyspace_grpc_pb");
 
 /**
  * Entry-point for Grakn client, it communicates with a running Grakn server using gRPC.
@@ -35,8 +36,8 @@ const services = require("../client-nodejs-proto/protocol/session/Session_grpc_p
 function GraknClient(uri, credentials) {
     // Open grpc node clients. A grpc node client is composed of stub + channel. 
     // When creating clients to the same uri, the channel will be automatically shared.
-    const sessionClient = new services.SessionServiceClient(uri, grpc.credentials.createInsecure());
-    const keyspaceClient = new services.KeyspaceServiceClient(uri, grpc.credentials.createInsecure());
+    const sessionClient = new sessionServices.SessionServiceClient(uri, grpc.credentials.createInsecure());
+    const keyspaceClient = new keyspaceServices.KeyspaceServiceClient(uri, grpc.credentials.createInsecure());
 
     const keyspaceService = new KeyspaceService(keyspaceClient, credentials);
 
