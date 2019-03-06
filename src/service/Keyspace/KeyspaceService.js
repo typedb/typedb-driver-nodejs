@@ -19,14 +19,12 @@
 
 const grpc = require("grpc");
 const messages = require("../../../client-nodejs-proto/protocol/keyspace/Keyspace_pb");
-const service = require("../../../client-nodejs-proto/protocol/keyspace/Keyspace_grpc_pb");
 
-function KeyspaceService(uri, credentials) {
+function KeyspaceService(grpcClient, credentials) {
     this.uri = uri;
     this.credentials = credentials;
-    this.stub = new service.KeyspaceServiceClient(uri, grpc.credentials.createInsecure());
+    this.stub = grpcClient;
 }
-
 
 KeyspaceService.prototype.retrieve = function () {
     const retrieveRequest = new messages.Keyspace.Retrieve.Req();

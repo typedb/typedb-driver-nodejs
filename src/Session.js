@@ -26,11 +26,18 @@ const SessionService = require("./service/Session/SessionService");
  *  - create a new Transaction
  * 
  * @param {String} uri String containing host and port of a valid Grakn server 
- * @param {String} keyspace Grakn keyspace to which this sessions should be bound to
  * @param {Object} credentials Optional object containing user credentials - only used when connecting to a KGMS instance
  */
-function Session(uri, keyspace, credentials) {
-  this.sessionService = new SessionService(uri, keyspace, credentials);
+function Session(uri, credentials) {
+  this.sessionService = new SessionService(uri, credentials);
+}
+
+/**
+ * Open a new Session on the server side
+ * @param {String} keyspace Grakn keyspace to which this sessions should be bound to
+ */
+Session.prototype.open = function(keyspace){
+  return this.sessionService.open(keyspace);
 }
 
 /**

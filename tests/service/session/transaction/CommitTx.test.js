@@ -22,9 +22,9 @@ const env = require('../../../support/GraknTestEnvironment');
 let graknClient;
 let session;
 
-beforeAll(() => {
+beforeAll(async () => {
     graknClient = env.graknClient;
-    session = graknClient.session("testcommit");
+    session = await graknClient.session("testcommit");
 });
 
 afterAll(async () => {

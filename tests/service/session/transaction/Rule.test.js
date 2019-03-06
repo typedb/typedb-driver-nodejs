@@ -21,8 +21,8 @@ const env = require('../../../support/GraknTestEnvironment');
 let session;
 let tx;
 
-beforeAll(() => {
-    session = env.session();
+beforeAll(async () => {
+    session = await env.session();
 });
 
 afterAll(async () => {

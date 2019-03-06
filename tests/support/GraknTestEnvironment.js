@@ -22,26 +22,24 @@ const INTEGRATION_TESTS_TIMEOUT = 40000;
 const TEST_KEYSPACE = 'testkeyspace';
 
 // Test Grakn with distribution code if TEST_ENV is dist
-let Grakn;
-let graknClient;
+let GraknClient;
+let client;
 if(process.env.TEST_ENV === 'dist'){
-    Grakn = require("../../dist/Grakn");
-    graknClient = new Grakn(DEFAULT_URI);
+    GraknClient = require("../../dist/GraknClient");
+    client = new GraknClient(DEFAULT_URI);
 }else {
-    Grakn = require("../../client-nodejs/src/Grakn");
-    graknClient = new Grakn(DEFAULT_URI);
+    GraknClient = require("../../client-nodejs/src/GraknClient");
+    client = new GraknClient(DEFAULT_URI);
 }
-//Every test file instantiate a new GraknEnvironment - so session will be new for every test file
-const session = graknClient.session(TEST_KEYSPACE);
 
 jest.setTimeout(INTEGRATION_TESTS_TIMEOUT);
 
 module.exports = {
-    session: () => session,
-    sessionForKeyspace: (keyspace) => graknClient.session(keyspace),
+    session: () => graknClient.session(TEST_KEYSPACE), //Every test file instantiate a new GraknEnvironment - so session will be new for every test file
+    sessionForKeyspace: (keyspace) => client.session(keyspace),
     tearDown: async () => {
         await session.close();
-        // await graknClient.keyspaces().delete(TEST_KEYSPACE);
+        client.close();
     },
     dataType: () => Grakn.dataType,
     txType: () => Grakn.txType,

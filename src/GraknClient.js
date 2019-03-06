@@ -17,9 +17,11 @@
  * under the License.
  */
 
+const grpc = require("grpc");
 const Session = require('./Session');
 const KeyspaceService = require('./service/Keyspace/KeyspaceService');
 const messages = require("../client-nodejs-proto/protocol/session/Session_pb");
+const services = require("../client-nodejs-proto/protocol/session/Session_grpc_pb");
 
 /**
  * Entry-point for Grakn client, it communicates with a running Grakn server using gRPC.
@@ -30,18 +32,32 @@ const messages = require("../client-nodejs-proto/protocol/session/Session_pb");
  * @param {String} uri String containing host address and gRPC port of a running Grakn instance, e.g. "localhost:48555"
  * @param {Object} credentials Optional object containing user credentials - only used when connecting to a KGMS instance
  */
-function Grakn(uri, credentials) {
-    const keyspaceService = new KeyspaceService(uri, credentials);
+function GraknClient(uri, credentials) {
+    // Open grpc node clients. A grpc node client is composed of stub + channel. 
+    // When creating clients to the same uri, the channel will be automatically shared.
+    const sessionClient = new services.SessionServiceClient(uri, grpc.credentials.createInsecure());
+    const keyspaceClient = new services.KeyspaceServiceClient(uri, grpc.credentials.createInsecure());
 
-    this.session = (keyspace) => new Session(uri, keyspace, credentials);
+    const keyspaceService = new KeyspaceService(keyspaceClient, credentials);
 
-    this.keyspaces = ()=> ({
+    this.session = async (keyspace) => { 
+        const session = new Session(sessionClient, credentials);
+        await session.open(keyspace);
+        return session;
+    };
+
+    this.keyspaces = () => ({
         delete: (keyspace) => keyspaceService.delete(keyspace),
         retrieve: () => keyspaceService.retrieve()
     });
+
+    this.close = () => {
+        grpc.closeClient(sessionClient);
+        grpc.closeClient(keyspaceClient);
+    }
 }
 
-module.exports = Grakn
+module.exports = GraknClient
 
 /**
  * List of available dataTypes for Grakn Attributes

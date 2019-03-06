@@ -21,8 +21,8 @@ const env = require('../../../support/GraknTestEnvironment');
 let session;
 let tx;
 
-beforeAll(() => {
-  session = env.session();
+beforeAll(async () => {
+  session = await env.session();
 });
 
 afterAll(async () => {
@@ -102,7 +102,7 @@ describe("Transaction methods", () => {
   }
 
   test("shortest path - Answer of conceptList", async ()=>{
-    const localSession = env.sessionForKeyspace('shortestpathks');
+    const localSession = await env.sessionForKeyspace('shortestpathks');
     let localTx = await localSession.transaction(env.txType().WRITE);
     const parentshipMap = await buildParentship(localTx);
     localTx = await localSession.transaction(env.txType.WRITE);
@@ -118,7 +118,7 @@ describe("Transaction methods", () => {
   });
 
   test("cluster connected components - Answer of conceptSet", async ()=>{
-    const localSession = env.sessionForKeyspace('clusterkeyspace');
+    const localSession = await env.sessionForKeyspace('clusterkeyspace');
     let localTx = await localSession.transaction(env.txType().WRITE);
     const parentshipMap = await buildParentship(localTx);
     localTx = await localSession.transaction(env.txType.WRITE);
@@ -134,7 +134,7 @@ describe("Transaction methods", () => {
   });
 
   test("compute centrality - Answer of conceptSetMeasure", async ()=>{
-    const localSession = env.sessionForKeyspace('computecentralityks');
+    const localSession = await env.sessionForKeyspace('computecentralityks');
     let localTx = await localSession.transaction(env.txType().WRITE);
     const parentshipMap = await buildParentship(localTx);
     localTx = await localSession.transaction(env.txType.WRITE);
@@ -149,7 +149,7 @@ describe("Transaction methods", () => {
   });
 
   test("group query - Answer of answerGroup", async ()=>{
-    const localSession = env.sessionForKeyspace('groupks');
+    const localSession = await env.sessionForKeyspace('groupks');
     let localTx = await localSession.transaction(env.txType().WRITE);
     const parentshipMap = await buildParentship(localTx);
     localTx = await localSession.transaction(env.txType.WRITE);
