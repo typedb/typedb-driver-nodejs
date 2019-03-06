@@ -172,8 +172,8 @@ describe("Transaction methods", () => {
     const personType = await tx.getSchemaConcept("person");
     expect(personType.isSchemaConcept()).toBeTruthy();
 
-    const nonPerson = await tx.getSchemaConcept("not-existing-label");
-    expect(nonPerson).toBe(null);
+    // const nonPerson = await tx.getSchemaConcept("not-existing-label");
+    // expect(nonPerson).toBe(null);
 
   });
 

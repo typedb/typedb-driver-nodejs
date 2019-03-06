@@ -47,6 +47,11 @@ SessionService.prototype.open = async function open(keyspace){
  */
 SessionService.prototype.transaction = async function create(txType) {
     const txService = new TxService(this.client.transaction());
+    // return {
+    //     read: async () => {},
+    //     write: async () => {}
+    // }
+
     await txService.openTx(this.sessionId, txType, this.credentials);
     return txService;
 }

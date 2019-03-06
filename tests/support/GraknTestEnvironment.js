@@ -42,10 +42,10 @@ module.exports = {
     },
     sessionForKeyspace: (keyspace) => graknClient.session(keyspace),
     tearDown: async () => {
-        await session.close();
+        if(session) await session.close();
         graknClient.close();
     },
-    dataType: () => Grakn.dataType,
-    txType: () => Grakn.txType,
+    dataType: () => GraknClient.dataType,
+    txType: () => GraknClient.txType,
     graknClient
 }
