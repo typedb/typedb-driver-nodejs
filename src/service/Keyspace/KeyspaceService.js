@@ -17,19 +17,17 @@
  * under the License.
  */
 
-const grpc = require("grpc");
 const messages = require("../../../client-nodejs-proto/protocol/keyspace/Keyspace_pb");
 
 function KeyspaceService(grpcClient, credentials) {
-    this.uri = uri;
     this.credentials = credentials;
-    this.stub = grpcClient;
+    this.client = grpcClient;
 }
 
 KeyspaceService.prototype.retrieve = function () {
     const retrieveRequest = new messages.Keyspace.Retrieve.Req();
     return new Promise((resolve, reject) => {
-        this.stub.retrieve(retrieveRequest, (err, resp) => {
+        this.client.retrieve(retrieveRequest, (err, resp) => {
             if (err) reject(err);
             else resolve(resp.getNamesList());
         });
@@ -40,15 +38,11 @@ KeyspaceService.prototype.delete = function (keyspace) {
     const deleteRequest = new messages.Keyspace.Delete.Req();
     deleteRequest.setName(keyspace);
     return new Promise((resolve, reject) => {
-        this.stub.delete(deleteRequest, (err) => {
+        this.client.delete(deleteRequest, (err) => {
             if (err) reject(err);
             else resolve();
         });
     });
-}
-
-KeyspaceService.prototype.close = function close() {
-    grpc.closeClient(this.stub);
 }
 
 module.exports = KeyspaceService;

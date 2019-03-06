@@ -25,11 +25,11 @@ const SessionService = require("./service/Session/SessionService");
  * Session object that can be used to:
  *  - create a new Transaction
  * 
- * @param {String} uri String containing host and port of a valid Grakn server 
+ * @param {Object} grpcClient grpc node client (session stub + channel)
  * @param {Object} credentials Optional object containing user credentials - only used when connecting to a KGMS instance
  */
-function Session(uri, credentials) {
-  this.sessionService = new SessionService(uri, credentials);
+function Session(grpcClient, credentials) {
+  this.sessionService = new SessionService(grpcClient, credentials);
 }
 
 /**
