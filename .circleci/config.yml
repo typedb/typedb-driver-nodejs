@@ -58,8 +58,9 @@ jobs:
       - run-grakn-server
       # upgrade NPM and run tests
       - run: |
-          npm install -g n
-          sudo n stable
+          /opt/circle/.nvm/load-nvm.sh
+          nvm install v10.15.3
+          nvm use --delete-prefix v10.15.3
           cd tests/deployment/
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
           npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
