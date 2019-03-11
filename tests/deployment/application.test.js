@@ -18,16 +18,16 @@ afterEach(async () => {
 
 describe("Basic GraknClient Tests", () => {
 
-    test("define", async function() {
+    test("define", async () => {
         const defined = await tx.query("define person sub entity, has name; name sub attribute, datatype string;");
         tx.commit();
     });
 
-    test("match", async function() {
+    test("match", async () => {
         const types = await tx.query("match $x sub thing; get;");
     });
 
-    test("insert", async function() {
+    test("insert", async () => {
         const defined = await tx.query("define person sub entity, has name; name sub attribute, datatype string;");
         const inserted = await tx.query("insert $x isa person, has name \"john\";");
     });
