@@ -32,5 +32,3 @@ describe("Basic GraknClient Tests", () => {
         const inserted = await tx.query("insert $x isa person, has name \"john\";");
     });
 });
-
-
