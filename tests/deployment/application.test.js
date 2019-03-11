@@ -1,5 +1,5 @@
 const GraknClient = require("grakn-client");
-jest.setTimeout(10000);
+jest.setTimeout(15000);
 
 let client;
 let session;

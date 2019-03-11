@@ -65,7 +65,7 @@ jobs:
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
           npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
           npm install jest --global
-          jest application.test.js
+          jest --detectOpenHandles application.test.js
 
   sync-dependencies:
     machine: true
@@ -111,13 +111,13 @@ workflows:
           filters:
             branches:
               ignore: client-nodejs-release-branch
-      - test-deployment #:
-#          filters:
-#            branches:
-#              only: master
-#          requires:
-#            - build
-#            - test
+      - test-deployment:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
+            - test
       - sync-dependencies:
           filters:
             branches:
