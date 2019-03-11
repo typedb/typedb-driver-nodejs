@@ -58,14 +58,14 @@ jobs:
       - run-grakn-server
       # upgrade NPM and run tests
       - run: |
-          /opt/circle/.nvm/load-nvm.sh
+          source /opt/circleci/.nvm/nvm.sh
           nvm install v10.15.3
           nvm use --delete-prefix v10.15.3
           cd tests/deployment/
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
           npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
           npm install jest --global
-      - run: jest application.test.js
+          jest application.test.js
 
   sync-dependencies:
     machine: true
