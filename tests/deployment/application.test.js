@@ -11,9 +11,8 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-    await tx.close();
     await session.close();
-    await client.close();
+    client.close();
 });
 
 
@@ -28,6 +27,7 @@ describe("Basic GraknClient Tests", () => {
 
     test("match", async () => {
         const types = await tx.query("match $x sub thing; get;");
+        await tx.close();
     });
 
     test("insert", async () => {
