@@ -1,5 +1,8 @@
 const GraknClient = require("grakn-client");
 
+let client;
+let session;
+let tx;
 
 beforeEach(async () => {
     client = new GraknClient("localhost:48555");
