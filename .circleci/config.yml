@@ -97,7 +97,7 @@ jobs:
       - checkout
       - run: bazel run @graknlabs_build_tools//ci:release-approval
 
-  release-github:
+  deploy-github:
     machine: true
     working_directory: ~/client-nodejs
     steps:
@@ -105,7 +105,7 @@ jobs:
       - checkout
       - run: bazel run //:deploy-github
 
-  release-npm:
+  deploy-npm:
     machine: true
     working_directory: ~/client-nodejs
     steps:
@@ -113,7 +113,7 @@ jobs:
       - checkout
       - run: bazel run //:deploy-npm -- test $REPO_NPM_USERNAME $REPO_NPM_PASSWORD $REPO_NPM_EMAIL
 
-  release-cleanup:
+  deploy-cleanup:
     machine: true
     working_directory: ~/client-nodejs
     steps:
@@ -153,26 +153,26 @@ workflows:
 
   client-nodejs-release:
     jobs:
-      - release-github:
+      - deploy-github:
           filters:
             branches:
               only: client-nodejs-release-branch
-      - release-deployment-approval:
+      - deploy-approval:
           type: approval
           requires:
-            - release-github
+            - deploy-github
           filters:
             branches:
               only: client-nodejs-release-branch
-      - release-npm:
+      - deploy-npm:
           requires:
-            - release-deployment-approval
+            - deploy-approval
           filters:
             branches:
               only: client-nodejs-release-branch
-      - release-cleanup:
+      - deploy-cleanup:
           filters:
             branches:
               only: client-nodejs-release-branch
           requires:
-            - release-npm
+            - deploy-npm
