@@ -111,7 +111,7 @@ jobs:
     steps:
       - install-bazel-linux-rbe
       - checkout
-      - run: bazel run //:deploy-npm -- test $REPO_NPM_USERNAME $REPO_NPM_PASSWORD $REPO_NPM_EMAIL
+      - run: bazel run //:deploy-npm -- npmjs $REPO_NPM_USERNAME $REPO_NPM_PASSWORD $REPO_NPM_EMAIL
 
   deploy-cleanup:
     machine: true
