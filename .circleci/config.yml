@@ -97,13 +97,21 @@ jobs:
       - checkout
       - run: bazel run @graknlabs_build_tools//ci:release-approval
 
+  release-github:
+    machine: true
+    working_directory: ~/client-nodejs
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run: bazel run //:deploy-github
+
   release-npm:
     machine: true
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
       - checkout
-      - run: bazel run //:deploy-npm -- npmjs $REPO_NPM_USERNAME $REPO_NPM_PASSWORD $REPO_NPM_EMAIL
+      - run: bazel run //:deploy-npm -- test $REPO_NPM_USERNAME $REPO_NPM_PASSWORD $REPO_NPM_EMAIL
 
   release-cleanup:
     machine: true
@@ -145,7 +153,20 @@ workflows:
 
   client-nodejs-release:
     jobs:
+      - release-github:
+          filters:
+            branches:
+              only: client-nodejs-release-branch
+      - release-deployment-approval:
+          type: approval
+          requires:
+            - release-github
+          filters:
+            branches:
+              only: client-nodejs-release-branch
       - release-npm:
+          requires:
+            - release-deployment-approval
           filters:
             branches:
               only: client-nodejs-release-branch
