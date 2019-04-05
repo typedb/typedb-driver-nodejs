@@ -22,8 +22,9 @@ let session;
 let tx;
 
 beforeAll(async () => {
+  await env.startGraknServer();
   session = await env.session();
-});
+}, env.beforeAllTimeout);
 
 afterAll(async () => {
   await env.tearDown();
@@ -102,9 +103,11 @@ describe("Transaction methods", () => {
   }
 
   test("shortest path - Answer of conceptList", async ()=>{
-    const localSession = await env.sessionForKeyspace('shortestpathks');
+    let localSession = await env.sessionForKeyspace('shortestpathks');
     let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
+    await localSession.close();
+    localSession = await env.sessionForKeyspace('shortestpathks');
     localTx = await localSession.transaction().write();
     const result = await localTx.query(`compute path from ${parentshipMap.parent}, to ${parentshipMap.child};`);
     const answer = await(result.next());
@@ -118,9 +121,11 @@ describe("Transaction methods", () => {
   });
 
   test("cluster connected components - Answer of conceptSet", async ()=>{
-    const localSession = await env.sessionForKeyspace('clusterkeyspace');
+    let localSession = await env.sessionForKeyspace('clusterkeyspace');
     let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
+    await localSession.close();
+    localSession = await env.sessionForKeyspace('clusterkeyspace');
     localTx = await localSession.transaction().write();
     const result = await localTx.query("compute cluster in [person, parentship], using connected-component;");
     const answer = await(result.next());

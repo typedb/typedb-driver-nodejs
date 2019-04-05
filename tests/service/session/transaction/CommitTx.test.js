@@ -23,9 +23,10 @@ let graknClient;
 let session;
 
 beforeAll(async () => {
+    await env.startGraknServer();
     graknClient = env.graknClient;
     session = await graknClient.session("testcommit");
-});
+}, env.beforeAllTimeout);
 
 afterAll(async () => {
     await session.close();
