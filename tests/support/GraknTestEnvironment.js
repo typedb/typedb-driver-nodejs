@@ -18,14 +18,12 @@
  */
 
 const DEFAULT_URI = "localhost:48555";
-const GRAKN_PORT=48555;
 const INTEGRATION_TESTS_TIMEOUT = 40000;
 const TEST_KEYSPACE = 'testkeyspace';
 
 const childProcess = require('child_process');
 const fs = require('fs-extra');
 const path = require('path');
-const tcpPortUsed = require('tcp-port-used');
 const tmp = require('tmp');
 const unzipper = require('unzipper');
 

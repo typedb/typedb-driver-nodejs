@@ -90,7 +90,6 @@ NODEJS_TEST_DEPENDENCIES = [
     "@nodejs_dependencies//google-protobuf",
     "@nodejs_dependencies//grpc",
     "@nodejs_dependencies//jest",
-    "@nodejs_dependencies//tcp-port-used",
     "@nodejs_dependencies//tmp",
     "@nodejs_dependencies//unzipper",
 ]
