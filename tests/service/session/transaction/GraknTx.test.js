@@ -102,7 +102,7 @@ describe("Transaction methods", () => {
     return {child: child.id, parent: parent.id, rel: relation.id};
   }
 
-  test.skip("shortest path - Answer of conceptList", async ()=>{
+  test("shortest path - Answer of conceptList", async ()=>{
     let localSession = await env.sessionForKeyspace('shortestpathks');
     let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
