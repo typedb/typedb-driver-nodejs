@@ -138,7 +138,7 @@ describe("Transaction methods", () => {
     await env.graknClient.keyspaces().delete('clusterkeyspace');
   });
 
-  test("compute centrality - Answer of conceptSetMeasure", async ()=>{
+  test.skip("compute centrality - Answer of conceptSetMeasure", async ()=>{
     const localSession = await env.sessionForKeyspace('computecentralityks');
     let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
