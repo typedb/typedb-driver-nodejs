@@ -122,5 +122,5 @@ module.exports = {
         await execGraknServerCommand('start');
         await loadGqlFile(path.resolve('.', 'tests/support/basic-genealogy.gql'), 'gene');
     },
-    beforeAllTimeout: 50000 // empirically, this should be enough to unpack, bootup Grakn and load data
+    beforeAllTimeout: 100000 // empirically, this should be enough to unpack, bootup Grakn and load data
 }
