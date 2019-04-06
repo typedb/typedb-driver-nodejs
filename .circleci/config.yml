@@ -55,8 +55,7 @@ jobs:
     steps:
       - install-bazel-linux-rbe
       - checkout
-      - run-bazel-rbe:
-          command: bazel test //:test-integration --test_output=streamed --spawn_strategy=local
+      - run: bazel test //:test-integration --test_output=streamed --spawn_strategy=local
 
   deploy-npm-snapshot:
     machine: true
