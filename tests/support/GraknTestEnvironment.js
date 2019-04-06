@@ -18,7 +18,7 @@
  */
 
 const DEFAULT_URI = "localhost:48555";
-const INTEGRATION_TESTS_TIMEOUT = 40000;
+const INTEGRATION_TESTS_TIMEOUT = 50000;
 const TEST_KEYSPACE = 'testkeyspace';
 
 const childProcess = require('child_process');
@@ -122,5 +122,5 @@ module.exports = {
         await execGraknServerCommand('start');
         await loadGqlFile(path.resolve('.', 'tests/support/basic-genealogy.gql'), 'gene');
     },
-    beforeAllTimeout: 100000 // empirically, this should be enough to unpack, bootup Grakn and load data
+    beforeAllTimeout: 50000 // empirically, this should be enough to unpack, bootup Grakn and load data
 }
