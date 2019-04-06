@@ -57,6 +57,21 @@ const unzipArchive = function(zipFile, extractPath) {
     });
 };
 
+const execGraknServerCommand = function (cmd) {
+    return new Promise((resolve, reject) => {
+        const graknServer = childProcess.spawn(graknExecutablePath, ['server', cmd], {
+            cwd: graknRootDir,
+        });
+        graknServer.once('exit', function (code) {
+            if (code === 0) {
+                resolve(code);
+            } else {
+                reject(code);
+            }
+        })
+    });
+}
+
 const loadGqlFile = function(filePath, keyspace) {
     return new Promise((resolve, reject) => {
         const graknConsole = childProcess.spawn(graknExecutablePath, ['console', '-f', filePath, '-k', keyspace], {
@@ -85,14 +100,7 @@ module.exports = {
         if(session) await session.close();
         graknClient.close();
 
-        const graknServer = childProcess.spawn(graknExecutablePath, ['server', 'stop'], {
-            cwd: graknRootDir,
-            detached: true,
-            stdio: 'ignore'
-        });
-        graknServer.unref();
-
-        await tcpPortUsed.waitUntilFree(GRAKN_PORT, 1000, 30000);
+        await execGraknServerCommand('stop');
 
         fs.removeSync(tempRootDir);
 
@@ -113,15 +121,7 @@ module.exports = {
         // fix permissions to not get EACCES
         fs.chmodSync(graknExecutablePath, 0o755);
 
-        const graknServer = childProcess.spawn(graknExecutablePath, ['server', 'start'], {
-            cwd: graknRootDir,
-            detached: true,
-            stdio: 'ignore'
-        });
-
-        graknServer.unref();
-
-        await tcpPortUsed.waitUntilUsed(GRAKN_PORT, 1000, 30000);
+        await execGraknServerCommand('start');
         await loadGqlFile(path.resolve('.', 'tests/support/basic-genealogy.gql'), 'gene');
     },
     beforeAllTimeout: 100000 // empirically, this should be enough to unpack, bootup Grakn and load data
