@@ -58,8 +58,15 @@ graknlabs_build_tools_ci_pip_install()
 # Load Node.js dependencies #
 #############################
 
-load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_rules_nodejs")
-bazel_rules_nodejs()
+#load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_rules_nodejs")
+#bazel_rules_nodejs()
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+git_repository(
+    name = "build_bazel_rules_nodejs",
+    remote = "https://github.com/graknlabs/rules_nodejs.git",
+    commit = "3e7727e6e57293cdc12eee4d67ff2429d4331cdc"
+)
 
 load("@build_bazel_rules_nodejs//:package.bzl", "rules_nodejs_dependencies")
 rules_nodejs_dependencies()
