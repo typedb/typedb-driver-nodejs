@@ -64,6 +64,7 @@ const unzipArchive = function(zipFile, extractPath) {
 };
 
 const execGraknServerCommand = function (cmd) {
+    _log('execGraknServerCommand :: ' + cmd);
     return new Promise((resolve, reject) => {
         const graknServer = childProcess.spawn(graknExecutablePath, ['server', cmd], {
             cwd: graknRootDir,
@@ -139,7 +140,7 @@ module.exports = {
 
         _log('[startGraknServer] before grakn-start');
         await execGraknServerCommand('start');
-        _log('[startGraknServer] before grakn-stop');
+        _log('[startGraknServer] after grakn-start');
 
         tail = new Tail(path.join(graknRootDir, 'logs', 'grakn.log'));
 

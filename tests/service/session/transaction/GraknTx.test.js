@@ -27,6 +27,7 @@ beforeAll(async () => {
 }, env.beforeAllTimeout);
 
 afterAll(async () => {
+  await session.close();
   await env.tearDown();
 });
 
