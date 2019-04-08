@@ -63,6 +63,12 @@ const execGraknServerCommand = function (cmd) {
         const graknServer = childProcess.spawn(graknExecutablePath, ['server', cmd], {
             cwd: graknRootDir,
         });
+        graknServer.stdout.on('data', function(data) {
+            console.log("GRAKN STDOUT ::: " + data);
+        });
+        graknServer.stderr.on('data', function(data) {
+            console.log("GRAKN STDERR ::: " + data);
+        });
         graknServer.once('exit', function (code) {
             if (code === 0) {
                 resolve(code);
