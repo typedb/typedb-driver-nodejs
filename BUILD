@@ -93,6 +93,7 @@ NODEJS_TEST_DEPENDENCIES = [
     "@nodejs_dependencies//tmp",
     "@nodejs_dependencies//unzipper",
     "@nodejs_dependencies//tail",
+    "@nodejs_dependencies//sync-request",
 ]
 
 NODEJS_TEST_DATA = [
@@ -243,19 +244,19 @@ nodejs_jest_test(
 test_suite(
     name = "test-integration",
     tests = [
-        ":keyspace-test",
-        ":concept-test",
-        ":schemaconcept-test",
-        ":rule-test",
-        ":type-test",
-        ":attribute-test",
-        ":attributetype-test",
-        ":role-test",
+        # ":keyspace-test",
+        # ":concept-test",
+        # ":schemaconcept-test",
+        # ":rule-test",
+        # ":type-test",
+        # ":attribute-test",
+        # ":attributetype-test",
+        # ":role-test",
         ":grakntx-test",
-        ":relation-test",
-        ":relationtype-test",
-        ":thing-test",
-        ":entitytype-test",
-        ":committx-test",
+        # ":relation-test",
+        # ":relationtype-test",
+        # ":thing-test",
+        # ":entitytype-test",
+        # ":committx-test",
     ]
 )
