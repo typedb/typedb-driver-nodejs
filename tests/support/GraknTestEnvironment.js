@@ -27,6 +27,9 @@ const path = require('path');
 const tmp = require('tmp');
 const unzipper = require('unzipper');
 
+const Tail = require('tail').Tail;
+
+
 // Test Grakn with distribution code if TEST_ENV is dist
 let GraknClient;
 let graknClient;
@@ -120,7 +123,19 @@ module.exports = {
         fs.chmodSync(graknExecutablePath, 0o755);
 
         await execGraknServerCommand('start');
-        await loadGqlFile(path.resolve('.', 'tests/support/basic-genealogy.gql'), 'gene');
+
+        tail = new Tail(path.join(graknRootDir, 'logs', 'grakn.log'));
+
+        tail.on("line", function(data) {
+            console.log("GRAKN LOG ::: " +  data);
+        });
+
+        tail.on("error", function(error) {
+            console.log('GRAKN LOG ERROR: ', error);
+        });
+
+
+    await loadGqlFile(path.resolve('.', 'tests/support/basic-genealogy.gql'), 'gene');
     },
     beforeAllTimeout: 100000 // empirically, this should be enough to unpack, bootup Grakn and load data
 }

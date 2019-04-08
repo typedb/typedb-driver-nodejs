@@ -92,6 +92,7 @@ NODEJS_TEST_DEPENDENCIES = [
     "@nodejs_dependencies//jest",
     "@nodejs_dependencies//tmp",
     "@nodejs_dependencies//unzipper",
+    "@nodejs_dependencies//tail",
 ]
 
 NODEJS_TEST_DATA = [
@@ -186,8 +187,7 @@ nodejs_jest_test(
         "tests/service/session/transaction/GraknTx.test.js",
     ],
     deps = NODEJS_TEST_DEPENDENCIES,
-    data = NODEJS_TEST_DATA,
-    tags = ["no-remote"]
+    data = NODEJS_TEST_DATA
 )
 
 nodejs_jest_test(
