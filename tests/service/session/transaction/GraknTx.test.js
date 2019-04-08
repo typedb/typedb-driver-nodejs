@@ -108,7 +108,7 @@ describe("Transaction methods", () => {
     const parentshipMap = await buildParentship(localTx);
     await localSession.close();
     localSession = await env.sessionForKeyspace('shortestpathks');
-    localTx = await localSession.transaction().write();
+    localTx = await localSession.transaction().read();
     const result = await localTx.query(`compute path from ${parentshipMap.parent}, to ${parentshipMap.child};`);
     const answer = await(result.next());
     expect(answer.list()).toHaveLength(3);
@@ -126,7 +126,7 @@ describe("Transaction methods", () => {
     const parentshipMap = await buildParentship(localTx);
     await localSession.close();
     localSession = await env.sessionForKeyspace('clusterkeyspace');
-    localTx = await localSession.transaction().write();
+    localTx = await localSession.transaction().read();
     const result = await localTx.query("compute cluster in [person, parentship], using connected-component;");
     const answer = await(result.next());
     expect(answer.set().size).toBe(3);
@@ -142,7 +142,7 @@ describe("Transaction methods", () => {
     const localSession = await env.sessionForKeyspace('computecentralityks');
     let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
-    localTx = await localSession.transaction().write();
+    localTx = await localSession.transaction().read();
     const result = await localTx.query("compute centrality in [person, parentship], using degree;");
     const answer = await(result.next());
     expect(answer.measurement()).toBe(1);
