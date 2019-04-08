@@ -29,8 +29,6 @@ beforeAll(async () => {
 
 afterAll(async () => {
   env.log('[GraknTx] ::: afterAll - before');
-  await session.close();
-  env.log('[GraknTx] ::: afterAll - session closed');
   await env.tearDown();
   env.log('[GraknTx] ::: afterAll - tearDownDone');
 });
