@@ -22,6 +22,7 @@ let session;
 let tx;
 
 beforeAll(async () => {
+  console.log('beforeAll of GraknTx.test.js');
   await env.startGraknServer();
   session = await env.session();
 }, env.beforeAllTimeout);
