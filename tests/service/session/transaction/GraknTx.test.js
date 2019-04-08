@@ -22,13 +22,17 @@ let session;
 let tx;
 
 beforeAll(async () => {
+  env.log('[GraknTx] ::: beforeAll');
   await env.startGraknServer();
   session = await env.session();
 }, env.beforeAllTimeout);
 
 afterAll(async () => {
+  env.log('[GraknTx] ::: afterAll - before');
   await session.close();
+  env.log('[GraknTx] ::: afterAll - session closed');
   await env.tearDown();
+  env.log('[GraknTx] ::: afterAll - tearDownDone');
 });
 
 beforeEach(async () => {

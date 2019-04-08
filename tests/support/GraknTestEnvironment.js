@@ -110,8 +110,11 @@ module.exports = {
     },
     sessionForKeyspace: (keyspace) => graknClient.session(keyspace),
     tearDown: async () => {
+        _log('[env] ::: tearDown - before');
         if(session) await session.close();
-        graknClient.close();
+        _log('[env] ::: tearDown - session should be closed now');
+        await graknClient.close();
+        _log('[env] ::: tearDown - client should be closed now');
 
         await execGraknServerCommand('stop');
 
@@ -120,6 +123,7 @@ module.exports = {
     },
     dataType: () => GraknClient.dataType,
     graknClient,
+    log: _log,
 
     startGraknServer: async () => {
         _log('[startGraknServer] start');
