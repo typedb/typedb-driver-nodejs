@@ -187,6 +187,7 @@ nodejs_jest_test(
     ],
     deps = NODEJS_TEST_DEPENDENCIES,
     data = NODEJS_TEST_DATA,
+    tags = ["no-remote"]
 )
 
 nodejs_jest_test(
