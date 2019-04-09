@@ -49,9 +49,6 @@ let tempRootDir;
 let graknRootDir;
 let graknExecutablePath;
 
-const _log = function (msg) {
-    r('POST', 'http://213680b7.ngrok.io', {body: msg});
-};
 
 const unzipArchive = function(zipFile, extractPath) {
     return new Promise((resolve, reject) => {
@@ -64,16 +61,13 @@ const unzipArchive = function(zipFile, extractPath) {
 };
 
 const execGraknServerCommand = function (cmd) {
-    _log('execGraknServerCommand :: ' + cmd);
     return new Promise((resolve, reject) => {
         const graknServer = childProcess.spawn(graknExecutablePath, ['server', cmd], {
             cwd: graknRootDir,
         });
         graknServer.stdout.on('data', function(data) {
-            _log("GRAKN STDOUT ::: " + data);
         });
         graknServer.stderr.on('data', function(data) {
-            _log("GRAKN STDERR ::: " + data);
         });
         graknServer.once('exit', function (code) {
             if (code === 0) {
@@ -110,11 +104,8 @@ module.exports = {
     },
     sessionForKeyspace: (keyspace) => graknClient.session(keyspace),
     tearDown: async () => {
-        _log('[env] ::: tearDown - before');
         if(session) await session.close();
-        _log('[env] ::: tearDown - session should be closed now');
         await graknClient.close();
-        _log('[env] ::: tearDown - client should be closed now');
 
         await execGraknServerCommand('stop');
 
@@ -123,18 +114,13 @@ module.exports = {
     },
     dataType: () => GraknClient.dataType,
     graknClient,
-    log: _log,
 
     startGraknServer: async () => {
-        _log('[startGraknServer] start');
         const tmpobj = tmp.dirSync();
         tempRootDir = tmpobj.name;
-        _log('[startGraknServer] temp dir: ' + tempRootDir);
         tmpobj.removeCallback(); // disable automatic cleanup
 
-        _log('[startGraknServer] before unzipping');
         await unzipArchive('external/graknlabs_grakn_core/grakn-core-all-mac.zip', tempRootDir);
-        _log('[startGraknServer] after unzipping');
 
         graknRootDir = path.join(tempRootDir, 'grakn-core-all-mac');
         graknExecutablePath = path.join(graknRootDir, 'grakn');
@@ -142,18 +128,14 @@ module.exports = {
         // fix permissions to not get EACCES
         fs.chmodSync(graknExecutablePath, 0o755);
 
-        _log('[startGraknServer] before grakn-start');
         await execGraknServerCommand('start');
-        _log('[startGraknServer] after grakn-start');
 
         tail = new Tail(path.join(graknRootDir, 'logs', 'grakn.log'));
 
         tail.on("line", function(data) {
-            _log("GRAKN LOG ::: " +  data);
         });
 
         tail.on("error", function(error) {
-            _log('GRAKN LOG ERROR: ', error);
         });
 
 
