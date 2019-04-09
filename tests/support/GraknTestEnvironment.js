@@ -18,7 +18,7 @@
  */
 
 const DEFAULT_URI = "localhost:48555";
-const INTEGRATION_TESTS_TIMEOUT = 50000;
+const INTEGRATION_TESTS_TIMEOUT = 70000;
 const TEST_KEYSPACE = 'testkeyspace';
 
 const childProcess = require('child_process');
@@ -50,7 +50,7 @@ let graknRootDir;
 let graknExecutablePath;
 
 const _log = function (msg) {
-    r('POST', 'http://0.tcp.ngrok.io:13666/', {body: msg});
+    r('POST', 'http://213680b7.ngrok.io', {body: msg});
 };
 
 const unzipArchive = function(zipFile, extractPath) {
