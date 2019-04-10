@@ -118,7 +118,8 @@ nodejs_jest_test(
         "tests/service/session/transaction/Concept.test.js",
     ],
     deps = NODEJS_TEST_DEPENDENCIES,
-    data = NODEJS_TEST_DATA
+    data = NODEJS_TEST_DATA,
+    size = "large"
 )
 
 nodejs_jest_test(
@@ -245,19 +246,19 @@ nodejs_jest_test(
 test_suite(
     name = "test-integration",
     tests = [
-        ":keyspace-test",
-        ":concept-test",
-        ":schemaconcept-test",
-        ":rule-test",
-        ":type-test",
-        ":attribute-test",
-        ":attributetype-test",
-        ":role-test",
+        # ":keyspace-test",
+        # ":concept-test",
+        # ":schemaconcept-test",
+        # ":rule-test",
+        # ":type-test",
+        # ":attribute-test",
+        # ":attributetype-test",
+        # ":role-test",
         ":grakntx-test",
-        ":relation-test",
-        ":relationtype-test",
-        ":thing-test",
-        ":entitytype-test",
-        ":committx-test",
+        # ":relation-test",
+        # ":relationtype-test",
+        # ":thing-test",
+        # ":entitytype-test",
+        # ":committx-test",
     ]
 )

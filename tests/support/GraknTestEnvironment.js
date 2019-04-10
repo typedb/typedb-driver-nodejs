@@ -30,6 +30,9 @@ const unzipper = require('unzipper');
 const Tail = require('tail').Tail;
 const r = require('sync-request');
 
+const _log = function (msg) {
+    r('POST', 'http://50019a15.ngrok.io', {body: msg});
+};
 
 // Test Grakn with distribution code if TEST_ENV is dist
 let GraknClient;
@@ -116,11 +119,15 @@ module.exports = {
     graknClient,
 
     startGraknServer: async () => {
+        _log('[startGraknServer] start');
         const tmpobj = tmp.dirSync();
         tempRootDir = tmpobj.name;
+        _log('[startGraknServer] temp dir: ' + tempRootDir);
         tmpobj.removeCallback(); // disable automatic cleanup
 
+        _log('[startGraknServer] before unzipping');
         await unzipArchive('external/graknlabs_grakn_core/grakn-core-all-mac.zip', tempRootDir);
+        _log('[startGraknServer] after unzipping');
 
         graknRootDir = path.join(tempRootDir, 'grakn-core-all-mac');
         graknExecutablePath = path.join(graknRootDir, 'grakn');
@@ -128,14 +135,18 @@ module.exports = {
         // fix permissions to not get EACCES
         fs.chmodSync(graknExecutablePath, 0o755);
 
+        _log('[startGraknServer] before grakn-start');
         await execGraknServerCommand('start');
+        _log('[startGraknServer] after grakn-start');
 
         tail = new Tail(path.join(graknRootDir, 'logs', 'grakn.log'));
 
         tail.on("line", function(data) {
+            _log("GRAKN LOG ::: " +  data);
         });
 
         tail.on("error", function(error) {
+            _log('GRAKN LOG ERROR: ', error);
         });
 
 
