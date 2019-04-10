@@ -189,8 +189,7 @@ nodejs_jest_test(
         "tests/service/session/transaction/GraknTx.test.js",
     ],
     deps = NODEJS_TEST_DEPENDENCIES,
-    data = NODEJS_TEST_DATA,
-    size = "large"
+    data = NODEJS_TEST_DATA
 )
 
 nodejs_jest_test(
