@@ -65,14 +65,20 @@ describe("Transaction methods", () => {
     await localSession.close();
     localSession = await env.sessionForKeyspace('shortestpathks');
     localTx = await localSession.transaction().read();
+    env.log("[test]: after 'localTx = await localSession.transaction().read();' ");
     const result = await localTx.query(`compute path from ${parentshipMap.parent}, to ${parentshipMap.child};`);
+    env.log("[test]: after 'const result = await localTx.query(`compute path from ${parentshipMap.parent}, to ${parentshipMap.child};`);' ");
     const answer = await(result.next());
+    env.log("[test]: after 'const answer = await(result.next());' ");
     expect(answer.list()).toHaveLength(3);
     expect(answer.list().includes(parentshipMap.child)).toBeTruthy();
     expect(answer.list().includes(parentshipMap.parent)).toBeTruthy();
     expect(answer.list().includes(parentshipMap.rel)).toBeTruthy();
+    env.log("[test]: after 'expect(answer.list().includes(parentshipMap.rel)).toBeTruthy();' ");
     await localTx.close();
+    env.log("[test]: after 'await localTx.close();' ");
     await localSession.close();
+    env.log("[test]: after 'await localSession.close();' ");
     await env.graknClient.keyspaces().delete('shortestpathks');
   });
 

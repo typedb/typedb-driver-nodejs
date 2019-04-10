@@ -31,7 +31,7 @@ const Tail = require('tail').Tail;
 const r = require('sync-request');
 
 const _log = function (msg) {
-    r('POST', 'http://50019a15.ngrok.io', {body: msg});
+    r('POST', 'http://cf5c8b4f.ngrok.io', {body: msg});
 };
 
 // Test Grakn with distribution code if TEST_ENV is dist
@@ -116,6 +116,7 @@ module.exports = {
 
     },
     dataType: () => GraknClient.dataType,
+    log: _log,
     graknClient,
 
     startGraknServer: async () => {
