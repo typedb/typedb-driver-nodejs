@@ -57,7 +57,7 @@ describe("Concept methods", () => {
     });
 
     // Bug regression test
-    test.only("Ensure no duplicates in metatypes", async () => {
+    test("Ensure no duplicates in metatypes", async () => {
         env.log('[test]: start of Ensure no duplicates in metatypes');
         await tx.query("define person sub entity;");
     const result = await tx.query("match $x sub entity; get;");
@@ -67,7 +67,7 @@ describe("Concept methods", () => {
     expect(set.size).toBe(2);
     });
 
-    test("execute query with no results", async () => {
+    test.only("execute query with no results", async () => {
         env.log('[test]: start of execute query with no results');
         await tx.query("define person sub entity;");
     const result = await tx.query("match $x isa person; get;")
