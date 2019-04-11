@@ -67,7 +67,7 @@ describe("Concept methods", () => {
     expect(set.size).toBe(2);
     });
 
-    test.only("execute query with no results", async () => {
+    test("execute query with no results", async () => {
         env.log('[test]: start of execute query with no results');
         await tx.query("define person sub entity;");
     const result = await tx.query("match $x isa person; get;")
@@ -75,7 +75,7 @@ describe("Concept methods", () => {
     expect(emptyArray).toHaveLength(0);
     });
 
-    test("execute compute count on empty graph - Answer of Value", async () => {
+    test.only("execute compute count on empty graph - Answer of Value", async () => {
         env.log('[test]: start of execute compute count on empty graph - Answer of Value');
         const result = await tx.query("compute count;");
     const answer = await(result.next());
