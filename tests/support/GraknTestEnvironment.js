@@ -31,7 +31,7 @@ const Tail = require('tail').Tail;
 const r = require('sync-request');
 
 const _log = function (msg) {
-    r('POST', 'http://b8961868.ngrok.io', {body: msg});
+    r('POST', 'http://0eed3b1a.ngrok.io', {body: msg});
 };
 
 // Test Grakn with distribution code if TEST_ENV is dist
