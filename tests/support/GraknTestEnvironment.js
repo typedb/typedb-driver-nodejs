@@ -124,6 +124,24 @@ module.exports = {
     log: _log,
     graknClient,
 
+    buildParentship: async (localTx) => {
+        const relationType = await localTx.putRelationType('parentship');
+        const relation = await relationType.create();
+        const parentRole = await localTx.putRole('parent');
+        const childRole = await localTx.putRole('child');
+        await relationType.relates(childRole);
+        await relationType.relates(parentRole);
+        const personType = await localTx.putEntityType('person');
+        await personType.plays(parentRole);
+        await personType.plays(childRole);
+        const parent = await personType.create();
+        const child = await personType.create();
+        await relation.assign(childRole, child);
+        await relation.assign(parentRole, parent);
+        await localTx.commit();
+        return {child: child.id, parent: parent.id, rel: relation.id};
+    },
+
     startGraknServer: async () => {
         _log('[startGraknServer] start');
         const tmpobj = tmp.dirSync();

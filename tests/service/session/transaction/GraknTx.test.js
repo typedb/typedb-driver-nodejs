@@ -40,28 +40,10 @@ afterEach(() => {
 
 describe("Transaction methods", () => {
 
-  async function buildParentship(localTx){
-    const relationType = await localTx.putRelationType('parentship');
-    const relation = await relationType.create();
-    const parentRole = await localTx.putRole('parent');
-    const childRole = await localTx.putRole('child');
-    await relationType.relates(childRole);
-    await relationType.relates(parentRole);
-    const personType = await localTx.putEntityType('person');
-    await personType.plays(parentRole);
-    await personType.plays(childRole);
-    const parent = await personType.create();
-    const child = await personType.create();
-    await relation.assign(childRole, child);
-    await relation.assign(parentRole, parent);
-    await localTx.commit();
-    return {child: child.id, parent: parent.id, rel: relation.id};
-  }
-
   test("shortest path - Answer of conceptList", async ()=>{
     let localSession = await env.sessionForKeyspace('shortestpathks');
     let localTx = await localSession.transaction().write();
-    const parentshipMap = await buildParentship(localTx);
+    const parentshipMap = await env.buildParentship(localTx);
     await localSession.close();
     localSession = await env.sessionForKeyspace('shortestpathks');
     localTx = await localSession.transaction().read();
@@ -85,7 +67,7 @@ describe("Transaction methods", () => {
   test("cluster connected components - Answer of conceptSet", async ()=>{
     let localSession = await env.sessionForKeyspace('clusterkeyspace');
     let localTx = await localSession.transaction().write();
-    const parentshipMap = await buildParentship(localTx);
+    const parentshipMap = await env.buildParentship(localTx);
     await localSession.close();
     localSession = await env.sessionForKeyspace('clusterkeyspace');
     localTx = await localSession.transaction().read();
@@ -103,7 +85,7 @@ describe("Transaction methods", () => {
   test("compute centrality - Answer of conceptSetMeasure", async ()=>{
     const localSession = await env.sessionForKeyspace('computecentralityks');
     let localTx = await localSession.transaction().write();
-    const parentshipMap = await buildParentship(localTx);
+    const parentshipMap = await env.buildParentship(localTx);
     localTx = await localSession.transaction().read();
     const result = await localTx.query("compute centrality in [person, parentship], using degree;");
     const answer = await(result.next());
