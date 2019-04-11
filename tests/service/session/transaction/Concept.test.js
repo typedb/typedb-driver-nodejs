@@ -108,7 +108,7 @@ describe("Concept methods", () => {
         expect(nullConcept).toBeNull();
     });
 
-    test.only("delete concept already deleted", async () => {
+    test("delete concept already deleted", async () => {
         env.log('[test]: start of delete concept already deleted');
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
@@ -118,7 +118,7 @@ describe("Concept methods", () => {
         await expect(person.delete()).rejects.toThrowError();
     });
 
-    test("instance isEntity/isRelation/isAttribute", async () => {
+    test.only("instance isEntity/isRelation/isAttribute", async () => {
         env.log('[test]: start of instance isEntity/isRelation/isAttribute');
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
