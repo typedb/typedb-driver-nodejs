@@ -57,7 +57,7 @@ describe("Concept methods", () => {
     });
 
     // Bug regression test
-    test("Ensure no duplicates in metatypes", async () => {
+    test.skip("Ensure no duplicates in metatypes", async () => {
         env.log('[test]: start of Ensure no duplicates in metatypes');
         await tx.query("define person sub entity;");
     const result = await tx.query("match $x sub entity; get;");
@@ -67,7 +67,7 @@ describe("Concept methods", () => {
     expect(set.size).toBe(2);
     });
 
-    test("execute query with no results", async () => {
+    test.skip("execute query with no results", async () => {
         env.log('[test]: start of execute query with no results');
         await tx.query("define person sub entity;");
     const result = await tx.query("match $x isa person; get;")
@@ -75,21 +75,21 @@ describe("Concept methods", () => {
     expect(emptyArray).toHaveLength(0);
     });
 
-    test("execute compute count on empty graph - Answer of Value", async () => {
+    test.skip("execute compute count on empty graph - Answer of Value", async () => {
         env.log('[test]: start of execute compute count on empty graph - Answer of Value');
         const result = await tx.query("compute count;");
     const answer = await(result.next());
     expect(answer.number()).toBe(0);
     });
 
-    test("execute aggregate count on empty graph - Answer of Value", async () => {
+    test.skip("execute aggregate count on empty graph - Answer of Value", async () => {
         env.log('[test]: start of execute aggregate count on empty graph - Answer of Value');
         const result = await tx.query("match $x sub thing; get; count;");
     const answer = await(result.next());
     expect(answer.number()).toBe(4);
     });
 
-    test("delete type", async () => {
+    test.skip("delete type", async () => {
         env.log('[test]: start of delete type');
         const personType = await tx.putEntityType('person');
         const schemaConcept = await tx.getSchemaConcept('person');
@@ -99,7 +99,7 @@ describe("Concept methods", () => {
         expect(nullSchemaConcept).toBeNull();
     });
 
-    test("delete instance", async () => {
+    test.skip("delete instance", async () => {
         env.log('[test]: start of delete instance');
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
@@ -108,7 +108,7 @@ describe("Concept methods", () => {
         expect(nullConcept).toBeNull();
     });
 
-    test("delete concept already deleted", async () => {
+    test.skip("delete concept already deleted", async () => {
         env.log('[test]: start of delete concept already deleted');
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
@@ -118,7 +118,7 @@ describe("Concept methods", () => {
         await expect(person.delete()).rejects.toThrowError();
     });
 
-    test("instance isEntity/isRelation/isAttribute", async () => {
+    test.skip("instance isEntity/isRelation/isAttribute", async () => {
         env.log('[test]: start of instance isEntity/isRelation/isAttribute');
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
@@ -139,7 +139,7 @@ describe("Concept methods", () => {
         expect(employed.isAttribute()).toBeTruthy();
     });
 
-    test("group query - Answer of answerGroup", async ()=>{
+    test.skip("group query - Answer of answerGroup", async ()=>{
         env.log('[test]: start of group query - Answer of answerGroup');
         const localSession = await env.sessionForKeyspace('groupks');
         let localTx = await localSession.transaction().write();
@@ -158,7 +158,7 @@ describe("Concept methods", () => {
     });
 
 
-    test("getSchemaConcept", async () => {
+    test.skip("getSchemaConcept", async () => {
         env.log('[test]: start of getSchemaConcept');
         await tx.query("define person sub entity;");
 
@@ -170,34 +170,34 @@ describe("Concept methods", () => {
 
     });
 
-    test("putEntityType", async () => {
+    test.skip("putEntityType", async () => {
         env.log('[test]: start of putEntityType');
         const personType = await tx.putEntityType("person");
         expect(personType.isSchemaConcept()).toBeTruthy();
         expect(personType.isEntityType()).toBeTruthy();
     });
 
-    test("putRelationType", async () => {
+    test.skip("putRelationType", async () => {
         env.log('[test]: start of putRelationType');
         const marriage = await tx.putRelationType("marriage");
         expect(marriage.isSchemaConcept()).toBeTruthy();
         expect(marriage.isRelationType()).toBeTruthy();
     });
 
-    test("putAttributeType", async () => {
+    test.skip("putAttributeType", async () => {
         env.log('[test]: start of putAttributeType');
         const attributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
         expect(attributeType.isAttributeType()).toBeTruthy();
     });
 
-    test("putRole", async () => {
+    test.skip("putRole", async () => {
         env.log('[test]: start of putRole');
         const role = await tx.putRole("father");
         expect(role.isRole()).toBeTruthy();
         expect(role.baseType).toBe("ROLE");
     });
 
-    test("putRule", async () => {
+    test.skip("putRule", async () => {
         env.log('[test]: start of putRule');
         const label = "genderisedParentship";
         const when = "{ (parent: $p, child: $c) isa parentship; $p has gender 'female'; $c has gender 'male'; };";
@@ -207,7 +207,7 @@ describe("Concept methods", () => {
         expect(rule.isRule()).toBeTruthy();
     });
 
-    test("getAttributesByValue", async () => {
+    test.skip("getAttributesByValue", async () => {
         env.log('[test]: start of getAttributesByValue');
         const firstNameAttributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
         env.log("after firstNameAttributeType");
