@@ -89,7 +89,7 @@ describe("Concept methods", () => {
     expect(answer.number()).toBe(4);
     });
 
-    test.only("delete type", async () => {
+    test("delete type", async () => {
         env.log('[test]: start of delete type');
         const personType = await tx.putEntityType('person');
         const schemaConcept = await tx.getSchemaConcept('person');
@@ -99,7 +99,7 @@ describe("Concept methods", () => {
         expect(nullSchemaConcept).toBeNull();
     });
 
-    test("delete instance", async () => {
+    test.only("delete instance", async () => {
         env.log('[test]: start of delete instance');
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
