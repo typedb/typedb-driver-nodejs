@@ -139,7 +139,7 @@ describe("Concept methods", () => {
         expect(employed.isAttribute()).toBeTruthy();
     });
 
-    test.only("group query - Answer of answerGroup", async ()=>{
+    test("group query - Answer of answerGroup", async ()=>{
         env.log('[test]: start of group query - Answer of answerGroup');
         const localSession = await env.sessionForKeyspace('groupks');
         env.log("after const localSession = await env.sessionForKeyspace('groupks');");
