@@ -40,24 +40,6 @@ afterEach(() => {
 
 describe("Concept methods", () => {
 
-    async function buildParentship(localTx){
-        const relationType = await localTx.putRelationType('parentship');
-        const relation = await relationType.create();
-        const parentRole = await localTx.putRole('parent');
-        const childRole = await localTx.putRole('child');
-        await relationType.relates(childRole);
-        await relationType.relates(parentRole);
-        const personType = await localTx.putEntityType('person');
-        await personType.plays(parentRole);
-        await personType.plays(childRole);
-        const parent = await personType.create();
-        const child = await personType.create();
-        await relation.assign(childRole, child);
-        await relation.assign(parentRole, parent);
-        await localTx.commit();
-        return {child: child.id, parent: parent.id, rel: relation.id};
-    }
-
     test("delete type", async () => {
         const personType = await tx.putEntityType('person');
         const schemaConcept = await tx.getSchemaConcept('person');
@@ -150,7 +132,7 @@ describe("Concept methods", () => {
 
     test("group query - Answer of answerGroup", async ()=>{ const localSession = await env.sessionForKeyspace('groupks');
         let localTx = await localSession.transaction().write();
-        const parentshipMap = await buildParentship(localTx);
+        const parentshipMap = await env.buildParentship(localTx);
         localTx = await localSession.transaction().write();
         const result = await localTx.query("match $x isa person; $y isa person; (parent: $x, child: $y) isa parentship; get; group $x;");
         const answer = await(result.next());
