@@ -75,14 +75,14 @@ describe("Concept methods", () => {
     expect(emptyArray).toHaveLength(0);
     });
 
-    test.only("execute compute count on empty graph - Answer of Value", async () => {
+    test("execute compute count on empty graph - Answer of Value", async () => {
         env.log('[test]: start of execute compute count on empty graph - Answer of Value');
         const result = await tx.query("compute count;");
     const answer = await(result.next());
     expect(answer.number()).toBe(0);
     });
 
-    test("execute aggregate count on empty graph - Answer of Value", async () => {
+    test.only("execute aggregate count on empty graph - Answer of Value", async () => {
         env.log('[test]: start of execute aggregate count on empty graph - Answer of Value');
         const result = await tx.query("match $x sub thing; get; count;");
     const answer = await(result.next());
