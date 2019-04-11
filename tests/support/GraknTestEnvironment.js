@@ -107,12 +107,17 @@ module.exports = {
     },
     sessionForKeyspace: (keyspace) => graknClient.session(keyspace),
     tearDown: async () => {
+        _log('[tearDown]: before all');
         if(session) await session.close();
+        _log('[tearDown]: session should be closed now');
         await graknClient.close();
+        _log('[tearDown]: client should be closed now');
 
         await execGraknServerCommand('stop');
+        _log('[tearDown]: Grakn should be stopped now');
 
         fs.removeSync(tempRootDir);
+        _log('[tearDown]: directory should be removed now');
 
     },
     dataType: () => GraknClient.dataType,
