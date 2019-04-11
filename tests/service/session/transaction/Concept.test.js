@@ -210,18 +210,32 @@ describe("Concept methods", () => {
     test("getAttributesByValue", async () => {
         env.log('[test]: start of getAttributesByValue');
         const firstNameAttributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
+        env.log("after firstNameAttributeType");
         const middleNameAttributeType = await tx.putAttributeType("middlename", env.dataType().STRING);
+        env.log("after middleNameAttributeType");
         const a1 = await firstNameAttributeType.create('James');
+        env.log("after a1");
         const a2 = await middleNameAttributeType.create('James');
+        env.log("after a2");
         const attributes = await (await tx.getAttributesByValue('James', env.dataType().STRING)).collect();
+        env.log("after attributes");
         expect(attributes.length).toBe(2);
+        env.log("after expect(attributes.length).toBe(2)");
         expect(attributes.filter(a => a.id === a1.id).length).toBe(1);
+        env.log("after expect(attributes.filter(a => a.id === a1.id).length).toBe(1);");
         expect(attributes.filter(a => a.id === a2.id).length).toBe(1);
+        env.log("after expect(attributes.filter(a => a.id === a2.id).length).toBe(1);");
         attributes.forEach(async attr => {
+            env.log("in attributes.forEach");
             expect(attr.isAttribute()).toBeTruthy();
+            env.log("after expect(attr.isAttribute()).toBeTruthy();");
             expect(await attr.value()).toBe('James');
+            env.log("after expect(await attr.value()).toBe('James');");
         });
+        env.log("after attributes.forEach");
         const bondAttributes = await (await tx.getAttributesByValue('Bond', env.dataType().STRING)).collect();
+        env.log("after bondAttributes");
         expect(bondAttributes).toHaveLength(0);
+        env.log("after expect(bondAttributes).toHaveLength(0);");
         });
 });
