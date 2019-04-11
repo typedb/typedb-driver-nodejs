@@ -142,19 +142,32 @@ describe("Concept methods", () => {
     test.only("group query - Answer of answerGroup", async ()=>{
         env.log('[test]: start of group query - Answer of answerGroup');
         const localSession = await env.sessionForKeyspace('groupks');
+        env.log("after const localSession = await env.sessionForKeyspace('groupks');");
         let localTx = await localSession.transaction().write();
+        env.log("after let localTx = await localSession.transaction().write();");
         const parentshipMap = await buildParentship(localTx);
+        env.log("after const parentshipMap = await buildParentship(localTx);");
         localTx = await localSession.transaction().write();
+        env.log("after localTx = await localSession.transaction().write();");
         const result = await localTx.query("match $x isa person; $y isa person; (parent: $x, child: $y) isa parentship; get; group $x;");
+        env.log("after const result = await localTx.query(\"match $x isa person; $y isa person; (parent: $x, child: $y) isa parentship; get; group $x;\");");
         const answer = await(result.next());
+        env.log("after const answer = await(result.next());");
         expect(answer.owner().id).toBe(parentshipMap.parent);
+        env.log("after expect(answer.owner().id).toBe(parentshipMap.parent);");
         expect(answer.answers()[0].map().size).toBe(2);
+        env.log("after expect(answer.answers()[0].map().size).toBe(2);");
         expect(answer.answers()[0].map().get('x').id).toBe(parentshipMap.parent);
+        env.log("after expect(answer.answers()[0].map().get('x').id).toBe(parentshipMap.parent);");
         expect(answer.answers()[0].map().get('y').id).toBe(parentshipMap.child);
+        env.log("after expect(answer.answers()[0].map().get('y').id).toBe(parentshipMap.child);");
 
         await localTx.close();
+        env.log("after await localTx.close();");
         await localSession.close();
+        env.log("after await localSession.close();");
         await env.graknClient.keyspaces().delete('groupks');
+        env.log("after await env.graknClient.keyspaces().delete('groupks');");
     });
 
 
