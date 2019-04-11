@@ -118,7 +118,7 @@ describe("Concept methods", () => {
         await expect(person.delete()).rejects.toThrowError();
     });
 
-    test.only("instance isEntity/isRelation/isAttribute", async () => {
+    test("instance isEntity/isRelation/isAttribute", async () => {
         env.log('[test]: start of instance isEntity/isRelation/isAttribute');
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
@@ -139,7 +139,7 @@ describe("Concept methods", () => {
         expect(employed.isAttribute()).toBeTruthy();
     });
 
-    test("group query - Answer of answerGroup", async ()=>{
+    test.only("group query - Answer of answerGroup", async ()=>{
         env.log('[test]: start of group query - Answer of answerGroup');
         const localSession = await env.sessionForKeyspace('groupks');
         let localTx = await localSession.transaction().write();
