@@ -99,7 +99,7 @@ describe("Concept methods", () => {
         expect(nullSchemaConcept).toBeNull();
     });
 
-    test.only("delete instance", async () => {
+    test("delete instance", async () => {
         env.log('[test]: start of delete instance');
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
@@ -108,7 +108,7 @@ describe("Concept methods", () => {
         expect(nullConcept).toBeNull();
     });
 
-    test("delete concept already deleted", async () => {
+    test.only("delete concept already deleted", async () => {
         env.log('[test]: start of delete concept already deleted');
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
