@@ -154,7 +154,7 @@ workflows:
       - deploy-npm-snapshot:
           filters:
             branches:
-              only: "kgms-1.5.2" # TODO: revert to master
+              only: master
           requires:
             - build
             - test
