@@ -33,7 +33,7 @@ function SessionService(grpcClient) {
  * to open a Transaction.
  */
 SessionService.prototype.open = async function open(keyspace, credentials){
-    const openResponse = await wrapInPromise(this.client, this.client.open, RequestBuilder.openSession(keyspace));
+    const openResponse = await wrapInPromise(this.client, this.client.open, RequestBuilder.openSession(keyspace, credentials));
     this.sessionId = openResponse.getSessionid();
 }
 
