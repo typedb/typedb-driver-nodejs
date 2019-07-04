@@ -50,7 +50,7 @@ babel_library(
 npm_package(
     name = "client-nodejs",
     deps = [
-        "@graknlabs_protocol//:client-nodejs-proto",
+        "@graknlabs_protocol//grpc/nodejs:protocol",
         ":bundle",
         "@nodejs_dependencies//grpc",
         "@nodejs_dependencies//google-protobuf"
