@@ -157,7 +157,7 @@ jobs:
     working_directory: ~/client-nodejs
     steps:
       - checkout
-      - run: git push --delete origin client-nodejs-release-branch
+      - run: git push --delete https://$REPO_GITHUB_TOKEN@github.com/graknlabs/client-nodejs $CIRCLE_BRANCH
 
 workflows:
   client-nodejs:
