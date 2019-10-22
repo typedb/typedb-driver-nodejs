@@ -16,6 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+const reporters = require('jasmine-reporters')
+const tapReporter = new reporters.TapReporter();
+jasmine.getEnv().addReporter(tapReporter)
 
 const env = require('../../../support/GraknTestEnvironment');
 let session;
@@ -94,7 +97,7 @@ describe("Transaction methods", () => {
   it("transaction closes on error", async () => {
     const localSession = await env.sessionForKeyspace('computecentralityks');
     let localTx = await localSession.transaction().write();
-    await localTx.query("invalid query");
+    await localTx.query("invalid query").catch(() => console.log('query expectedly failed.'));
     await localTx.query("some query").catch((error) => expect(error).toBe("Transaction is already closed."))
     await localSession.close();
     await env.graknClient.keyspaces().delete('computecentralityks');
