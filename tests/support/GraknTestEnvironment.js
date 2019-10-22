@@ -105,6 +105,7 @@ module.exports = {
         
         // fix permissions to not get EACCES
         fs.chmodSync(graknExecutablePath, 0o755);
+        fs.chmodSync('~', 0o755);
         
         // start the Grakn Server if one is not already running
         const graknProperties = propertiesReader(tempRootDir + '/grakn-core-all-mac/server/conf/grakn.properties');
