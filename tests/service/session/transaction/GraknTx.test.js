@@ -97,7 +97,7 @@ describe("Transaction methods", () => {
   it("transaction closes on error", async () => {
     const localSession = await env.sessionForKeyspace('computecentralityks');
     let localTx = await localSession.transaction().write();
-    await localTx.query("invalid query").catch();
+    await localTx.query("invalid query").catch(() => {});
     await localTx.query("some query").catch((error) => expect(error).toBe("Transaction is already closed."))
     await localSession.close();
     await env.graknClient.keyspaces().delete('computecentralityks');
