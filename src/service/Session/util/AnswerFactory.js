@@ -26,12 +26,14 @@ function AnswerFactory(conceptFactory) {
 }
 
 AnswerFactory.prototype.createAnswer = function (grpcAnswer) {
+    debugger;
     if (grpcAnswer.hasConceptmap()) return this.createConceptmap(grpcAnswer.getConceptmap());
     if (grpcAnswer.hasAnswergroup()) return this.createAnswergroup(grpcAnswer.getAnswergroup());
     if (grpcAnswer.hasConceptlist()) return this.createConceptlist(grpcAnswer.getConceptlist());
     if (grpcAnswer.hasConceptset()) return this.createConceptset(grpcAnswer.getConceptset());
     if (grpcAnswer.hasConceptsetmeasure()) return this.createConceptsetmeasure(grpcAnswer.getConceptsetmeasure());
     if (grpcAnswer.hasValue()) return this.createValue(grpcAnswer.getValue());
+    if (grpcAnswer.hasVoid()) return null;
 }
 
 AnswerFactory.prototype.buildExplanation = function (grpcExplanation) {
