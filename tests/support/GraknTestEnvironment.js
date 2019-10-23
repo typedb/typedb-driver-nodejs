@@ -52,7 +52,7 @@ const unzipArchive = function(zipFile, extractPath) {
 
 const execGraknCommand = (command) => {
     try {
-        childProcess.execSync(command);
+        childProcess.execSync(command, { cwd: graknRootDir });
     } catch (error) {
         throw new Error(`There was a problem when running ${command}`)
     }
