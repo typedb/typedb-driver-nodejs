@@ -105,6 +105,7 @@ module.exports = {
         
         // fix permissions to not get EACCES
         fs.chmodSync(graknExecutablePath, 0o755);
+        // make `/tmp` writable as running console commands creates a file in there
         fs.chmodSync('/tmp', 0o755);
         
         // start the Grakn Server if one is not already running
