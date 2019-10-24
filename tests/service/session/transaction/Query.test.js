@@ -41,7 +41,7 @@ afterEach(() => {
   tx.close();
 });
 
-describe("Transaction methods", () => {
+describe("Query methods", () => {
   it("delete query response type should be Void", async () => {
     const localSession = await env.sessionForKeyspace('gene');
     let localTx = await localSession.transaction().write();
