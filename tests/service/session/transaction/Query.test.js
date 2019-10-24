@@ -42,13 +42,13 @@ afterEach(() => {
 });
 
 describe("Transaction methods", () => {
-  it("transaction closes on error", async () => {
+  it("delete query response type should be Void", async () => {
     const localSession = await env.sessionForKeyspace('gene');
     let localTx = await localSession.transaction().write();
     await localTx.query('insert $x isa person, has identifier "a";');
-    debugger;
-    const response = await (await localTx.query('match $x isa person, has identifier "a"; delete $x;')).collect();
-    expect(response).toBe(null);
+    const iterator = await localTx.query('match $x isa person, has identifier "a"; delete $x;');
+    const response = await iterator.next();
+    expect(response.message()).toEqual("Delete successful.");
     await localTx.close();
     await localSession.close();
     await env.graknClient.keyspaces().delete('gene');
