@@ -40,7 +40,7 @@ function GrpcCommunicator(stream) {
   })
 }
 
-GrpcCommunicator.prototype.send = async function (request) {
+GrpcCommunicator.prototype.send = function (request) {
   if(!this.stream.writable) throw "Transaction is already closed.";
   return new Promise((resolve, reject) => {
     this.pending.push({ resolve, reject });
@@ -48,7 +48,7 @@ GrpcCommunicator.prototype.send = async function (request) {
   })
 };
 
-GrpcCommunicator.prototype.end = async function end() {
+GrpcCommunicator.prototype.end = function end() {
   if(this.stream.writable) { // transaction is still open
     this.stream.end();
     return new Promise((resolve) => {
