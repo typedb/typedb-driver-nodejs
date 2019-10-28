@@ -117,7 +117,8 @@ describe("Transaction methods", () => {
     const localSession = await env.sessionForKeyspace('computecentralityks');
     const localTx = await localSession.transaction().read();
     await localTx.close();
-    await localTx.close().catch((error) => expect(error).toEqual("Transaction is already closed."));
+    await localTx.close();
+    expect(localTx.isOpen()).toEqual(false);
     await localSession.close();
     await env.graknClient.keyspaces().delete('computecentralityks');
   });

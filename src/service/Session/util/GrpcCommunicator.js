@@ -49,11 +49,12 @@ GrpcCommunicator.prototype.send = async function (request) {
 };
 
 GrpcCommunicator.prototype.end = async function end() {
-  if(!this.stream.writable) throw "Transaction is already closed.";
-  this.stream.end();
-  return new Promise((resolve) => {
-    this.stream.on('end', resolve);
-  });
+  if(this.stream.writable) { // transaction is still open
+    this.stream.end();
+    return new Promise((resolve) => {
+      this.stream.on('end', resolve);
+    });
+  }
 }
 
 module.exports = GrpcCommunicator;
