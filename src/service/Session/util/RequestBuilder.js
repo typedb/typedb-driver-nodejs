@@ -536,6 +536,13 @@ const methods = {
     iterMessage.setId(iteratorId);
     txRequest.setIterateReq(iterMessage);
     return txRequest;
+  },
+  explanation: function (grpcConceptMap) {
+    const txRequest = new messages.Transaction.Req();
+    const explMessage = new messages.Transaction.Explanation.Req();
+    explMessage.setExplainable(grpcConceptMap);
+    txRequest.setExplanationReq(explMessage);
+    return txRequest;
   }
 
 };
