@@ -18,6 +18,7 @@
  */
 
 const messages = require("../../../../grpc/nodejs/protocol/session/Session_pb");
+const answerMessages = require("../../../../grpc/nodejs/protocol/session/Answer_pb");
 const ConceptsBaseType = require("../concept/BaseTypeConstants").baseType;
 const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.DATA_TYPE;
 const INFER_TRUE_MESSAGE = messages.Transaction.Query.INFER.TRUE;
@@ -539,7 +540,7 @@ const methods = {
   },
   explanation: function (grpcConceptMap) {
     const txRequest = new messages.Transaction.Req();
-    const explMessage = new messages.Transaction.Explanation.Req();
+    const explMessage = new answerMessages.Explanation.Req();
     explMessage.setExplainable(grpcConceptMap);
     txRequest.setExplanationReq(explMessage);
     return txRequest;

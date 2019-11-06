@@ -36,7 +36,7 @@ AnswerFactory.prototype.createAnswer = function (grpcAnswer) {
 }
 
 AnswerFactory.prototype.buildExplanation = function (grpcExplanation) {
-    const grpcListOfConceptMaps = grpcExplanation.getExplanationsList();
+    const grpcListOfConceptMaps = grpcExplanation.getExplanationRes().getExplanationList();
     const nativeListOfConceptMaps = grpcListOfConceptMaps.map((grpcConceptMap) => this.createConceptmap(grpcConceptMap));
 
     return {
@@ -50,16 +50,17 @@ AnswerFactory.prototype.createConceptmap = function (answer) {
     answer.getMapMap().forEach((grpcConcept, key) => {
         answerMap.set(key, this.conceptFactory.createConcept(grpcConcept));
     });
-    
+
+
     return {
         map: () => answerMap,
         get: (v) => answerMap.get(v),
-        hasExplanation: () => answer.getHasExplanation(),
+        hasExplanation: () => answer.getHasexplanation(),
         queryPattern: () => answer.getPattern(),
-        explanation: () => {
-            if (answer.getHasExplanation()) {
-                const grpcExplanation = this.txService.explanation(answer.getMapMap());
-                return this.buildExplanation(grpcExplanation)
+        explanation: async () => {
+            if (answer.getHasexplanation()) {
+                const grpcExplanation = await this.txService.explanation(answer);
+                return this.buildExplanation(grpcExplanation);
             } else {
                 throw "Explanation not available on concept map";
             }
