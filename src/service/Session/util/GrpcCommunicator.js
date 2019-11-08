@@ -31,28 +31,37 @@ function GrpcCommunicator(stream) {
   });
 
   this.stream.on("error", err => {
-    this.pending.shift().reject(err);
     this.end();
+    if (this.pending.length) {
+      this.pending.shift().reject(err);
+    } else {
+      throw err;
+    }
   });
 
   this.stream.on('status', (e) => {
-    if (this.pending.length) this.pending.shift().reject(e);
+    if (this.pending.length) {
+      this.pending.shift().reject(e);
+    }
   })
 }
 
-GrpcCommunicator.prototype.send = async function (request) {
+GrpcCommunicator.prototype.send = function (request) {
   if(!this.stream.writable) throw "Transaction is already closed.";
   return new Promise((resolve, reject) => {
     this.pending.push({ resolve, reject });
     this.stream.write(request);
+
   })
 };
 
 GrpcCommunicator.prototype.end = function end() {
-  this.stream.end();
-  return new Promise((resolve) => {
-    this.stream.on('end', resolve);
-  });
+  if(this.stream.writable) { // transaction is still open
+    this.stream.end();
+    return new Promise((resolve) => {
+      this.stream.on('end', resolve);
+    });
+  }
 }
 
 module.exports = GrpcCommunicator;
