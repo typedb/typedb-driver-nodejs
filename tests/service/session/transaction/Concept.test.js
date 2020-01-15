@@ -96,8 +96,8 @@ describe("Concept methods", () => {
         expect(samePerson.isThing()).toBeTruthy();
         expect(samePerson.id).toBe(personId);
 
-        // retrieve non existing id should return null
-        const nonPerson = await tx.getConcept("not-existing-id");
+        // retrieve non existing id should return null (can still be parsed as integer by server)
+        const nonPerson = await tx.getConcept("1111122222");
         expect(nonPerson).toBe(null);
     });
 
