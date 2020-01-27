@@ -46,8 +46,6 @@ describe("Schema concept methods", () => {
         const personSchemaConcept = await tx.getSchemaConcept('person');
         expect(await personSchemaConcept.label()).toBe('person');
         await personSchemaConcept.label('superperson');
-        // retrieve updated schema concepts
-        await (await tx.query('match $x sub thing; get;')).collect();
         const superPersonSchemaConcept = await tx.getSchemaConcept('superperson');
         expect(await superPersonSchemaConcept.label()).toBe('superperson');
         const nullSchemaConcept = await tx.getSchemaConcept('person');
