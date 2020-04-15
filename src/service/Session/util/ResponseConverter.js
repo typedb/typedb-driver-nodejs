@@ -185,8 +185,8 @@ ResponseConverter.prototype.rolePlayersMap = async function (resp) {
     // Create map using string as key and set as value
     rolePlayers.forEach(rp => {
         const key = rp.role.id;
-        if (map.has(key)) map.set(key, map.get(key).add(rp.player));
-        else map.set(key, new Set([rp.player]));
+        if (map.has(key)) map.set(key, map.get(key).push(rp.player));
+        else map.set(key, [rp.player]);
     })
     const resultMap = new Map();
     // Convert map to use Role object as key
