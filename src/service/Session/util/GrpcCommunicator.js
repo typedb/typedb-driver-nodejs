@@ -107,7 +107,6 @@ function GrpcCommunicator(stream) {
   });
 
   this.stream.on('error', err => {
-    console.log(err)
     this.end();
     if (this.pending.length) {
       for (let p of this.pending) {
