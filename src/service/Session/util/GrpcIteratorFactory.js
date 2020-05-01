@@ -64,6 +64,12 @@ class Iterator {
 
   async _start() {
     await this._nextBatch(this._startIterRequest);
+    const response = await this._iterator.next(); // Fetch first response in anticipation of query errors
+    if (!response) {
+      throw new Error('Iterator did not end with a Done or Iteratorid response');
+    }
+
+    this._firstResponse = response
   }
 
   async _nextBatch(iterRequest) {
@@ -77,7 +83,14 @@ class Iterator {
       return null;
     }
 
-    const response = await this._iterator.next();
+    let response;
+    if (this._firstResponse) {
+      response = this._firstResponse;
+      this._firstResponse = null;
+    } else {
+      response = await this._iterator.next();
+    }
+
     if (!response) {
       throw new Error('Iterator did not end with a Done or Iteratorid response');
     }

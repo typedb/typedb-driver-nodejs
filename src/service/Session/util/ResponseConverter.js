@@ -163,10 +163,10 @@ ResponseConverter.prototype.getOwners = function (resp) {
 
 // Relation
 ResponseConverter.prototype.rolePlayersMap = function (resp) {
-    const resContent = iterRes.getConceptmethodIterRes().getResponse().getRelationRoleplayersmapIterRes();
+    const resContent = resp.getConceptmethodIterRes().getResponse().getRelationRoleplayersmapIterRes();
     return {
-      role: conceptFactory.createConcept(resContent.getRole()),
-      player: conceptFactory.createConcept(resContent.getPlayer())
+      role: this.conceptFactory.createConcept(resContent.getRole()),
+      player: this.conceptFactory.createConcept(resContent.getPlayer())
     };
 }
 
@@ -190,7 +190,7 @@ ResponseConverter.prototype.collectRolePlayersMap = async function (iterator) {
 }
 
 ResponseConverter.prototype.rolePlayers = function (resp) {
-    const grpcConcept = resp.getConceptmethodIterRes().getRelationRoleplayersIterRes().getThing();
+    const grpcConcept = resp.getConceptmethodIterRes().getResponse().getRelationRoleplayersIterRes().getThing();
     return this.conceptFactory.createConcept(grpcConcept);
 }
 
@@ -207,12 +207,12 @@ ResponseConverter.prototype.getThen = function (resp) {
 
 // Role
 ResponseConverter.prototype.getRelationTypesThatRelateRole = function (resp) {
-    const grpcConcept = resp.getConceptmethodIterRes().getRoleRelationsIterRes().getRelationtype();
+    const grpcConcept = resp.getConceptmethodIterRes().getResponse().getRoleRelationsIterRes().getRelationtype();
     return this.conceptFactory.createConcept(grpcConcept);
 }
 
 ResponseConverter.prototype.getTypesThatPlayRole = function (resp) {
-    const grpcConcept = resp.getConceptmethodIterRes().getRolePlayersIterRes().getType();
+    const grpcConcept = resp.getConceptmethodIterRes().getResponse().getRolePlayersIterRes().getType();
     return this.conceptFactory.createConcept(grpcConcept);
 }
 

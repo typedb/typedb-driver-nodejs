@@ -272,7 +272,7 @@ TransactionService.prototype.unsetAttribute = function (id, attribute) {
 // Relation
 TransactionService.prototype.rolePlayersMap = async function (id) {
     const iterRequest = RequestBuilder.rolePlayersMap(id);
-    const iterator = this.iteratorFactory.createIterator(iterRequest,
+    const iterator = await this.iteratorFactory.createIterator(iterRequest,
         (response) => this.respConverter.rolePlayersMap(response));
     return await this.respConverter.collectRolePlayersMap(iterator);
 };

@@ -17,8 +17,6 @@
  * under the License.
  */
 
-const util = require('util');
-
 function SingleResponse(resolve, reject) {
   this._reject = reject
   this._resolve = resolve
@@ -40,22 +38,22 @@ function MultiResponse(endEvaluator) {
 }
 
 MultiResponse.prototype.next = function () {
-  const responseQueue = this._responseQueue
-
-  if (responseQueue.length > 0) {
-    return Promise.resolve(responseQueue.shift())
-  }
-
-  const err = this._error
-  if (err) {
-    return Promise.reject(err)
-  }
-
-  if (this._finished) {
-    return Promise.resolve(null) // Iterator-style empty result for finished stream
-  }
-
   return new Promise((resolve, reject) => {
+    const responseQueue = this._responseQueue
+
+    if (responseQueue.length > 0) {
+      resolve(responseQueue.shift())
+    }
+
+    const err = this._error
+    if (err) {
+      reject(err)
+    }
+
+    if (this._finished) {
+      resolve() // Iterator-style empty result for finished stream
+    }
+
     this._readerQueue.push({resolve, reject})
   })
 }
@@ -103,13 +101,13 @@ function GrpcCommunicator(stream) {
   this.pending = [];
 
   this.stream.on('data', resp => {
-    // console.log('resp: ' + util.inspect(resp.toObject()))
     if (!this.pending[0]._onResponse(resp)) {
       this.pending.shift() // Only remove if resolver returns falsy
     }
   });
 
   this.stream.on('error', err => {
+    console.log(err)
     this.end();
     if (this.pending.length) {
       for (let p of this.pending) {
@@ -128,7 +126,6 @@ function GrpcCommunicator(stream) {
 }
 
 GrpcCommunicator.prototype.send = function (request) {
-  // console.log('sing: ' + util.inspect(request.toObject()))
   if(!this.stream.writable) throw 'Transaction is already closed.';
   return new Promise((resolve, reject) => {
     this.pending.push(new SingleResponse(resolve, reject));
@@ -137,7 +134,6 @@ GrpcCommunicator.prototype.send = function (request) {
 };
 
 GrpcCommunicator.prototype.iterateUntil = function (request, endEvaluator) {
-  // console.log('iter: ' + util.inspect(request.toObject()))
   if(!this.stream.writable) throw 'Transaction is already closed.';
   return new Promise((resolve) => {
     const responseIterator = new MultiResponse(endEvaluator);
