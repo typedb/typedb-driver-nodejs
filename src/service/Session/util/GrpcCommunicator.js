@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 class SingleResponse {
   constructor(resolve, reject) {
     this._reject = reject
@@ -99,6 +100,7 @@ class GrpcCommunicator {
     this.stream.on('data', resp => {
       if (!this.pending[0]._onResponse(resp)) {
         this.pending.shift() // Only remove if resolver returns falsy
+        console.log('Iterators on queue: ' + this.penging.length)
       }
     })
 
