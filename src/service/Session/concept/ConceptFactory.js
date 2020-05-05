@@ -18,40 +18,54 @@
  */
 
 const RemoteConcept = require("./RemoteConcept");
-const ConceptGrpcMessages = require("../../../../grpc/nodejs/protocol/session/Concept_pb");
-const BaseType = require("./BaseTypeConstants").baseType;
+const LocalConcept = require("./LocalConcept");
+const BaseTypeConstants = require("./BaseTypeConstants");
+const BaseType = BaseTypeConstants.baseType;
 
 /**
  * This factory creates Concepts as Javascipt objects from GrpcConcept provided
  * @param {Object} txService Object implementing all the functionalities of gRPC Transaction as defined in Session.proto
  */
-function ConceptFactory(txService) {
-  this.txService = txService;
-}
+class ConceptFactory {
+  constructor(txService) {
+    this.txService = txService;
+  }
 
-ConceptFactory.prototype.createConcept = function createConcept(grpcConcept) {
-  const conceptId = grpcConcept.getId();
-  switch (grpcConcept.getBasetype()) {
-    case ConceptGrpcMessages.Concept.BASE_TYPE.ENTITY:
-      return new RemoteConcept.Thing(conceptId, BaseType.ENTITY, this.txService);
-    case ConceptGrpcMessages.Concept.BASE_TYPE.RELATION:
-      return new RemoteConcept.Relation(conceptId, BaseType.RELATION, this.txService);
-    case ConceptGrpcMessages.Concept.BASE_TYPE.ATTRIBUTE:
-      return new RemoteConcept.Attribute(conceptId, BaseType.ATTRIBUTE, this.txService);
-    case ConceptGrpcMessages.Concept.BASE_TYPE.ENTITY_TYPE:
-      return new RemoteConcept.EntityType(conceptId, BaseType.ENTITY_TYPE, this.txService);
-    case ConceptGrpcMessages.Concept.BASE_TYPE.RELATION_TYPE:
-      return new RemoteConcept.RelationType(conceptId, BaseType.RELATION_TYPE, this.txService);
-    case ConceptGrpcMessages.Concept.BASE_TYPE.ATTRIBUTE_TYPE:
-      return new RemoteConcept.AttributeType(conceptId, BaseType.ATTRIBUTE_TYPE, this.txService);
-    case ConceptGrpcMessages.Concept.BASE_TYPE.ROLE:
-      return new RemoteConcept.Role(conceptId, BaseType.ROLE, this.txService);
-    case ConceptGrpcMessages.Concept.BASE_TYPE.RULE:
-      return new RemoteConcept.Rule(conceptId, BaseType.RULE, this.txService);
-    case ConceptGrpcMessages.Concept.BASE_TYPE.META_TYPE:
-      return new RemoteConcept.SchemaConcept(conceptId, BaseType.META_TYPE, this.txService);
-    default:
-      throw "BaseType not recognised.";
+  createConcept(grpcConcept) {
+    return ConceptFactory.createRemoteConcept(grpcConcept.getId(), BaseTypeConstants.fromGrpcConcept(grpcConcept), this.txService);
+  }
+
+  static createRemoteConcept(conceptId, baseType, txService) {
+    switch (baseType) {
+      case BaseType.ENTITY: return new RemoteConcept.Thing(conceptId, BaseType.ENTITY, txService);
+      case BaseType.RELATION: return new RemoteConcept.Relation(conceptId, BaseType.RELATION, txService);
+      case BaseType.ATTRIBUTE: return new RemoteConcept.Attribute(conceptId, BaseType.ATTRIBUTE, txService);
+      case BaseType.ENTITY_TYPE: return new RemoteConcept.EntityType(conceptId, BaseType.ENTITY_TYPE, txService);
+      case BaseType.RELATION_TYPE: return new RemoteConcept.RelationType(conceptId, BaseType.RELATION_TYPE, txService);
+      case BaseType.ATTRIBUTE_TYPE: return new RemoteConcept.AttributeType(conceptId, BaseType.ATTRIBUTE_TYPE, txService);
+      case BaseType.ROLE: return new RemoteConcept.Role(conceptId, BaseType.ROLE, txService);
+      case BaseType.RULE: return new RemoteConcept.Rule(conceptId, BaseType.RULE, txService);
+      case BaseType.META_TYPE: return new RemoteConcept.SchemaConcept(conceptId, BaseType.META_TYPE, txService);
+      default:
+        throw "BaseType not recognised.";
+    }
+  }
+
+  static createLocalConcept(grpcConcept) {
+    const baseType = BaseTypeConstants.fromGrpcConcept(grpcConcept);
+    switch (baseType) {
+      case BaseType.ENTITY: return new LocalConcept.Thing(grpcConcept);
+      case BaseType.RELATION: return new LocalConcept.Relation(grpcConcept);
+      case BaseType.ATTRIBUTE: return new LocalConcept.Attribute(grpcConcept);
+      case BaseType.ENTITY_TYPE: return new LocalConcept.EntityType(grpcConcept);
+      case BaseType.RELATION_TYPE: return new LocalConcept.RelationType(grpcConcept);
+      case BaseType.ATTRIBUTE_TYPE: return new LocalConcept.AttributeType(grpcConcept);
+      case BaseType.ROLE: return new LocalConcept.Role(grpcConcept);
+      case BaseType.RULE: return new LocalConcept.Rule(grpcConcept);
+      case BaseType.META_TYPE: return new RemotLocalConcepteConcept.SchemaConcept(grpcConcept);
+      default:
+        throw "BaseType not recognised.";
+    }
   }
 }
 
