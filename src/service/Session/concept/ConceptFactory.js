@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const Methods = require("./Methods");
+const RemoteConcept = require("./RemoteConcept");
 const ConceptGrpcMessages = require("../../../../grpc/nodejs/protocol/session/Concept_pb");
 const BaseType = require("./BaseTypeConstants").baseType;
 
@@ -31,101 +31,28 @@ function ConceptFactory(txService) {
 
 ConceptFactory.prototype.createConcept = function createConcept(grpcConcept) {
   const conceptId = grpcConcept.getId();
-  let state;
   switch (grpcConcept.getBasetype()) {
     case ConceptGrpcMessages.Concept.BASE_TYPE.ENTITY:
-      state = buildState(conceptId, BaseType.ENTITY, this.txService);
-      return Object.create(entityProto, state);
+      return new RemoteConcept.Thing(conceptId, BaseType.ENTITY, this.txService);
     case ConceptGrpcMessages.Concept.BASE_TYPE.RELATION:
-      state = buildState(conceptId, BaseType.RELATION, this.txService);
-      return Object.create(relationProto, state);
+      return new RemoteConcept.Relation(conceptId, BaseType.RELATION, this.txService);
     case ConceptGrpcMessages.Concept.BASE_TYPE.ATTRIBUTE:
-      state = buildState(conceptId, BaseType.ATTRIBUTE, this.txService);
-      return Object.create(attributeProto, state);
+      return new RemoteConcept.Attribute(conceptId, BaseType.ATTRIBUTE, this.txService);
     case ConceptGrpcMessages.Concept.BASE_TYPE.ENTITY_TYPE:
-      state = buildState(conceptId, BaseType.ENTITY_TYPE, this.txService);
-      return Object.create(entityTypeProto, state);
+      return new RemoteConcept.EntityType(conceptId, BaseType.ENTITY_TYPE, this.txService);
     case ConceptGrpcMessages.Concept.BASE_TYPE.RELATION_TYPE:
-      state = buildState(conceptId, BaseType.RELATION_TYPE, this.txService);
-      return Object.create(relationTypeProto, state);
+      return new RemoteConcept.RelationType(conceptId, BaseType.RELATION_TYPE, this.txService);
     case ConceptGrpcMessages.Concept.BASE_TYPE.ATTRIBUTE_TYPE:
-      state = buildState(conceptId, BaseType.ATTRIBUTE_TYPE, this.txService);
-      return Object.create(attributeTypeProto, state);
+      return new RemoteConcept.AttributeType(conceptId, BaseType.ATTRIBUTE_TYPE, this.txService);
     case ConceptGrpcMessages.Concept.BASE_TYPE.ROLE:
-      state = buildState(conceptId, BaseType.ROLE, this.txService);
-      return Object.create(roleProto, state);
+      return new RemoteConcept.Role(conceptId, BaseType.ROLE, this.txService);
     case ConceptGrpcMessages.Concept.BASE_TYPE.RULE:
-      state = buildState(conceptId, BaseType.RULE, this.txService);
-      return Object.create(ruleProto, state);
+      return new RemoteConcept.Rule(conceptId, BaseType.RULE, this.txService);
     case ConceptGrpcMessages.Concept.BASE_TYPE.META_TYPE:
-      state = buildState(conceptId, BaseType.META_TYPE, this.txService);
-      return Object.create(metaschemaProto, state);
+      return new RemoteConcept.SchemaConcept(conceptId, BaseType.META_TYPE, this.txService);
     default:
       throw "BaseType not recognised.";
   }
 }
-
-function buildState(conceptId, baseType, txService) {
-  return {
-    id: { value: conceptId, enumerable: true },
-    baseType: { value: baseType, enumerable: true },
-    txService: { value: txService, enumerable: true }
-  };
-}
-
-const attributeTypeProto = Object.assign({},
-  Methods.concept,
-  Methods.schemaConcept,
-  Methods.type,
-  Methods.attributeType
-);
-
-const relationTypeProto = Object.assign({},
-  Methods.concept,
-  Methods.schemaConcept,
-  Methods.type,
-  Methods.relationType
-);
-
-const entityTypeProto = Object.assign({},
-  Methods.concept,
-  Methods.schemaConcept,
-  Methods.type,
-  Methods.entityType
-);
-
-const relationProto = Object.assign({},
-  Methods.concept,
-  Methods.thing,
-  Methods.relation
-);
-
-const attributeProto = Object.assign({},
-  Methods.concept,
-  Methods.thing,
-  Methods.attribute
-);
-
-const entityProto = Object.assign({},
-  Methods.concept,
-  Methods.thing
-);
-
-const roleProto = Object.assign({},
-  Methods.concept,
-  Methods.schemaConcept,
-  Methods.role
-);
-
-const ruleProto = Object.assign({},
-  Methods.concept,
-  Methods.schemaConcept,
-  Methods.rule
-);
-
-const metaschemaProto = Object.assign({},
-  Methods.concept,
-  Methods.schemaConcept,
-);
 
 module.exports = ConceptFactory;
