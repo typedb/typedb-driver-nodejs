@@ -17,6 +17,8 @@
  * under the License.
  */
 
+module.exports = {} // Fix circular dependency
+
 const Constant = require('./BaseTypeConstants');
 const BaseType = Constant.baseType;
 const ConceptFactory = require('./ConceptFactory');
@@ -57,8 +59,8 @@ class Concept {
         this.baseType = Constant.fromGrpcConcept(grpcConcept);
     }
 
-    asRemote(txService) {
-        ConceptFactory.createRemoteConcept(this.id, this.baseType, txService);
+    asRemote(tx) {
+        return ConceptFactory.createRemoteConcept(this.id, this.baseType, tx.txService);
     }
 
     isSchemaConcept() { return Constant.set.SCHEMA_CONCEPTS.has(this.baseType); }
@@ -87,7 +89,7 @@ class Thing extends Concept {
     constructor(grpcConcept) {
         super(grpcConcept)
         this._inferred = grpcConcept.getInferredRes().getInferred();
-        this._type = ConceptFactory.prototype.createLocalConcept(grpcConcept.getTypeRes().getType());
+        this._type = ConceptFactory.createLocalConcept(grpcConcept.getTypeRes().getType());
     }
 
     isInferred() { return this._inferred; }
@@ -131,7 +133,7 @@ class Role extends SchemaConcept {
 class Rule extends SchemaConcept {
 }
 
-module.exports = {
+Object.assign(module.exports, {
     Concept,
     SchemaConcept,
     Thing,
@@ -143,4 +145,4 @@ module.exports = {
     RelationType,
     Role,
     Rule
-}
+})
