@@ -54,7 +54,7 @@ function convertValue(attrValue) {
 class Concept {
     constructor(grpcConcept) {
         this.id = grpcConcept.getId();
-        this.baseType = Constant.gromGrpcConcept(grpcConcept);
+        this.baseType = Constant.fromGrpcConcept(grpcConcept);
     }
 
     asRemote(txService) {
@@ -76,8 +76,8 @@ class Concept {
 
 class SchemaConcept extends Concept {
     constructor(grpcConcept) {
-        this._implicit = grpcConcept.getIsimplicitRes().getImplicit();
         super(grpcConcept)
+        this._implicit = grpcConcept.getIsimplicitRes().getImplicit();
     }
 
     isImplicit() { return this._implicit; }
@@ -85,9 +85,9 @@ class SchemaConcept extends Concept {
 
 class Thing extends Concept {
     constructor(grpcConcept) {
-        this._inferred = grpcConcept.getInferredRes().getInferred();
-        this._type = ConceptFactory.createLocalConcept(grpcConcept.getTypeRes().getType());
         super(grpcConcept)
+        this._inferred = grpcConcept.getInferredRes().getInferred();
+        this._type = ConceptFactory.prototype.createLocalConcept(grpcConcept.getTypeRes().getType());
     }
 
     isInferred() { return this._inferred; }
@@ -99,8 +99,8 @@ class Type extends SchemaConcept {
 
 class Attribute extends Thing {
     constructor(grpcConcept) {
-        this._value = convertValue(grpcConcept.getValueRes().getValue());
         super(grpcConcept);
+        this._value = convertValue(grpcConcept.getValueRes().getValue());
     }
 
     dataType() { return this.type().dataType(); }
@@ -109,8 +109,8 @@ class Attribute extends Thing {
 
 class AttributeType extends Type {
     constructor(grpcConcept) {
-        this._dataType = convertDataType(grpcConcept.getDatatypeRes().getDatatype());
         super(grpcConcept);
+        this._dataType = convertDataType(grpcConcept.getDatatypeRes().getDatatype());
     }
 
     dataType() { return this._dataType; }
