@@ -100,7 +100,6 @@ class GrpcCommunicator {
     this.stream.on('data', resp => {
       if (!this.pending[0]._onResponse(resp)) {
         this.pending.shift() // Only remove if resolver returns falsy
-        console.log('Iterators on queue: ' + this.penging.length)
       }
     })
 

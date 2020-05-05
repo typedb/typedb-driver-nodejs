@@ -20,8 +20,6 @@
 const RequestBuilder = require("./RequestBuilder");
 const AnswerFactory = require("./AnswerFactory");
 
-const util = require('util')
-
 /**
  * Factory of Iterators, bound to a specific transaction
  */

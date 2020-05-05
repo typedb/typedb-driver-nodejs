@@ -297,7 +297,6 @@ TransactionService.prototype.getValue = function (id) {
 };
 TransactionService.prototype.getOwners = function (id) {
     const iterRequest = RequestBuilder.getOwners(id);
-    console.log(Object.getPrototypeOf(iterRequest))
     return this.iteratorFactory.createIterator(iterRequest,
         (response) => this.respConverter.getOwners(response));
 };
