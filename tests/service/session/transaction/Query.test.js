@@ -63,4 +63,15 @@ describe("Query methods", () => {
     expect(id.type().isImplicit()).toEqual(false);
   })
 
+  it("works with a query greater than the batch size", async () => {
+    inserts = ['insert'];
+    for (let i = 1; i <= 128; ++i) {
+      inserts.push(`\$p${i} isa person, has identifier "${i}";`);
+    }
+    await tx.query(inserts.join(' '));
+
+    const iterator = await tx.query('match $x isa person; get $x;');
+    const results = await iterator.collect();
+    expect(results.length).toEqual(128);
+  })
 });
