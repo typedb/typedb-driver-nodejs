@@ -22,6 +22,7 @@ module.exports = {} // Fix circular dependency
 const Constant = require('./BaseTypeConstants');
 const BaseType = Constant.baseType;
 const ConceptFactory = require('./ConceptFactory');
+const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.DATA_TYPE;
 
 function convertDataType(dataTypeRes) {
     if (dataTypeRes.hasNull()) return null;
@@ -80,9 +81,11 @@ class SchemaConcept extends Concept {
     constructor(grpcConcept) {
         super(grpcConcept)
         this._implicit = grpcConcept.getIsimplicitRes().getImplicit();
+        this._label = grpcConcept.getLabelRes().getLabel();
     }
 
     isImplicit() { return this._implicit; }
+    label() { return this._label; }
 }
 
 class Thing extends Concept {
@@ -103,19 +106,14 @@ class Attribute extends Thing {
     constructor(grpcConcept) {
         super(grpcConcept);
         this._value = convertValue(grpcConcept.getValueRes().getValue());
+        this._dataType = convertDataType(grpcConcept.getDatatypeRes());
     }
 
-    dataType() { return this.type().dataType(); }
+    dataType() { return this._dataType; }
     value() { return this._value; }
 }
 
 class AttributeType extends Type {
-    constructor(grpcConcept) {
-        super(grpcConcept);
-        this._dataType = convertDataType(grpcConcept.getDatatypeRes().getDatatype());
-    }
-
-    dataType() { return this._dataType; }
 }
 
 class EntityType extends Type {
