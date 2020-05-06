@@ -103,6 +103,9 @@ class AttributeType extends Type {
     }
 }
 
+class Entity extends Thing {
+}
+
 class EntityType extends Type {
     create() { return this.txService.addEntity(this.id); }
 }
@@ -138,6 +141,7 @@ module.exports = {
     Type,
     Attribute,
     AttributeType,
+    Entity,
     EntityType,
     Relation,
     RelationType,

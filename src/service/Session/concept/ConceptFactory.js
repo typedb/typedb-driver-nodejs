@@ -44,7 +44,7 @@ const LocalConcept = require("./LocalConcept");
 
 ConceptFactory.createRemoteConcept = function(conceptId, baseType, txService) {
   switch (baseType) {
-    case BaseType.ENTITY: return new RemoteConcept.Thing(conceptId, BaseType.ENTITY, txService);
+    case BaseType.ENTITY: return new RemoteConcept.Entity(conceptId, BaseType.ENTITY, txService);
     case BaseType.RELATION: return new RemoteConcept.Relation(conceptId, BaseType.RELATION, txService);
     case BaseType.ATTRIBUTE: return new RemoteConcept.Attribute(conceptId, BaseType.ATTRIBUTE, txService);
     case BaseType.ENTITY_TYPE: return new RemoteConcept.EntityType(conceptId, BaseType.ENTITY_TYPE, txService);
@@ -61,7 +61,7 @@ ConceptFactory.createRemoteConcept = function(conceptId, baseType, txService) {
 ConceptFactory.createLocalConcept = function(grpcConcept) {
   const baseType = BaseTypeConstants.fromGrpcConcept(grpcConcept);
   switch (baseType) {
-    case BaseType.ENTITY: return new LocalConcept.Thing(grpcConcept);
+    case BaseType.ENTITY: return new LocalConcept.Entity(grpcConcept);
     case BaseType.RELATION: return new LocalConcept.Relation(grpcConcept);
     case BaseType.ATTRIBUTE: return new LocalConcept.Attribute(grpcConcept);
     case BaseType.ENTITY_TYPE: return new LocalConcept.EntityType(grpcConcept);

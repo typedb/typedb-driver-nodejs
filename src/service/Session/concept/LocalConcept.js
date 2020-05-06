@@ -116,6 +116,9 @@ class Attribute extends Thing {
 class AttributeType extends Type {
 }
 
+class Entity extends Thing {
+}
+
 class EntityType extends Type {
 }
 
@@ -138,6 +141,7 @@ Object.assign(module.exports, {
     Type,
     Attribute,
     AttributeType,
+    Entity,
     EntityType,
     Relation,
     RelationType,
