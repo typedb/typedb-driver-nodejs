@@ -66,11 +66,6 @@ TransactionService.prototype.setLabel = function (id, label) {
     const txRequest = RequestBuilder.setLabel(id, label);
     return this.communicator.send(txRequest);
 };
-TransactionService.prototype.isImplicit = function (id) {
-    const txRequest = RequestBuilder.isImplicit(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.isImplicit(resp));
-}
 TransactionService.prototype.subs = function (id) {
     const iterRequest = RequestBuilder.subs(id);
     return this.iteratorFactory.createIterator(iterRequest,

@@ -50,7 +50,6 @@ class SchemaConcept extends Concept {
         if (label) return this.txService.setLabel(this.id, label);
         else return this.txService.getLabel(this.id);
     }
-    isImplicit() { return this.txService.isImplicit(this.id); }
     subs() { return this.txService.subs(this.id); }
     sups() { return this.txService.sups(this.id); }
     sup(type) {

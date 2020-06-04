@@ -22,7 +22,7 @@ module.exports = {} // Fix circular dependency
 const Constant = require('./BaseTypeConstants');
 const BaseType = Constant.baseType;
 const ConceptFactory = require('./ConceptFactory');
-const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.DATA_TYPE;
+const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
 
 function convertDataType(dataTypeRes) {
     if (dataTypeRes.hasNull()) return null;
@@ -33,7 +33,7 @@ function convertDataType(dataTypeRes) {
         case ProtoDataType.LONG: return "Long";
         case ProtoDataType.FLOAT: return "Float";
         case ProtoDataType.DOUBLE: return "Double";
-        case ProtoDataType.DATE: return "Date";
+        case ProtoDataType.DATETIME: return "Datetime";
     }
 }
 
@@ -50,8 +50,8 @@ function convertValue(attrValue) {
         return attrValue.getFloat();
     if (attrValue.hasDouble())
         return attrValue.getDouble();
-    if (attrValue.hasDate())
-        return new Date(attrValue.getDate());
+    if (attrValue.hasDatetime())
+        return new Date(attrValue.getDatetime());
 }
 
 class Concept {
@@ -80,11 +80,9 @@ class Concept {
 class SchemaConcept extends Concept {
     constructor(grpcConcept) {
         super(grpcConcept)
-        this._implicit = grpcConcept.getIsimplicitRes().getImplicit();
         this._label = grpcConcept.getLabelRes().getLabel();
     }
 
-    isImplicit() { return this._implicit; }
     label() { return this._label; }
 }
 

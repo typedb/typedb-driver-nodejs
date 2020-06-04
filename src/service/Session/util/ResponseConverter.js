@@ -30,9 +30,6 @@ class ResponseConverter {
     getLabel(resp) {
         return resp.getConceptmethodRes().getResponse().getSchemaconceptGetlabelRes().getLabel();
     }
-    isImplicit(resp) {
-        return resp.getConceptmethodRes().getResponse().getSchemaconceptIsimplicitRes().getImplicit();
-    }
     subs(resp) {
         const grpcConcept = resp.getConceptmethodIterRes().getResponse().getSchemaconceptSubsIterRes().getSchemaconcept();
         return this.conceptFactory.createConcept(grpcConcept);
@@ -90,7 +87,7 @@ class ResponseConverter {
             case ProtoDataType.LONG: return "Long";
             case ProtoDataType.FLOAT: return "Float";
             case ProtoDataType.DOUBLE: return "Double";
-            case ProtoDataType.DATE: return "Date";
+            case ProtoDataType.DATETIME: return "Datetime";
         }
     }
     getRegex(resp) {
@@ -144,8 +141,8 @@ class ResponseConverter {
             return attrValue.getFloat();
         if (attrValue.hasDouble())
             return attrValue.getDouble();
-        if (attrValue.hasDate())
-            return new Date(attrValue.getDate());
+        if (attrValue.hasDatetime())
+            return new Date(attrValue.getDatetime());
     }
     getOwners(resp) {
         const grpcConcept = resp.getConceptmethodIterRes().getResponse().getAttributeOwnersIterRes().getThing();

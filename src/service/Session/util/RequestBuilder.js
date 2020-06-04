@@ -90,7 +90,7 @@ function setAttributeValueObject(valueObject, dataType, value) {
     case ProtoDataType.LONG: valueObject.setLong(value); break;
     case ProtoDataType.FLOAT: valueObject.setFloat(value); break;
     case ProtoDataType.DOUBLE: valueObject.setDouble(value); break;
-    case ProtoDataType.DATE: valueObject.setDate(value.getTime()); break; // Send epoch time in milliseconds to server
+    case ProtoDataType.DATETIME: valueObject.setDatetime(value.getTime()); break; // Send epoch time in milliseconds to server
     default: throw new Error('DataType of attribute not recognised.');
   }
 }
@@ -117,13 +117,6 @@ const methods = {
     setLabelReq.setLabel(label);
     const conceptMethodReq = new messages.Method.Req();
     conceptMethodReq.setSchemaconceptSetlabelReq(setLabelReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
-  },
-
-  isImplicit: function (conceptId) {
-    const isImplicitReq = new messages.SchemaConcept.IsImplicit.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setSchemaconceptIsimplicitReq(isImplicitReq);
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
 
