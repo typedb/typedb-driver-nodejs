@@ -20,7 +20,7 @@
 const messages = require("../../../../grpc/nodejs/protocol/session/Session_pb");
 const answerMessages = require("../../../../grpc/nodejs/protocol/session/Answer_pb");
 const ConceptsBaseType = require("../concept/BaseTypeConstants").baseType;
-const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.DATA_TYPE;
+const ProtoValueType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
 const INFER_TRUE_MESSAGE = messages.Transaction.Query.INFER.TRUE;
 const INFER_FALSE_MESSAGE = messages.Transaction.Query.INFER.FALSE;
 
@@ -82,16 +82,16 @@ function toGrpcConcept(conceptObject) {
 }
 
 function setAttributeValueObject(valueObject, dataType, value) {
-  if (dataType == null) throw new Error('Datatype of AttributeType not specified.');
+  if (dataType == null) throw new Error('Valuetype of AttributeType not specified.');
   switch (dataType) {
-    case ProtoDataType.STRING: valueObject.setString(value); break;
-    case ProtoDataType.BOOLEAN: valueObject.setBoolean(value); break;
-    case ProtoDataType.INTEGER: valueObject.setInteger(value); break;
-    case ProtoDataType.LONG: valueObject.setLong(value); break;
-    case ProtoDataType.FLOAT: valueObject.setFloat(value); break;
-    case ProtoDataType.DOUBLE: valueObject.setDouble(value); break;
-    case ProtoDataType.DATETIME: valueObject.setDatetime(value.getTime()); break; // Send epoch time in milliseconds to server
-    default: throw new Error('DataType of attribute not recognised.');
+    case ProtoValueType.STRING: valueObject.setString(value); break;
+    case ProtoValueType.BOOLEAN: valueObject.setBoolean(value); break;
+    case ProtoValueType.INTEGER: valueObject.setInteger(value); break;
+    case ProtoValueType.LONG: valueObject.setLong(value); break;
+    case ProtoValueType.FLOAT: valueObject.setFloat(value); break;
+    case ProtoValueType.DOUBLE: valueObject.setDouble(value); break;
+    case ProtoValueType.DATETIME: valueObject.setDatetime(value.getTime()); break; // Send epoch time in milliseconds to server
+    default: throw new Error('ValueType of attribute not recognised.');
   }
 }
 
@@ -383,10 +383,10 @@ const methods = {
     return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
   setAttribute: function (conceptId, attribute) {
-    const thingHasReq = new messages.Thing.Relhas.Req();
+    const thingHasReq = new messages.Thing.Has.Req();
     const conceptMethodReq = new messages.Method.Req();
     thingHasReq.setAttribute(toGrpcConcept(attribute));
-    conceptMethodReq.setThingRelhasReq(thingHasReq);
+    conceptMethodReq.setThingHasReq(thingHasReq);
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
   unsetAttribute: function (conceptId, attribute) {

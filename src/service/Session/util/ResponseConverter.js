@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
+const ProtoValueType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
 
 /**
  * This is used to parse gRPC responses and build type of Concepts or Iterators
