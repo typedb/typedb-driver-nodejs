@@ -61,7 +61,7 @@ module.exports = GraknClient
 /**
  * List of available dataTypes for Grakn Attributes
  */
-module.exports.dataType = {
+module.exports.valueType = {
     STRING: messages.AttributeType.VALUE_TYPE.STRING,
     BOOLEAN: messages.AttributeType.VALUE_TYPE.BOOLEAN,
     INTEGER: messages.AttributeType.VALUE_TYPE.INTEGER,

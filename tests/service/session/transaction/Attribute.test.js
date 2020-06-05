@@ -46,7 +46,7 @@ describe("Attribute methods", () => {
         expect(await doubleAttribute.value()).toBe(11.58);
     });
 
-    it("get value Date", async () => {
+    it("get value Datetime", async () => {
         const dateType = await tx.putAttributeType("birth-date", env.valueType().DATETIME);
         const personType = await tx.putEntityType('person');
         await personType.has(dateType);
@@ -59,7 +59,7 @@ describe("Attribute methods", () => {
         expect(value instanceof Date).toBeTruthy();
     });
 
-    it("set value Date", async () => {
+    it("set value Relation methods assig", async () => {
         const dateType = await tx.putAttributeType("birth-date", env.valueType().DATETIME);
         const testDate = new Date('2018-08-06');
         const date = await dateType.create(testDate);
