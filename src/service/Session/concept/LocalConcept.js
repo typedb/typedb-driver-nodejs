@@ -22,7 +22,7 @@ module.exports = {} // Fix circular dependency
 const Constant = require('./BaseTypeConstants');
 const BaseType = Constant.baseType;
 const ConceptFactory = require('./ConceptFactory');
-const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
+const ProtoValueType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
 
 function convertValueType(valueTypeRes) {
     if (valueTypeRes.hasNull()) return null;

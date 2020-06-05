@@ -48,7 +48,7 @@ describe("Query methods", () => {
     await tx.query('insert $x isa person, has identifier "a";');
     const iterator = await tx.query('match $x isa person, has identifier "a"; delete $x isa person;');
     const response = await iterator.next();
-    expect(response.message()).toEqual("Delete successful.");
+    expect(response.message().includes("Deleted facts")).toEqual(true);
   });
 
   it("returned concepts should have local values", async () => {
@@ -60,7 +60,6 @@ describe("Query methods", () => {
     expect(id.valueType()).toEqual('String');
     expect(id.type().label()).toEqual('identifier');
     expect(id.isInferred()).toEqual(false);
-    expect(id.type().isImplicit()).toEqual(false);
   })
 
   it("works with a query greater than the batch size", async () => {
