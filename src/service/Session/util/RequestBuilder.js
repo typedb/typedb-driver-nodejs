@@ -316,10 +316,10 @@ const methods = {
     conceptMethodReq.setAttributetypeAttributeReq(attributeReq);
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
-  getDataTypeOfType: function (conceptId) {
-    const attributeTypeDataTypeReq = new messages.AttributeType.DataType.Req();
+  getValueTypeOfType: function (conceptId) {
+    const attributeTypeValueTypeReq = new messages.AttributeType.ValueType.Req();
     const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setAttributetypeDatatypeReq(attributeTypeDataTypeReq);
+    conceptMethodReq.setAttributetypeValuetypeReq(attributeTypeValueTypeReq);
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
   getRegex: function (conceptId) {
@@ -487,12 +487,12 @@ const methods = {
     txRequest.setPutruleReq(putMessage);
     return txRequest;
   },
-  putAttributeType: function (label, dataType) {
-    if (dataType == null) throw new Error('Datatype of AttributeType not specified.');
+  putAttributeType: function (label, valueType) {
+    if (valueType == null) throw new Error('Valuetype of AttributeType not specified.');
     const txRequest = new messages.Transaction.Req();
     const putMessage = new messages.Transaction.PutAttributeType.Req();
     putMessage.setLabel(label);
-    putMessage.setDatatype(dataType);
+    putMessage.setValuetype(valueType);
     txRequest.setPutattributetypeReq(putMessage);
     return txRequest;
   },
@@ -551,11 +551,11 @@ const methods = {
     iterMessage.setQueryIterReq(queryMessage);
     return iterMessage;
   },
-  startGetAttributesByValueIter: function (value, dataType, iterOptionsMessage) {
-    if (dataType == null) throw new Error('Datatype of AttributeType not specified.');
+  startGetAttributesByValueIter: function (value, valueType, iterOptionsMessage) {
+    if (valueType == null) throw new Error('Valuetype of AttributeType not specified.');
     const valueObject = new messages.ValueObject();
     const getAttributesReq = new messages.Transaction.GetAttributes.Iter.Req();
-    setAttributeValueObject(valueObject, dataType, value);
+    setAttributeValueObject(valueObject, valueType, value);
     getAttributesReq.setValue(valueObject);
     const iterMessage = new messages.Transaction.Iter.Req();
     iterMessage.setOptions(iterOptionsMessage);

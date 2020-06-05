@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.DATA_TYPE;
+const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
 
 /**
  * This is used to parse gRPC responses and build type of Concepts or Iterators
@@ -78,16 +78,16 @@ class ResponseConverter {
         const grpcConcept = resp.getConceptmethodRes().getResponse().getAttributetypeCreateRes().getAttribute();
         return this.conceptFactory.createConcept(grpcConcept);
     }
-    getDataTypeOfType(resp) {
-        const dataType = resp.getConceptmethodRes().getResponse().getAttributetypeDatatypeRes().getDatatype();
-        switch (dataType) {
-            case ProtoDataType.STRING: return "String";
-            case ProtoDataType.BOOLEAN: return "Boolean";
-            case ProtoDataType.INTEGER: return "Integer";
-            case ProtoDataType.LONG: return "Long";
-            case ProtoDataType.FLOAT: return "Float";
-            case ProtoDataType.DOUBLE: return "Double";
-            case ProtoDataType.DATETIME: return "Datetime";
+    getValueTypeOfType(resp) {
+        const valueType = resp.getConceptmethodRes().getResponse().getAttributetypeValuetypeRes().getValuetype();
+        switch (valueType) {
+            case ProtoValueType.STRING: return "String";
+            case ProtoValueType.BOOLEAN: return "Boolean";
+            case ProtoValueType.INTEGER: return "Integer";
+            case ProtoValueType.LONG: return "Long";
+            case ProtoValueType.FLOAT: return "Float";
+            case ProtoValueType.DOUBLE: return "Double";
+            case ProtoValueType.DATETIME: return "Datetime";
         }
     }
     getRegex(resp) {

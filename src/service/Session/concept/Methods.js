@@ -21,14 +21,14 @@ const Constant = require('./BaseTypeConstants');
 const BaseType = Constant.baseType;
 const methods = {
     attribute: {
-        dataType: function () { return this.txService.getDataTypeOfAttribute(this.id); },
+        valueType: function () { return this.txService.getValueTypeOfAttribute(this.id); },
         value: function () { return this.txService.getValue(this.id); },
         owners: function () { return this.txService.getOwners(this.id); }
     },
     attributeType: {
         create: function (value) { return this.txService.putAttribute(this.id, value); },
         attribute: function (value) { return this.txService.getAttribute(this.id, value); },
-        dataType: function () { return this.txService.getDataTypeOfType(this.id); },
+        valueType: function () { return this.txService.getValueTypeOfType(this.id); },
         regex: function (regex) {
             if (regex) return this.txService.setRegex(this.id, regex);
             else return this.txService.getRegex(this.id);

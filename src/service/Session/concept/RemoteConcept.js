@@ -87,7 +87,7 @@ class Type extends SchemaConcept {
 }
 
 class Attribute extends Thing {
-    dataType() { return this.txService.getDataTypeOfAttribute(this.id); }
+    valueType() { return this.txService.getValueTypeOfAttribute(this.id); }
     value() { return this.txService.getValue(this.id); }
     owners() { return this.txService.getOwners(this.id); }
 }
@@ -95,7 +95,7 @@ class Attribute extends Thing {
 class AttributeType extends Type {
     create(value) { return this.txService.putAttribute(this.id, value); }
     attribute(value) { return this.txService.getAttribute(this.id, value); }
-    dataType() { return this.txService.getDataTypeOfType(this.id); }
+    valueType() { return this.txService.getValueTypeOfType(this.id); }
     regex(regex) {
         if (regex) return this.txService.setRegex(this.id, regex);
         else return this.txService.getRegex(this.id);
