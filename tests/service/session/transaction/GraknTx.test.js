@@ -86,7 +86,7 @@ describe("Transaction methods", () => {
         Array.from(conceptMap.map().entries()).forEach(([variable]) => {
           expect(pattern.includes(`$${variable}`)).toBeTruthy();
         });
-        explanation(explanation.getRule()).not.toBeNull();
+        expect(explanation.getRule()).not.toBeNull();
         hasExplanationCounter += 1;
       } else {
         noExplanationCounter += 1;
