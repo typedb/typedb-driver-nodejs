@@ -47,7 +47,7 @@ class AnswerFactory {
     buildExplanation(grpcExplanation) {
         const res = grpcExplanation.getExplanationRes()
         const grpcListOfConceptMaps = res.getExplanationList();
-        const rule = res.hasRule() ? this.conceptFactory.createConcept(res.getRule()) : nil;
+        const rule = res.hasRule() ? this.conceptFactory.createConcept(res.getRule()) : null;
         const nativeListOfConceptMaps = grpcListOfConceptMaps.map((grpcConceptMap) => this.createConceptmap(grpcConceptMap));
         return {
             getAnswers: () => nativeListOfConceptMaps,
