@@ -47,12 +47,16 @@ function RunConceptMethodIterRequest(conceptId, iterReq) {
   return iterMessage;
 }
 
-function IterOptions(batchSize = 50) {
+function IterOptions(batchSize) {
   const optionsMessage = new messages.Transaction.Iter.Req.Options();
-  if (batchSize > 0) {
-    optionsMessage.setNumber(batchSize);
-  } else {
-    optionsMessage.setAll(true);
+  if (batchSize !== undefined) {
+    if (batchSize == "all") {
+      optionsMessage.setAll(true);
+    } else if (typeof batchSize == "number" && batchSize > 0) {
+      optionsMessage.setNumber(batchSize);
+    } else {
+      throw new Error("Invalid batchSize parameter: " + batchSize);
+    }
   }
   return optionsMessage;
 }
@@ -542,12 +546,17 @@ const methods = {
     const iterMessage = new messages.Transaction.Iter.Req();
     iterMessage.setOptions(iterOptionsMessage);
     const queryMessage = new messages.Transaction.Query.Iter.Req();
+    const optionsMessage = new messages.Transaction.Query.Options();
     queryMessage.setQuery(query);
     if (options) {
       if ('infer' in options) {
-        queryMessage.setInfer(options.infer ? INFER_TRUE_MESSAGE : INFER_FALSE_MESSAGE);
+        optionsMessage.setInfer(options.infer);
+      }
+      if ('explain' in options) {
+        optionsMessage.setExplain(options.explain);
       }
     }
+    queryMessage.setOptions(optionsMessage);
     iterMessage.setQueryIterReq(queryMessage);
     return iterMessage;
   },
