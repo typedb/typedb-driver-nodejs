@@ -357,7 +357,7 @@ TransactionService.prototype.commit = function () {
 }
 
 TransactionService.prototype.query = function (query, options) {
-    const queryIter = RequestBuilder.startQueryIter(query, options, RequestBuilder.iterOptions(options.batchSize));
+    const queryIter = RequestBuilder.startQueryIter(query, options, RequestBuilder.iterOptions(options ? options.batchSize : undefined));
     return this.iteratorFactory.createQueryIterator(queryIter);
 };
 
