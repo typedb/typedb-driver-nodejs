@@ -21,8 +21,6 @@ const messages = require("../../../../grpc/nodejs/protocol/session/Session_pb");
 const answerMessages = require("../../../../grpc/nodejs/protocol/session/Answer_pb");
 const ConceptsBaseType = require("../concept/BaseTypeConstants").baseType;
 const ProtoValueType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
-const INFER_TRUE_MESSAGE = messages.Transaction.Query.INFER.TRUE;
-const INFER_FALSE_MESSAGE = messages.Transaction.Query.INFER.FALSE;
 
 // Helper functions
 
@@ -550,10 +548,10 @@ const methods = {
     queryMessage.setQuery(query);
     if (options) {
       if ('infer' in options) {
-        optionsMessage.setInfer(options.infer);
+        optionsMessage.setInferflag(options.infer);
       }
       if ('explain' in options) {
-        optionsMessage.setExplain(options.explain);
+        optionsMessage.setExplainflag(options.explain);
       }
     }
     queryMessage.setOptions(optionsMessage);
