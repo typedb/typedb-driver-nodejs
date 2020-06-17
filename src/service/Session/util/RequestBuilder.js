@@ -548,10 +548,10 @@ const methods = {
     queryMessage.setQuery(query);
     if (options) {
       if ('infer' in options) {
-        optionsMessage.setInfer(options.infer);
+        optionsMessage.setInferFlag(options.infer);
       }
       if ('explain' in options) {
-        optionsMessage.setExplain(options.explain);
+        optionsMessage.setExplainFlag(options.explain);
       }
     }
     queryMessage.setOptions(optionsMessage);
