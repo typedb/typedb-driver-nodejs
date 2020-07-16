@@ -80,7 +80,6 @@ NODEJS_TEST_DEPENDENCIES = [
     "@npm//google-protobuf",
     "@npm//grpc",
     "@npm//tmp",
-    "@npm//tar",
     "@npm//properties-reader",
     "@npm//jasmine-reporters",
 ]

@@ -21,6 +21,9 @@ const DEFAULT_URI = "localhost:48555";
 const INTEGRATION_TESTS_TIMEOUT = 70000;
 const TEST_KEYSPACE = 'testkeyspace';
 
+const GRAKN_ARTIFACT_PATH_FILE_PATH = 'grakn-artifact-path.txt';
+const GRAKN_DIRECTORY_NAME = 'grakn-core-all-linux'
+
 const childProcess = require('child_process');
 const fs = require('fs-extra');
 const path = require('path');
@@ -34,6 +37,7 @@ const graknClient = new GraknClient(DEFAULT_URI);
 
 let session;
 let tempRootDir;
+let graknExecutablePath;
 let graknRootDir;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = INTEGRATION_TESTS_TIMEOUT;
@@ -100,10 +104,10 @@ module.exports = {
         tempRootDir = tmpobj.name;
         tmpobj.removeCallback(); // disable automatic cleanup
 
-        graknArchivePath = fs.readFileSync(path.resolve('.', 'grakn-artifact-path.txt'), 'utf8').trim();
-        graknRootDir = path.join('.', 'grakn-core-all-linux');
+        graknArchivePath = fs.readFileSync(path.resolve('.', GRAKN_ARTIFACT_PATH_FILE_PATH), 'utf8').trim();
+        graknRootDir = path.join('.', GRAKN_DIRECTORY_NAME);
         fs.mkdirsSync(graknRootDir);
-        
+
         childProcess.execSync(`tar -xzf ${graknArchivePath} -C ${graknRootDir} --strip-components=2`, { stdio: 'inherit' });
 
         graknExecutablePath = path.join(graknRootDir, 'grakn');
