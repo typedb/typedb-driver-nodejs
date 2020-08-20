@@ -23,14 +23,13 @@ exports_files([
     "RELEASE_TEMPLATE.md",
 ])
 
-load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package")
-load("@npm_bazel_jasmine//:index.bzl", "jasmine_node_test")
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm", "nodejs_binary")
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
 load("@graknlabs_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "artifact_extractor")
 
-
-npm_package(
+pkg_npm(
     name = "client-nodejs",
     srcs = glob([
        "package.json",
@@ -64,7 +63,6 @@ deploy_npm(
     target = ":assemble-npm",
     deployment_properties = "@graknlabs_dependencies//distribution:deployment.properties",
 )
-
 
 deploy_github(
     name = "deploy-github",
