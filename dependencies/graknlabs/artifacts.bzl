@@ -25,5 +25,6 @@ def graknlabs_grakn_core_artifact():
         artifact_name = "grakn-core-all-linux-{version}.tar.gz",
         commit_source = deployment["artifact.snapshot"],
         tag_source = deployment["artifact.release"],
+        # TODO - client-nodejs is broken with 1.8.1, as current deps (eg. protocol) are preparing for Grakn 2.0
         tag = "1.8.1",
     )

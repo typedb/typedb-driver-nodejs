@@ -40,6 +40,7 @@ com_github_grpc_grpc_deps()
 load("@stackb_rules_proto//node:deps.bzl", "node_grpc_compile")
 node_grpc_compile()
 
+
 # Load Java
 load("@graknlabs_dependencies//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
@@ -51,6 +52,9 @@ kotlin_deps()
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
 kotlin_repositories()
 kt_register_toolchains()
+
+# Load Kotlin Maven Dependencies
+load("@graknlabs_dependencies//dependencies/maven:artifacts.bzl", graknlabs_dependencies_artifacts = "artifacts")
 
 # Load NodeJS
 load("@graknlabs_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
@@ -101,10 +105,25 @@ graknlabs_grakn_core_artifact()
 #################################
 # Load @graknlabs_client_nodejs #
 #################################
-load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
 node_repositories(package_json = ["//:package.json"])
 yarn_install(
     name = "npm",
     package_json = "//:package.json",
     yarn_lock = "//:yarn.lock"
+)
+
+###############
+# Load @maven #
+###############
+maven(
+   graknlabs_dependencies_artifacts
+)
+
+################################################
+# Create @graknlabs_client_java_workspace_refs #
+################################################
+load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
+workspace_refs(
+    name = "graknlabs_client_nodejs_workspace_refs"
 )
