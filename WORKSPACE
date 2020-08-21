@@ -73,8 +73,8 @@ graknlabs_dependencies_ci_pip_install()
 #####################################################################
 # Load @graknlabs_bazel_distribution (from @graknlabs_dependencies) #
 #####################################################################
-load("@graknlabs_dependencies//dependencies/graknlabs:repositories.bzl", distribution_deps = "graknlabs_bazel_distribution")
-distribution_deps()
+load("@graknlabs_dependencies//dependencies/graknlabs:repositories.bzl", "graknlabs_bazel_distribution")
+graknlabs_bazel_distribution()
 
 load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")
 tcnksm_ghr()
@@ -101,7 +101,7 @@ graknlabs_grakn_core_artifact()
 #################################
 # Load @graknlabs_client_nodejs #
 #################################
-load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 node_repositories(package_json = ["//:package.json"])
 yarn_install(
     name = "npm",
