@@ -55,7 +55,8 @@ jobs:
       - install-bazel
       - run: bazel build //ex:assemble-ex
       - run-bazel:
-          bazel build //ex:assemble-ex
+          command: bazel build //ex:assemble-ex
+
   build:
     machine: 
       image: ubuntu-1604:201903-01
