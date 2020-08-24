@@ -53,8 +53,9 @@ jobs:
       - checkout
       - install-bazel
       - install-artifact-credentials
-      - run-bazel:
-          command: bazel build //...
+#      - run-bazel:
+#          command: bazel build //...
+      - run: bazel build //...
 
   test:
     machine: 
