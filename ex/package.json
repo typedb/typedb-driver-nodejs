@@ -1,0 +1,10 @@
+{
+  "name": "reproducible-example",
+  "version": "0.0.0-development",
+  "description": "Test npm packaging",
+  "main": "test.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}

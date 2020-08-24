@@ -32,6 +32,7 @@ load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_deps")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
+
 pkg_npm(
     name = "client-nodejs",
     srcs = glob([
