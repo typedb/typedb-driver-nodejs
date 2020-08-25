@@ -76,8 +76,7 @@ graknlabs_dependencies_ci_pip_install()
 #####################################################################
 # Load @graknlabs_bazel_distribution (from @graknlabs_dependencies) #
 #####################################################################
-#load("@graknlabs_dependencies//dependencies/graknlabs:repositories.bzl", "graknlabs_bazel_distribution")
-load("//dependencies/graknlabs:repositories.bzl", "graknlabs_bazel_distribution")
+load("@graknlabs_dependencies//dependencies/graknlabs:repositories.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
 
 load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")

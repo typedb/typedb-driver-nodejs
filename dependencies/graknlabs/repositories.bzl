@@ -21,18 +21,7 @@ def graknlabs_dependencies():
     git_repository(
         name = "graknlabs_dependencies",
         remote = "https://github.com/graknlabs/dependencies",
-        commit = "650b270fe125a2eccd70575003feafb136897d51", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
-    )
-
-def graknlabs_bazel_distribution():
-#    native.local_repository(
-#        name = "graknlabs_bazel_distribution",
-#        path = "../bazel-distribution",
-#    )
-    git_repository(
-           name = "graknlabs_bazel_distribution",
-           remote = "https://github.com/flyingsilverfin/bazel-distribution",
-           commit = "e5253b0fe556b128c931127b0ae926e42fef0461", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
+        commit = "0b68f87dda933e75dbe6b4c2e79c0ba59c4f7306", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
     )
 
 def graknlabs_protocol():
