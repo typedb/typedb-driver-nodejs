@@ -65,8 +65,7 @@ jobs:
       - checkout
       - install-bazel
       - install-artifact-credentials
-#      - run-bazel:
-#          command: bazel build //...
+      # NOTE: pkg_npm is not executable on RBE as it generates directories
       - run: bazel build //...
 
   test:
