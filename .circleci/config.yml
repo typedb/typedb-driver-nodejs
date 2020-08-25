@@ -64,8 +64,7 @@ jobs:
       - checkout
       - install-bazel
       - install-artifact-credentials
-      - run-bazel:
-          command: bazel test //:test-integration --test_output=streamed
+      - run: bazel test //:test-integration --test_output=streamed
 
   deploy-npm-snapshot:
     machine: 
