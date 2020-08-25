@@ -204,59 +204,56 @@ jobs:
 
 workflows:
   client-nodejs:
-    jobs:
-      - test-example
+      - build:
+          filters:
+            branches:
+              ignore: client-nodejs-release-branch
+      - test:
+          filters:
+            branches:
+              ignore: client-nodejs-release-branch
+      - deploy-npm-snapshot:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
+            - test
+      - test-deployment:
+          filters:
+            branches:
+              only: master
+          requires:
+            - deploy-npm-snapshot
+      - release-approval:
+          filters:
+            branches:
+              only: master
+          requires:
+            - test-deployment
 
-#      - build:
-#          filters:
-#            branches:
-#              ignore: client-nodejs-release-branch
-#      - test:
-#          filters:
-#            branches:
-#              ignore: client-nodejs-release-branch
-#      - deploy-npm-snapshot:
-#          filters:
-#            branches:
-#              only: master
-#          requires:
-#            - build
-#            - test
-#      - test-deployment:
-#          filters:
-#            branches:
-#              only: master
-#          requires:
-#            - deploy-npm-snapshot
-#      - release-approval:
-#          filters:
-#            branches:
-#              only: master
-#          requires:
-#            - test-deployment
-#
-#  client-nodejs-release:
-#    jobs:
-#      - deploy-github:
-#          filters:
-#            branches:
-#              only: client-nodejs-release-branch
-#      - deploy-approval:
-#          type: approval
-#          requires:
-#            - deploy-github
-#          filters:
-#            branches:
-#              only: client-nodejs-release-branch
-#      - deploy-npm-release:
-#          requires:
-#            - deploy-approval
-#          filters:
-#            branches:
-#              only: client-nodejs-release-branch
-#      - release-cleanup:
-#          filters:
-#            branches:
-#              only: client-nodejs-release-branch
-#          requires:
-#            - deploy-npm-release
+  client-nodejs-release:
+    jobs:
+      - deploy-github:
+          filters:
+            branches:
+              only: client-nodejs-release-branch
+      - deploy-approval:
+          type: approval
+          requires:
+            - deploy-github
+          filters:
+            branches:
+              only: client-nodejs-release-branch
+      - deploy-npm-release:
+          requires:
+            - deploy-approval
+          filters:
+            branches:
+              only: client-nodejs-release-branch
+      - release-cleanup:
+          filters:
+            branches:
+              only: client-nodejs-release-branch
+          requires:
+            - deploy-npm-release
