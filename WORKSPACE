@@ -92,23 +92,19 @@ graknlabs_bazel_distribution_pip_install()
 load("@graknlabs_bazel_distribution//github:deps.bzl", github_deps = "deps")
 github_deps()
 
-############################
-# Load @graknlabs_protocol #
-############################
+################################
+# Load @graknlabs dependencies #
+################################
+
+# Load repositories
 load("//dependencies/graknlabs:repositories.bzl", "graknlabs_protocol")
 graknlabs_protocol()
 
-#######################################
-# Load @graknlabs_grakn_core_artifact #
-#######################################
-
+# Load artifacts
 load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifact")
 graknlabs_grakn_core_artifact()
 
-#################################
-# Load @graknlabs_client_nodejs #
-#################################
-
+# Load package.json
 yarn_install(
     name = "npm",
     package_json = "//:package.json",
