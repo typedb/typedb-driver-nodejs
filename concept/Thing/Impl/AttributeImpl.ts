@@ -103,10 +103,47 @@ abstract class RemoteAttributeImpl<T> extends RemoteThingImpl implements RemoteA
         return undefined
     }
 
-    getType(): AttributeTypeImpl {
+    getType(): this {
         return super.getType().asAttributeType()
     }
 
     abstract getValue(): T;
 
+}
+
+class BooleanAttributeImpl extends AttributeImpl<Boolean> implements Attribute<Boolean> {
+    private value: boolean;
+
+    constructor(iid: string, value: boolean) {
+        super(iid);
+        this.value = value;
+    }
+
+    asRemote(transaction: Transaction): Remote<Concept> {
+        return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this.value);
+    }
+
+    getValue(): Boolean {
+        return this.value;
+    }
+}
+
+class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements RemoteBooleanAttribute {
+    private value: boolean;
+    constructor(transaction: Transaction, iid: string, value: boolean){
+        super(transaction, iid);
+        this.value = value;
+    }
+
+    getValue(): boolean {
+        return this.value;
+    }
+
+    of(transaction: Transaction, thingProto: ThingConceptProto) {
+        return new RemoteBooleanAttributeImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getBoolean());
+    }
+
+    getType(): BooleanAttributeTypeImpl {
+        return super.getType().asAttributeType()
+    }
 }
