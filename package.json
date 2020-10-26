@@ -2,7 +2,8 @@
   "name": "grakn-client",
   "version": "0.0.0-development",
   "description": "Grakn Client for Node.js",
-  "main": "src/GraknClient.js",
+  "main": "dist/GraknClient.js",
+  "types": "dist/GraknClient.d.ts",
   "author": "Grakn Labs",
   "license": "Apache-2.0",
   "homepage": "https://grakn.ai",
@@ -12,7 +13,8 @@
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
-    "grpc": "^1.24.3"
+    "grpc": "^1.24.3",
+    "tsc": "^1.20150623.0"
   },
   "devDependencies": {
     "@bazel/jasmine": "2.0.3",
@@ -22,5 +24,6 @@
     "jasmine-reporters": "^2.3.2",
     "properties-reader": "^0.3.1",
     "tmp": "0.1.0"
-  }
+  },
+  "prepublish": "tsc"
 }

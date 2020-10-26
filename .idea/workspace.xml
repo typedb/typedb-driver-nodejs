@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/GraknClient.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/concept/Concept.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/concept/Thing/Attribute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/concept/Thing/Impl/AttributeImpl.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/concept/Thing/Impl/ThingImpl.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/concept/Thing/Thing.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GraknClient.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Session.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Transaction.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Keyspace/KeyspaceService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/SessionService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/TransactionService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/concept/BaseTypeConstants.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/concept/ConceptFactory.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/concept/LocalConcept.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/concept/Methods.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/concept/RemoteConcept.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/util/AnswerFactory.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/util/GrpcCommunicator.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/util/GrpcIteratorFactory.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/util/RequestBuilder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/Session/util/ResponseConverter.js" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="ProjectId" id="1jBJk1E3VsLQIhweDBBzmFpCYEZ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.tslint" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/concept" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="" />
+      <created>1603271690355</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1603271690355</updated>
+      <workItem from="1603271694838" duration="3125000" />
+      <workItem from="1603279710648" duration="2000" />
+      <workItem from="1603358099826" duration="35326000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="475" y="461" key="#com.intellij.ide.util.MemberChooser" timestamp="1603730634338">
+      <screen x="0" y="23" width="2560" height="1417" />
+    </state>
+    <state x="475" y="461" key="#com.intellij.ide.util.MemberChooser/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603730634338" />
+    <state x="475" y="461" key="#com.intellij.ide.util.MemberChooser/2560.23.2560.1417/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603717018678" />
+    <state x="450" y="486" key="FileChooserDialogImpl" timestamp="1603465852843">
+      <screen x="0" y="23" width="2560" height="1417" />
+    </state>
+    <state x="450" y="486" key="FileChooserDialogImpl/2560.23.2560.1417/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603465852843" />
+    <state x="922" y="315" key="SettingsEditor" timestamp="1603720358573">
+      <screen x="0" y="23" width="2560" height="1417" />
+    </state>
+    <state x="922" y="315" key="SettingsEditor/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603720358573" />
+  </component>
+</project>
