@@ -2,6 +2,9 @@ class Transaction {
 
 }
 
+class QueryIterator {
+}
+
 interface Concept {
     asType(): Type;
     asThing(): Thing;

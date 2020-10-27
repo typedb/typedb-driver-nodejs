@@ -114,22 +114,22 @@ class RemoteThingImpl implements RemoteThing, Thing {
         return undefined;
     }
 
-    getHas(onlyKey: boolean): ReadableStream;
-    getHas(attributeType: BooleanAttributeType): ReadableStream;
-    getHas(attributeType: LongAttributeType): ReadableStream;
-    getHas(attributeType: DoubleAttributeType): ReadableStream;
-    getHas(attributeType: StringAttributeType): ReadableStream;
-    getHas(attributeType: DateTimeAttributeType): ReadableStream;
-    getHas(attributeTypes: AttributeType[]): ReadableStream;
+    getHas(onlyKey: boolean): QueryIterator;
+    getHas(attributeType: BooleanAttributeType): QueryIterator;
+    getHas(attributeType: LongAttributeType): QueryIterator;
+    getHas(attributeType: DoubleAttributeType): QueryIterator;
+    getHas(attributeType: StringAttributeType): QueryIterator;
+    getHas(attributeType: DateTimeAttributeType): QueryIterator;
+    getHas(attributeTypes: AttributeType[]): QueryIterator;
     getHas(onlyKey: boolean | BooleanAttributeType | LongAttributeType | DoubleAttributeType | StringAttributeType | DateTimeAttributeType | AttributeType[]): ReadableStream {
         return undefined;
     }
 
-    getPlays(): ReadableStream {
+    getPlays(): QueryIterator {
         return undefined;
     }
 
-    getRelations(roleTypes: RoleType[]): ReadableStream {
+    getRelations(roleTypes: RoleType[]): QueryIterator {
         return undefined;
     }
 

@@ -11,7 +11,7 @@ interface Attribute<T> extends Thing {
 
 
 interface RemoteAttribute<T> extends Remote<Attribute<T>>, Attribute<T> {
-
+    getType(): AttributeType;
 }
 
 interface BooleanAttribute extends Attribute<boolean> {

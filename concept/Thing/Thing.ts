@@ -13,14 +13,14 @@ interface RemoteThing extends Remote<Thing>, Thing {
     setHas(attribute: Attribute<any>): void;
     unsetHas(attribute: Attribute<any>): void;
 
-    getHas(onlyKey: boolean): ReadableStream;
-    getHas(attributeType: BooleanAttributeType): ReadableStream;
-    getHas(attributeType: LongAttributeType): ReadableStream;
-    getHas(attributeType: DoubleAttributeType): ReadableStream;
-    getHas(attributeType: StringAttributeType): ReadableStream;
-    getHas(attributeType: DateTimeAttributeType): ReadableStream;
-    getHas(attributeTypes: AttributeType[]): ReadableStream;
-    getPlays(): ReadableStream;
-    getRelations(roleTypes: RoleType[]): ReadableStream;
+    getHas(onlyKey: boolean): QueryIterator;
+    getHas(attributeType: BooleanAttributeType): QueryIterator;
+    getHas(attributeType: LongAttributeType): QueryIterator;
+    getHas(attributeType: DoubleAttributeType): QueryIterator;
+    getHas(attributeType: StringAttributeType): QueryIterator;
+    getHas(attributeType: DateTimeAttributeType): QueryIterator;
+    getHas(attributeTypes: AttributeType[]): QueryIterator;
+    getPlays(): QueryIterator;
+    getRelations(roleTypes: RoleType[]): QueryIterator;
 
 }
