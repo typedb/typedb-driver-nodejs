@@ -22,7 +22,7 @@ class RemoteEntityImpl extends RemoteThingImpl implements EntityImpl {
     }
 
     of(transaction: Transaction, thingProto: ThingConceptProto) {
-        return new RemoteEntityImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray());
+        return new RemoteEntityImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
     }
 
     public asRemote(transaction: Transaction) {

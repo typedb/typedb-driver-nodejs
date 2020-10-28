@@ -4,7 +4,7 @@ class RelationImpl extends ThingImpl implements Relation {
     }
 
     asRemote(transaction: Transaction): Remote<Concept> {
-        return RemoteRelationImpl(transaction, this.getIID());
+        return new RemoteRelationImpl(transaction, this.getIID());
     }
 
     of(thingProto: ThingConceptProto): RelationImpl {
@@ -22,7 +22,7 @@ class RemoteRelationImpl extends RemoteThingImpl implements RelationImpl {
     }
 
     of(transaction: Transaction, thingProto: ThingConceptProto) {
-        return new RemoteRelationImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray());
+        return new RemoteRelationImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
     }
 
     public asRemote(transaction: Transaction) {
