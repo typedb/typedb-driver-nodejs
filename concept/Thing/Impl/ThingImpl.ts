@@ -1,20 +1,6 @@
 abstract class ThingImpl implements Thing {
     readonly iid: string;
 
-    of(thingProto: ThingConceptProto): ThingImpl {
-        switch (thingProto.getEncoding()) {
-            case ENTITY:
-                return EntityImpl.of(thingProto);
-            case RELATION:
-                return RelationImpl.of(thingProto);
-            case ATTRIBUTE:
-                return AttributeImpl.of(thingProto);
-            case UNRECOGNIZED:
-            default:
-                throw "Bad Encoding"
-        }
-    }
-
     constructor (iid: string) {
         if (!iid) {
             throw "IID Missing"
@@ -22,7 +8,7 @@ abstract class ThingImpl implements Thing {
         this.iid = iid;
     }
 
-    asAttribute(): Attribute<any> {
+    asAttribute(): Attribute<AttributeValueType> {
         throw "Invalid cast to Attribute";
     }
 
@@ -46,14 +32,14 @@ abstract class ThingImpl implements Thing {
         return this.iid;
     }
 
-    isRemote(): Boolean {
+    isRemote(): boolean {
         return false;
     }
 
-    abstract asRemote(transaction: Transaction): Remote<Concept>
+    abstract asRemote(transaction: Transaction): RemoteThing;
 }
 
-class RemoteThingImpl implements RemoteThing, Thing {
+class RemoteThingImpl implements RemoteThing {
     readonly iid: string;
     private transaction: Transaction;
 
@@ -64,35 +50,36 @@ class RemoteThingImpl implements RemoteThing, Thing {
         this.transaction = transaction;
     }
 
-    getType(): void {
-        throw new Error("Method not implemented.");
-    }
-    setHas(attribute: Attribute<any>): void {
-        throw new Error("Method not implemented.");
+    getType() {
+        return new ThingTypeImpl();
     }
 
-    asAttribute(): Attribute<any> {
+    setHas(attribute: Attribute<AttributeValueType>): void {
         return undefined;
+    }
+
+    asAttribute(): Attribute<AttributeValueType> {
+        throw "Invalid cast to Attribute";
     }
 
     asEntity(): Entity {
-        return undefined;
+        throw "Invalid cast to Entity";
     }
 
     asRelation(): Relation {
-        return undefined;
+        throw "Invalid cast to Relation"
     }
 
-    asRemote(transaction: Transaction): Remote<Concept> {
-        return undefined;
+    asRemote(transaction: Transaction) {
+        return this;
     }
 
     asThing(): Thing {
-        return undefined;
+        return this;
     }
 
     asType(): Type {
-        return undefined;
+        throw "Invalid cast to Type";
     }
 
     delete(): void {
@@ -106,12 +93,8 @@ class RemoteThingImpl implements RemoteThing, Thing {
         return false;
     }
 
-    isRemote(): Boolean {
-        return false;
-    }
-
-    of(transaction: Transaction, concept: Thing): this {
-        return undefined;
+    isRemote(): boolean {
+        return true;
     }
 
     getHas(onlyKey: boolean): QueryIterator;

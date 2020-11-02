@@ -1,7 +1,7 @@
 interface ThingType extends Type {
 }
 
-interface RemoteThingType extends Type, Remote<Type> {
+interface RemoteThingType extends Merge<Remote<ThingType>, ThingType> {
     getSupertype(): ThingType;
 
     setLabel(label: string): void;

@@ -1,27 +1,9 @@
-abstract class AttributeImpl<T> extends ThingImpl implements Attribute<T> {
+abstract class AttributeImpl<T extends AttributeValueType> extends ThingImpl implements Attribute<T> {
     constructor(iid: string) {
         super(iid);
     }
 
-    of(thingProto: ThingConceptProto): ThingImpl {
-        switch (thingProto.getValueType()) {
-            case BOOLEAN:
-                return BooleanAttributeImpl.of(thingProto);
-            case LONG:
-                return LongAttributeImpl.of(thingProto);
-            case DOUBLE:
-                return DoubleAttributeImpl.of(thingProto);
-            case STRING:
-                return StringAttributeImpl.of(thingProto);
-            case DATETIME:
-                return DateTimeAttributeImpl.of(thingProto);
-            case UNRECOGNIZED:
-            default:
-                throw "Bad Value Type"
-        }
-    }
-
-    asAttribute() {
+    asAttribute(): Attribute<T> {
         return this;
     }
 
@@ -48,27 +30,9 @@ abstract class AttributeImpl<T> extends ThingImpl implements Attribute<T> {
     abstract getValue(): T
 }
 
-abstract class RemoteAttributeImpl<T> extends RemoteThingImpl implements RemoteAttribute<T> {
+abstract class RemoteAttributeImpl<T extends AttributeValueType> extends RemoteThingImpl implements Attribute<T>, RemoteAttribute<T> {
     constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
-    }
-
-    of(transaction: Transaction, thingProto: ThingConceptProto): RemoteAttributeImpl<any> {
-        switch (thingProto.getValueType()) {
-            case BOOLEAN:
-                return RemoteBooleanAttributeImpl.of(transaction, thingProto);
-            case LONG:
-                return RemoteLongAttributeImpl.of(transaction, thingProto);
-            case DOUBLE:
-                return RemoteDoubleAttributeImpl.of(transaction, thingProto);
-            case STRING:
-                return RemoteStringAttributeImpl.of(transaction, thingProto);
-            case DATETIME:
-                return RemoteDateTimeAttributeImpl.of(transaction, thingProto);
-            case UNRECOGNIZED:
-            default:
-                throw "Bad Value Type"
-        }
     }
 
     asAttribute() {
@@ -95,11 +59,11 @@ abstract class RemoteAttributeImpl<T> extends RemoteThingImpl implements RemoteA
         throw "Invalid cast to String";
     }
 
-    getOwners(): ReadableStream {
+    getOwners(): QueryIterator {
         return undefined
     }
 
-    getOwners(ownerType: ThingType): ReadableStream {
+    getOwners(ownerType: ThingType): QueryIterator {
         return undefined
     }
 
@@ -111,7 +75,7 @@ abstract class RemoteAttributeImpl<T> extends RemoteThingImpl implements RemoteA
 
 }
 
-class BooleanAttributeImpl extends AttributeImpl<boolean> implements Attribute<Boolean> {
+class BooleanAttributeImpl extends AttributeImpl<boolean> implements BooleanAttribute {
     private value: boolean;
 
     constructor(iid: string, value: boolean) {
@@ -119,7 +83,7 @@ class BooleanAttributeImpl extends AttributeImpl<boolean> implements Attribute<B
         this.value = value;
     }
 
-    asRemote(transaction: Transaction): Remote<Concept> {
+    asRemote(transaction: Transaction) {
         return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this.value);
     }
 
@@ -130,13 +94,9 @@ class BooleanAttributeImpl extends AttributeImpl<boolean> implements Attribute<B
     asBoolean() {
         return this;
     }
-
-    of(thingProto: ThingConceptProto) {
-        return new BooleanAttributeImpl(bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getBoolean());
-    }
 }
 
-class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements RemoteBooleanAttribute {
+class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements Merge<RemoteBooleanAttribute, BooleanAttribute> {
     private value: boolean;
 
     constructor(transaction: Transaction, iid: string, value: boolean){
@@ -148,10 +108,6 @@ class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements
         return this.value;
     }
 
-    of(transaction: Transaction, thingProto: ThingConceptProto) {
-        return new RemoteBooleanAttributeImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getBoolean());
-    }
-
     getType(): BooleanAttributeTypeImpl {
         return super.getType().asAttributeType()
     }
@@ -161,7 +117,7 @@ class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements
     }
 }
 
-class LongAttributeImpl extends AttributeImpl<number> implements Attribute<number> {
+class LongAttributeImpl extends AttributeImpl<number> implements LongAttribute {
     private value: number;
 
     constructor(iid: string, value: number) {
@@ -180,13 +136,9 @@ class LongAttributeImpl extends AttributeImpl<number> implements Attribute<numbe
     asLong() {
         return this;
     }
-
-    of(thingProto: ThingConceptProto) {
-        return new LongAttributeImpl(bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getLong());
-    }
 }
 
-class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> implements RemoteLongAttribute {
+class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteLongAttribute, LongAttribute> {
     private value: number;
 
     constructor(transaction: Transaction, iid: string, value: number){
@@ -196,10 +148,6 @@ class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> implements Rem
 
     getValue(): number {
         return this.value;
-    }
-
-    of(transaction: Transaction, thingProto: ThingConceptProto) {
-        return new RemoteLongAttributeImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getLong());
     }
 
     getType(): LongAttributeTypeImpl {
@@ -230,13 +178,9 @@ class StringAttributeImpl extends AttributeImpl<string> implements Attribute<str
     asString() {
         return this;
     }
-
-    of(thingProto: ThingConceptProto) {
-        return new StringAttributeImpl(bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getString());
-    }
 }
 
-class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements RemoteStringAttribute {
+class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements Merge<RemoteStringAttribute, StringAttribute> {
     private value: string;
 
     constructor(transaction: Transaction, iid: string, value: string){
@@ -246,10 +190,6 @@ class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements R
 
     getValue(): string {
         return this.value;
-    }
-
-    of(transaction: Transaction, thingProto: ThingConceptProto) {
-        return new RemoteStringAttributeImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getString());
     }
 
     getType(): StringAttributeTypeImpl {
@@ -280,27 +220,19 @@ class DoubleAttributeImpl extends AttributeImpl<number> implements Attribute<num
     asDouble() {
         return this;
     }
-
-    of(thingProto: ThingConceptProto) {
-        return new DoubleAttributeImpl(bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getDouble());
-    }
 }
 
 
-class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> implements RemoteDoubleAttribute {
+class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteDoubleAttribute, DoubleAttribute> {
     private value: number;
 
-    constructor(transaction: Transaction, iid: string, value: string){
+    constructor(transaction: Transaction, iid: string, value: number){
         super(transaction, iid);
         this.value = value;
     }
 
     getValue(): number {
         return this.value;
-    }
-
-    of(transaction: Transaction, thingProto: ThingConceptProto) {
-        return new RemoteDoubleAttributeImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getDouble());
     }
 
     getType(): DoubleAttributeTypeImpl {
@@ -313,7 +245,7 @@ class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> implements R
 }
 
 
-class DateTimeAttributeImpl extends AttributeImpl<Date> implements Attribute<Date> {
+class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTimeAttribute {
     private value: Date;
 
     constructor(iid: string, value: Date) {
@@ -332,14 +264,10 @@ class DateTimeAttributeImpl extends AttributeImpl<Date> implements Attribute<Dat
     asDateTime() {
         return this;
     }
-
-    of(thingProto: ThingConceptProto) {
-        return new DateTimeAttributeImpl(bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getDateTime());
-    }
 }
 
 
-class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements RemoteDateTimeAttribute {
+class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements Merge<RemoteDateTimeAttribute, DateTimeAttribute> {
     private value: Date;
 
     constructor(transaction: Transaction, iid: string, value: Date){
@@ -349,10 +277,6 @@ class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements R
 
     getValue(): Date {
         return this.value;
-    }
-
-    of(transaction: Transaction, thingProto: ThingConceptProto) {
-        return new RemoteDateTimeAttributeImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getDateTime());
     }
 
     getType(): DateTimeAttributeTypeImpl {

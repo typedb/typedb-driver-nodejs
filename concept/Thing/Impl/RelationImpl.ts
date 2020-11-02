@@ -3,12 +3,8 @@ class RelationImpl extends ThingImpl implements Relation {
         super(iid)
     }
 
-    asRemote(transaction: Transaction): Remote<Concept> {
+    asRemote(transaction: Transaction): RemoteRelation {
         return new RemoteRelationImpl(transaction, this.getIID());
-    }
-
-    of(thingProto: ThingConceptProto): RelationImpl {
-        return new RelationImpl(bytesToHexString(protoThing.getIid().toByteArray()));
     }
 
     asRelation() {
@@ -16,20 +12,16 @@ class RelationImpl extends ThingImpl implements Relation {
     }
 }
 
-class RemoteRelationImpl extends RemoteThingImpl implements RelationImpl {
+class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelation {
     constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
     }
 
-    of(transaction: Transaction, thingProto: ThingConceptProto) {
-        return new RemoteRelationImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
-    }
-
-    public asRemote(transaction: Transaction) {
+    asRemote(transaction: Transaction): RemoteRelation {
         return new RemoteRelationImpl(transaction, this.getIID());
     }
 
-    getType(): RelationshipTypeImpl {
+    getType(): RelationTypeImpl {
         return super.getType().asRelationshipType();
     }
 
@@ -37,11 +29,11 @@ class RemoteRelationImpl extends RemoteThingImpl implements RelationImpl {
         return this;
     }
 
-    getPlayersByRoleType() {
+    getPlayersByRoleType(): [RoleType, Thing[]] {
         return undefined
     }
 
-    getPlayers(roleTypes: RoleType[]) {
+    getPlayers(roleTypes: RoleType[]): QueryIterator {
         return undefined
     }
     addPlayer(roleType: RoleType, player: Thing) {

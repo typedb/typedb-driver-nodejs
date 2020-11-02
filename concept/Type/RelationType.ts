@@ -2,7 +2,7 @@ interface RelationType extends ThingType {
 
 }
 
-interface RemoteRelationType extends RelationType, Remote<RelationType> {
+interface RemoteRelationType extends Merge<Remote<RelationType>, RelationType> {
     create(): Relation;
 
     setSupertype(superRelationType: RelationType): void;

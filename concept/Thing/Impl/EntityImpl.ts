@@ -3,26 +3,18 @@ class EntityImpl extends ThingImpl implements Entity {
         super(iid);
     }
 
-    asRemote(transaction: Transaction): Remote<Concept> {
+    asRemote(transaction: Transaction) {
         return new RemoteEntityImpl(transaction, this.getIID());
     }
 
     asEntity() {
         return this;
     }
-
-    of(thingProto: ThingConceptProto) {
-        return new EntityImpl(bytesToHexString(thingProto.getIid().toByteArray()));
-    }
 }
 
-class RemoteEntityImpl extends RemoteThingImpl implements EntityImpl {
+class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity, Entity {
     constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
-    }
-
-    of(transaction: Transaction, thingProto: ThingConceptProto) {
-        return new RemoteEntityImpl(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
     }
 
     public asRemote(transaction: Transaction) {

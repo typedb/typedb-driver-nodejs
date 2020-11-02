@@ -1,0 +1,3 @@
+interface AttributeType extends ThingType {
+
+}

@@ -8,14 +8,18 @@ class QueryIterator {
 interface Concept {
     asType(): Type;
     asThing(): Thing;
-    asRemote(transaction: Transaction): Remote<Concept>;
+    asRemote(transaction: Transaction): RemoteConcept;
 
-    isRemote(): Boolean
+    isRemote(): boolean;
 }
 
-interface Remote<T extends Concept> extends Concept {
-    of(transaction: Transaction, concept: T): this;
+interface RemoteConcept {
     delete(): void;
-
     isDeleted(): boolean;
+
+    asType(): RemoteType;
+    asThing(): RemoteThing;
+    asRemote(transaction: Transaction): RemoteConcept;
+
+    isRemote(): boolean;
 }
