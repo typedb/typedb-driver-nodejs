@@ -22,7 +22,7 @@ interface RemoteType extends Merge<RemoteConcept, Type> {
     asType():           RemoteType
     asThingType():      RemoteThingType;
     asEntityType():     RemoteEntityType;
-    asAttributeType():  RemoteAttributeType;
+    //asAttributeType():  RemoteAttributeType;
     asRelationType():   RemoteRelationType;
     asRoleType():       RemoteRoleType;
 }

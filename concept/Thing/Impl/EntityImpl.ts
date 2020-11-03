@@ -12,20 +12,20 @@ class EntityImpl extends ThingImpl implements Entity {
     }
 }
 
-class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity, Entity {
+class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
     constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
     }
 
     public asRemote(transaction: Transaction): RemoteEntity {
-        return new RemoteEntityImpl(transaction, this.getIID());
+        return this;
     }
 
     getType() {
         return super.getType().asEntityType();
     }
 
-    asEntity() {
+    asEntity(): RemoteEntity {
         return this;
     }
 }

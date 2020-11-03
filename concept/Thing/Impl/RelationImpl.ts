@@ -17,7 +17,7 @@ class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelation {
         super(transaction, iid);
     }
 
-    asRemote(transaction: Transaction): RemoteRelation {
+    asRemote(transaction: Transaction) {
         return new RemoteRelationImpl(transaction, this.getIID());
     }
 

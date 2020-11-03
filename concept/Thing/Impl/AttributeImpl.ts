@@ -35,7 +35,7 @@ abstract class RemoteAttributeImpl<T extends AttributeValueType> extends RemoteT
         super(transaction, iid);
     }
 
-    asAttribute() {
+    asAttribute(): RemoteAttributeImpl<T> {
         return this;
     }
 

@@ -21,20 +21,16 @@
   <component name="ChangeListManager">
     <list default="true" id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/common/utils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Concept.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Concept.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/concept/Concepts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Concepts.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/concept/Thing/Attribute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Attribute.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/concept/Thing/Entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Entity.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Impl/AttributeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Impl/AttributeImpl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Impl/EntityImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Impl/EntityImpl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Impl/RelationImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Impl/RelationImpl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Impl/ThingImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Impl/ThingImpl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Relation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Relation.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Thing.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Thing.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/TypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/TypeImpl.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Type/RelationType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/RelationType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Type/ThingType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/ThingType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Type/Type.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Type.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +83,7 @@
       <updated>1603271690355</updated>
       <workItem from="1603271694838" duration="3125000" />
       <workItem from="1603279710648" duration="2000" />
-      <workItem from="1603358099826" duration="104621000" />
+      <workItem from="1603358099826" duration="106803000" />
     </task>
     <servers />
   </component>

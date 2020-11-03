@@ -1,7 +1,7 @@
 interface ThingType extends Type {
 }
 
-interface RemoteThingType extends Merge<Remote<ThingType>, ThingType> {
+interface RemoteThingType extends Merge<RemoteType, ThingType> {
     getSupertype(): ThingType;
 
     setLabel(label: string): void;
@@ -19,9 +19,9 @@ interface RemoteThingType extends Merge<Remote<ThingType>, ThingType> {
 
     getPlays(): QueryIterator;
     getOwns(): QueryIterator;
-    getOwns(valueType: ValueType):                      QueryIterator;
+    //getOwns(valueType: ValueType):                      QueryIterator;
     getOwns(keysOnly: boolean):                         QueryIterator;
-    getOwns(valueType: ValueType, keysOnly: boolean):   QueryIterator;
+    //getOwns(valueType: ValueType, keysOnly: boolean):   QueryIterator;
 
     unsetPlays(role: RoleType): void;
     unsetOwns(attributeType: AttributeType): void;

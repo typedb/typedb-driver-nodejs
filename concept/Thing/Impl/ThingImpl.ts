@@ -70,7 +70,7 @@ abstract class RemoteThingImpl implements RemoteThing {
         throw "Invalid cast to Relation"
     }
 
-    asRemote(transaction: Transaction): RemoteThing {
+    asRemote(transaction: Transaction) {
         return this;
     }
 
