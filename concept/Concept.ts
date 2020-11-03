@@ -13,7 +13,7 @@ interface Concept {
     isRemote(): boolean;
 }
 
-interface RemoteConcept {
+interface RemoteConcept extends Concept {
     delete(): void;
     isDeleted(): boolean;
 

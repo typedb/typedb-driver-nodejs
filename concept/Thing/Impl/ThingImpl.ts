@@ -1,7 +1,7 @@
 abstract class ThingImpl implements Thing {
     readonly iid: string;
 
-    constructor (iid: string) {
+    protected constructor (iid: string) {
         if (!iid) {
             throw "IID Missing"
         }
@@ -39,11 +39,11 @@ abstract class ThingImpl implements Thing {
     abstract asRemote(transaction: Transaction): RemoteThing;
 }
 
-class RemoteThingImpl implements RemoteThing {
+abstract class RemoteThingImpl implements RemoteThing {
     readonly iid: string;
     private transaction: Transaction;
 
-    constructor (transaction: Transaction, iid: string) {
+    protected constructor (transaction: Transaction, iid: string) {
         if (!transaction)   throw "Transaction Missing"
         if (!iid)           throw "IID Missing"
         this.iid = iid;
@@ -70,15 +70,15 @@ class RemoteThingImpl implements RemoteThing {
         throw "Invalid cast to Relation"
     }
 
-    asRemote(transaction: Transaction) {
+    asRemote(transaction: Transaction): RemoteThing {
         return this;
     }
 
-    asThing(): Thing {
+    asThing(): RemoteThing {
         return this;
     }
 
-    asType(): Type {
+    asType(): RemoteType {
         throw "Invalid cast to Type";
     }
 
@@ -98,22 +98,22 @@ class RemoteThingImpl implements RemoteThing {
     }
 
     getHas(onlyKey: boolean): QueryIterator;
-    getHas(attributeType: BooleanAttributeType): QueryIterator;
-    getHas(attributeType: LongAttributeType): QueryIterator;
-    getHas(attributeType: DoubleAttributeType): QueryIterator;
-    getHas(attributeType: StringAttributeType): QueryIterator;
-    getHas(attributeType: DateTimeAttributeType): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
     getHas(attributeTypes: AttributeType[]): QueryIterator;
-    getHas(onlyKey: boolean | BooleanAttributeType | LongAttributeType | DoubleAttributeType | StringAttributeType | DateTimeAttributeType | AttributeType[]): ReadableStream {
-        return undefined;
+    getHas(onlyKey: boolean | Type | AttributeType[]): QueryIterator {
+        return new QueryIterator();
     }
 
     getPlays(): QueryIterator {
-        return undefined;
+        return new QueryIterator();
     }
 
     getRelations(roleTypes: RoleType[]): QueryIterator {
-        return undefined;
+        return new QueryIterator();
     }
 
     isInferred(): boolean {

@@ -3,7 +3,7 @@ class EntityImpl extends ThingImpl implements Entity {
         super(iid);
     }
 
-    asRemote(transaction: Transaction) {
+    asRemote(transaction: Transaction): RemoteEntity {
         return new RemoteEntityImpl(transaction, this.getIID());
     }
 
@@ -17,11 +17,11 @@ class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity, Entity {
         super(transaction, iid);
     }
 
-    public asRemote(transaction: Transaction) {
+    public asRemote(transaction: Transaction): RemoteEntity {
         return new RemoteEntityImpl(transaction, this.getIID());
     }
 
-    getType(): EntityTypeImpl {
+    getType() {
         return super.getType().asEntityType();
     }
 

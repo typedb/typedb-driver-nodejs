@@ -11,7 +11,14 @@ abstract class TypeImpl implements Type {
         this.hash = hash(this.label);
     }
 
-    equals(): boolean
+    equals(type: Type): boolean {
+        if (typeof type != typeof this) {
+            return false;
+        }
+        if (type.hashCode() != this.hashCode()) {
+            return false;
+
+        }    }
 
     hashCode(): number {
         return this.hash;
@@ -29,7 +36,7 @@ abstract class TypeImpl implements Type {
         throw "Invalid cast to Relation Type.";
     }
 
-    asRemote(transaction: Transaction): Remote<Concept> {
+    asRemote(transaction: Transaction): RemoteConcept {
         return undefined;
     }
 
@@ -60,4 +67,8 @@ abstract class TypeImpl implements Type {
     isRoot(): boolean {
         return this.root;
     }
+}
+
+abstract class RemoteTypeImpl implements RemoteType {
+
 }

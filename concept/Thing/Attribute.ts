@@ -10,7 +10,7 @@ interface Attribute<T extends AttributeValueType> extends Thing {
 
 
 
-interface RemoteAttribute<T extends AttributeValueType> extends Merge<Remote<Attribute<T>>, Attribute<T>> {
+interface RemoteAttribute<T extends AttributeValueType> extends Merge<RemoteThing, Attribute<T>> {
     getType(): AttributeType;
 }
 
@@ -18,7 +18,7 @@ interface BooleanAttribute extends Attribute<boolean> {
 
 }
 
-interface RemoteBooleanAttribute extends Merge<BooleanAttribute, Remote<BooleanAttribute>> {
+interface RemoteBooleanAttribute extends Merge<RemoteAttribute<boolean>, BooleanAttribute> {
 
 }
 
@@ -26,7 +26,7 @@ interface LongAttribute extends Attribute<number> {
 
 }
 
-interface RemoteLongAttribute extends Merge<LongAttribute, Remote<LongAttribute>> {
+interface RemoteLongAttribute extends Merge<RemoteAttribute<number>, LongAttribute> {
 
 }
 
@@ -34,7 +34,7 @@ interface DoubleAttribute extends Attribute<number> {
 
 }
 
-interface RemoteDoubleAttribute extends Merge<DoubleAttribute, Remote<DoubleAttribute>> {
+interface RemoteDoubleAttribute extends Merge<RemoteAttribute<number>, LongAttribute> {
 
 }
 
@@ -42,7 +42,7 @@ interface StringAttribute extends Attribute<string> {
 
 }
 
-interface RemoteStringAttribute extends Merge<StringAttribute, Remote<StringAttribute>> {
+interface RemoteStringAttribute extends Merge<RemoteAttribute<string>, StringAttribute> {
 
 }
 
@@ -50,7 +50,7 @@ interface DateTimeAttribute extends Attribute<Date> {
 
 }
 
-interface RemoteDateTimeAttribute extends Merge<DateTimeAttribute, Remote<DateTimeAttribute>> {
+interface RemoteDateTimeAttribute extends Merge<RemoteAttribute<Date>, DateTimeAttribute> {
 
 }
 

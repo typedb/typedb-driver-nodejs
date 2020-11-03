@@ -6,6 +6,8 @@ interface Thing extends Concept {
     asRelation(): Relation;
 
     asRemote(transaction: Transaction): RemoteThing;
+
+    asThing(): Thing;
 }
 
 interface RemoteThing extends Merge<RemoteConcept, Thing> {
@@ -16,15 +18,15 @@ interface RemoteThing extends Merge<RemoteConcept, Thing> {
     unsetHas(attribute: Attribute<any>): void;
 
     getHas(onlyKey: boolean):                       QueryIterator;
-    getHas(attributeType: BooleanAttributeType):    QueryIterator;
-    getHas(attributeType: LongAttributeType):       QueryIterator;
-    getHas(attributeType: DoubleAttributeType):     QueryIterator;
-    getHas(attributeType: StringAttributeType):     QueryIterator;
-    getHas(attributeType: DateTimeAttributeType):   QueryIterator;
+    getHas(attributeType: Type):                    QueryIterator;
+    getHas(attributeType: Type):                    QueryIterator;
+    getHas(attributeType: Type):                    QueryIterator;
+    getHas(attributeType: Type):                    QueryIterator;
+    getHas(attributeType: Type):                    QueryIterator;
     getHas(attributeTypes: AttributeType[]):        QueryIterator;
     getPlays():                                     QueryIterator;
     getRelations(roleTypes: RoleType[]):            QueryIterator;
 
-    asRemote(transaction: Transaction): Remote<Thing>;
-
+    asRemote(transaction: Transaction): RemoteThing;
+    asThing(): RemoteThing;
 }

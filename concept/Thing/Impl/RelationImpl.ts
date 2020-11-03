@@ -30,11 +30,11 @@ class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelation {
     }
 
     getPlayersByRoleType(): [RoleType, Thing[]] {
-        return undefined
+        throw "Not implemented"
     }
 
     getPlayers(roleTypes: RoleType[]): QueryIterator {
-        return undefined
+        return new QueryIterator();
     }
     addPlayer(roleType: RoleType, player: Thing) {
 

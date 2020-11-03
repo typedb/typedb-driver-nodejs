@@ -20,18 +20,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/common/utils.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/AttributeType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/EntityType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/Impl/TypeImpl.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/RelationType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/RoleType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/Rule.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/ThingType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/common/utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Concept.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Concept.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Concepts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Concepts.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Thing/Attribute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Attribute.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Thing/Entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Thing/Impl/AttributeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Impl/AttributeImpl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Impl/EntityImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Impl/EntityImpl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Impl/RelationImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Impl/RelationImpl.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Thing/Impl/ThingImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Impl/ThingImpl.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Thing/Relation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Relation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Thing/Thing.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Thing.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/TypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/TypeImpl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Type/Type.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Type.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +66,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.tslint" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
@@ -84,7 +87,7 @@
       <updated>1603271690355</updated>
       <workItem from="1603271694838" duration="3125000" />
       <workItem from="1603279710648" duration="2000" />
-      <workItem from="1603358099826" duration="60267000" />
+      <workItem from="1603358099826" duration="104621000" />
     </task>
     <servers />
   </component>
@@ -107,23 +110,29 @@
       <screen x="0" y="23" width="2560" height="1417" />
     </state>
     <state x="470" y="547" key="#com.intellij.fileTypes.FileTypeChooser/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603905528398" />
-    <state x="475" y="461" key="#com.intellij.ide.util.MemberChooser" timestamp="1603903584584">
-      <screen x="0" y="23" width="2560" height="1417" />
+    <state x="475" y="445" key="#com.intellij.ide.util.MemberChooser" timestamp="1604413742015">
+      <screen x="0" y="0" width="2560" height="1440" />
     </state>
+    <state x="475" y="445" key="#com.intellij.ide.util.MemberChooser/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1603908734897" />
     <state x="475" y="461" key="#com.intellij.ide.util.MemberChooser/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603903584584" />
+    <state x="475" y="445" key="#com.intellij.ide.util.MemberChooser/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604413742015" />
     <state x="475" y="461" key="#com.intellij.ide.util.MemberChooser/2560.23.2560.1417/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603717018678" />
     <state x="450" y="486" key="FileChooserDialogImpl" timestamp="1603465852843">
       <screen x="0" y="23" width="2560" height="1417" />
     </state>
     <state x="450" y="486" key="FileChooserDialogImpl/2560.23.2560.1417/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603465852843" />
-    <state x="922" y="315" key="SettingsEditor" timestamp="1603720358573">
-      <screen x="0" y="23" width="2560" height="1417" />
+    <state x="922" y="297" key="SettingsEditor" timestamp="1604058039494">
+      <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="922" y="315" key="SettingsEditor/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603720358573" />
-    <state x="434" y="493" width="586" height="490" key="find.popup" timestamp="1603880306313">
-      <screen x="0" y="23" width="2560" height="1417" />
+    <state x="922" y="297" key="SettingsEditor/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604058039494" />
+    <state x="434" y="478" width="871" height="498" key="find.popup" timestamp="1604402739155">
+      <screen x="0" y="0" width="2560" height="1440" />
     </state>
+    <state x="434" y="478" width="586" height="498" key="find.popup/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1603909521905" />
     <state x="434" y="493" width="586" height="490" key="find.popup/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603880306313" />
+    <state x="434" y="478" width="871" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604402739155" />
+    <state x="434" y="478" width="586" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.343.1792.1097@0.0.2560.1440" timestamp="1604080928930" />
     <state x="409" y="323" width="670" height="676" key="search.everywhere.popup" timestamp="1603905313495">
       <screen x="0" y="23" width="2560" height="1417" />
     </state>

@@ -1,6 +1,7 @@
 interface Relation extends Thing {
 
     asRemote(transaction: Transaction): RemoteRelation;
+    asRelation(): Relation;
 
 }
 
@@ -13,5 +14,6 @@ interface RemoteRelation extends Merge<RemoteThing, Relation> {
     getPlayers(roleTypes: RoleType[]):               QueryIterator;
     getPlayersByRoleType():                          [RoleType, Thing[]];
 
+    asRelation(): RemoteRelation;
     asRemote(transaction: Transaction): RemoteRelation;
 }
