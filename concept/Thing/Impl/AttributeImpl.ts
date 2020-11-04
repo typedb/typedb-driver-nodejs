@@ -7,6 +7,8 @@ abstract class AttributeImpl<T extends AttributeValueType> extends ThingImpl imp
         return this;
     }
 
+    abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
+
     asBoolean(): BooleanAttribute {
         throw "Invalid cast to Boolean";
     }
@@ -63,9 +65,8 @@ abstract class RemoteAttributeImpl<T extends AttributeValueType> extends RemoteT
         return new QueryIterator()
     }
 
-    getType(): AttributeTypeImpl {
-        return super.getType().asAttributeType()
-    }
+    abstract getType(): AttributeTypeImpl;
+    abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
 
     abstract getValue(): T;
 
@@ -105,7 +106,7 @@ class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements
     }
 
     getType(): BooleanAttributeTypeImpl {
-        return super.getType().asAttributeType()
+        throw "Of not present"
     }
 
     asBoolean() {
@@ -113,7 +114,7 @@ class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements
     }
 
     asRemote(transaction: Transaction): RemoteBooleanAttribute {
-        return this;
+        return new RemoteBooleanAttributeImpl(transaction, this.iid, this.value);
     }
 }
 
@@ -151,7 +152,7 @@ class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> implements Mer
     }
 
     getType(): LongAttributeTypeImpl {
-        return super.getType().asAttributeType()
+        throw "Of not present"
     }
 
     asLong() {
@@ -197,7 +198,7 @@ class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements M
     }
 
     getType(): StringAttributeTypeImpl {
-        return super.getType().asAttributeType()
+        throw "Of not present"
     }
 
     asString() {
@@ -244,7 +245,7 @@ class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> implements M
     }
 
     getType(): DoubleAttributeTypeImpl {
-        return super.getType().asAttributeType()
+        throw "Of not present"
     }
 
     asDouble() {
@@ -292,7 +293,7 @@ class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements M
     }
 
     getType(): DateTimeAttributeTypeImpl {
-        return super.getType().asAttributeType()
+        throw "Of not present"
     }
 
     asRemote(transaction: Transaction): RemoteDateTimeAttribute {

@@ -50,9 +50,7 @@ abstract class RemoteThingImpl implements RemoteThing {
         this.transaction = transaction;
     }
 
-    getType() {
-        return new ThingTypeImpl();
-    }
+    abstract getType(): ThingType;
 
     setHas(attribute: Attribute<AttributeValueType>): void {
         return undefined;
@@ -70,9 +68,7 @@ abstract class RemoteThingImpl implements RemoteThing {
         throw "Invalid cast to Relation"
     }
 
-    asRemote(transaction: Transaction) {
-        return this;
-    }
+    abstract asRemote(transaction: Transaction): RemoteThing;
 
     asThing(): RemoteThing {
         return this;

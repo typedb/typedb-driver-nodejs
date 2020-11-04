@@ -1,7 +1,7 @@
 abstract class TypeImpl implements Type {
-    private label:  string;
-    private root: boolean;
-    private hash:   int;
+    label:  string;
+    root: boolean;
+    hash: number;
 
     constructor(label: string, root: boolean) {
         if (!label) throw("Type Label missing.");
@@ -18,7 +18,10 @@ abstract class TypeImpl implements Type {
         if (type.hashCode() != this.hashCode()) {
             return false;
 
-        }    }
+        }
+        return true;
+    }
+
 
     hashCode(): number {
         return this.hash;
@@ -36,9 +39,7 @@ abstract class TypeImpl implements Type {
         throw "Invalid cast to Relation Type.";
     }
 
-    asRemote(transaction: Transaction): RemoteConcept {
-        return undefined;
-    }
+    abstract asRemote(transaction: Transaction): RemoteType
 
     asRoleType(): RoleType {
         throw "Invalid cast to Role Type.";
@@ -70,5 +71,85 @@ abstract class TypeImpl implements Type {
 }
 
 abstract class RemoteTypeImpl implements RemoteType {
+    readonly transaction: Transaction;
+    label:  string;
+    readonly root: boolean;
+    hash: number;
+
+    protected constructor (transaction: Transaction, label: string, isRoot: boolean) {
+        if (!transaction)   throw "Transaction Missing"
+        if (!label)         throw "IID Missing"
+        this.label = label;
+        this.transaction = transaction;
+        this.root = isRoot;
+        this.hash = hash(this.label);
+    }
+
+    asAttributeType(): AttributeType {
+        throw "Invalid cast to Attribute Type";
+    }
+
+    delete(): void {
+    }
+
+    equals(type: Type): boolean {
+        return false;
+    }
+
+    getLabel(): string {
+        return "";
+    }
+
+    hashCode(): number {
+        return 0;
+    }
+
+    isDeleted(): boolean {
+        return false;
+    }
+
+    isRemote(): boolean { return true; };
+
+    isRoot(): boolean {
+        return this.root;
+    }
+
+    asEntityType(): RemoteEntityType {
+        throw "Invalid cast to Entity Type";
+    }
+
+    asRelationType(): RemoteRelationType {
+        throw "Invalid cast to Relation Type";
+    }
+
+    abstract asRemote(transaction: Transaction): RemoteType
+
+    asRoleType(): RemoteRoleType {
+        throw "Invalid cast to Role Type";
+    }
+
+    asThingType(): RemoteThingType {
+        throw "Invalid cast to Thing Type";
+    }
+
+    getSubtypes(): QueryIterator {
+        return new QueryIterator();
+    }
+
+    getSupertypes(): QueryIterator {
+        return new QueryIterator();
+    }
+
+    setLabel(label: string): void {
+        this.label = label;
+    }
+
+    asThing(): RemoteThing {
+        throw "Invalid cast to Thing"
+    };
+    asType(): RemoteType {
+        return this;
+    };
+
 
 }

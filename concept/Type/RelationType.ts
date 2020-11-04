@@ -1,8 +1,9 @@
 interface RelationType extends ThingType {
+    asRemote(transaction: Transaction): RemoteRelationType;
 
 }
 
-interface RemoteRelationType extends Merge<RemoteType, RelationType> {
+interface RemoteRelationType extends Merge<RemoteThingType, RelationType> {
     create(): Relation;
 
     setSupertype(superRelationType: RelationType): void;
@@ -16,4 +17,6 @@ interface RemoteRelationType extends Merge<RemoteType, RelationType> {
     getSupertypes():    QueryIterator;
     getSubtypes():    QueryIterator;
     getInstances():    QueryIterator;
+
+    asRemote(transaction: Transaction): RemoteRelationType;
 }

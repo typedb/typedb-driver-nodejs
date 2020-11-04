@@ -1,8 +1,12 @@
-interface RoleType extends Type {
+interface RoleType extends ThingType {
     getScope(): string;
+
+    asRemote(transaction: Transaction): RemoteRoleType;
 }
 
-interface RemoteRoleType extends RoleType, Remote<RoleType> {
+interface RemoteRoleType extends Merge<RemoteThingType, RoleType> {
+    asRemote(transaction: Transaction): RemoteRoleType;
+
     getSupertype():     RoleType;
     getSupertypes():    QueryIterator;
     getSubtypes():      QueryIterator;

@@ -27,5 +27,7 @@ interface RemoteThing extends Merge<RemoteConcept, Thing> {
     getPlays():                                     QueryIterator;
     getRelations(roleTypes: RoleType[]):            QueryIterator;
 
+    asRemote(transaction: Transaction): RemoteThing;
+
     asThing(): RemoteThing;
 }

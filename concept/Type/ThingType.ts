@@ -1,7 +1,9 @@
 interface ThingType extends Type {
+    asRemote(transaction: Transaction): RemoteThingType;
 }
 
 interface RemoteThingType extends Merge<RemoteType, ThingType> {
+    asRemote(transaction: Transaction): RemoteThingType;
     getSupertype(): ThingType;
 
     setLabel(label: string): void;
@@ -15,7 +17,7 @@ interface RemoteThingType extends Merge<RemoteType, ThingType> {
     setOwns(attributeType: AttributeType): void;
     setOwns(attributeType: AttributeType, isKey: boolean): void;
     setOwns(attributeType: AttributeType, overriddenType: AttributeType): void;
-    setOwns(attributeType: AttributeType, otherType: AttributeType, isKey: boolean): void;
+    setOwns(attributeType: AttributeType, isKey: boolean, otherType: AttributeType): void;
 
     getPlays(): QueryIterator;
     getOwns(): QueryIterator;

@@ -21,8 +21,8 @@ class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
         return this;
     }
 
-    getType() {
-        return super.getType().asEntityType();
+    getType(): EntityType {
+        throw "Not yet implemented"
     }
 
     asEntity(): RemoteEntity {

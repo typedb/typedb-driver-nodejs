@@ -15,4 +15,5 @@ interface RemoteRelation extends Merge<RemoteThing, Relation> {
     getPlayersByRoleType():                          [RoleType, Thing[]];
 
     asRelation(): RemoteRelation;
+    asRemote(transaction: Transaction): RemoteRelation;
 }

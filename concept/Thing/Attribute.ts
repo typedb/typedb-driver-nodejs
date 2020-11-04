@@ -6,12 +6,14 @@ interface Attribute<T extends AttributeValueType> extends Thing {
     asDouble():     DoubleAttribute;
     asString():     StringAttribute;
     asDateTime():   DateTimeAttribute;
+    asRemote(transaction: Transaction): RemoteAttribute<T>;
 }
 
 
 
 interface RemoteAttribute<T extends AttributeValueType> extends Merge<RemoteThing, Attribute<T>> {
     getType(): AttributeType;
+    asRemote(transaction: Transaction): RemoteAttribute<T>;
 }
 
 interface BooleanAttribute extends Attribute<boolean> {

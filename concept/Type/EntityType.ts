@@ -1,8 +1,8 @@
 interface EntityType extends ThingType {
-
+    asRemote(transaction: Transaction): RemoteEntityType;
 }
 
-interface RemoteEntityType extends Merge<EntityType, Remote<EntityType>> {
+interface RemoteEntityType extends Merge<RemoteThingType, EntityType> {
     create(): Entity;
 
     setSupertype(superEntityType: EntityType): void;
@@ -11,4 +11,6 @@ interface RemoteEntityType extends Merge<EntityType, Remote<EntityType>> {
     getSupertypes() : QueryIterator;
     getSubtypes()   : QueryIterator;
     getInstances()  : QueryIterator;
+
+    asRemote(transaction: Transaction): RemoteEntityType;
 }

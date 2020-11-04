@@ -10,6 +10,8 @@ interface Type extends Concept {
 
     equals(type: Type): boolean;
     hashCode():         number;
+
+    asRemote(transaction: Transaction):         RemoteType;
 }
 
 interface RemoteType extends Merge<RemoteConcept, Type> {
@@ -19,10 +21,11 @@ interface RemoteType extends Merge<RemoteConcept, Type> {
     getSubtypes():      QueryIterator;
 
 
-    asType():           RemoteType
     asThingType():      RemoteThingType;
     asEntityType():     RemoteEntityType;
     //asAttributeType():  RemoteAttributeType;
     asRelationType():   RemoteRelationType;
     asRoleType():       RemoteRoleType;
+
+    asRemote(transaction: Transaction):         RemoteType;
 }

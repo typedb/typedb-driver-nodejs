@@ -22,7 +22,7 @@ class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelation {
     }
 
     getType(): RelationTypeImpl {
-        return super.getType().asRelationshipType();
+        throw "As yet unimplemented"
     }
 
     asRelation() {
