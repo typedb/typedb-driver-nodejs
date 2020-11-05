@@ -1,9 +1,14 @@
-interface RelationType extends ThingType {
+import { ThingType, RemoteThingType } from "./ThingType";
+import { Relation } from "../Thing/Relation";
+import { RoleType } from "./RoleType";
+import { QueryIterator } from "../Concept";
+
+export interface RelationType extends ThingType {
     asRemote(transaction: Transaction): RemoteRelationType;
 
 }
 
-interface RemoteRelationType extends Merge<RemoteThingType, RelationType> {
+export interface RemoteRelationType extends Merge<RemoteThingType, RelationType> {
     create(): Relation;
 
     setSupertype(superRelationType: RelationType): void;

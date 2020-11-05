@@ -1,4 +1,13 @@
-interface Thing extends Concept {
+import { Entity } from "./Entity";
+import { Attribute, AttributeValueType } from "./Attribute";
+import { Relation } from "./Relation";
+import { Concept, RemoteConcept, QueryIterator } from "../Concept";
+import { Type } from "../Type/Type";
+import { ThingType } from "../Type/ThingType";
+import { AttributeType } from "../Type/AttributeType";
+import { RoleType } from "../Type/RoleType";
+
+export interface Thing extends Concept {
     getIID(): string;
 
     asEntity(): Entity;
@@ -10,7 +19,7 @@ interface Thing extends Concept {
     asThing(): Thing;
 }
 
-interface RemoteThing extends Merge<RemoteConcept, Thing> {
+export interface RemoteThing extends Merge<RemoteConcept, Thing> {
     getType(): ThingType;
     isInferred(): boolean;
 

@@ -1,4 +1,10 @@
-class RelationTypeImpl extends ThingTypeImpl implements RelationType {
+import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
+import {Relation} from "../../Thing/Relation";
+import { RelationType, RemoteRelationType } from "../RelationType";
+import { QueryIterator } from "../../Concept";
+import { RoleType } from "../RoleType";
+
+export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     asRemote(transaction: Transaction): RemoteRelationType {
         return new RemoteRelationTypeImpl(transaction, this.getLabel(), this.isRoot())
     };
@@ -9,7 +15,7 @@ class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
 }
 
-class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements RemoteRelationType {
+export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements RemoteRelationType {
     asRemote(transaction: Transaction): RemoteRelationType {
         return new RemoteRelationTypeImpl(transaction, this.getLabel(), this.isRoot())
     };

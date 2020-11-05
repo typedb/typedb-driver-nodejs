@@ -1,11 +1,14 @@
-class Transaction {
+import {RemoteThing, Thing} from "./Thing/Thing";
+import { RemoteType, Type } from "./Type/Type";
+
+export class Transaction {
 
 }
 
-class QueryIterator {
+export class QueryIterator {
 }
 
-interface Concept {
+export interface Concept {
     asType(): Type;
     asThing(): Thing;
     asRemote(transaction: Transaction): RemoteConcept;
@@ -13,7 +16,7 @@ interface Concept {
     isRemote(): boolean;
 }
 
-interface RemoteConcept extends Concept {
+export interface RemoteConcept extends Concept {
     delete(): void;
     isDeleted(): boolean;
 

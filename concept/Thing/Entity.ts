@@ -1,8 +1,11 @@
-interface Entity extends Thing {
+import { Thing, RemoteThing } from "./Thing";
+import { EntityType } from "../Type/EntityType";
+
+export interface Entity extends Thing {
     asRemote(transaction: Transaction): RemoteEntity;
 }
 
-interface RemoteEntity extends Merge<RemoteThing, Entity> {
+export interface RemoteEntity extends Merge<RemoteThing, Entity> {
     getType(): EntityType;
     asRemote(transaction: Transaction): RemoteEntity;
 }

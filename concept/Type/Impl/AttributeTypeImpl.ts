@@ -1,4 +1,7 @@
-class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
+import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
+import { RemoteAttributeType, AttributeType, BooleanAttributeType, RemoteBooleanAttributeType, StringAttributeType, RemoteStringAttributeType, DoubleAttributeType, RemoteDoubleAttributeType, LongAttributeType, RemoteLongAttributeType, DateTimeAttributeType, RemoteDateTimeAttributeType } from "../AttributeType";
+
+export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     asRemote(transaction: Transaction): RemoteAttributeType {
         return new RemoteAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     };
@@ -9,7 +12,7 @@ class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
 }
 
-class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements RemoteAttributeType {
+export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements RemoteAttributeType {
 
     getValueType(): string {
         throw "Invalid Attribute Get attempted"
@@ -19,7 +22,7 @@ class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements RemoteAttri
         return new RemoteAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
 }
-class BooleanAttributeTypeImpl extends RemoteAttributeTypeImpl implements BooleanAttributeType {
+export class BooleanAttributeTypeImpl extends RemoteAttributeTypeImpl implements BooleanAttributeType {
     getValueType(): string {
         return "BOOLEAN";
     }
@@ -30,7 +33,7 @@ class BooleanAttributeTypeImpl extends RemoteAttributeTypeImpl implements Boolea
 
 }
 
-class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteBooleanAttributeType {
+export class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteBooleanAttributeType {
     getValueType(): string {
         return "BOOLEAN";
     }
@@ -40,7 +43,7 @@ class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl implements 
     }
 }
 
-class StringAttributeTypeImpl extends RemoteAttributeTypeImpl implements StringAttributeType {
+export class StringAttributeTypeImpl extends RemoteAttributeTypeImpl implements StringAttributeType {
     getValueType(): string {
         return "STRING";
     }
@@ -51,7 +54,7 @@ class StringAttributeTypeImpl extends RemoteAttributeTypeImpl implements StringA
 
 }
 
-class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteStringAttributeType {
+export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteStringAttributeType {
     getValueType(): string {
         return "STRING";
     }
@@ -61,7 +64,7 @@ class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl implements R
     }
 }
 
-class DoubleAttributeTypeImpl extends RemoteAttributeTypeImpl implements DoubleAttributeType {
+export class DoubleAttributeTypeImpl extends RemoteAttributeTypeImpl implements DoubleAttributeType {
     getValueType(): string {
         return "DOUBLE";
     }
@@ -72,7 +75,7 @@ class DoubleAttributeTypeImpl extends RemoteAttributeTypeImpl implements DoubleA
 
 }
 
-class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteDoubleAttributeType {
+export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteDoubleAttributeType {
     getValueType(): string {
         return "DOUBLE";
     }
@@ -83,7 +86,7 @@ class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl implements R
 }
 
 
-class LongAttributeTypeImpl extends RemoteAttributeTypeImpl implements LongAttributeType {
+export class LongAttributeTypeImpl extends RemoteAttributeTypeImpl implements LongAttributeType {
     getValueType(): string {
         return "LONG";
     }
@@ -94,7 +97,7 @@ class LongAttributeTypeImpl extends RemoteAttributeTypeImpl implements LongAttri
 
 }
 
-class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteLongAttributeType {
+export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteLongAttributeType {
     getValueType(): string {
         return "LONG";
     }
@@ -104,7 +107,7 @@ class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl implements Rem
     }
 }
 
-class DateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl implements DateTimeAttributeType {
+export class DateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl implements DateTimeAttributeType {
     getValueType(): string {
         return "DATETIME";
     }
@@ -115,7 +118,7 @@ class DateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl implements DateT
 
 }
 
-class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteDateTimeAttributeType {
+export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl implements RemoteDateTimeAttributeType {
     getValueType(): string {
         return "DATETIME";
     }

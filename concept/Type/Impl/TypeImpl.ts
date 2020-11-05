@@ -1,4 +1,14 @@
-abstract class TypeImpl implements Type {
+import {RemoteThing, Thing} from "../../Thing/Thing";
+import { Type, RemoteType } from "../Type";
+import { AttributeType, RemoteAttributeType } from "../AttributeType";
+import { RelationType, RemoteRelationType } from "../RelationType";
+import { EntityType, RemoteEntityType } from "../EntityType";
+import { RoleType, RemoteRoleType } from "../RoleType";
+import { ThingType, RemoteThingType } from "../ThingType";
+import { QueryIterator } from "../../Concept";
+import ValueType = WebAssembly.ValueType;
+
+export abstract class TypeImpl implements Type {
     label:  string;
     root: boolean;
     hash: number;
@@ -70,7 +80,7 @@ abstract class TypeImpl implements Type {
     }
 }
 
-abstract class RemoteTypeImpl implements RemoteType {
+export abstract class RemoteTypeImpl implements RemoteType {
     readonly transaction: Transaction;
     label:  string;
     readonly root: boolean;
@@ -85,9 +95,13 @@ abstract class RemoteTypeImpl implements RemoteType {
         this.hash = hash(this.label);
     }
 
-    asAttributeType(): AttributeType {
+    asAttributeType(): RemoteAttributeType {
         throw "Invalid cast to Attribute Type";
     }
+
+    getValueType(): string {
+        throw "Invalid get";
+    };
 
     delete(): void {
     }

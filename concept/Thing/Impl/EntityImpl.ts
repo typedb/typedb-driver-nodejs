@@ -1,4 +1,7 @@
-class EntityImpl extends ThingImpl implements Entity {
+import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
+import { Entity, RemoteEntity } from "../Entity";
+
+export class EntityImpl extends ThingImpl implements Entity {
     constructor(iid: string) {
         super(iid);
     }
@@ -12,7 +15,7 @@ class EntityImpl extends ThingImpl implements Entity {
     }
 }
 
-class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
+export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
     constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
     }

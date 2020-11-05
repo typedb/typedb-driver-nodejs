@@ -1,4 +1,14 @@
-abstract class ThingImpl implements Thing {
+import { Thing, RemoteThing } from "../Thing";
+import { AttributeValueType, Attribute } from "../Attribute";
+import { Entity } from "../Entity";
+import { Relation } from "../Relation";
+import { Type, RemoteType } from "../../Type/Type";
+import { ThingType } from "../../Type/ThingType";
+import { QueryIterator } from "../../Concept";
+import { AttributeType } from "../../Type/AttributeType";
+import { RoleType } from "../../Type/RoleType";
+
+export abstract class ThingImpl implements Thing {
     readonly iid: string;
 
     protected constructor (iid: string) {
@@ -39,7 +49,7 @@ abstract class ThingImpl implements Thing {
     abstract asRemote(transaction: Transaction): RemoteThing;
 }
 
-abstract class RemoteThingImpl implements RemoteThing {
+export abstract class RemoteThingImpl implements RemoteThing {
     readonly iid: string;
     private transaction: Transaction;
 

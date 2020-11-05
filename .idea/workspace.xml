@@ -20,12 +20,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/concept/Type/Impl/AttributeTypeImpl.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/Impl/EntityTypeImpl.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/Impl/RelationTypeImpl.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/Impl/RoleTypeImpl.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/concept/Type/Impl/ThingTypeImpl.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc/RPCSession.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/behaviour/concept/thing/entity/EntitySteps.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/babel.rc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Concept.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Concept.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Concepts.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Attribute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Attribute.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Entity.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Thing/Impl/AttributeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Impl/AttributeImpl.ts" afterDir="false" />
@@ -36,11 +36,37 @@
       <change beforePath="$PROJECT_DIR$/concept/Thing/Thing.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Thing/Thing.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Type/AttributeType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/AttributeType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Type/EntityType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/EntityType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/AttributeTypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/AttributeTypeImpl.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/EntityTypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/EntityTypeImpl.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/RelationTypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/RelationTypeImpl.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/RoleTypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/RoleTypeImpl.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/ThingTypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/ThingTypeImpl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Type/Impl/TypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/TypeImpl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Type/RelationType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/RelationType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Type/RoleType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/RoleType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Type/ThingType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/ThingType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/concept/Type/Type.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Type.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/deployment/application.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/deployment/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/keyspace/Keyspace.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/Attribute.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/AttributeType.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/CommitTx.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/Concept.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/EntityType.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/GraknTx.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/Query.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/Relation.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/RelationType.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/Role.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/Rule.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/SchemaConcept.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/Thing.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/service/session/transaction/Type.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/support/GraknTestEnvironment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/support/basic-genealogy.gql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +122,7 @@
       <updated>1603271690355</updated>
       <workItem from="1603271694838" duration="3125000" />
       <workItem from="1603279710648" duration="2000" />
-      <workItem from="1603358099826" duration="118077000" />
+      <workItem from="1603358099826" duration="126824000" />
     </task>
     <servers />
   </component>
@@ -138,10 +164,11 @@
     </state>
     <state x="922" y="315" key="SettingsEditor/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603720358573" />
     <state x="922" y="297" key="SettingsEditor/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604058039494" />
-    <state x="434" y="478" width="871" height="498" key="find.popup" timestamp="1604421368185">
+    <state x="434" y="478" width="871" height="548" key="find.popup" timestamp="1604599651215">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="434" y="478" width="586" height="498" key="find.popup/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1603909521905" />
+    <state x="434" y="478" width="871" height="548" key="find.popup/0.0.2560.1440/2560.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604599651215" />
     <state x="434" y="493" width="586" height="490" key="find.popup/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603880306313" />
     <state x="434" y="478" width="871" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604421368185" />
     <state x="434" y="478" width="586" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.343.1792.1097@0.0.2560.1440" timestamp="1604080928930" />

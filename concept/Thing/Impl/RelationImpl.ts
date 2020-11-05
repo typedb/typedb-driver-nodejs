@@ -1,4 +1,8 @@
-class RelationImpl extends ThingImpl implements Relation {
+import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
+import { Relation, RemoteRelation } from "../Relation";
+import { Thing } from "../Thing";
+
+export class RelationImpl extends ThingImpl implements Relation {
     constructor(iid: string) {
         super(iid)
     }
@@ -12,7 +16,7 @@ class RelationImpl extends ThingImpl implements Relation {
     }
 }
 
-class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelation {
+export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelation {
     constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
     }

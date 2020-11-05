@@ -1,8 +1,13 @@
-interface ThingType extends Type {
+import { QueryIterator } from "../Concept";
+import { AttributeType } from "./AttributeType";
+import { RoleType } from "./RoleType";
+import { RemoteType, Type } from "./Type";
+
+export interface ThingType extends Type {
     asRemote(transaction: Transaction): RemoteThingType;
 }
 
-interface RemoteThingType extends Merge<RemoteType, ThingType> {
+export interface RemoteThingType extends Merge<RemoteType, ThingType> {
     asRemote(transaction: Transaction): RemoteThingType;
     getSupertype(): ThingType;
 

@@ -1,4 +1,12 @@
-interface Type extends Concept {
+import { Concept, RemoteConcept, QueryIterator } from "../Concept";
+import { ThingType, RemoteThingType } from "./ThingType";
+import { EntityType, RemoteEntityType } from "./EntityType";
+import { AttributeType, RemoteAttributeType } from "./AttributeType";
+import { RelationType, RemoteRelationType } from "./RelationType";
+import { RoleType, RemoteRoleType } from "./RoleType";
+import ValueType = WebAssembly.ValueType;
+
+export interface Type extends Concept {
     asThingType():      ThingType;
     asEntityType():     EntityType;
     asAttributeType():  AttributeType;
@@ -14,7 +22,7 @@ interface Type extends Concept {
     asRemote(transaction: Transaction):         RemoteType;
 }
 
-interface RemoteType extends Merge<RemoteConcept, Type> {
+export interface RemoteType extends Merge<RemoteConcept, Type> {
     setLabel(label: string): void;
 
     getSupertypes():    QueryIterator;
@@ -23,9 +31,11 @@ interface RemoteType extends Merge<RemoteConcept, Type> {
 
     asThingType():      RemoteThingType;
     asEntityType():     RemoteEntityType;
-    //asAttributeType():  RemoteAttributeType;
+    asAttributeType():  RemoteAttributeType;
     asRelationType():   RemoteRelationType;
     asRoleType():       RemoteRoleType;
+
+    getValueType():     string;
 
     asRemote(transaction: Transaction):         RemoteType;
 }

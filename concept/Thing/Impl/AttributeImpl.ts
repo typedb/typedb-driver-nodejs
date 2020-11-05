@@ -1,4 +1,7 @@
-abstract class AttributeImpl<T extends AttributeValueType> extends ThingImpl implements Attribute<T> {
+import { AttributeValueType, Attribute, RemoteAttribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute, RemoteBooleanAttribute, RemoteLongAttribute, RemoteStringAttribute, RemoteDoubleAttribute, RemoteDateTimeAttribute } from "../Attribute";
+import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
+
+export abstract class AttributeImpl<T extends AttributeValueType> extends ThingImpl implements Attribute<T> {
     protected constructor(iid: string) {
         super(iid);
     }
@@ -32,7 +35,7 @@ abstract class AttributeImpl<T extends AttributeValueType> extends ThingImpl imp
     abstract getValue(): T
 }
 
-abstract class RemoteAttributeImpl<T extends AttributeValueType> extends RemoteThingImpl implements RemoteAttribute<T> {
+export abstract class RemoteAttributeImpl<T extends AttributeValueType> extends RemoteThingImpl implements RemoteAttribute<T> {
     protected constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
     }
@@ -72,7 +75,7 @@ abstract class RemoteAttributeImpl<T extends AttributeValueType> extends RemoteT
 
 }
 
-class BooleanAttributeImpl extends AttributeImpl<boolean> implements BooleanAttribute {
+export class BooleanAttributeImpl extends AttributeImpl<boolean> implements BooleanAttribute {
     private readonly value: boolean;
 
     constructor(iid: string, value: boolean) {
@@ -93,7 +96,7 @@ class BooleanAttributeImpl extends AttributeImpl<boolean> implements BooleanAttr
     }
 }
 
-class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements Merge<RemoteBooleanAttribute, BooleanAttribute> {
+export class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements Merge<RemoteBooleanAttribute, BooleanAttribute> {
     private readonly value: boolean;
 
     constructor(transaction: Transaction, iid: string, value: boolean){
@@ -118,7 +121,7 @@ class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements
     }
 }
 
-class LongAttributeImpl extends AttributeImpl<number> implements LongAttribute {
+export class LongAttributeImpl extends AttributeImpl<number> implements LongAttribute {
     private readonly value: number;
 
     constructor(iid: string, value: number) {
@@ -139,7 +142,7 @@ class LongAttributeImpl extends AttributeImpl<number> implements LongAttribute {
     }
 }
 
-class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteLongAttribute, LongAttribute> {
+export class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteLongAttribute, LongAttribute> {
     private readonly value: number;
 
     constructor(transaction: Transaction, iid: string, value: number){
@@ -164,7 +167,7 @@ class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> implements Mer
     }
 }
 
-class StringAttributeImpl extends AttributeImpl<string> implements Attribute<string> {
+export class StringAttributeImpl extends AttributeImpl<string> implements Attribute<string> {
     private readonly value: string;
 
     constructor(iid: string, value: string) {
@@ -185,7 +188,7 @@ class StringAttributeImpl extends AttributeImpl<string> implements Attribute<str
     }
 }
 
-class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements Merge<RemoteStringAttribute, StringAttribute> {
+export class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements Merge<RemoteStringAttribute, StringAttribute> {
     private readonly value: string;
 
     constructor(transaction: Transaction, iid: string, value: string){
@@ -210,7 +213,7 @@ class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements M
     }
 }
 
-class DoubleAttributeImpl extends AttributeImpl<number> implements Attribute<number> {
+export class DoubleAttributeImpl extends AttributeImpl<number> implements Attribute<number> {
     private readonly value: number;
 
     constructor(iid: string, value: number) {
@@ -232,7 +235,7 @@ class DoubleAttributeImpl extends AttributeImpl<number> implements Attribute<num
 }
 
 
-class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteDoubleAttribute, DoubleAttribute> {
+export class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteDoubleAttribute, DoubleAttribute> {
     private readonly value: number;
 
     constructor(transaction: Transaction, iid: string, value: number){
@@ -258,7 +261,7 @@ class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> implements M
 }
 
 
-class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTimeAttribute {
+export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTimeAttribute {
     private readonly value: Date;
 
     constructor(iid: string, value: Date) {

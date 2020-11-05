@@ -1,11 +1,17 @@
-class ThingTypeImpl extends TypeImpl implements ThingType {
+import { TypeImpl, RemoteTypeImpl } from "./TypeImpl";
+import { ThingType, RemoteThingType } from "../ThingType";
+import { QueryIterator } from "../../Concept";
+import { AttributeType } from "../AttributeType";
+import { RoleType } from "../RoleType";
+
+export class ThingTypeImpl extends TypeImpl implements ThingType {
     asRemote(transaction: Transaction): RemoteThingType {
         return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot())
     };
 
 }
 
-class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingType {
+export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingType {
     constructor(transaction: Transaction, label: string, isRoot: boolean) {
         super(transaction, label, isRoot);
     }
