@@ -29,7 +29,7 @@ export abstract class TypeImpl implements Type {
             return false;
 
         }
-        return true;
+        return type.getLabel() === this.getLabel();
     }
 
 
