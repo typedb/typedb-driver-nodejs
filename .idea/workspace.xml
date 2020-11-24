@@ -20,14 +20,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/concept/Type/Impl/RuleImpl.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/behaviour/connection/ConnectionSteps.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/behaviour/connection/database/DatabaseSteps.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/Exceptions.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc/RequestBuilder.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc/ResponseReader.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc/Transciever.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/BUILD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/GraknCoreRunner.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/behaviour/concept/thing/entity/BUILD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/cucumber_test.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/rules.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/TypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/TypeImpl.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/concept/Type/Rule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Rule.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpc/RPCSession.ts" beforeDir="false" afterPath="$PROJECT_DIR$/rpc/RPCSession.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/BUILD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GraknClient.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GraknClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/GraknClient.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WORKSPACE" beforeDir="false" afterPath="$PROJECT_DIR$/WORKSPACE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependencies/graknlabs/artifacts.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/graknlabs/artifacts.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependencies/graknlabs/repositories.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/graknlabs/repositories.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc/RPCSession.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/behaviour/concept/thing/entity/EntitySteps.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/behaviour/concept/thing/entity/EntitySteps.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +98,9 @@
       <updated>1603271690355</updated>
       <workItem from="1603271694838" duration="3125000" />
       <workItem from="1603279710648" duration="2000" />
-      <workItem from="1603358099826" duration="138940000" />
+      <workItem from="1603358099826" duration="153086000" />
+      <workItem from="1605705630451" duration="144000" />
+      <workItem from="1606135242632" duration="4279000" />
     </task>
     <servers />
   </component>
@@ -101,6 +117,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="470" y="533" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604478507876">
@@ -128,22 +145,24 @@
     </state>
     <state x="922" y="315" key="SettingsEditor/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603720358573" />
     <state x="922" y="297" key="SettingsEditor/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604058039494" />
-    <state x="434" y="478" width="871" height="548" key="find.popup" timestamp="1604599651215">
-      <screen x="0" y="0" width="2560" height="1440" />
+    <state x="434" y="494" width="871" height="491" key="find.popup" timestamp="1606138914947">
+      <screen x="0" y="25" width="2560" height="1415" />
     </state>
     <state x="434" y="478" width="586" height="498" key="find.popup/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1603909521905" />
     <state x="434" y="478" width="871" height="548" key="find.popup/0.0.2560.1440/2560.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604599651215" />
     <state x="434" y="493" width="586" height="490" key="find.popup/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603880306313" />
-    <state x="434" y="478" width="871" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604421368185" />
+    <state x="2994" y="493" width="871" height="491" key="find.popup/0.23.2560.1417/2560.23.2560.1417/-1792.343.1792.1097@2560.23.2560.1417" timestamp="1605705710494" />
+    <state x="434" y="494" width="871" height="491" key="find.popup/0.25.2560.1415/2560.25.2560.1415/-1792.345.1792.1095@0.25.2560.1415" timestamp="1606138914947" />
+    <state x="434" y="478" width="871" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604685298618" />
     <state x="434" y="478" width="586" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.343.1792.1097@0.0.2560.1440" timestamp="1604080928930" />
     <state width="600" height="428" key="javadoc.popup" timestamp="1604673150667">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state width="600" height="428" key="javadoc.popup/2560.0.2560.1440/0.0.2560.1440/-1792.343.1792.1097@0.0.2560.1440" timestamp="1604673150667" />
-    <state x="409" y="305" width="670" height="687" key="search.everywhere.popup" timestamp="1604671653247">
+    <state x="409" y="305" width="670" height="687" key="search.everywhere.popup" timestamp="1604685292099">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="409" y="323" width="670" height="676" key="search.everywhere.popup/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603905313495" />
-    <state x="409" y="305" width="670" height="687" key="search.everywhere.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604671653247" />
+    <state x="409" y="305" width="670" height="687" key="search.everywhere.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604685292099" />
   </component>
 </project>

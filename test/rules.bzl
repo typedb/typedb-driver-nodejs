@@ -15,15 +15,19 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_file")
-load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment_private")
-
-def graknlabs_grakn_core_artifact():
-    artifact_file(
-        name = "graknlabs_grakn_core_artifact",
-        group_name = "graknlabs_grakn_core",
-        artifact_name = "grakn-core-server-linux-{version}.tar.gz",
-        tag_source = deployment_private["artifact.release"],
-        commit_source = deployment_private["artifact.snapshot"],
-        commit = "6012ed6d9cfd39b512b44299c4f03b3f297998b8",
+def node_cucumber_test(name, features, node_modules, package_json, core_artifact, deps):
+    native.sh_test (
+        name = name,
+        data = [
+            "//test:GraknCoreRunner.js",
+            node_modules,
+            package_json,
+            core_artifact,
+        ] + features + deps,
+        srcs = [
+            "//test:cucumber_test.sh",
+        ],
+        args = [
+            "$(location @graknlabs_grakn_core_artifact//file)"
+        ],
     )

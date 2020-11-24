@@ -51,7 +51,8 @@ pip_repositories()
 # Load //builder/nodejs
 load("@graknlabs_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
-load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")
+npm_install(name = "perform_npm_install", quiet = False, package_json = "package.json", package_lock_json = "package-lock.json")
 
 # Load //builder/grpc
 load("@graknlabs_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
@@ -104,16 +105,12 @@ github_deps()
 load("//dependencies/graknlabs:repositories.bzl", "graknlabs_protocol")
 graknlabs_protocol()
 
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_behaviour")
+graknlabs_behaviour()
+
 # Load artifacts
 load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifact")
 graknlabs_grakn_core_artifact()
-
-# Load package.json
-yarn_install(
-    name = "npm",
-    package_json = "//:package.json",
-    yarn_lock = "//:yarn.lock"
-)
 
 ############################
 # Load @maven dependencies #

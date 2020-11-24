@@ -2,3 +2,4 @@ bazel-*
 .ijwb
 node_modules
 dist
+.idea
