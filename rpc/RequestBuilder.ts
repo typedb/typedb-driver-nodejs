@@ -1,5 +1,3 @@
-import { Session } from "../grpc/nodejs/protocol/protobuf/session_pb";
+import { Session } from "../grpc/nodejs/protobuf/session_pb";
 
-class  {
-
-}
+gfdgfdgfdsgfdsgfdsgfdsgfds

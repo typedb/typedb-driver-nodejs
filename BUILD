@@ -31,6 +31,17 @@ load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_deps")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
+load("@npm//@bazel/typescript:index.bzl", "ts_project")
+
+ts_project(
+    name = "_client_nodejs",
+    srcs = glob([
+        "GraknClient.ts",
+    ]),
+    tsconfig = "tsconfig.json",
+    deps = ["@graknlabs_protocol//grpc/nodejs:protocol",],
+    declaration = True,
+)
 
 pkg_npm(
     name = "client-nodejs",
@@ -38,12 +49,12 @@ pkg_npm(
        "package.json",
        "README.md",
        ".npmignore",
-       "dist/GraknClient.js"
     ]),
     deps = [
         "@graknlabs_protocol//grpc/nodejs:protocol",
         "@npm//grpc",
-        "@npm//google-protobuf"
+        "@npm//google-protobuf",
+        ":_client_nodejs",
     ],
     visibility = ["//visibility:public"],
     vendor_external = [

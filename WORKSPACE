@@ -51,8 +51,14 @@ pip_repositories()
 # Load //builder/nodejs
 load("@graknlabs_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
-load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")
-npm_install(name = "npm", quiet = False, package_json = "package.json", package_lock_json = "package-lock.json")
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+
+# Load package.json
+yarn_install(
+    name = "npm",
+    package_json = "//:package.json",
+    yarn_lock = "//:yarn.lock"
+)
 
 # Load //builder/grpc
 load("@graknlabs_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")

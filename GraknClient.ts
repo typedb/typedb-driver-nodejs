@@ -1,5 +1,8 @@
 const DEFAULT_URI = "localhost:48555"
+import { Session } from "./bazel-bin/external/graknlabs_protocol/grpc/nodejs/protobuf/session_pb"
 
+
+/*
 export class GraknClient {
     private channel: ManagedChannel;
     private keyspaces: Keyspaces;
@@ -20,3 +23,5 @@ export class Keyspaces {
     constructor(channel: ManagedChannel, username: string, password: string) {
     }
 }
+
+*/

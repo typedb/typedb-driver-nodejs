@@ -18,13 +18,15 @@
   },
   "devDependencies": {
     "@bazel/jasmine": "2.0.3",
+    "@bazel/typescript": "2.0.3",
     "@cucumber/cucumber": "^7.0.0-rc.0",
     "fs-extra": "^7.0.0",
     "grpc-tools": "^1.6.6",
+    "grpc_tools_node_protoc_ts": "^5.0.1",
     "jasmine": "3.6.1",
     "jasmine-reporters": "^2.3.2",
     "properties-reader": "^0.3.1",
-    "tmp": "0.1.0"
-  },
-  "prepublish": "tsc"
+    "tmp": "0.1.0",
+    "typescript": "3.7.5"
+  }
 }
