@@ -37,9 +37,9 @@ ts_project(
     name = "_client_nodejs",
     srcs = glob([
         "GraknClient.ts",
-    ]),
+    ]) + ["@graknlabs_protocol//grpc/nodejs:protocol"],
     tsconfig = "tsconfig.json",
-    deps = ["@graknlabs_protocol//grpc/nodejs:protocol",],
+    deps = [],
     declaration = True,
 )
 

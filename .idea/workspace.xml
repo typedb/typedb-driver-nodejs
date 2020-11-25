@@ -23,143 +23,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/BUILD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GraknClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/GraknClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WORKSPACE" beforeDir="false" afterPath="$PROJECT_DIR$/WORKSPACE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.bazelrc" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.bazelrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.bazelversion" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.bazelversion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.circleci/config.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.github/CODEOWNERS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.github/ISSUE_TEMPLATE/bug-report.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.github/ISSUE_TEMPLATE/feature-request.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.github/pull_request_template.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.grabl/automation.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/client-nodejs.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/dictionaries/alistair_crook.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.npmignore" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.npmignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/BUILD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/GraknClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/GraknClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/RELEASE_TEMPLATE.md" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/RELEASE_TEMPLATE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/VERSION" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/VERSION" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/WORKSPACE" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/WORKSPACE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/common/Exceptions.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/common/utils.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Concept.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Attribute.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Entity.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Impl/AttributeImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Impl/EntityImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Impl/RelationImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Impl/ThingImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Relation.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Thing.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/AttributeType.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/EntityType.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/AttributeTypeImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/EntityTypeImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/RelationTypeImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/RoleTypeImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/RuleImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/ThingTypeImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/TypeImpl.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/RelationType.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/RoleType.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Rule.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/ThingType.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Type.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/dependencies/graknlabs/BUILD" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/dependencies/graknlabs/artifacts.bzl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/dependencies/graknlabs/repositories.bzl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/deployment.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/deployment.bzl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/answer.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/answer_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/answer_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/answer_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/concept.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/concept_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/concept_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/concept_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/database.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/database_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/database_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/database_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/grakn.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/grakn_grpc_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/grakn_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/grakn_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/grakn_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/options.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/options_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/options_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/options_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/query.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/query_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/query_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/query_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/session.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/session_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/session_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/session_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/transaction.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/transaction_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/transaction_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/grpc/nodejs/protocol/protobuf/transaction_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/rpc/RequestBuilder.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/rpc/ResponseReader.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/rpc/Transciever.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/BUILD" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/GraknCoreRunner.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/GraknCoreRunner.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/behaviour/concept/thing/entity/BUILD" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/behaviour/concept/thing/entity/EntitySteps.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/behaviour/connection/ConnectionSteps.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/behaviour/connection/database/DatabaseSteps.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/cucumber_test.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/rules.bzl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/answer.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/answer_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/answer_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/answer_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/concept.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/concept_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/concept_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/concept_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/database.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/database_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/database_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/database_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/grakn.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/grakn_grpc_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/grakn_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/grakn_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/grakn_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/options.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/options_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/options_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/options_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/query.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/query_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/query_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/query_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/session.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/session_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/session_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/session_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/transaction.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/transaction_grpc_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/transaction_pb.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpc/nodejs/protocol/protobuf/transaction_pb.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rpc/RequestBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/rpc/RequestBuilder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,7 +84,7 @@
       <workItem from="1603279710648" duration="2000" />
       <workItem from="1603358099826" duration="153086000" />
       <workItem from="1605705630451" duration="144000" />
-      <workItem from="1606135242632" duration="28488000" />
+      <workItem from="1606135242632" duration="34825000" />
     </task>
     <servers />
   </component>

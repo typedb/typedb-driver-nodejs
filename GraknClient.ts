@@ -1,6 +1,4 @@
 const DEFAULT_URI = "localhost:48555"
-import { Session } from "./bazel-bin/external/graknlabs_protocol/grpc/nodejs/protobuf/session_pb"
-
 
 /*
 export class GraknClient {
