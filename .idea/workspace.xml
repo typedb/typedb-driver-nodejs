@@ -20,11 +20,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Grakn.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GraknOptions.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/ProtoBuilder.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/concept/ConceptManager.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc/RPCTransaction.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/BUILD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GraknClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/GraknClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpc/RequestBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/rpc/RequestBuilder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GraknClient.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc/RequestBuilder.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc/ResponseReader.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc/Transciever.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +44,8 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/bazel-bin/test/behaviour/concept/thing/entity/entity-test.runfiles/graknlabs_client_nodejs/package.json" />
+    <dismissed value="$PROJECT_DIR$/bazel-out/darwin-fastbuild/bin/test/behaviour/concept/thing/entity/entity-test.runfiles/graknlabs_client_nodejs/package.json" />
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectId" id="1jBJk1E3VsLQIhweDBBzmFpCYEZ" />
@@ -44,8 +55,10 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/concept/Type/Impl" />
@@ -57,7 +70,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
-    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -84,17 +97,14 @@
       <workItem from="1603279710648" duration="2000" />
       <workItem from="1603358099826" duration="153086000" />
       <workItem from="1605705630451" duration="144000" />
-      <workItem from="1606135242632" duration="34825000" />
+      <workItem from="1606135242632" duration="36221000" />
+      <workItem from="1606320926491" duration="13457000" />
+      <workItem from="1606405019277" duration="27334000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
-    <option name="exactExcludedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/GraknClient.js" />
-      </list>
-    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -138,14 +148,14 @@
       <screen x="0" y="25" width="1792" height="1095" />
     </state>
     <state x="737" y="274" key="VCS.ChangeListViewerDialog/0.25.1792.1095@0.25.1792.1095" timestamp="1606215916332" />
-    <state x="304" y="388" width="954" height="490" key="find.popup" timestamp="1606226058135">
+    <state x="304" y="388" width="988" height="490" key="find.popup" timestamp="1606416592779">
       <screen x="0" y="25" width="1792" height="1095" />
     </state>
     <state x="434" y="478" width="586" height="498" key="find.popup/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1603909521905" />
     <state x="434" y="478" width="871" height="548" key="find.popup/0.0.2560.1440/2560.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604599651215" />
     <state x="434" y="493" width="586" height="490" key="find.popup/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603880306313" />
     <state x="2994" y="493" width="871" height="491" key="find.popup/0.23.2560.1417/2560.23.2560.1417/-1792.343.1792.1097@2560.23.2560.1417" timestamp="1605705710494" />
-    <state x="304" y="388" width="954" height="490" key="find.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606226058135" />
+    <state x="304" y="388" width="988" height="490" key="find.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606416592779" />
     <state x="434" y="494" width="871" height="491" key="find.popup/0.25.2560.1415/2560.25.2560.1415/-1792.345.1792.1095@0.25.2560.1415" timestamp="1606138914947" />
     <state x="434" y="478" width="871" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604685298618" />
     <state x="434" y="478" width="586" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.343.1792.1097@0.0.2560.1440" timestamp="1604080928930" />
@@ -153,10 +163,33 @@
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state width="600" height="428" key="javadoc.popup/2560.0.2560.1440/0.0.2560.1440/-1792.343.1792.1097@0.0.2560.1440" timestamp="1604673150667" />
-    <state x="409" y="305" width="670" height="687" key="search.everywhere.popup" timestamp="1604685292099">
-      <screen x="0" y="0" width="2560" height="1440" />
+    <state x="501" y="263" key="run.anything.popup" timestamp="1606417161991">
+      <screen x="0" y="25" width="1792" height="1095" />
+    </state>
+    <state x="501" y="263" key="run.anything.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606417161991" />
+    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup" timestamp="1606413577553">
+      <screen x="0" y="25" width="1792" height="1095" />
     </state>
     <state x="409" y="323" width="670" height="676" key="search.everywhere.popup/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603905313495" />
+    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606413577553" />
     <state x="409" y="305" width="670" height="687" key="search.everywhere.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604685292099" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/bazel-out/darwin-fastbuild/bin/external/graknlabs_protocol/grpc/nodejs/protobuf/transaction_pb.d.ts</url>
+          <line>217</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/rpc/RPCTransaction.ts</url>
+          <line>40</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -13,13 +13,15 @@
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
-    "grpc": "^1.24.3",
-    "tsc": "^1.20150623.0"
+    "@grpc/grpc-js": "^1.2.1",
+    "tsc": "^1.20150623.0",
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@bazel/jasmine": "2.0.3",
     "@bazel/typescript": "2.0.3",
     "@cucumber/cucumber": "^7.0.0-rc.0",
+    "@types/google-protobuf": "^3.7.3",
     "fs-extra": "^7.0.0",
     "grpc-tools": "^1.6.6",
     "grpc_tools_node_protoc_ts": "^5.0.1",

@@ -52,7 +52,7 @@ pkg_npm(
     ]),
     deps = [
         "@graknlabs_protocol//grpc/nodejs:protocol",
-        "@npm//grpc",
+        "@npm//@grpc/grpc-js",
         "@npm//google-protobuf",
         ":_client_nodejs",
     ],
