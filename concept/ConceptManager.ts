@@ -36,62 +36,62 @@ export class ConceptManager {
     }
 
     public getEntityType(label: string): EntityType | null {
-        let concept = this.getType(label)
+        const concept = this.getType(label)
         if (concept instanceof EntityTypeImpl) return concept.asEntityType();
         return null;
     }
 
     public putRelationType(label: string): RelationType {
-        let req = new ProtoConceptManager.Req()
+        const req = new ProtoConceptManager.Req()
             .setPutRelationTypeReq(
                 new ProtoConceptManager.PutRelationType.Req()
                     .setLabel(label)
             )
-        let res = this.execute(req);
+        const res = this.execute(req);
         return RelationTypeImpl.of(res.getPutRelationTypeRes().getRelationType())
     }
 
     public getRelationType(label: string): RelationType | null {
-        let concept = this.getType(label)
+        const concept = this.getType(label)
         if (concept instanceof RelationTypeImpl) return concept.asRelationType();
         return null;
     }
 
     public putAttributeType(label: string): AttributeType {
-        let req = new ProtoConceptManager.Req()
+        const req = new ProtoConceptManager.Req()
             .setPutAttributeTypeReq(
                 new ProtoConceptManager.PutAttributeType.Req()
                     .setLabel(label)
             )
-        let res = this.execute(req);
+        const res = this.execute(req);
         return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType())
     }
 
     public getAttributeType(label: string): AttributeType | null {
-        let concept = this.getType(label)
+        const concept = this.getType(label)
         if (concept instanceof AttributeTypeImpl) return concept.asAttributeType();
         return null;
     }
 
     public putRule(label: string, when: string, then: string): Rule {
-        let req = new ProtoConceptManager.Req()
+        const req = new ProtoConceptManager.Req()
             .setPutRuleReq(
                 new ProtoConceptManager.PutRule.Req()
                     .setLabel(label)
                     .setWhen(when)
                     .setThen(then)
             )
-        let res = this.execute(req);
+        const res = this.execute(req);
         return RuleImpl.of(res.getPutRuleRes().getRule())
     }
 
     public getThing(iid: string): Thing | null {
-        let req = new ProtoConceptManager.Req()
+        const req = new ProtoConceptManager.Req()
             .setGetThingReq(
                 new ProtoConceptManager.GetThing.Req()
                     .setIid(iid)
             )
-        let res = this.execute(req);
+        const res = this.execute(req);
         if (res.getGetThingRes().getResCase() === ProtoConceptManager.GetThing.Res.ResCase.THING)
             return ThingImpl.of(res.getGetThingRes().getThing());
         else
@@ -99,12 +99,12 @@ export class ConceptManager {
     }
 
     public getType(label: string): Type | null {
-        let req = new ProtoConceptManager.Req()
+        const req = new ProtoConceptManager.Req()
             .setGetTypeReq(
                 new ProtoConceptManager.GetType.Req()
                     .setLabel(label)
             )
-        let res = this.execute(req);
+        const res = this.execute(req);
         if (res.getGetTypeRes().getResCase() === ProtoConceptManager.GetType.Res.ResCase.TYPE)
             return TypeImpl.of(res.getGetTypeRes().getType());
         else
@@ -112,18 +112,18 @@ export class ConceptManager {
     }
 
     public getRule(label: string): Rule | null {
-        let req = new ProtoConceptManager.Req()
+        const req = new ProtoConceptManager.Req()
             .setGetRuleReq(
                 new ProtoConceptManager.GetRule.Req()
                     .setLabel(label)
             )
-        let res = this.execute(req);
+        const res = this.execute(req);
         if (res.getGetRuleRes().getResCase() === ProtoConceptManager.GetRule.Res.ResCase.RULE) return RuleImpl.of(res.getGetRuleRes().getRule());
         return null;
     }
 
     private execute(conceptManagerReq: ProtoConceptManager.Req): ProtoConceptManager.Res {
-        let transactionReq = new Transaction.Req()
+        const transactionReq = new Transaction.Req()
             .setConceptManagerReq(conceptManagerReq)
         addTracingDataToMetadata(transactionReq);
         return this._rpcTransaction.execute(transactionReq).getConceptManagerRes()

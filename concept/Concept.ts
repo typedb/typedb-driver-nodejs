@@ -1,10 +1,12 @@
 import {RemoteThing, Thing} from "./Thing/Thing";
 import { RemoteType, Type } from "./Type/Type";
 
+// TODO: remove
 export class Transaction {
 
 }
 
+// TODO: remove
 export class QueryIterator {
 }
 
@@ -23,6 +25,4 @@ export interface RemoteConcept extends Concept {
     asType(): RemoteType;
     asThing(): RemoteThing;
     asRemote(transaction: Transaction): RemoteConcept;
-
-    isRemote(): boolean;
 }
