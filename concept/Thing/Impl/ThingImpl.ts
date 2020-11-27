@@ -3,67 +3,93 @@ import { AttributeValueType, Attribute } from "../Attribute";
 import { Entity } from "../Entity";
 import { Relation } from "../Relation";
 import { Type, RemoteType } from "../../Type/Type";
-import { ThingType } from "../../Type/ThingType";
 import { QueryIterator } from "../../Concept";
 import { AttributeType } from "../../Type/AttributeType";
 import { RoleType } from "../../Type/RoleType";
+import {GraknTransaction} from "../../../Grakn";
+import {Thing as ProtoThing} from "protobuf/concept_pb";
+import {EntityImpl} from "./EntityImpl";
+import {RelationImpl} from "./RelationImpl";
+import {AttributeImpl} from "./AttributeImpl";
+import {TypeImpl} from "../../Type/Impl/TypeImpl";
+import {ThingTypeImpl} from "../../Type/Impl/ThingTypeImpl";
 
 export abstract class ThingImpl implements Thing {
-    readonly iid: string;
+    private readonly _iid: string;
 
-    protected constructor (iid: string) {
+    // TODO: all error messages should be extracted into ErrorMessage class or namespace
+    protected constructor(iid: string) {
         if (!iid) {
             throw "IID Missing"
         }
-        this.iid = iid;
+        this._iid = iid;
     }
 
-    asAttribute(): Attribute<AttributeValueType> {
-        throw "Invalid cast to Attribute";
-    }
-
-    asEntity(): Entity {
-        throw "Invalid cast to Entity";
-    }
-
-    asRelation(): Relation {
-        throw "Invalid cast to Relation"
-    }
-
-    asThing(): Thing {
-        return this;
-    }
-
-    asType(): Type {
-        throw "Invalid cast to Type";
+    static of(thingProto: ProtoThing): ThingImpl {
+        switch (thingProto.getEncoding()) {
+            case ProtoThing.ENCODING.ENTITY:
+                return EntityImpl.of(thingProto);
+            case ProtoThing.ENCODING.RELATION:
+                return RelationImpl.of(thingProto);
+            case ProtoThing.ENCODING.ATTRIBUTE:
+                return AttributeImpl.of(thingProto);
+            default:
+                throw "Bad encoding"
+        }
     }
 
     getIID(): string {
-        return this.iid;
+        return this._iid;
     }
 
     isRemote(): boolean {
         return false;
     }
 
-    abstract asRemote(transaction: Transaction): RemoteThing;
+    asThing(): ThingImpl {
+        return this;
+    }
+
+    asType(): TypeImpl {
+        throw "Invalid cast to Type";
+    }
+
+    asEntity(): EntityImpl {
+        throw "Invalid cast to Entity";
+    }
+
+    asAttribute(): AttributeImpl<AttributeValueType> {
+        throw "Invalid cast to Attribute";
+    }
+
+    asRelation(): RelationImpl {
+        throw "Invalid cast to Relation"
+    }
+
+    toString(): string {
+        return `${ThingImpl.name}[iid:${this._iid}]`;
+    }
+
+    abstract asRemote(transaction: GraknTransaction): RemoteThing;
 }
 
 export abstract class RemoteThingImpl implements RemoteThing {
-    readonly iid: string;
-    private transaction: Transaction;
+    private readonly _iid: string;
+    protected readonly transaction: GraknTransaction;
 
-    protected constructor (transaction: Transaction, iid: string) {
-        if (!transaction)   throw "Transaction Missing"
-        if (!iid)           throw "IID Missing"
-        this.iid = iid;
+    protected constructor(transaction: GraknTransaction, iid: string) {
+        if (!transaction) throw "Transaction Missing"
+        if (!iid) throw "IID Missing"
+        this._iid = iid;
         this.transaction = transaction;
     }
 
-    abstract getType(): ThingType;
+    getType(): ThingTypeImpl {
+        throw "Not implemented yet";
+    }
 
-    setHas(attribute: Attribute<AttributeValueType>): void {
-        return undefined;
+    isInferred(): boolean {
+        throw "Not implemented yet";
     }
 
     asAttribute(): Attribute<AttributeValueType> {
@@ -78,7 +104,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
         throw "Invalid cast to Relation"
     }
 
-    abstract asRemote(transaction: Transaction): RemoteThing;
+    abstract asRemote(transaction: GraknTransaction): RemoteThing;
 
     asThing(): RemoteThing {
         return this;
@@ -92,7 +118,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
     }
 
     getIID(): string {
-        return this.iid;
+        return this._iid;
     }
 
     isDeleted(): boolean {
@@ -122,8 +148,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
         return new QueryIterator();
     }
 
-    isInferred(): boolean {
-        return false;
+    setHas(attribute: Attribute<AttributeValueType>): void {
     }
 
     unsetHas(attribute: Attribute<any>): void {

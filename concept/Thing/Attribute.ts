@@ -1,22 +1,21 @@
 import { Thing, RemoteThing } from "./Thing";
 import { AttributeType } from "../Type/AttributeType";
+import {GraknTransaction} from "../../Grakn";
 
 export interface Attribute<T extends AttributeValueType> extends Thing {
     getValue(): T;
 
-    asBoolean():    BooleanAttribute;
-    asLong():       LongAttribute;
-    asDouble():     DoubleAttribute;
-    asString():     StringAttribute;
-    asDateTime():   DateTimeAttribute;
-    asRemote(transaction: Transaction): RemoteAttribute<T>;
+    asBoolean(): BooleanAttribute;
+    asLong(): LongAttribute;
+    asDouble(): DoubleAttribute;
+    asString(): StringAttribute;
+    asDateTime(): DateTimeAttribute;
+    asRemote(transaction: GraknTransaction): RemoteAttribute<T>;
 }
-
-
 
 export interface RemoteAttribute<T extends AttributeValueType> extends Merge<RemoteThing, Attribute<T>> {
     getType(): AttributeType;
-    asRemote(transaction: Transaction): RemoteAttribute<T>;
+    asRemote(transaction: GraknTransaction): RemoteAttribute<T>;
 }
 
 export interface BooleanAttribute extends Attribute<boolean> {

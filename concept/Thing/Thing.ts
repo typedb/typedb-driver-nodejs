@@ -6,6 +6,7 @@ import { Type } from "../Type/Type";
 import { ThingType } from "../Type/ThingType";
 import { AttributeType } from "../Type/AttributeType";
 import { RoleType } from "../Type/RoleType";
+import {GraknTransaction} from "../../Grakn";
 
 export interface Thing extends Concept {
     getIID(): string;
@@ -14,7 +15,7 @@ export interface Thing extends Concept {
     asAttribute(): Attribute<AttributeValueType>;
     asRelation(): Relation;
 
-    asRemote(transaction: Transaction): RemoteThing;
+    asRemote(transaction: GraknTransaction): RemoteThing;
 
     asThing(): Thing;
 }
@@ -26,17 +27,17 @@ export interface RemoteThing extends Merge<RemoteConcept, Thing> {
     setHas(attribute: Attribute<any>): void;
     unsetHas(attribute: Attribute<any>): void;
 
-    getHas(onlyKey: boolean):                       QueryIterator;
-    getHas(attributeType: Type):                    QueryIterator;
-    getHas(attributeType: Type):                    QueryIterator;
-    getHas(attributeType: Type):                    QueryIterator;
-    getHas(attributeType: Type):                    QueryIterator;
-    getHas(attributeType: Type):                    QueryIterator;
-    getHas(attributeTypes: AttributeType[]):        QueryIterator;
-    getPlays():                                     QueryIterator;
-    getRelations(roleTypes: RoleType[]):            QueryIterator;
+    getHas(onlyKey: boolean): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
+    getHas(attributeType: Type): QueryIterator;
+    getHas(attributeTypes: AttributeType[]): QueryIterator;
+    getPlays(): QueryIterator;
+    getRelations(roleTypes: RoleType[]): QueryIterator;
 
-    asRemote(transaction: Transaction): RemoteThing;
+    asRemote(transaction: GraknTransaction): RemoteThing;
 
     asThing(): RemoteThing;
 }

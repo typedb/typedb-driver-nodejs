@@ -10,7 +10,7 @@ import {TypeImpl} from "./Type/Impl/TypeImpl";
 import {Rule} from "./Type/Rule";
 import {RuleImpl} from "./Type/Impl/RuleImpl";
 import {RPCTransaction} from "../rpc/RPCTransaction";
-import {addTracingDataToMetadata, putAllMetadata} from "../common/ProtoBuilder";
+import {addTracingDataToMetadata} from "../common/ProtoBuilder";
 import {RelationTypeImpl} from "./Type/Impl/RelationTypeImpl";
 import {AttributeTypeImpl} from "./Type/Impl/AttributeTypeImpl";
 import {Thing} from "./Thing/Thing";
