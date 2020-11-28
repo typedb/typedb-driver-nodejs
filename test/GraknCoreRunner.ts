@@ -79,13 +79,13 @@ function start_grakn(distribution_file_name: string, port: number): string {
 
     console.error("Starting Grakn Core database server at " + GRAKN_TARGET_DIRECTORY);
     console.error("Database directory will be at " + tmpDir);
-    //TODO: Check if this ever returns
     execSync(GRAKN_TARGET_DIRECTORY + "/grakn server --port " + port.toString() + " --data grakn_core_test", {stdio: 'inherit'});
     console.error("Grakn Core database server started");
     return "127.0.0.1:" + port.toString();
 }
 
-function stop_grakn(): void {
+function stop_grakn(distribution_file_name: string, port: number): void {
+    execSync(distributionTarget(distribution_file_name) + "/grakn server stop --port " + port.toString(), {stdio: 'inherit'});
 }
 
 
@@ -95,7 +95,7 @@ function main() {
         case "start":
             return start_grakn(args[0], parseInt(args[1]));
         case "stop":
-            stop_grakn();
+            stop_grakn(args[0], parseInt(args[1]));
             return "";
         case "help":
         default:
