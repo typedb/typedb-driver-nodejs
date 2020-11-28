@@ -1,5 +1,8 @@
 import { Given, When, Then } from "@cucumber/cucumber";
+import { GraknClient } from "../../../rpc/GraknClient";
 
+export let client: GraknClient;
 Given("connection has been opened", () => {
-    console.log("Hello World");
+    if (client) return;
+    client = new GraknClient();
 });

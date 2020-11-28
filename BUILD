@@ -105,14 +105,14 @@ artifact_extractor(
     artifact = "@graknlabs_grakn_core_artifact//file",
 )
 
-release_validate_deps(
-    name = "release-validate-deps",
-    refs = "@graknlabs_client_nodejs_workspace_refs//:refs.json",
-    tagged_deps = [
-        "graknlabs_protocol",
-    ],
-    tags = ["manual"]  # in order for bazel test //... to not fail
-)
+#release_validate_deps(
+#    name = "release-validate-deps",
+#    refs = "@graknlabs_client_nodejs_workspace_refs//:refs.json",
+#    tagged_deps = [
+#        "@graknlabs_protocol",
+#    ],
+#    tags = ["manual"]  # in order for bazel test //... to not fail
+#)
 
 # CI targets that are not declared in any BUILD file, but are called externally
 filegroup(

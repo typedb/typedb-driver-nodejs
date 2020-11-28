@@ -61,8 +61,7 @@ function unzip(file_to_unzip: string, directory: string, format: string): void {
     console.error("Grakn Core distribution unarchived");
 }
 
-function start_grakn(distribution_file_name: string): string {
-    let port = 40000 + Math.floor(Math.random()*20000);
+function start_grakn(distribution_file_name: string, port: number): string {
     console.error("Constructing a Grakn Core runner on port " + port.toString());
     if (!existsSync(distribution_file_name)) {
         throw "Distribution file " + distribution_file_name + " not accessible."
@@ -94,7 +93,7 @@ function main() {
     let [func, ...args] = process.argv.slice(2);
     switch (func) {
         case "start":
-            return start_grakn(args[0]);
+            return start_grakn(args[0], parseInt(args[1]));
         case "stop":
             stop_grakn();
             return "";

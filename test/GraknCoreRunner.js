@@ -1,5 +1,6 @@
+"use strict";
 var _a = require("fs"), mkdirSync = _a.mkdirSync, existsSync = _a.existsSync, constants = _a.constants, readdirSync = _a.readdirSync, lstatSync = _a.lstatSync, unlinkSync = _a.unlinkSync, rmdirSync = _a.rmdirSync;
-var execSync = require("child_process").execSync;
+var _b = require("child_process"), exec = _b.exec, execSync = _b.execSync;
 var Path = require("path");
 var promisify = require("util").promisify;
 var TAR = ".tar.gz";
@@ -20,14 +21,14 @@ function recursivelyDeleteDirectory(directory) {
 }
 function checkAndDeleteExistingDistribution(distributionFile) {
     var target = distributionTarget(distributionFile);
-    console.error("Checking for existing Grakn distribution at " + target);
+    //console.error("Checking for existing Grakn distribution at " + target);
     if (existsSync(target)) {
-        console.error("There exists a Grakn Core distribution and will be deleted");
+        //console.error("There exists a Grakn Core distribution and will be deleted");
         recursivelyDeleteDirectory(target);
-        console.error("Existing Grakn Core distribution deleted");
+        //console.error("Existing Grakn Core distribution deleted");
     }
     else {
-        console.error("There is no existing Grakn Core distribution");
+        //console.error("There is no existing Grakn Core distribution");
     }
 }
 function distributionTarget(distributionFile) {
@@ -46,18 +47,18 @@ function distributionFormat(distributionFile) {
     }
 }
 function unzip(file_to_unzip, directory, format) {
-    console.error("Unarchiving Grakn Core distribution");
+    //console.error("Unarchiving Grakn Core distribution");
     if (format === TAR) {
         execSync("tar -xf " + file_to_unzip + " -C " + Path.dirname(directory), { stdio: 'inherit' });
     }
     else {
         execSync("unzip -q " + file_to_unzip + " -d " + Path.dirname(directory), { stdio: 'inherit' });
     }
-    console.error("Grakn Core distribution unarchived");
+    //console.error("Grakn Core distribution unarchived");
 }
 function start_grakn(distribution_file_name) {
     var port = 40000 + Math.floor(Math.random() * 20000);
-    console.error("Constructing a Grakn Core runner on port " + port.toString());
+    //console.error("Constructing a Grakn Core runner on port " + port.toString());
     if (!existsSync(distribution_file_name)) {
         throw "Distribution file " + distribution_file_name + " not accessible.";
     }
@@ -68,10 +69,12 @@ function start_grakn(distribution_file_name) {
     var tmpDir = GRAKN_TARGET_DIRECTORY + "/grakn_core_test";
     unzip(GRAKN_DISTRIBUTION_FILE, GRAKN_TARGET_DIRECTORY, GRAKN_DISTRIBUTION_FORMAT);
     mkdirSync(tmpDir);
-    console.error("Starting Grakn Core database server at " + GRAKN_TARGET_DIRECTORY);
-    console.error("Database directory will be at " + tmpDir);
-    execSync(GRAKN_TARGET_DIRECTORY + "/grakn server --port " + port.toString() + " --data grakn_core_test", { stdio: 'inherit' });
-    console.error("Grakn Core database server started");
+    //console.error("Starting Grakn Core database server at " + GRAKN_TARGET_DIRECTORY);
+    //console.error("Database directory will be at " + tmpDir);
+    //TODO: Check if this ever returns
+    exec(GRAKN_TARGET_DIRECTORY + "/grakn server --port " + port.toString() + " --data grakn_core_test", { stdio: 'inherit' });
+    //console.error("Grakn Core database server started");
+    console.log("127.0.0.1:" + port.toString());
     return "127.0.0.1:" + port.toString();
 }
 function stop_grakn() {
@@ -86,7 +89,7 @@ function main() {
             return "";
         case "help":
         default:
-            console.error("Help to follow once I have a better idea what's going on.");
+            //console.error("Help to follow once I have a better idea what's going on.");
             break;
     }
 }

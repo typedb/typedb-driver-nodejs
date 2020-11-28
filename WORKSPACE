@@ -114,9 +114,12 @@ graknlabs_protocol()
 load("//dependencies/graknlabs:repositories.bzl", "graknlabs_behaviour")
 graknlabs_behaviour()
 
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_common")
+graknlabs_common()
+
 # Load artifacts
-load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifact")
-graknlabs_grakn_core_artifact()
+load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifacts")
+graknlabs_grakn_core_artifacts()
 
 ############################
 # Load @maven dependencies #

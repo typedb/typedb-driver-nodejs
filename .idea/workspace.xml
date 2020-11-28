@@ -20,20 +20,93 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/test/GraknOptions.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/behaviour/connection/database/BUILD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Grakn.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Grakn.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GraknOptions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/GraknOptions.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/ProtoBuilder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/common/ProtoBuilder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/concept/ConceptManager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/ConceptManager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/AttributeTypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/AttributeTypeImpl.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/concept/Type/Impl/ThingTypeImpl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/concept/Type/Impl/ThingTypeImpl.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/query/QueryManager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/query/QueryManager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpc/RPCDatabaseManager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/rpc/RPCDatabaseManager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpc/RPCSession.ts" beforeDir="false" afterPath="$PROJECT_DIR$/rpc/RPCSession.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpc/RPCTransaction.ts" beforeDir="false" afterPath="$PROJECT_DIR$/rpc/RPCTransaction.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/behaviour/concept/thing/entity/EntitySteps.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/behaviour/concept/thing/entity/EntitySteps.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/BUILD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WORKSPACE" beforeDir="false" afterPath="$PROJECT_DIR$/WORKSPACE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.bazelrc" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.bazelrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.bazelversion" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.bazelversion" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.circleci/config.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.github/CODEOWNERS" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.github/ISSUE_TEMPLATE/bug-report.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.github/ISSUE_TEMPLATE/feature-request.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.github/pull_request_template.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.grabl/automation.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/client-nodejs.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/dictionaries/alistair_crook.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.npmignore" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.npmignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/BUILD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/Grakn.ts" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/Grakn.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/GraknOptions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/GraknOptions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/RELEASE_TEMPLATE.md" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/RELEASE_TEMPLATE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/VERSION" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/VERSION" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/WORKSPACE" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/WORKSPACE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/common/Exceptions.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/common/ProtoBuilder.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/common/utils.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Concept.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/ConceptManager.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Attribute.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Entity.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Impl/AttributeImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Impl/EntityImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Impl/RelationImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Impl/ThingImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Relation.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Thing/Thing.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/AttributeType.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/EntityType.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/AttributeTypeImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/EntityTypeImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/RelationTypeImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/RoleTypeImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/RuleImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/ThingTypeImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Impl/TypeImpl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/RelationType.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/RoleType.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Rule.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/ThingType.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/concept/Type/Type.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/dependencies/graknlabs/BUILD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/dependencies/graknlabs/artifacts.bzl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/dependencies/graknlabs/repositories.bzl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/deployment.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/deployment.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/query/QueryManager.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/rpc/GraknClient.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/rpc/RPCDatabaseManager.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/rpc/RPCSession.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/rpc/RPCTransaction.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/BUILD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/GraknCoreRunner.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/GraknCoreRunner.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/behaviour/concept/thing/entity/BUILD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/behaviour/concept/thing/entity/EntitySteps.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/behaviour/connection/ConnectionSteps.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/behaviour/connection/database/DatabaseSteps.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/cucumber_test.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/rules.bzl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependencies/graknlabs/artifacts.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/graknlabs/artifacts.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependencies/graknlabs/repositories.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/graknlabs/repositories.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/test/BUILD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/GraknCoreRunner.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/GraknCoreRunner.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/GraknCoreRunner.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/GraknCoreRunner.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/behaviour/connection/ConnectionSteps.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/behaviour/connection/ConnectionSteps.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/behaviour/connection/database/DatabaseSteps.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/behaviour/connection/database/DatabaseSteps.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cucumber_test.sh" beforeDir="false" afterPath="$PROJECT_DIR$/test/cucumber_test.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/rules.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/test/rules.bzl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +134,7 @@
     <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/concept/Type/Impl" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/test" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -73,14 +146,15 @@
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/test" />
+      <recent name="$PROJECT_DIR$/concept/Type/Impl" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/grpc/nodejs" />
       <recent name="$PROJECT_DIR$/test/behaviour/connection/database" />
       <recent name="$PROJECT_DIR$/concept" />
       <recent name="$PROJECT_DIR$" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/concept/Type/Impl" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -99,12 +173,17 @@
       <workItem from="1605705630451" duration="144000" />
       <workItem from="1606135242632" duration="36221000" />
       <workItem from="1606320926491" duration="13457000" />
-      <workItem from="1606405019277" duration="60239000" />
+      <workItem from="1606405019277" duration="64164000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/test/GraknCoreRunner.js" />
+      </list>
+    </option>
     <option name="additionalRoots">
       <list>
         <option value="$PROJECT_DIR$/bazel-out/darwin-fastbuild/bin/external/graknlabs_protocol/grpc/nodejs/protobuf" />
@@ -167,14 +246,14 @@
       <screen x="0" y="25" width="1792" height="1095" />
     </state>
     <state x="737" y="274" key="VCS.ChangeListViewerDialog/0.25.1792.1095@0.25.1792.1095" timestamp="1606215916332" />
-    <state x="304" y="388" width="988" height="490" key="find.popup" timestamp="1606588748443">
+    <state x="304" y="388" width="988" height="490" key="find.popup" timestamp="1606591494975">
       <screen x="0" y="25" width="1792" height="1095" />
     </state>
     <state x="434" y="478" width="586" height="498" key="find.popup/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1603909521905" />
     <state x="434" y="478" width="871" height="548" key="find.popup/0.0.2560.1440/2560.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604599651215" />
     <state x="434" y="493" width="586" height="490" key="find.popup/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603880306313" />
     <state x="2994" y="493" width="871" height="491" key="find.popup/0.23.2560.1417/2560.23.2560.1417/-1792.343.1792.1097@2560.23.2560.1417" timestamp="1605705710494" />
-    <state x="304" y="388" width="988" height="490" key="find.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606588748443" />
+    <state x="304" y="388" width="988" height="490" key="find.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606591494975" />
     <state x="434" y="494" width="871" height="491" key="find.popup/0.25.2560.1415/2560.25.2560.1415/-1792.345.1792.1095@0.25.2560.1415" timestamp="1606138914947" />
     <state x="434" y="478" width="871" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604685298618" />
     <state x="434" y="478" width="586" height="498" key="find.popup/2560.0.2560.1440/0.0.2560.1440/-1792.343.1792.1097@0.0.2560.1440" timestamp="1604080928930" />
@@ -186,11 +265,11 @@
       <screen x="0" y="25" width="1792" height="1095" />
     </state>
     <state x="501" y="263" key="run.anything.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606417161991" />
-    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup" timestamp="1606413577553">
+    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup" timestamp="1606594850783">
       <screen x="0" y="25" width="1792" height="1095" />
     </state>
     <state x="409" y="323" width="670" height="676" key="search.everywhere.popup/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603905313495" />
-    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606413577553" />
+    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606594850783" />
     <state x="409" y="305" width="670" height="687" key="search.everywhere.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604685292099" />
   </component>
   <component name="XDebuggerManager">

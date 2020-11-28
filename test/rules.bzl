@@ -28,6 +28,6 @@ def node_cucumber_test(name, features, node_modules, package_json, core_artifact
             "//test:cucumber_test.sh",
         ],
         args = [
-            "$(location @graknlabs_grakn_core_artifact//file)"
+            "$(location @graknlabs_grakn_core_artifact_mac//file)"
         ],
     )
