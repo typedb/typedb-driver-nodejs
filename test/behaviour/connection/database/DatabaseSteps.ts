@@ -1,72 +1,60 @@
-import { Given, When, Then } from "@cucumber/cucumber";
-import { client } from "../ConnectionSteps"
+import { When, Then } from "@cucumber/cucumber";
+import { client, THREAD_POOL_SIZE } from "../ConnectionSteps";
+import * as assert from "assert";
 
-When("connection create database(s):", () => {
-    console.log("This does nothing");
+When("connection create database: {word}", async (name: string) => {
+    await client.databases().create(name);
 });
 
-When("connection create database: {word}", (name: string) => {
-    connection_create_databases([name]);
+When("connection create database(s):", async (names: string[]) => {
+    await names.forEach(async (name: string) => await client.databases().create(name));
 });
 
-When("connection create database(s):", (names: string[]) => {
-    connection_create_databases(names);
+When("connection create databases in parallel:", async (names: string[]) => {
+    assert.ok(THREAD_POOL_SIZE >= names.length);
+    const creations: Promise<void>[] = [];
+    names.forEach(name => {
+        creations.push(client.databases().create(name));
+    });
+    await Promise.all(creations);
 });
 
-function connection_create_databases(names: string[]) {
-    names.forEach((name:string) => client.databases().create(name));
-}
+When("connection delete database(s):", async (names: string[]) => {
+    await names.forEach(async (name) => {
+        await client.databases().delete(name);
+    })
+});
 
-// @When("connection create databases in parallel:")
-// public void connection_create_databases_in_parallel(List<String> names) {
-//     assertTrue(THREAD_POOL_SIZE >= names.size());
-//
-//     CompletableFuture[] creations = names.stream()
-//         .map(name -> CompletableFuture.runAsync(() -> client.databases().create(name), threadPool))
-//         .toArray(CompletableFuture[]::new);
-//
-//     CompletableFuture.allOf(creations).join();
-// }
-//
-// @When("connection delete database(s):")
-// public void connection_delete_databases(List<String> names) {
-//     for (String databaseName : names) {
-//         client.databases().delete(databaseName);
-//     }
-// }
-//
-// @Then("connection delete database(s); throws exception")
-// public void connection_delete_databases_throws_exception(List<String> names) {
-//     for (String databaseName : names) {
-//         try {
-//             client.databases().delete(databaseName);
-//             fail();
-//         } catch (Exception e) {
-//             // successfully failed
-//         }
-//     }
-// }
-//
-// @When("connection delete databases in parallel:")
-// public void connection_delete_databases_in_parallel(List<String> names) {
-//     assertTrue(THREAD_POOL_SIZE >= names.size());
-//
-//     CompletableFuture[] deletions = names.stream()
-//         .map(name -> CompletableFuture.runAsync(() -> client.databases().delete(name), threadPool))
-//         .toArray(CompletableFuture[]::new);
-//
-//     CompletableFuture.allOf(deletions).join();
-// }
-//
-// @Then("connection has database(s):")
-// public void connection_has_databases(List<String> names) {
-//     assertEquals(set(names), set(client.databases().all()));
-// }
-//
-// @Then("connection does not have database(s):")
-// public void connection_does_not_have_databases(List<String> names) {
-//     Set<String> databases = set(client.databases().all());
-//     for (String databaseName : names) {
-//         assertFalse(databases.contains(databaseName));
-//     }
-// }
+Then("connection delete database(s); throws exception", async (names: string[]) => {
+    for (const name of names) {
+        try {
+            await client.databases().delete(name);
+            assert.fail();
+        } catch (e) {
+            // successfully failed
+        }
+    }
+});
+
+When("connection delete databases in parallel:", async (names: string[]) => {
+    assert.ok(THREAD_POOL_SIZE >= names.length);
+    const deletions: Promise<void>[] = [];
+    names.forEach(name => {
+        deletions.push(client.databases().delete(name));
+    });
+    await Promise.all(deletions);
+});
+
+Then("connection has database(s):", async (names: string[]) => {
+    const databases = await client.databases().all();
+    names.forEach(name => {
+        assert.ok(databases.includes(name));
+    });
+});
+
+Then("connection does not have database(s):", async (names: string[]) => {
+    const databases = await client.databases().all();
+    names.forEach(name => {
+        assert.ok(!databases.includes(name));
+    });
+});
