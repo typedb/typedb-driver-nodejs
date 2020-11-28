@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-def node_cucumber_test(name, features, node_modules, package_json, core_artifact, deps):
+def node_cucumber_test(name, features, node_modules, package_json, core_artifact, deps, steps):
     native.sh_test (
         name = name,
         data = [
@@ -23,7 +23,7 @@ def node_cucumber_test(name, features, node_modules, package_json, core_artifact
             node_modules,
             package_json,
             core_artifact,
-        ] + features + deps,
+        ] + features + deps + steps,
         srcs = [
             "//test:cucumber_test.sh",
         ],

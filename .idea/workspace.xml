@@ -20,6 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/test/behaviour/connection/BUILD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.bazelrc" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.bazelrc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.bazelversion" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.bazelversion" afterDir="false" />
@@ -95,9 +96,10 @@
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/cucumber_test.sh" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/rules.bzl" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/GraknCoreRunner.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/GraknCoreRunner.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/GraknCoreRunner.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/GraknCoreRunner.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/behaviour/connection/ConnectionSteps.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/behaviour/connection/ConnectionSteps.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/behaviour/connection/database/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/test/behaviour/connection/database/BUILD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/cucumber_test.sh" beforeDir="false" afterPath="$PROJECT_DIR$/test/cucumber_test.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/rules.bzl" beforeDir="false" afterPath="$PROJECT_DIR$/test/rules.bzl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +166,7 @@
       <workItem from="1605705630451" duration="144000" />
       <workItem from="1606135242632" duration="36221000" />
       <workItem from="1606320926491" duration="13457000" />
-      <workItem from="1606405019277" duration="65544000" />
+      <workItem from="1606405019277" duration="66413000" />
     </task>
     <servers />
   </component>
@@ -256,11 +258,11 @@
       <screen x="0" y="25" width="1792" height="1095" />
     </state>
     <state x="501" y="263" key="run.anything.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606417161991" />
-    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup" timestamp="1606594850783">
+    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup" timestamp="1606597525614">
       <screen x="0" y="25" width="1792" height="1095" />
     </state>
     <state x="409" y="323" width="670" height="676" key="search.everywhere.popup/0.23.2560.1417/-1792.343.1792.1097@0.23.2560.1417" timestamp="1603905313495" />
-    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606594850783" />
+    <state x="286" y="257" width="670" height="523" key="search.everywhere.popup/0.25.1792.1095@0.25.1792.1095" timestamp="1606597525614" />
     <state x="409" y="305" width="670" height="687" key="search.everywhere.popup/2560.0.2560.1440/0.0.2560.1440/-1792.320.1792.1120@0.0.2560.1440" timestamp="1604685292099" />
   </component>
   <component name="XDebuggerManager">
