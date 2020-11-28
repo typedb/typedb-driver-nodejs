@@ -34,10 +34,6 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
                 throw "Bad encoding";
         }
     }
-
-    asThingType(): ThingTypeImpl {
-        return this;
-    }
 }
 
 export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingType {
@@ -102,9 +98,5 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
 
     asRemote(transaction: Transaction): RemoteThingTypeImpl {
         return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot())
-    }
-
-    asThingType(): RemoteThingTypeImpl {
-        return this;
     }
 }

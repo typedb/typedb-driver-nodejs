@@ -1,6 +1,4 @@
-import { Entity } from "./Entity";
 import { Attribute } from "./Attribute";
-import { Relation } from "./Relation";
 import { Concept, RemoteConcept, QueryIterator } from "../Concept";
 import { Type } from "../Type/Type";
 import { ThingType } from "../Type/ThingType";
@@ -13,13 +11,7 @@ import { Merge } from "../../common/utils";
 export interface Thing extends Concept {
     getIID(): string;
 
-    asEntity(): Entity;
-    asAttribute(): Attribute<AttributeType.ValueClass>;
-    asRelation(): Relation;
-
     asRemote(transaction: Transaction): RemoteThing;
-
-    asThing(): Thing;
 }
 
 export interface RemoteThing extends Merge<RemoteConcept, Thing> {
@@ -40,6 +32,4 @@ export interface RemoteThing extends Merge<RemoteConcept, Thing> {
     getRelations(roleTypes: RoleType[]): QueryIterator;
 
     asRemote(transaction: Transaction): RemoteThing;
-
-    asThing(): RemoteThing;
 }

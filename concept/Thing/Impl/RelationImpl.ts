@@ -12,12 +12,8 @@ export class RelationImpl extends ThingImpl implements Relation {
         super(iid)
     }
 
-    asRemote(transaction: Transaction): RemoteRelation {
+    asRemote(transaction: Transaction): RemoteRelationImpl {
         return new RemoteRelationImpl(transaction, this.getIID());
-    }
-
-    asRelation() {
-        return this;
     }
 }
 
@@ -26,16 +22,12 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
         super(transaction, iid);
     }
 
-    asRemote(transaction: Transaction) {
+    asRemote(transaction: Transaction): RemoteRelationImpl {
         return new RemoteRelationImpl(transaction, this.getIID());
     }
 
     getType(): RelationTypeImpl {
         throw "As yet unimplemented"
-    }
-
-    asRelation() {
-        return this;
     }
 
     getPlayersByRoleType(): [RoleType, Thing[]] {

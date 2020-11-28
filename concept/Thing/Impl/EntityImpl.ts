@@ -9,12 +9,8 @@ export class EntityImpl extends ThingImpl implements Entity {
         super(iid);
     }
 
-    asRemote(transaction: Transaction): RemoteEntity {
+    asRemote(transaction: Transaction): RemoteEntityImpl {
         return new RemoteEntityImpl(transaction, this.getIID());
-    }
-
-    asEntity() {
-        return this;
     }
 }
 
@@ -29,9 +25,5 @@ export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
 
     getType(): EntityTypeImpl {
         throw "Not yet implemented"
-    }
-
-    asEntity(): RemoteEntityImpl {
-        return this;
     }
 }

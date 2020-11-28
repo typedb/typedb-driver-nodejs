@@ -8,11 +8,6 @@ import { Merge } from "../../common/utils";
 export interface Attribute<T extends ValueClass> extends Thing {
     getValue(): T;
 
-    asBoolean(): BooleanAttribute;
-    asLong(): LongAttribute;
-    asDouble(): DoubleAttribute;
-    asString(): StringAttribute;
-    asDateTime(): DateTimeAttribute;
     asRemote(transaction: Transaction): RemoteAttribute<T>;
 }
 

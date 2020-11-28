@@ -8,7 +8,6 @@ import { Merge } from "../../common/utils";
 
 export interface Relation extends Thing {
     asRemote(transaction: Transaction): RemoteRelation;
-    asRelation(): Relation;
 }
 
 export interface RemoteRelation extends Merge<RemoteThing, Relation> {
@@ -20,6 +19,5 @@ export interface RemoteRelation extends Merge<RemoteThing, Relation> {
     getPlayers(roleTypes: RoleType[]): QueryIterator;
     getPlayersByRoleType(): [RoleType, Thing[]];
 
-    asRelation(): RemoteRelation;
     asRemote(transaction: Transaction): RemoteRelation;
 }

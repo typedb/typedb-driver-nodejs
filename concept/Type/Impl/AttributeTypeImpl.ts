@@ -51,30 +51,6 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     asRemote(transaction: Transaction): RemoteAttributeTypeImpl {
         return new RemoteAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
-
-    asAttributeType(): AttributeTypeImpl {
-        return this;
-    }
-
-    asBoolean(): BooleanAttributeTypeImpl {
-        throw "Invalid cast";
-    }
-
-    asLong(): LongAttributeTypeImpl {
-        throw "Invalid cast";
-    }
-
-    asDouble(): DoubleAttributeTypeImpl {
-        throw "Invalid cast";
-    }
-
-    asString(): StringAttributeTypeImpl {
-        throw "Invalid cast";
-    }
-
-    asDateTime(): DateTimeAttributeTypeImpl {
-        throw "Invalid cast";
-    }
 }
 
 export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements RemoteAttributeType {
@@ -126,30 +102,6 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
     protected getInternal<T extends ValueClass>(value: T): AttributeImpl<T> {
         throw "Not implemented yet";
     }
-
-    asAttributeType(): RemoteAttributeTypeImpl {
-        return this;
-    }
-
-    asBoolean(): RemoteBooleanAttributeTypeImpl {
-        throw "Invalid cast";
-    }
-
-    asLong(): RemoteLongAttributeTypeImpl {
-        throw "Invalid cast";
-    }
-
-    asDouble(): RemoteDoubleAttributeTypeImpl {
-        throw "Invalid cast";
-    }
-
-    asString(): RemoteStringAttributeTypeImpl {
-        throw "Invalid cast";
-    }
-
-    asDateTime(): RemoteDateTimeAttributeTypeImpl {
-        throw "Invalid cast";
-    }
 }
 
 export class BooleanAttributeTypeImpl extends AttributeTypeImpl implements BooleanAttributeType {
@@ -164,10 +116,6 @@ export class BooleanAttributeTypeImpl extends AttributeTypeImpl implements Boole
 
     asRemote(transaction: Transaction): RemoteBooleanAttributeTypeImpl {
         return new RemoteBooleanAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
-    }
-
-    asBoolean(): BooleanAttributeTypeImpl {
-        return this;
     }
 }
 
@@ -206,11 +154,11 @@ export class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl impl
     }
 
     put(value: boolean): BooleanAttributeImpl {
-        return this.putInternal(value).asBoolean();
+        return this.putInternal(value) as BooleanAttributeImpl;
     }
 
     get(value: boolean): BooleanAttributeImpl {
-        return this.getInternal(value)?.asBoolean();
+        return this.getInternal(value) as BooleanAttributeImpl;
     }
 }
 
@@ -226,10 +174,6 @@ export class LongAttributeTypeImpl extends AttributeTypeImpl implements LongAttr
 
     asRemote(transaction: Transaction): RemoteLongAttributeTypeImpl {
         return new RemoteLongAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
-    }
-
-    asLong(): LongAttributeTypeImpl {
-        return this;
     }
 }
 
@@ -268,11 +212,11 @@ export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl impleme
     }
 
     put(value: number): LongAttributeImpl {
-        return this.putInternal(value).asLong();
+        return this.putInternal(value) as LongAttributeImpl;
     }
 
     get(value: number): LongAttributeImpl {
-        return this.getInternal(value)?.asLong();
+        return this.getInternal(value) as LongAttributeImpl;
     }
 }
 
@@ -288,10 +232,6 @@ export class DoubleAttributeTypeImpl extends AttributeTypeImpl implements Double
 
     asRemote(transaction: Transaction): RemoteDoubleAttributeTypeImpl {
         return new RemoteDoubleAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
-    }
-
-    asDouble(): DoubleAttributeTypeImpl {
-        return this;
     }
 }
 
@@ -330,11 +270,11 @@ export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl imple
     }
 
     put(value: number): DoubleAttributeImpl {
-        return this.putInternal(value).asDouble();
+        return this.putInternal(value) as DoubleAttributeImpl;
     }
 
     get(value: number): DoubleAttributeImpl {
-        return this.getInternal(value)?.asDouble();
+        return this.getInternal(value) as DoubleAttributeImpl;
     }
 }
 
@@ -350,10 +290,6 @@ export class StringAttributeTypeImpl extends AttributeTypeImpl implements String
 
     asRemote(transaction: Transaction): RemoteStringAttributeTypeImpl {
         return new RemoteStringAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
-    }
-
-    asString(): StringAttributeTypeImpl {
-        return this;
     }
 }
 
@@ -392,11 +328,11 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
     }
 
     put(value: string): StringAttributeImpl {
-        return this.putInternal(value).asString();
+        return this.putInternal(value) as StringAttributeImpl;
     }
 
     get(value: string): StringAttributeImpl {
-        return this.getInternal(value)?.asString();
+        return this.getInternal(value) as StringAttributeImpl;
     }
 }
 
@@ -412,10 +348,6 @@ export class DateTimeAttributeTypeImpl extends AttributeTypeImpl implements Date
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeTypeImpl {
         return new RemoteDateTimeAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
-    }
-
-    asDateTime(): DateTimeAttributeTypeImpl {
-        return this;
     }
 }
 
@@ -454,10 +386,10 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
     }
 
     put(value: Date): DateTimeAttributeImpl {
-        return this.putInternal(value).asDateTime();
+        return this.putInternal(value) as DateTimeAttributeImpl;
     }
 
     get(value: Date): DateTimeAttributeImpl {
-        return this.getInternal(value)?.asDateTime();
+        return this.getInternal(value) as DateTimeAttributeImpl;
     }
 }

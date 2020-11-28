@@ -15,12 +15,6 @@ export interface AttributeType extends ThingType {
     isKeyable(): boolean;
 
     asRemote(transaction: Transaction): RemoteAttributeType;
-
-    asBoolean(): BooleanAttributeType;
-    asLong(): LongAttributeType;
-    asDouble(): DoubleAttributeType;
-    asString(): StringAttributeType;
-    asDateTime(): DateTimeAttributeType;
 }
 
 export interface RemoteAttributeType extends Merge<RemoteThingType, AttributeType> {
@@ -33,13 +27,6 @@ export interface RemoteAttributeType extends Merge<RemoteThingType, AttributeTyp
     getInstances(): QueryIterator;
     getOwners(): QueryIterator;
     getOwners(onlyKey: boolean): QueryIterator;
-
-    asAttributeType(): RemoteAttributeType;
-    asBoolean(): RemoteBooleanAttributeType;
-    asLong(): RemoteLongAttributeType;
-    asDouble(): RemoteDoubleAttributeType;
-    asString(): RemoteStringAttributeType;
-    asDateTime(): RemoteDateTimeAttributeType;
 }
 
 export interface BooleanAttributeType extends AttributeType {

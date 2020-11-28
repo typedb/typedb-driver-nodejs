@@ -1,8 +1,6 @@
 import { Thing, RemoteThing } from "../Thing";
 import { Attribute } from "../Attribute";
-import { Entity } from "../Entity";
-import { Relation } from "../Relation";
-import { Type, RemoteType } from "../../Type/Type";
+import { Type } from "../../Type/Type";
 import { QueryIterator } from "../../Concept";
 import { AttributeType } from "../../Type/AttributeType";
 import { RoleType } from "../../Type/RoleType";
@@ -10,7 +8,6 @@ import { Thing as ProtoThing } from "protobuf/concept_pb";
 import { EntityImpl } from "./EntityImpl";
 import { RelationImpl } from "./RelationImpl";
 import { AttributeImpl } from "./AttributeImpl";
-import { TypeImpl } from "../../Type/Impl/TypeImpl";
 import { ThingTypeImpl } from "../../Type/Impl/ThingTypeImpl";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
@@ -47,26 +44,6 @@ export abstract class ThingImpl implements Thing {
         return false;
     }
 
-    asThing(): ThingImpl {
-        return this;
-    }
-
-    asType(): TypeImpl {
-        throw "Invalid cast to Type";
-    }
-
-    asEntity(): EntityImpl {
-        throw "Invalid cast to Entity";
-    }
-
-    asAttribute(): AttributeImpl<AttributeType.ValueClass> {
-        throw "Invalid cast to Attribute";
-    }
-
-    asRelation(): RelationImpl {
-        throw "Invalid cast to Relation"
-    }
-
     toString(): string {
         return `${ThingImpl.name}[iid:${this._iid}]`;
     }
@@ -93,27 +70,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
         throw "Not implemented yet";
     }
 
-    asAttribute(): Attribute<AttributeType.ValueClass> {
-        throw "Invalid cast to Attribute";
-    }
-
-    asEntity(): Entity {
-        throw "Invalid cast to Entity";
-    }
-
-    asRelation(): Relation {
-        throw "Invalid cast to Relation"
-    }
-
     abstract asRemote(transaction: Transaction): RemoteThing;
-
-    asThing(): RemoteThingImpl {
-        return this;
-    }
-
-    asType(): RemoteType {
-        throw "Invalid cast to Type";
-    }
 
     delete(): void {
         throw "Not implemented yet";

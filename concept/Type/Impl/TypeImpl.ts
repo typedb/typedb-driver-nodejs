@@ -1,8 +1,4 @@
 import { Type, RemoteType } from "../Type";
-import { RemoteRelationType } from "../RelationType";
-import { RemoteEntityType } from "../EntityType";
-import { RemoteRoleType } from "../RoleType";
-import { RemoteThingType } from "../ThingType";
 import { QueryIterator } from "../../Concept";
 // TODO
 import { Type as TypeProto } from "bazel-bin/external/graknlabs_protocol/grpc/nodejs/protobuf/concept_pb";
@@ -10,10 +6,6 @@ import { RoleTypeImpl } from "./RoleTypeImpl";
 import { ThingTypeImpl } from "./ThingTypeImpl";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { RemoteThingImpl, ThingImpl } from "../../Thing/Impl/ThingImpl";
-import { EntityTypeImpl } from "./EntityTypeImpl";
-import { AttributeTypeImpl, RemoteAttributeTypeImpl } from "./AttributeTypeImpl";
-import { RelationTypeImpl } from "./RelationTypeImpl";
 
 export abstract class TypeImpl implements Type {
     private readonly _label: string;
@@ -45,34 +37,6 @@ export abstract class TypeImpl implements Type {
 
     isRemote(): boolean {
         return false;
-    }
-
-    asType(): TypeImpl {
-        return this;
-    }
-
-    asThing(): ThingImpl {
-        throw "Invalid cast to Thing.";
-    }
-
-    asThingType(): ThingTypeImpl {
-        throw "Invalid cast to Thing Type.";
-    }
-
-    asEntityType(): EntityTypeImpl {
-        throw "Invalid cast to Entity Type.";
-    }
-
-    asAttributeType(): AttributeTypeImpl {
-        throw "Invalid cast to Attribute Type.";
-    }
-
-    asRelationType(): RelationTypeImpl {
-        throw "Invalid cast to Relation Type.";
-    }
-
-    asRoleType(): RoleTypeImpl {
-        throw "Invalid cast to Role Type.";
     }
 
     toString(): string {
@@ -115,34 +79,6 @@ export abstract class RemoteTypeImpl implements RemoteType {
 
     isAbstract(): boolean {
         throw "Not implemented yet";
-    }
-
-    asType(): RemoteTypeImpl {
-        return this;
-    }
-
-    asThing(): RemoteThingImpl {
-        throw "Invalid cast to Thing"
-    }
-
-    asThingType(): RemoteThingType {
-        throw "Invalid cast to Thing Type";
-    }
-
-    asEntityType(): RemoteEntityType {
-        throw "Invalid cast to Entity Type";
-    }
-
-    asRelationType(): RemoteRelationType {
-        throw "Invalid cast to Relation Type";
-    }
-
-    asAttributeType(): RemoteAttributeTypeImpl {
-        throw "Invalid cast to Attribute Type";
-    }
-
-    asRoleType(): RemoteRoleType {
-        throw "Invalid cast to Role Type";
     }
 
     delete(): void {

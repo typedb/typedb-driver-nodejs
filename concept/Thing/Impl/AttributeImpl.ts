@@ -7,37 +7,14 @@ import { AttributeType } from "../../Type/AttributeType";
 import ValueClass = AttributeType.ValueClass;
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
+import { Merge } from "../../../common/utils";
 
 export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl implements Attribute<T> {
     protected constructor(iid: string) {
         super(iid);
     }
 
-    asAttribute(): AttributeImpl<T> {
-        return this;
-    }
-
     abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
-
-    asBoolean(): BooleanAttributeImpl {
-        throw "Invalid cast to Boolean";
-    }
-
-    asDateTime(): DateTimeAttributeImpl {
-        throw "Invalid cast to DateTime";
-    }
-
-    asDouble(): DoubleAttributeImpl {
-        throw "Invalid cast to Double";
-    }
-
-    asLong(): LongAttributeImpl {
-        throw "Invalid cast to Long";
-    }
-
-    asString(): StringAttributeImpl {
-        throw "Invalid cast to String";
-    }
 
     abstract getValue(): T;
 }
@@ -45,30 +22,6 @@ export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl impl
 export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteThingImpl implements RemoteAttribute<T> {
     protected constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
-    }
-
-    asAttribute(): RemoteAttributeImpl<T> {
-        return this;
-    }
-
-    asBoolean(): BooleanAttribute {
-        throw "Invalid cast to Boolean";
-    }
-
-    asDateTime(): DateTimeAttribute {
-        throw "Invalid cast to DateTime";
-    }
-
-    asDouble(): DoubleAttribute {
-        throw "Invalid cast to Double";
-    }
-
-    asLong(): LongAttribute {
-        throw "Invalid cast to Long";
-    }
-
-    asString(): StringAttribute {
-        throw "Invalid cast to String";
     }
 
     getOwners(ownerType: ThingType): QueryIterator {
@@ -92,16 +45,12 @@ export class BooleanAttributeImpl extends AttributeImpl<boolean> implements Bool
         this.value = value;
     }
 
-    asRemote(transaction: Transaction): RemoteBooleanAttribute {
+    asRemote(transaction: Transaction): RemoteBooleanAttributeImpl {
         return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this.value);
     }
 
     getValue(): boolean {
         return this.value;
-    }
-
-    asBoolean() {
-        return this;
     }
 }
 
@@ -121,11 +70,7 @@ export class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> imp
         throw "Not implemented yet"
     }
 
-    asBoolean() {
-        return this;
-    }
-
-    asRemote(transaction: Transaction): RemoteBooleanAttribute {
+    asRemote(transaction: Transaction): RemoteBooleanAttributeImpl {
         return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this.value);
     }
 }
@@ -138,16 +83,12 @@ export class LongAttributeImpl extends AttributeImpl<number> implements LongAttr
         this.value = value;
     }
 
-    asRemote(transaction: Transaction): RemoteLongAttribute {
+    asRemote(transaction: Transaction): RemoteLongAttributeImpl {
         return new RemoteLongAttributeImpl(transaction, this.getIID(), this.value);
     }
 
     getValue(): number {
         return this.value;
-    }
-
-    asLong() {
-        return this;
     }
 }
 
@@ -167,11 +108,7 @@ export class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> impleme
         throw "Of not present"
     }
 
-    asLong() {
-        return this;
-    }
-
-    asRemote(transaction: Transaction): RemoteLongAttribute {
+    asRemote(transaction: Transaction): RemoteLongAttributeImpl {
         return this;
     }
 }
@@ -184,16 +121,12 @@ export class StringAttributeImpl extends AttributeImpl<string> implements Attrib
         this.value = value;
     }
 
-    asRemote(transaction: Transaction): RemoteStringAttribute {
+    asRemote(transaction: Transaction): RemoteStringAttributeImpl {
         return new RemoteStringAttributeImpl(transaction, this.getIID(), this.value);
     }
 
     getValue(): string {
         return this.value;
-    }
-
-    asString() {
-        return this;
     }
 }
 
@@ -213,11 +146,7 @@ export class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> imple
         throw "Of not present"
     }
 
-    asString() {
-        return this;
-    }
-
-    asRemote(transaction: Transaction): RemoteStringAttribute {
+    asRemote(transaction: Transaction): RemoteStringAttributeImpl {
         return this;
     }
 }
@@ -230,16 +159,12 @@ export class DoubleAttributeImpl extends AttributeImpl<number> implements Attrib
         this.value = value;
     }
 
-    asRemote(transaction: Transaction): RemoteDoubleAttribute {
+    asRemote(transaction: Transaction): RemoteDoubleAttributeImpl {
         return new RemoteDoubleAttributeImpl(transaction, this.getIID(), this.value);
     }
 
     getValue(): number {
         return this.value;
-    }
-
-    asDouble() {
-        return this;
     }
 }
 
@@ -260,11 +185,7 @@ export class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> imple
         throw "Not implemented yet";
     }
 
-    asDouble() {
-        return this;
-    }
-
-    asRemote(transaction: Transaction): RemoteDoubleAttribute {
+    asRemote(transaction: Transaction): RemoteDoubleAttributeImpl {
         return this;
     }
 }
@@ -278,16 +199,12 @@ export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTi
         this.value = value;
     }
 
-    asRemote(transaction: Transaction): RemoteDateTimeAttribute {
+    asRemote(transaction: Transaction): RemoteDateTimeAttributeImpl {
         return new RemoteDateTimeAttributeImpl(transaction, this.getIID(), this.value);
     }
 
     getValue(): Date {
         return this.value;
-    }
-
-    asDateTime() {
-        return this;
     }
 }
 
@@ -308,11 +225,7 @@ class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements M
         throw "Of not present"
     }
 
-    asRemote(transaction: Transaction): RemoteDateTimeAttribute {
-        return this;
-    }
-
-    asDateTime() {
+    asRemote(transaction: Transaction): RemoteDateTimeAttributeImpl {
         return this;
     }
 }
