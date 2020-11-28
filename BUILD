@@ -16,10 +16,11 @@
 #
 
 exports_files([
-    "package.json",
-    "VERSION",
-    "RELEASE_TEMPLATE.md",
     "node_modules",
+    "package.json",
+    "package-lock.json",
+    "RELEASE_TEMPLATE.md",
+    "VERSION",
 ])
 
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm", "nodejs_binary")
