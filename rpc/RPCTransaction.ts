@@ -1,12 +1,13 @@
-import {GraknTransaction, GraknTransactionType} from "../Grakn";
+import {Grakn} from "../Grakn";
 import {ConceptManager} from "../concept/ConceptManager";
 import {Transaction} from "protobuf/transaction_pb";
+import {GraknService} from "protobuf/grakn_grpc_pb";
 import {addTracingDataToMetadata, optionsBuilder} from "../common/ProtoBuilder";
 import {GraknOptions} from "../GraknOptions";
 import { v4 as uuidv4 } from "uuid";
 
-export class RPCTransaction implements GraknTransaction {
-    private _type: GraknTransactionType;
+export class RPCTransaction implements Grakn.Transaction {
+    private _type: Grakn.TransactionType;
     private _conceptManager: ConceptManager;
     private _queryManager: QueryManager;
     private _collectors: ResponseCollectors;
@@ -16,7 +17,7 @@ export class RPCTransaction implements GraknTransaction {
     private _transactionWasClosed: boolean;
     private _networkLatencyMillis: number;
 
-    constructor(session: RPCSession, sessionId: string, type: GraknTransactionType, options: GraknOptions) {
+    constructor(session: RPCSession, sessionId: string, type: Grakn.TransactionType, options: GraknOptions) {
         let tracing = traceOnThread(type == WRITE ? "tx.write" : "tx.read")
         try {
             this._type = type;
@@ -27,7 +28,7 @@ export class RPCTransaction implements GraknTransaction {
             this._transactionWasClosed = false;
             this._transactionWasOpened = false;
             this._streamIsOpen = false;
-            //TODO: OPEN STREAM LISTENER
+            this._requestObserver = new GraknService(session.channel().address, session.channel().credentials).transaction(this.responseObserver());
             this._streamIsOpen = true;
 
             let openRequest = new Transaction.Req()
@@ -47,7 +48,7 @@ export class RPCTransaction implements GraknTransaction {
         }
     }
 
-    public type(): GraknTransactionType {
+    public type(): Grakn.TransactionType {
         return this._type;
     }
 
@@ -117,6 +118,11 @@ export class RPCTransaction implements GraknTransaction {
         finally {
             tracing.close();
         }
-
     }
+
+    private responseObserver() {
+        return new StreamObserver
+    }
+
+
 }
