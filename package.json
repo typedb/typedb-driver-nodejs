@@ -1,6 +1,7 @@
 {
   "name": "grakn-client",
   "version": "0.0.0-development",
+  "type": "module",
   "description": "Grakn Client for Node.js",
   "main": "dist/GraknClient.js",
   "types": "dist/GraknClient.d.ts",

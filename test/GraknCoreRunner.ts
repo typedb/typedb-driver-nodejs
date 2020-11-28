@@ -1,7 +1,6 @@
-const { mkdirSync, existsSync, constants, readdirSync, lstatSync, unlinkSync, rmdirSync } = require("fs");
-const { execSync } = require("child_process");
-const Path = require("path");
-const { promisify } = require("util");
+import { mkdirSync, existsSync, constants, readdirSync, lstatSync, unlinkSync, rmdirSync } from "fs";
+import { execSync } from "child_process";
+import Path from "path";
 const TAR = ".tar.gz";
 const ZIP = ".zip";
 
@@ -85,7 +84,7 @@ function start_grakn(distribution_file_name: string, port: number): string {
 }
 
 function stop_grakn(distribution_file_name: string, port: number): void {
-    execSync(distributionTarget(distribution_file_name) + "/grakn server stop --port " + port.toString(), {stdio: 'inherit'});
+    //TODO: KILL GRAKN
 }
 
 

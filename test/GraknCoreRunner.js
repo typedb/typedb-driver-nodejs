@@ -1,8 +1,6 @@
-"use strict";
-var _a = require("fs"), mkdirSync = _a.mkdirSync, existsSync = _a.existsSync, constants = _a.constants, readdirSync = _a.readdirSync, lstatSync = _a.lstatSync, unlinkSync = _a.unlinkSync, rmdirSync = _a.rmdirSync;
-var execSync = require("child_process").execSync;
-var Path = require("path");
-var promisify = require("util").promisify;
+import { mkdirSync, existsSync, readdirSync, lstatSync, unlinkSync, rmdirSync } from "fs";
+import { execSync } from "child_process";
+import Path from "path";
 var TAR = ".tar.gz";
 var ZIP = ".zip";
 function recursivelyDeleteDirectory(directory) {
@@ -74,7 +72,8 @@ function start_grakn(distribution_file_name, port) {
     console.error("Grakn Core database server started");
     return "127.0.0.1:" + port.toString();
 }
-function stop_grakn() {
+function stop_grakn(distribution_file_name, port) {
+    //TODO: KILL GRAKN
 }
 function main() {
     var _a = process.argv.slice(2), func = _a[0], args = _a.slice(1);
@@ -82,7 +81,7 @@ function main() {
         case "start":
             return start_grakn(args[0], parseInt(args[1]));
         case "stop":
-            stop_grakn();
+            stop_grakn(args[0], parseInt(args[1]));
             return "";
         case "help":
         default:
