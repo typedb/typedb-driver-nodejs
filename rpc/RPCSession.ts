@@ -1,9 +1,9 @@
-import {Grakn} from "../Grakn";
-import {GraknClient as GraknGrpc} from "protobuf/grakn_grpc_pb"
-import {Session} from "protobuf/session_pb";
-import {Protobuilder} from "../common/ProtoBuilder";
-import {GraknOptions} from "../GraknOptions";
-import SessionType = Grakn.SessionType;
+import { Grakn } from "../Grakn";
+import { GraknClient as GraknGrpc } from "protobuf/grakn_grpc_pb"
+import { Session } from "protobuf/session_pb";
+import { Protobuilder } from "../common/ProtoBuilder";
+import { GraknOptions } from "../GraknOptions";
+import { RPCTransaction } from "./RPCTransaction";
 
 export class RPCSession implements Grakn.Session {
     private readonly _grpcClient: GraknGrpc;
@@ -34,31 +34,44 @@ export class RPCSession implements Grakn.Session {
         return this;
     }
 
-    close(): void {
+    async close(): Promise<void> {
+        if (this._isOpen) {
+            this._isOpen = false;
+            const closeReq = new Session.Close.Req()
+                .setSessionId(this._sessionId);
+            const closePromise = new Promise((resolve, reject) => {
+                this._grpcClient.session_close(closeReq, (err) => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+            await closePromise;
+        }
     }
 
     database(): string {
-        return "";
+        return this._database;
     }
 
     isOpen(): boolean {
-        return false;
+        return this._isOpen;
     }
 
-    transaction(type: Grakn.TransactionType, options?: GraknOptions): Grakn.Transaction {
-        return undefined;
+    transaction(type: Grakn.TransactionType, options?: GraknOptions): Promise<Grakn.Transaction> {
+        const transaction = new RPCTransaction(this._grpcClient, type)
+        return transaction.open(this._sessionId, options);
     }
 
     type(): Grakn.SessionType {
-        return undefined;
+        return this._type;
     }
 }
 
 function sessionType(type: Grakn.SessionType): Session.Type {
     switch (type) {
-        case SessionType.DATA:
+        case Grakn.SessionType.DATA:
             return Session.Type.DATA;
-        case SessionType.SCHEMA:
+        case Grakn.SessionType.SCHEMA:
             return Session.Type.SCHEMA;
         default:
             throw "Unrecognized Type";

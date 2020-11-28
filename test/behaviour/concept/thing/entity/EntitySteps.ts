@@ -1,5 +1,4 @@
-const { Given, When, Then } = require("@cucumber/cucumber");
-const assert = require("assert").strict
+import { Given, When, Then } from "@cucumber/cucumber";
 
 Given("connection has been opened", () => {
     console.log("Hello World");

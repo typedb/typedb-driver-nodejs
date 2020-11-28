@@ -139,7 +139,7 @@ export class ConceptManager {
     private execute(conceptManagerReq: ProtoConceptManager.Req): ProtoConceptManager.Res {
         const transactionReq = new Transaction.Req()
             .setConceptManagerReq(conceptManagerReq)
-        Protobuilder.addTracingDataToMetadata(transactionReq);
-        return this._rpcTransaction.execute(transactionReq).getConceptManagerRes()
+        //return this._rpcTransaction.execute(transactionReq).getConceptManagerRes()
+        throw "not implemented conceptmanager.execute"
     }
 }

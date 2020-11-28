@@ -11,6 +11,7 @@ import isKeyable = AttributeType.ValueType.isKeyable;
 import { AttributeImpl, BooleanAttributeImpl, DateTimeAttributeImpl, DoubleAttributeImpl,
     LongAttributeImpl, StringAttributeImpl } from "../../Thing/Impl/AttributeImpl";
 import ValueClass = AttributeType.ValueClass;
+import assert from "assert";
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 

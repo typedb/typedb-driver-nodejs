@@ -1,6 +1,6 @@
-import {GraknClient as GraknGrpc} from "protobuf/grakn_grpc_pb"
-import {Grakn} from "../Grakn";
-import {Database} from "protobuf/database_pb";
+import { GraknClient as GraknGrpc } from "protobuf/grakn_grpc_pb"
+import { Grakn } from "../Grakn";
+import { Database } from "protobuf/database_pb";
 
 export class RPCDatabaseManager implements Grakn.DatabaseManager {
     private _grpcClient: GraknGrpc;

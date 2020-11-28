@@ -1,5 +1,6 @@
-import {GraknOptions} from "./GraknOptions";
-import {ConceptManager} from "./concept/ConceptManager";
+import { GraknOptions } from "./GraknOptions";
+import { ConceptManager } from "./concept/ConceptManager";
+import { QueryManager } from "./query/QueryManager";
 
 export namespace Grakn {
     export interface Client {
@@ -23,13 +24,13 @@ export namespace Grakn {
     export interface Session {
         open(options?: GraknOptions): Promise<Session>;
 
-        transaction(type: TransactionType, options?: GraknOptions): Transaction;
+        transaction(type: TransactionType, options?: GraknOptions): Promise<Transaction>;
 
         type(): SessionType;
 
         isOpen(): boolean;
 
-        close(): void;
+        close(): Promise<void>;
 
         database(): string;
     }
@@ -40,6 +41,8 @@ export namespace Grakn {
     }
 
     export interface Transaction {
+        open(sessionId:string, options?: GraknOptions): Promise<Transaction>
+
         type(): TransactionType;
 
         isOpen(): boolean;
@@ -48,11 +51,11 @@ export namespace Grakn {
 
         query(): QueryManager;
 
-        commit(): void;
+        commit(): Promise<void>;
 
-        rollback(): void;
+        rollback(): Promise<void>;
 
-        close(): void;
+        close(): Promise<void>;
     }
 
     export enum TransactionType {
