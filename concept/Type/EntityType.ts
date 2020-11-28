@@ -1,6 +1,9 @@
 import { ThingType, RemoteThingType } from "./ThingType";
-import {Entity} from "../Thing/Entity";
+import { Entity } from "../Thing/Entity";
 import { QueryIterator } from "../Concept";
+import { Grakn } from "../../Grakn";
+import Transaction = Grakn.Transaction;
+import { Merge } from "../../common/utils";
 
 export interface EntityType extends ThingType {
     asRemote(transaction: Transaction): RemoteEntityType;
@@ -11,10 +14,9 @@ export interface RemoteEntityType extends Merge<RemoteThingType, EntityType> {
 
     setSupertype(superEntityType: EntityType): void;
     getSupertype(): EntityType;
-
-    getSupertypes() : QueryIterator;
-    getSubtypes()   : QueryIterator;
-    getInstances()  : QueryIterator;
+    getSupertypes(): QueryIterator;
+    getSubtypes(): QueryIterator;
+    getInstances(): QueryIterator;
 
     asRemote(transaction: Transaction): RemoteEntityType;
 }

@@ -1,14 +1,15 @@
 import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
 import { Entity, RemoteEntity } from "../Entity";
-import {GraknTransaction} from "../../../Grakn";
-import {EntityTypeImpl} from "../../Type/Impl/EntityTypeImpl";
+import { EntityTypeImpl } from "../../Type/Impl/EntityTypeImpl";
+import { Grakn } from "../../../Grakn";
+import Transaction = Grakn.Transaction;
 
 export class EntityImpl extends ThingImpl implements Entity {
-    constructor(iid: string) {
+    protected constructor(iid: string) {
         super(iid);
     }
 
-    asRemote(transaction: GraknTransaction): RemoteEntity {
+    asRemote(transaction: Transaction): RemoteEntity {
         return new RemoteEntityImpl(transaction, this.getIID());
     }
 
@@ -18,11 +19,11 @@ export class EntityImpl extends ThingImpl implements Entity {
 }
 
 export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
-    constructor(transaction: GraknTransaction, iid: string) {
+    constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
     }
 
-    public asRemote(transaction: GraknTransaction): RemoteEntity {
+    public asRemote(transaction: Transaction): RemoteEntityImpl {
         return this;
     }
 
@@ -30,7 +31,7 @@ export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
         throw "Not yet implemented"
     }
 
-    asEntity(): RemoteEntity {
+    asEntity(): RemoteEntityImpl {
         return this;
     }
 }

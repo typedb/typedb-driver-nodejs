@@ -1,22 +1,19 @@
+import { Grakn } from "../../Grakn";
+import Transaction = Grakn.Transaction;
+
 export interface Rule {
-
     getLabel(): string;
-
-    getWhen(): Pattern;
-
-    getThen(): Pattern;
-
-    hashCode(): number;
+    getWhen(): string;
+    getThen(): string;
 
     asRemote(transaction: Transaction): RemoteRule;
-
-    equals(rule: Rule): boolean;
 }
 
 export interface RemoteRule extends Rule {
     setLabel(label: string): void;
 
     delete(): void;
-
     isDeleted(): boolean;
+
+    asRemote(transaction: Transaction): RemoteRule;
 }

@@ -3,12 +3,41 @@ import { ThingType, RemoteThingType } from "../ThingType";
 import { QueryIterator } from "../../Concept";
 import { AttributeType } from "../AttributeType";
 import { RoleType } from "../RoleType";
+import { Grakn } from "../../../Grakn";
+import Transaction = Grakn.Transaction;
+import { Type as TypeProto } from "bazel-bin/external/graknlabs_protocol/grpc/nodejs/protobuf/concept_pb";
+import { EntityTypeImpl } from "./EntityTypeImpl";
+import { RelationTypeImpl } from "./RelationTypeImpl";
+import { AttributeTypeImpl } from "./AttributeTypeImpl";
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
+    protected constructor(label: string, isRoot: boolean) {
+        super(label, isRoot);
+    }
+
     asRemote(transaction: Transaction): RemoteThingType {
         return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot())
-    };
+    }
 
+    static of(typeProto: TypeProto): ThingTypeImpl {
+        switch (typeProto.getEncoding()) {
+            case TypeProto.ENCODING.ENTITY_TYPE:
+                return EntityTypeImpl.of(typeProto);
+            case TypeProto.ENCODING.RELATION_TYPE:
+                return RelationTypeImpl.of(typeProto);
+            case TypeProto.ENCODING.ATTRIBUTE_TYPE:
+                return AttributeTypeImpl.of(typeProto);
+            case TypeProto.ENCODING.THING_TYPE:
+                assert(typeProto.getRoot());
+                return new ThingTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+            default:
+                throw "Bad encoding";
+        }
+    }
+
+    asThingType(): ThingTypeImpl {
+        return this;
+    }
 }
 
 export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingType {
@@ -16,25 +45,38 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
         super(transaction, label, isRoot);
     }
 
-    asRemote(transaction: Transaction): RemoteThingType {
-        return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot())
-    };
+    getSupertype(): ThingTypeImpl {
+        throw "Behaviour not yet implemented";
+    }
 
-    getOwns(): QueryIterator;
-    getOwns(keysOnly: boolean): QueryIterator;
-    getOwns(keysOnly?: boolean): QueryIterator {
-        return new QueryIterator();
+    getSupertypes(): QueryIterator {
+        throw "Not implemented yet";
+    }
+
+    getSubtypes(): QueryIterator {
+        throw "Not implemented yet";
+    }
+
+    getInstances(): QueryIterator {
+        throw "Not implemented yet";
+    }
+
+    setAbstract(): void {
+        throw "Not implemented yet";
+    }
+
+    unsetAbstract(): void {
+        throw "Not implemented yet";
     }
 
     getPlays(): QueryIterator {
         return new QueryIterator();
     }
 
-    getSupertype(): ThingType {
-        throw "Behaviour not yet implemented";
-    }
-
-    setAbstract(): void {
+    getOwns(): QueryIterator;
+    getOwns(keysOnly: boolean): QueryIterator;
+    getOwns(keysOnly?: boolean): QueryIterator {
+        return new QueryIterator();
     }
 
     setOwns(attributeType: AttributeType): void;
@@ -47,15 +89,22 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
     setPlays(role: RoleType): void;
     setPlays(role: RoleType, overriddenType: RoleType): void;
     setPlays(role: RoleType, overriddenType?: RoleType): void {
-    }
-
-    unsetAbstract(): void {
+        throw "Not implemented yet";
     }
 
     unsetOwns(attributeType: AttributeType): void {
+        throw "Not implemented yet";
     }
 
     unsetPlays(role: RoleType): void {
+        throw "Not implemented yet";
     }
 
+    asRemote(transaction: Transaction): RemoteThingTypeImpl {
+        return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot())
+    }
+
+    asThingType(): RemoteThingTypeImpl {
+        return this;
+    }
 }

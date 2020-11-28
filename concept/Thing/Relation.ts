@@ -2,13 +2,13 @@ import { Thing, RemoteThing } from "./Thing";
 import { RelationType } from "../Type/RelationType";
 import { RoleType } from "../Type/RoleType";
 import { QueryIterator } from "../Concept";
-import {GraknTransaction} from "../../Grakn";
+import { Grakn } from "../../Grakn";
+import Transaction = Grakn.Transaction;
+import { Merge } from "../../common/utils";
 
 export interface Relation extends Thing {
-
-    asRemote(transaction: GraknTransaction): RemoteRelation;
+    asRemote(transaction: Transaction): RemoteRelation;
     asRelation(): Relation;
-
 }
 
 export interface RemoteRelation extends Merge<RemoteThing, Relation> {
@@ -21,5 +21,5 @@ export interface RemoteRelation extends Merge<RemoteThing, Relation> {
     getPlayersByRoleType(): [RoleType, Thing[]];
 
     asRelation(): RemoteRelation;
-    asRemote(transaction: GraknTransaction): RemoteRelation;
+    asRemote(transaction: Transaction): RemoteRelation;
 }

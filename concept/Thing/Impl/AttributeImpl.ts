@@ -1,11 +1,14 @@
-import { AttributeValueType, Attribute, RemoteAttribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute, RemoteBooleanAttribute, RemoteLongAttribute, RemoteStringAttribute, RemoteDoubleAttribute, RemoteDateTimeAttribute } from "../Attribute";
+import { Attribute, RemoteAttribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute, RemoteBooleanAttribute, RemoteLongAttribute, RemoteStringAttribute, RemoteDoubleAttribute, RemoteDateTimeAttribute } from "../Attribute";
 import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
-import {GraknTransaction} from "../../../Grakn";
-import {ThingType} from "../../Type/ThingType";
-import {QueryIterator} from "../../Concept";
-import {AttributeTypeImpl, BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl, DoubleAttributeTypeImpl, LongAttributeTypeImpl, StringAttributeTypeImpl} from "../../Type/Impl/AttributeTypeImpl";
+import { ThingType } from "../../Type/ThingType";
+import { QueryIterator } from "../../Concept";
+import { AttributeTypeImpl, BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl, DoubleAttributeTypeImpl, LongAttributeTypeImpl, StringAttributeTypeImpl } from "../../Type/Impl/AttributeTypeImpl";
+import { AttributeType } from "../../Type/AttributeType";
+import ValueClass = AttributeType.ValueClass;
+import { Grakn } from "../../../Grakn";
+import Transaction = Grakn.Transaction;
 
-export abstract class AttributeImpl<T extends AttributeValueType> extends ThingImpl implements Attribute<T> {
+export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl implements Attribute<T> {
     protected constructor(iid: string) {
         super(iid);
     }
@@ -14,33 +17,33 @@ export abstract class AttributeImpl<T extends AttributeValueType> extends ThingI
         return this;
     }
 
-    abstract asRemote(transaction: GraknTransaction): RemoteAttribute<T>;
+    abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
 
-    asBoolean(): BooleanAttribute {
+    asBoolean(): BooleanAttributeImpl {
         throw "Invalid cast to Boolean";
     }
 
-    asDateTime(): DateTimeAttribute {
+    asDateTime(): DateTimeAttributeImpl {
         throw "Invalid cast to DateTime";
     }
 
-    asDouble(): DoubleAttribute {
+    asDouble(): DoubleAttributeImpl {
         throw "Invalid cast to Double";
     }
 
-    asLong(): LongAttribute {
+    asLong(): LongAttributeImpl {
         throw "Invalid cast to Long";
     }
 
-    asString(): StringAttribute {
+    asString(): StringAttributeImpl {
         throw "Invalid cast to String";
     }
 
-    abstract getValue(): T
+    abstract getValue(): T;
 }
 
-export abstract class RemoteAttributeImpl<T extends AttributeValueType> extends RemoteThingImpl implements RemoteAttribute<T> {
-    protected constructor(transaction: GraknTransaction, iid: string) {
+export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteThingImpl implements RemoteAttribute<T> {
+    protected constructor(transaction: Transaction, iid: string) {
         super(transaction, iid);
     }
 
@@ -76,7 +79,7 @@ export abstract class RemoteAttributeImpl<T extends AttributeValueType> extends 
         throw "Not implemented yet";
     }
 
-    abstract asRemote(transaction: GraknTransaction): RemoteAttribute<T>;
+    abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
 
     abstract getValue(): T;
 }
@@ -89,7 +92,7 @@ export class BooleanAttributeImpl extends AttributeImpl<boolean> implements Bool
         this.value = value;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteBooleanAttribute {
+    asRemote(transaction: Transaction): RemoteBooleanAttribute {
         return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this.value);
     }
 
@@ -105,7 +108,7 @@ export class BooleanAttributeImpl extends AttributeImpl<boolean> implements Bool
 export class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements Merge<RemoteBooleanAttribute, BooleanAttribute> {
     private readonly value: boolean;
 
-    constructor(transaction: GraknTransaction, iid: string, value: boolean){
+    constructor(transaction: Transaction, iid: string, value: boolean){
         super(transaction, iid);
         this.value = value;
     }
@@ -122,7 +125,7 @@ export class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> imp
         return this;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteBooleanAttribute {
+    asRemote(transaction: Transaction): RemoteBooleanAttribute {
         return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this.value);
     }
 }
@@ -135,7 +138,7 @@ export class LongAttributeImpl extends AttributeImpl<number> implements LongAttr
         this.value = value;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteLongAttribute {
+    asRemote(transaction: Transaction): RemoteLongAttribute {
         return new RemoteLongAttributeImpl(transaction, this.getIID(), this.value);
     }
 
@@ -151,7 +154,7 @@ export class LongAttributeImpl extends AttributeImpl<number> implements LongAttr
 export class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteLongAttribute, LongAttribute> {
     private readonly value: number;
 
-    constructor(transaction: GraknTransaction, iid: string, value: number){
+    constructor(transaction: Transaction, iid: string, value: number){
         super(transaction, iid);
         this.value = value;
     }
@@ -168,7 +171,7 @@ export class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> impleme
         return this;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteLongAttribute {
+    asRemote(transaction: Transaction): RemoteLongAttribute {
         return this;
     }
 }
@@ -181,7 +184,7 @@ export class StringAttributeImpl extends AttributeImpl<string> implements Attrib
         this.value = value;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteStringAttribute {
+    asRemote(transaction: Transaction): RemoteStringAttribute {
         return new RemoteStringAttributeImpl(transaction, this.getIID(), this.value);
     }
 
@@ -197,7 +200,7 @@ export class StringAttributeImpl extends AttributeImpl<string> implements Attrib
 export class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements Merge<RemoteStringAttribute, StringAttribute> {
     private readonly value: string;
 
-    constructor(transaction: GraknTransaction, iid: string, value: string){
+    constructor(transaction: Transaction, iid: string, value: string){
         super(transaction, iid);
         this.value = value;
     }
@@ -214,7 +217,7 @@ export class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> imple
         return this;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteStringAttribute {
+    asRemote(transaction: Transaction): RemoteStringAttribute {
         return this;
     }
 }
@@ -227,7 +230,7 @@ export class DoubleAttributeImpl extends AttributeImpl<number> implements Attrib
         this.value = value;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteDoubleAttribute {
+    asRemote(transaction: Transaction): RemoteDoubleAttribute {
         return new RemoteDoubleAttributeImpl(transaction, this.getIID(), this.value);
     }
 
@@ -244,7 +247,7 @@ export class DoubleAttributeImpl extends AttributeImpl<number> implements Attrib
 export class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteDoubleAttribute, DoubleAttribute> {
     private readonly value: number;
 
-    constructor(transaction: GraknTransaction, iid: string, value: number){
+    constructor(transaction: Transaction, iid: string, value: number){
         super(transaction, iid);
         this.value = value;
     }
@@ -261,7 +264,7 @@ export class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> imple
         return this;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteDoubleAttribute {
+    asRemote(transaction: Transaction): RemoteDoubleAttribute {
         return this;
     }
 }
@@ -275,7 +278,7 @@ export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTi
         this.value = value;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteDateTimeAttribute {
+    asRemote(transaction: Transaction): RemoteDateTimeAttribute {
         return new RemoteDateTimeAttributeImpl(transaction, this.getIID(), this.value);
     }
 
@@ -292,7 +295,7 @@ export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTi
 class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements Merge<RemoteDateTimeAttribute, DateTimeAttribute> {
     private readonly value: Date;
 
-    constructor(transaction: GraknTransaction, iid: string, value: Date){
+    constructor(transaction: Transaction, iid: string, value: Date){
         super(transaction, iid);
         this.value = value;
     }
@@ -305,7 +308,7 @@ class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements M
         throw "Of not present"
     }
 
-    asRemote(transaction: GraknTransaction): RemoteDateTimeAttribute {
+    asRemote(transaction: Transaction): RemoteDateTimeAttribute {
         return this;
     }
 

@@ -2,10 +2,12 @@ import { ThingType, RemoteThingType } from "./ThingType";
 import { Relation } from "../Thing/Relation";
 import { RoleType } from "./RoleType";
 import { QueryIterator } from "../Concept";
+import { Grakn } from "../../Grakn";
+import Transaction = Grakn.Transaction;
+import { Merge } from "../../common/utils";
 
 export interface RelationType extends ThingType {
     asRemote(transaction: Transaction): RemoteRelationType;
-
 }
 
 export interface RemoteRelationType extends Merge<RemoteThingType, RelationType> {
@@ -14,14 +16,13 @@ export interface RemoteRelationType extends Merge<RemoteThingType, RelationType>
     setSupertype(superRelationType: RelationType): void;
     getRelates(roleLabel: string): RoleType;
     getRelates(): QueryIterator;
-
     setRelates(roleLabel: string): void;
     setRelates(roleLabel: string, overriddenLabel: string): void;
     unsetRelates(roleLabel: string): void;
 
-    getSupertypes():    QueryIterator;
-    getSubtypes():    QueryIterator;
-    getInstances():    QueryIterator;
+    getSupertypes(): QueryIterator;
+    getSubtypes(): QueryIterator;
+    getInstances(): QueryIterator;
 
     asRemote(transaction: Transaction): RemoteRelationType;
 }

@@ -1,21 +1,23 @@
 import { Entity } from "./Entity";
-import { Attribute, AttributeValueType } from "./Attribute";
+import { Attribute } from "./Attribute";
 import { Relation } from "./Relation";
 import { Concept, RemoteConcept, QueryIterator } from "../Concept";
 import { Type } from "../Type/Type";
 import { ThingType } from "../Type/ThingType";
 import { AttributeType } from "../Type/AttributeType";
 import { RoleType } from "../Type/RoleType";
-import {GraknTransaction} from "../../Grakn";
+import { Grakn } from "../../Grakn";
+import Transaction = Grakn.Transaction;
+import { Merge } from "../../common/utils";
 
 export interface Thing extends Concept {
     getIID(): string;
 
     asEntity(): Entity;
-    asAttribute(): Attribute<AttributeValueType>;
+    asAttribute(): Attribute<AttributeType.ValueClass>;
     asRelation(): Relation;
 
-    asRemote(transaction: GraknTransaction): RemoteThing;
+    asRemote(transaction: Transaction): RemoteThing;
 
     asThing(): Thing;
 }
@@ -37,7 +39,7 @@ export interface RemoteThing extends Merge<RemoteConcept, Thing> {
     getPlays(): QueryIterator;
     getRelations(roleTypes: RoleType[]): QueryIterator;
 
-    asRemote(transaction: GraknTransaction): RemoteThing;
+    asRemote(transaction: Transaction): RemoteThing;
 
     asThing(): RemoteThing;
 }

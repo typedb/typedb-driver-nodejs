@@ -1,29 +1,43 @@
-import {ThingType} from "./Type/ThingType";
-import {EntityType} from "./Type/EntityType";
-import {RelationType} from "./Type/RelationType";
-import {AttributeType} from "./Type/AttributeType";
-import {ConceptManager as ProtoConceptManager} from "protobuf/concept_pb";
-import {Transaction} from "protobuf/transaction_pb";
-import {EntityTypeImpl} from "./Type/Impl/EntityTypeImpl";
-import {Type} from "./Type/Type";
-import {TypeImpl} from "./Type/Impl/TypeImpl";
-import {Rule} from "./Type/Rule";
-import {RuleImpl} from "./Type/Impl/RuleImpl";
-import {RPCTransaction} from "../rpc/RPCTransaction";
-import {Protobuilder} from "../common/ProtoBuilder";
-import {RelationTypeImpl} from "./Type/Impl/RelationTypeImpl";
-import {AttributeTypeImpl} from "./Type/Impl/AttributeTypeImpl";
-import {Thing} from "./Thing/Thing";
-import {ThingImpl} from "./Thing/Impl/ThingImpl";
+import { ThingType } from "./Type/ThingType";
+import { EntityType } from "./Type/EntityType";
+import { RelationType } from "./Type/RelationType";
+import { AttributeType } from "./Type/AttributeType";
+import { ConceptManager as ProtoConceptManager } from "protobuf/concept_pb";
+import { Transaction } from "protobuf/transaction_pb";
+import { EntityTypeImpl } from "./Type/Impl/EntityTypeImpl";
+import { Type } from "./Type/Type";
+import { TypeImpl } from "./Type/Impl/TypeImpl";
+import { Rule } from "./Type/Rule";
+import { RuleImpl } from "./Type/Impl/RuleImpl";
+import { RPCTransaction } from "../rpc/RPCTransaction";
+import { Protobuilder } from "../common/ProtoBuilder";
+import { RelationTypeImpl } from "./Type/Impl/RelationTypeImpl";
+import { AttributeTypeImpl } from "./Type/Impl/AttributeTypeImpl";
+import { Thing } from "./Thing/Thing";
+import { ThingImpl } from "./Thing/Impl/ThingImpl";
 
 export class ConceptManager {
-    private _rpcTransaction: RPCTransaction;
-    constructor (rpcTransaction: RPCTransaction) {this._rpcTransaction = rpcTransaction}
+    private readonly _rpcTransaction: RPCTransaction;
 
-    public getRootThingType(): ThingType {return this.getType("thing").asThingType();}
-    public getRootEntityType(): EntityType {return this.getType("entity").asEntityType();}
-    public getRootRelationType(): RelationType {return this.getType("relation").asRelationType();}
-    public getRootAttributeType(): AttributeType {return this.getType("attribute").asAttributeType();}
+    constructor (rpcTransaction: RPCTransaction) {
+        this._rpcTransaction = rpcTransaction;
+    }
+
+    public getRootThingType(): ThingType {
+        return this.getType("thing").asThingType();
+    }
+
+    public getRootEntityType(): EntityType {
+        return this.getType("entity").asEntityType();
+    }
+
+    public getRootRelationType(): RelationType {
+        return this.getType("relation").asRelationType();
+    }
+
+    public getRootAttributeType(): AttributeType {
+        return this.getType("attribute").asAttributeType();
+    }
 
     public putEntityType(label: string): EntityType {
         const req = new ProtoConceptManager.Req()

@@ -1,18 +1,19 @@
 import { Thing, RemoteThing } from "../Thing";
-import { AttributeValueType, Attribute } from "../Attribute";
+import { Attribute } from "../Attribute";
 import { Entity } from "../Entity";
 import { Relation } from "../Relation";
 import { Type, RemoteType } from "../../Type/Type";
 import { QueryIterator } from "../../Concept";
 import { AttributeType } from "../../Type/AttributeType";
 import { RoleType } from "../../Type/RoleType";
-import {GraknTransaction} from "../../../Grakn";
-import {Thing as ProtoThing} from "protobuf/concept_pb";
-import {EntityImpl} from "./EntityImpl";
-import {RelationImpl} from "./RelationImpl";
-import {AttributeImpl} from "./AttributeImpl";
-import {TypeImpl} from "../../Type/Impl/TypeImpl";
-import {ThingTypeImpl} from "../../Type/Impl/ThingTypeImpl";
+import { Thing as ProtoThing } from "protobuf/concept_pb";
+import { EntityImpl } from "./EntityImpl";
+import { RelationImpl } from "./RelationImpl";
+import { AttributeImpl } from "./AttributeImpl";
+import { TypeImpl } from "../../Type/Impl/TypeImpl";
+import { ThingTypeImpl } from "../../Type/Impl/ThingTypeImpl";
+import { Grakn } from "../../../Grakn";
+import Transaction = Grakn.Transaction;
 
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;
@@ -58,7 +59,7 @@ export abstract class ThingImpl implements Thing {
         throw "Invalid cast to Entity";
     }
 
-    asAttribute(): AttributeImpl<AttributeValueType> {
+    asAttribute(): AttributeImpl<AttributeType.ValueClass> {
         throw "Invalid cast to Attribute";
     }
 
@@ -70,18 +71,18 @@ export abstract class ThingImpl implements Thing {
         return `${ThingImpl.name}[iid:${this._iid}]`;
     }
 
-    abstract asRemote(transaction: GraknTransaction): RemoteThing;
+    abstract asRemote(transaction: Transaction): RemoteThing;
 }
 
 export abstract class RemoteThingImpl implements RemoteThing {
     private readonly _iid: string;
-    protected readonly transaction: GraknTransaction;
+    private readonly _transaction: Transaction;
 
-    protected constructor(transaction: GraknTransaction, iid: string) {
+    protected constructor(transaction: Transaction, iid: string) {
         if (!transaction) throw "Transaction Missing"
         if (!iid) throw "IID Missing"
         this._iid = iid;
-        this.transaction = transaction;
+        this._transaction = transaction;
     }
 
     getType(): ThingTypeImpl {
@@ -92,7 +93,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
         throw "Not implemented yet";
     }
 
-    asAttribute(): Attribute<AttributeValueType> {
+    asAttribute(): Attribute<AttributeType.ValueClass> {
         throw "Invalid cast to Attribute";
     }
 
@@ -104,9 +105,9 @@ export abstract class RemoteThingImpl implements RemoteThing {
         throw "Invalid cast to Relation"
     }
 
-    abstract asRemote(transaction: GraknTransaction): RemoteThing;
+    abstract asRemote(transaction: Transaction): RemoteThing;
 
-    asThing(): RemoteThing {
+    asThing(): RemoteThingImpl {
         return this;
     }
 
@@ -115,6 +116,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
     }
 
     delete(): void {
+        throw "Not implemented yet";
     }
 
     getIID(): string {
@@ -148,10 +150,19 @@ export abstract class RemoteThingImpl implements RemoteThing {
         return new QueryIterator();
     }
 
-    setHas(attribute: Attribute<AttributeValueType>): void {
+    setHas(attribute: Attribute<AttributeType.ValueClass>): void {
+        throw "Not implemented yet";
     }
 
-    unsetHas(attribute: Attribute<any>): void {
+    unsetHas(attribute: Attribute<AttributeType.ValueClass>): void {
+        throw "Not implemented yet";
     }
 
+    protected get transaction(): Transaction {
+        return this._transaction;
+    }
+
+    toString(): string {
+        return `${RemoteThingImpl.name}[iid:${this._iid}]`;
+    }
 }

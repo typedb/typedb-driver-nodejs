@@ -2,14 +2,19 @@ import { QueryIterator } from "../Concept";
 import { AttributeType } from "./AttributeType";
 import { RoleType } from "./RoleType";
 import { RemoteType, Type } from "./Type";
+import { Grakn } from "../../Grakn";
+import Transaction = Grakn.Transaction;
+import { Merge } from "../../common/utils";
 
 export interface ThingType extends Type {
     asRemote(transaction: Transaction): RemoteThingType;
 }
 
 export interface RemoteThingType extends Merge<RemoteType, ThingType> {
-    asRemote(transaction: Transaction): RemoteThingType;
     getSupertype(): ThingType;
+    getSupertypes(): QueryIterator;
+    getSubtypes(): QueryIterator;
+    getInstances(): QueryIterator;
 
     setLabel(label: string): void;
 
@@ -26,11 +31,12 @@ export interface RemoteThingType extends Merge<RemoteType, ThingType> {
 
     getPlays(): QueryIterator;
     getOwns(): QueryIterator;
-    //getOwns(valueType: ValueType):                      QueryIterator;
-    getOwns(keysOnly: boolean):                         QueryIterator;
-    //getOwns(valueType: ValueType, keysOnly: boolean):   QueryIterator;
+    getOwns(valueType: AttributeType.ValueType): QueryIterator;
+    getOwns(keysOnly: boolean): QueryIterator;
+    getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): QueryIterator;
 
     unsetPlays(role: RoleType): void;
     unsetOwns(attributeType: AttributeType): void;
 
+    asRemote(transaction: Transaction): RemoteThingType;
 }

@@ -1,131 +1,132 @@
-import {RemoteThing, Thing} from "../../Thing/Thing";
 import { Type, RemoteType } from "../Type";
-import { AttributeType, RemoteAttributeType } from "../AttributeType";
-import { RelationType, RemoteRelationType } from "../RelationType";
-import { EntityType, RemoteEntityType } from "../EntityType";
-import { RoleType, RemoteRoleType } from "../RoleType";
-import { ThingType, RemoteThingType } from "../ThingType";
+import { RemoteRelationType } from "../RelationType";
+import { RemoteEntityType } from "../EntityType";
+import { RemoteRoleType } from "../RoleType";
+import { RemoteThingType } from "../ThingType";
 import { QueryIterator } from "../../Concept";
-import ValueType = WebAssembly.ValueType;
+// TODO
+import { Type as TypeProto } from "bazel-bin/external/graknlabs_protocol/grpc/nodejs/protobuf/concept_pb";
+import { RoleTypeImpl } from "./RoleTypeImpl";
+import { ThingTypeImpl } from "./ThingTypeImpl";
+import { Grakn } from "../../../Grakn";
+import Transaction = Grakn.Transaction;
+import { RemoteThingImpl, ThingImpl } from "../../Thing/Impl/ThingImpl";
+import { EntityTypeImpl } from "./EntityTypeImpl";
+import { AttributeTypeImpl, RemoteAttributeTypeImpl } from "./AttributeTypeImpl";
+import { RelationTypeImpl } from "./RelationTypeImpl";
 
 export abstract class TypeImpl implements Type {
-    label:  string;
-    root: boolean;
-    hash: number;
+    private readonly _label: string;
+    private readonly _root: boolean;
 
-    constructor(label: string, root: boolean) {
-        if (!label) throw("Type Label missing.");
+    protected constructor(label: string, root: boolean) {
+        if (!label) throw "Type Label missing.";
 
-        this.label = label;
-        this.root = root;
-        this.hash = hash(this.label);
+        this._label = label;
+        this._root = root;
     }
 
-    equals(type: Type): boolean {
-        if (typeof type != typeof this) {
-            return false;
+    static of(typeProto: TypeProto): TypeImpl {
+        switch (typeProto.getEncoding()) {
+            case TypeProto.ENCODING.ROLE_TYPE:
+                return RoleTypeImpl.of(typeProto);
+            default:
+                return ThingTypeImpl.of(typeProto);
         }
-        if (type.hashCode() != this.hashCode()) {
-            return false;
-
-        }
-        return type.getLabel() === this.getLabel();
-    }
-
-
-    hashCode(): number {
-        return this.hash;
-    }
-
-    asAttributeType(): AttributeType {
-        throw "Invalid cast to Attribute Type.";
-    }
-
-    asEntityType(): EntityType {
-        throw "Invalid cast to Entity Type.";
-    }
-
-    asRelationType(): RelationType {
-        throw "Invalid cast to Relation Type.";
-    }
-
-    abstract asRemote(transaction: Transaction): RemoteType
-
-    asRoleType(): RoleType {
-        throw "Invalid cast to Role Type.";
-    }
-
-    asThing(): Thing {
-        throw "Invalid cast to Thing.";
-    }
-
-    asThingType(): ThingType {
-        throw "Invalid cast to Thing Type.";
-    }
-
-    asType(): Type {
-        return this;
     }
 
     getLabel(): string {
-        return this.label;
+        return this._label;
+    }
+
+    isRoot(): boolean {
+        return this._root;
     }
 
     isRemote(): boolean {
         return false;
     }
 
-    isRoot(): boolean {
-        return this.root;
+    asType(): TypeImpl {
+        return this;
     }
+
+    asThing(): ThingImpl {
+        throw "Invalid cast to Thing.";
+    }
+
+    asThingType(): ThingTypeImpl {
+        throw "Invalid cast to Thing Type.";
+    }
+
+    asEntityType(): EntityTypeImpl {
+        throw "Invalid cast to Entity Type.";
+    }
+
+    asAttributeType(): AttributeTypeImpl {
+        throw "Invalid cast to Attribute Type.";
+    }
+
+    asRelationType(): RelationTypeImpl {
+        throw "Invalid cast to Relation Type.";
+    }
+
+    asRoleType(): RoleTypeImpl {
+        throw "Invalid cast to Role Type.";
+    }
+
+    toString(): string {
+        return `${TypeImpl.name}[label:${this._label}]`;
+    }
+
+    abstract asRemote(transaction: Transaction): RemoteType;
 }
 
 export abstract class RemoteTypeImpl implements RemoteType {
-    readonly transaction: Transaction;
-    label:  string;
-    readonly root: boolean;
-    hash: number;
+    // TODO: protected readonly _rpcTransaction: RPCTransaction
+    private readonly _rpcTransaction: Transaction;
+    private _label: string;
+    private readonly _isRoot: boolean;
 
-    protected constructor (transaction: Transaction, label: string, isRoot: boolean) {
-        if (!transaction)   throw "Transaction Missing"
-        if (!label)         throw "IID Missing"
-        this.label = label;
-        this.transaction = transaction;
-        this.root = isRoot;
-        this.hash = hash(this.label);
-    }
-
-    asAttributeType(): RemoteAttributeType {
-        throw "Invalid cast to Attribute Type";
-    }
-
-    getValueType(): string {
-        throw "Invalid get";
-    };
-
-    delete(): void {
-    }
-
-    equals(type: Type): boolean {
-        return false;
+    protected constructor(transaction: Transaction, label: string, isRoot: boolean) {
+        if (!transaction) throw "Transaction Missing";
+        if (!label) throw "IID Missing";
+        this._rpcTransaction = transaction;
+        this._label = label;
+        this._isRoot = isRoot;
     }
 
     getLabel(): string {
-        return "";
+        return this._label;
     }
-
-    hashCode(): number {
-        return 0;
-    }
-
-    isDeleted(): boolean {
-        return false;
-    }
-
-    isRemote(): boolean { return true; };
 
     isRoot(): boolean {
-        return this.root;
+        return this._isRoot;
+    }
+
+    isRemote(): boolean {
+        return true;
+    }
+
+    setLabel(label: string): void {
+        this._label = label;
+        throw "Not implemented yet"; // TODO: issue RPC call
+    }
+
+    isAbstract(): boolean {
+        throw "Not implemented yet";
+    }
+
+    asType(): RemoteTypeImpl {
+        return this;
+    }
+
+    asThing(): RemoteThingImpl {
+        throw "Invalid cast to Thing"
+    }
+
+    asThingType(): RemoteThingType {
+        throw "Invalid cast to Thing Type";
     }
 
     asEntityType(): RemoteEntityType {
@@ -136,34 +137,32 @@ export abstract class RemoteTypeImpl implements RemoteType {
         throw "Invalid cast to Relation Type";
     }
 
-    abstract asRemote(transaction: Transaction): RemoteType
+    asAttributeType(): RemoteAttributeTypeImpl {
+        throw "Invalid cast to Attribute Type";
+    }
 
     asRoleType(): RemoteRoleType {
         throw "Invalid cast to Role Type";
     }
 
-    asThingType(): RemoteThingType {
-        throw "Invalid cast to Thing Type";
+    delete(): void {
+        throw "Not implemented yet";
     }
 
-    getSubtypes(): QueryIterator {
-        return new QueryIterator();
+    isDeleted(): boolean {
+        return false;
     }
 
-    getSupertypes(): QueryIterator {
-        return new QueryIterator();
+    protected get transaction(): Transaction {
+        return this._rpcTransaction;
     }
 
-    setLabel(label: string): void {
-        this.label = label;
+    toString(): string {
+        return `${RemoteTypeImpl.name}[label:${this._label}]`;
     }
 
-    asThing(): RemoteThing {
-        throw "Invalid cast to Thing"
-    };
-    asType(): RemoteType {
-        return this;
-    };
-
-
+    abstract asRemote(transaction: Transaction): RemoteTypeImpl;
+    abstract getSupertype(): TypeImpl;
+    abstract getSubtypes(): QueryIterator;
+    abstract getSupertypes(): QueryIterator;
 }
