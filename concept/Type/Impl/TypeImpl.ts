@@ -1,7 +1,7 @@
 import { Type, RemoteType } from "../Type";
 import { QueryIterator } from "../../Concept";
 // TODO
-import { Type as TypeProto } from "bazel-bin/external/graknlabs_protocol/grpc/nodejs/protobuf/concept_pb";
+import { Type as TypeProto } from "protobuf/concept_pb";
 import { RoleTypeImpl } from "./RoleTypeImpl";
 import { ThingTypeImpl } from "./ThingTypeImpl";
 import { Grakn } from "../../../Grakn";

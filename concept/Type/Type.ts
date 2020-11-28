@@ -1,9 +1,4 @@
 import { Concept, RemoteConcept, QueryIterator } from "../Concept";
-import { ThingType, RemoteThingType } from "./ThingType";
-import { EntityType, RemoteEntityType } from "./EntityType";
-import { AttributeType, RemoteAttributeType } from "./AttributeType";
-import { RelationType, RemoteRelationType } from "./RelationType";
-import { RoleType, RemoteRoleType } from "./RoleType";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
 import { Merge } from "../../common/utils";

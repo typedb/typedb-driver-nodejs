@@ -5,7 +5,7 @@ import { AttributeType } from "../AttributeType";
 import { RoleType } from "../RoleType";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Type as TypeProto } from "bazel-bin/external/graknlabs_protocol/grpc/nodejs/protobuf/concept_pb";
+import { Type as TypeProto } from "protobuf/concept_pb";
 import { EntityTypeImpl } from "./EntityTypeImpl";
 import { RelationTypeImpl } from "./RelationTypeImpl";
 import { AttributeTypeImpl } from "./AttributeTypeImpl";

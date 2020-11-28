@@ -24,19 +24,19 @@ export class ConceptManager {
     }
 
     public getRootThingType(): ThingType {
-        return this.getType("thing").asThingType();
+        return this.getType("thing") as ThingType;
     }
 
     public getRootEntityType(): EntityType {
-        return this.getType("entity").asEntityType();
+        return this.getType("entity") as EntityType;
     }
 
     public getRootRelationType(): RelationType {
-        return this.getType("relation").asRelationType();
+        return this.getType("relation") as RelationType;
     }
 
     public getRootAttributeType(): AttributeType {
-        return this.getType("attribute").asAttributeType();
+        return this.getType("attribute") as AttributeType;
     }
 
     public putEntityType(label: string): EntityType {
@@ -51,7 +51,7 @@ export class ConceptManager {
 
     public getEntityType(label: string): EntityType | null {
         const concept = this.getType(label)
-        if (concept instanceof EntityTypeImpl) return concept.asEntityType();
+        if (concept instanceof EntityTypeImpl) return concept as EntityType;
         return null;
     }
 
@@ -67,7 +67,7 @@ export class ConceptManager {
 
     public getRelationType(label: string): RelationType | null {
         const concept = this.getType(label)
-        if (concept instanceof RelationTypeImpl) return concept.asRelationType();
+        if (concept instanceof RelationTypeImpl) return concept as RelationType;
         return null;
     }
 
@@ -83,7 +83,7 @@ export class ConceptManager {
 
     public getAttributeType(label: string): AttributeType | null {
         const concept = this.getType(label)
-        if (concept instanceof AttributeTypeImpl) return concept.asAttributeType();
+        if (concept instanceof AttributeTypeImpl) return concept as AttributeType;
         return null;
     }
 

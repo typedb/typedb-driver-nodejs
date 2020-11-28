@@ -2,7 +2,7 @@ import { RemoteThingType, ThingType } from "./ThingType";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
 // TODO
-import { AttributeType as AttributeTypeProto } from "bazel-bin/external/graknlabs_protocol/grpc/nodejs/protobuf/concept_pb";
+import { AttributeType as AttributeTypeProto } from "protobuf/concept_pb";
 import ProtoValueType = AttributeTypeProto.VALUE_TYPE;
 import { QueryIterator } from "../Concept";
 import { BooleanAttribute, DateTimeAttribute, DoubleAttribute,

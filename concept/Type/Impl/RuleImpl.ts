@@ -1,111 +1,88 @@
-import {RemoteRule, Rule} from "../Rule";
-import {Type} from "../Type";
+import { RemoteRule, Rule } from "../Rule";
+import { Rule as RuleProto } from "protobuf/concept_pb";
+import { Grakn } from "../../../Grakn";
+import Transaction = Grakn.Transaction;
 
 export class RuleImpl implements Rule {
-    private label: string;
-    private when: Conjunction<any>;
-    private then: ThingVariable<any>;
-    private hash: number;
 
-    constructor(label: string, when: Conjunction<any>, then: ThingVariable<any>) {
-        this.label = label;
-        this.when = when;
-        this.then = then;
-        this.hash = hash(label);
+    private readonly _label: string;
+    private readonly _when: string;
+    private readonly _then: string;
+
+    protected constructor(label: string, when: string, then: string) {
+        this._label = label;
+        this._when = when;
+        this._then = then;
     }
 
-    asRemote(transaction: Transaction): RemoteRule {
-        return new RemoteRuleImpl(transaction, this.getLabel(), this.getWhen(), this.getThen());
+    static of(ruleProto: RuleProto): RuleImpl {
+        return new RuleImpl(ruleProto.getLabel(), ruleProto.getWhen(), ruleProto.getThen());
     }
 
     getLabel(): string {
-        return this.label;
+        return this._label;
     }
 
-    getThen(): Pattern {
-        return this.then;
+    getThen(): string {
+        return this._then;
     }
 
-    getWhen(): Pattern {
-        return this.when;
-    }
-
-    equals(rule: Rule): boolean {
-        if (typeof rule != typeof this) {
-            return false;
-        }
-        if (rule.hashCode() != this.hashCode()) {
-            return false;
-
-        }
-        return rule.getLabel() === this.getLabel();
-    }
-
-    hashCode(): number {
-        return this.hash;
-    }
-
-}
-
-export class RemoteRuleImpl implements RemoteRule {
-    private label: string;
-    private readonly when: Conjunction<any>;
-    private readonly then: ThingVariable<any>;
-    private readonly hash: number;
-    private readonly transaction: Transaction;
-
-    constructor(transaction: Transaction, label: string, when: Conjunction<any>, then: ThingVariable<any>) {
-        this.transaction = transaction;
-        this.label = label;
-        this.when = when;
-        this.then = then;
-        this.hash = hash(label);
+    getWhen(): string {
+        return this._when;
     }
 
     asRemote(transaction: Transaction): RemoteRule {
         return new RemoteRuleImpl(transaction, this.getLabel(), this.getWhen(), this.getThen());
     }
 
+    toString(): string {
+        return `${RuleImpl.name}[label:${this._label}]`;
+    }
+}
+
+export class RemoteRuleImpl implements RemoteRule {
+    private _label: string;
+    private readonly _when: string;
+    private readonly _then: string;
+    private readonly _transaction: Transaction;
+
+    constructor(transaction: Transaction, label: string, when: string, then: string) {
+        this._transaction = transaction;
+        this._label = label;
+        this._when = when;
+        this._then = then;
+    }
+
+    getLabel(): string {
+        return this._label;
+    }
+
+    getThen(): string {
+        return this._then;
+    }
+
+    getWhen(): string {
+        return this._when;
+    }
+
+    setLabel(label: string): void {
+        this._label = label;
+        throw "Not yet implemented"; // TODO: rpc call
+    }
+
     delete(): void {
+        throw "Not yet implemented";
     }
 
     isDeleted(): boolean {
         throw "Not yet applicable"
     }
 
-    getLabel(): string {
-        return this.label;
+    asRemote(transaction: Transaction): RemoteRule {
+        return new RemoteRuleImpl(transaction, this.getLabel(), this.getWhen(), this.getThen());
     }
 
-    getThen(): Pattern {
-        return this.then;
+    protected get transaction(): Transaction {
+        return this._transaction;
     }
-
-    getWhen(): Pattern {
-        return this.when;
-    }
-
-    setLabel(label: string): void {
-        this.label = label;
-    }
-
-    tx(): Transaction {
-        return this.transaction;
-    }
-
-    hashCode(): number {
-        return this.hash
-    }
-
-    equals(rule: Rule): boolean {
-        if (typeof rule != typeof this) {
-            return false;
-        }
-        if (rule.hashCode() != this.hashCode()) {
-            return false;
-
-        }
-        return rule.getLabel() === this.getLabel();
-    }
-
 }

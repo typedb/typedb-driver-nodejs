@@ -1,36 +1,56 @@
 import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
-import { Entity } from "../../Thing/Entity";
 import { RemoteEntityType } from "../EntityType";
 import { EntityType } from "../EntityType";
 import { QueryIterator } from "../../Concept";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
+import { Type as TypeProto } from "protobuf/concept_pb";
+import { EntityImpl } from "../../Thing/Impl/EntityImpl";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
-    asRemote(transaction: Transaction): RemoteEntityType {
-        return new RemoteEntityTypeImpl(transaction, this._label, this.root)
-    };
+    protected constructor(label: string, isRoot: boolean) {
+        super(label, isRoot);
+    }
 
+    static of(typeProto: TypeProto): EntityTypeImpl {
+        return new EntityTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+    }
+
+    asRemote(transaction: Transaction): RemoteEntityType {
+        return new RemoteEntityTypeImpl(transaction, this.getLabel(), this.isRoot());
+    }
 }
 
 export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteEntityType {
-    asRemote(transaction: Transaction): RemoteEntityType {
-        return new RemoteEntityTypeImpl(transaction, this.label, this.root)
-    };
+    constructor(transaction: Transaction, label: string, isRoot: boolean) {
+        super(transaction, label, isRoot);
+    }
 
-    create(): Entity {
+    setSupertype(superEntityType: EntityType): void {
         throw "Not yet Implemented"
     }
 
-    getSupertype(): EntityType {
+    getSupertype(): EntityTypeImpl {
         throw "Not yet implemented"
     }
 
     getInstances(): QueryIterator {
-        return new QueryIterator();
+        throw "Not yet implemented"
     }
 
-    setSupertype(superEntityType: EntityType): void {
+    asRemote(transaction: Transaction): RemoteEntityTypeImpl {
+        return new RemoteEntityTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
+    getSupertypes(): QueryIterator {
+        throw "Not yet implemented";
+    }
+
+    getSubtypes(): QueryIterator {
+        throw "Not yet implemented";
+    }
+
+    create(): EntityImpl {
+        throw "Not yet implemented"
+    }
 }
