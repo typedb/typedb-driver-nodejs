@@ -10,7 +10,7 @@ import {TypeImpl} from "./Type/Impl/TypeImpl";
 import {Rule} from "./Type/Rule";
 import {RuleImpl} from "./Type/Impl/RuleImpl";
 import {RPCTransaction} from "../rpc/RPCTransaction";
-import {addTracingDataToMetadata} from "../common/ProtoBuilder";
+import {Protobuilder} from "../common/ProtoBuilder";
 import {RelationTypeImpl} from "./Type/Impl/RelationTypeImpl";
 import {AttributeTypeImpl} from "./Type/Impl/AttributeTypeImpl";
 import {Thing} from "./Thing/Thing";
@@ -125,7 +125,7 @@ export class ConceptManager {
     private execute(conceptManagerReq: ProtoConceptManager.Req): ProtoConceptManager.Res {
         const transactionReq = new Transaction.Req()
             .setConceptManagerReq(conceptManagerReq)
-        addTracingDataToMetadata(transactionReq);
+        Protobuilder.addTracingDataToMetadata(transactionReq);
         return this._rpcTransaction.execute(transactionReq).getConceptManagerRes()
     }
 }

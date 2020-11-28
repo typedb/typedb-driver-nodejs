@@ -1,45 +1,62 @@
 import {GraknOptions} from "./GraknOptions";
 import {ConceptManager} from "./concept/ConceptManager";
 
-export interface GraknClient {
-    session(databaseName: string, type: GraknSessionType, options?: GraknOptions): GraknSession;
-    databases(): GraknDatabaseManager;
-    isOpen(): boolean;
-    close(): void;
-}
+export namespace Grakn {
+    export interface Client {
+        session(databaseName: string, type: SessionType, options?: GraknOptions): Promise<Session>;
 
-export interface GraknDatabaseManager {
-    contains(name: string): boolean;
-    create(name: string):   void;
-    delete(name: string):   void;
+        databases(): DatabaseManager;
 
-    all():                  string[];
-}
+        close(): void;
+    }
 
-export interface GraknSession {
-    transaction(type: GraknTransactionType, options?: GraknOptions): GraknTransaction;
-    type():     GraknSessionType;
-    isOpen():   boolean;
-    close():    void;
-    database(): string;
-}
+    export interface DatabaseManager {
+        contains(name: string): Promise<boolean>;
 
-export enum GraknSessionType {
-    DATA,
-    SCHEMA,
-}
+        create(name: string): Promise<void>;
 
-export interface GraknTransaction {
-    type():         GraknTransactionType;
-    isOpen():       boolean;
-    concepts():     ConceptManager;
-    query():        QueryManager;
-    commit():       void;
-    rollback():     void;
-    close():        void;
-}
+        delete(name: string): Promise<void>;
 
-export enum GraknTransactionType {
-    READ,
-    WRITE,
+        all(): Promise<string[]>;
+    }
+
+    export interface Session {
+        open(options?: GraknOptions): Promise<Session>;
+
+        transaction(type: TransactionType, options?: GraknOptions): Transaction;
+
+        type(): SessionType;
+
+        isOpen(): boolean;
+
+        close(): void;
+
+        database(): string;
+    }
+
+    export enum SessionType {
+        DATA,
+        SCHEMA,
+    }
+
+    export interface Transaction {
+        type(): TransactionType;
+
+        isOpen(): boolean;
+
+        concepts(): ConceptManager;
+
+        query(): QueryManager;
+
+        commit(): void;
+
+        rollback(): void;
+
+        close(): void;
+    }
+
+    export enum TransactionType {
+        READ,
+        WRITE,
+    }
 }
