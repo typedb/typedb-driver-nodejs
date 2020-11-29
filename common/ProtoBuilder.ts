@@ -1,4 +1,4 @@
-import {GraknOptions} from "../GraknOptions";
+import {GraknOptions} from "../internal";
 import options_pb from "grakn-protocol/options_pb";
 const { Options } = options_pb;
 

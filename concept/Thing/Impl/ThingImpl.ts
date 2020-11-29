@@ -1,15 +1,15 @@
-import { Thing, RemoteThing } from "../Thing";
-import { Attribute } from "../Attribute";
-import { Type } from "../../Type/Type";
-import { QueryIterator } from "../../Concept";
-import { AttributeType } from "../../Type/AttributeType";
-import { RoleType } from "../../Type/RoleType";
+import { Thing, RemoteThing } from "../../../internal";
+import { Attribute } from "../../../internal";
+import { Type } from "../../../internal";
+import { QueryIterator } from "../../../internal";
+import { AttributeType } from "../../../internal";
+import { RoleType } from "../../../internal";
 import ConceptProto from "grakn-protocol/concept_pb";
-import { EntityImpl } from "./EntityImpl";
-import { RelationImpl } from "./RelationImpl";
-import { AttributeImpl } from "./AttributeImpl";
-import { ThingTypeImpl } from "../../Type/Impl/ThingTypeImpl";
-import { Grakn } from "../../../Grakn";
+import { EntityImpl } from "../../../internal";
+import { RelationImpl } from "../../../internal";
+import { AttributeImpl } from "../../../internal";
+import { ThingTypeImpl } from "../../../internal";
+import { Grakn } from "../../../internal";
 import Transaction = Grakn.Transaction;
 
 export abstract class ThingImpl implements Thing {

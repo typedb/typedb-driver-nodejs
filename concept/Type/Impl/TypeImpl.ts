@@ -1,9 +1,9 @@
-import { Type, RemoteType } from "../Type";
-import { QueryIterator } from "../../Concept";
+import { Type, RemoteType } from "../../../internal";
+import { QueryIterator } from "../../../internal";
 import ConceptProto from "grakn-protocol/concept_pb";
-import { RoleTypeImpl } from "./RoleTypeImpl";
-import { ThingTypeImpl } from "./ThingTypeImpl";
-import { Grakn } from "../../../Grakn";
+import { RoleTypeImpl } from "../../../internal";
+import { ThingTypeImpl } from "../../../internal";
+import { Grakn } from "../../../internal";
 import Transaction = Grakn.Transaction;
 
 export abstract class TypeImpl implements Type {

@@ -1,10 +1,10 @@
-import { Thing, RemoteThing } from "./Thing";
-import { RelationType } from "../Type/RelationType";
-import { RoleType } from "../Type/RoleType";
-import { QueryIterator } from "../Concept";
-import { Grakn } from "../../Grakn";
+import { Thing, RemoteThing } from "../../internal";
+import { RelationType } from "../../internal";
+import { RoleType } from "../../internal";
+import { QueryIterator } from "../../internal";
+import { Grakn } from "../../internal";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../common/utils";
+import { Merge } from "../../internal";
 
 export interface Relation extends Thing {
     asRemote(transaction: Transaction): RemoteRelation;

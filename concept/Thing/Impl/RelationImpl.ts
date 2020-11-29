@@ -1,10 +1,10 @@
-import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
-import { Relation, RemoteRelation } from "../Relation";
-import { Thing } from "../Thing";
-import { RelationTypeImpl } from "../../Type/Impl/RelationTypeImpl";
-import { RoleType } from "../../Type/RoleType";
-import { QueryIterator } from "../../Concept";
-import { Grakn } from "../../../Grakn";
+import { ThingImpl, RemoteThingImpl } from "../../../internal";
+import { Relation, RemoteRelation } from "../../../internal";
+import { Thing } from "../../../internal";
+import { RelationTypeImpl } from "../../../internal";
+import { RoleType } from "../../../internal";
+import { QueryIterator } from "../../../internal";
+import { Grakn } from "../../../internal";
 import Transaction = Grakn.Transaction;
 
 export class RelationImpl extends ThingImpl implements Relation {

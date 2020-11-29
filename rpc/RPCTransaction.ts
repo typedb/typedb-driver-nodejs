@@ -1,11 +1,11 @@
-import { Grakn } from "../Grakn";
-import { ConceptManager } from "../concept/ConceptManager";
+import { Grakn } from "../internal";
+import { ConceptManager } from "../internal";
 import TransactionProto from "grakn-protocol/transaction_pb";
-import { Protobuilder } from "../common/ProtoBuilder";
+import { Protobuilder } from "../internal";
 import GraknProto from "grakn-protocol/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
-import { GraknOptions } from "../GraknOptions";
-import { QueryManager } from "../query/QueryManager";
+import { GraknOptions } from "../internal";
+import { QueryManager } from "../internal";
 import { ClientDuplexStream } from "@grpc/grpc-js";
 
 export class RPCTransaction implements Grakn.Transaction {

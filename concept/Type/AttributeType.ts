@@ -1,11 +1,11 @@
-import { RemoteThingType, ThingType } from "./ThingType";
-import { Grakn } from "../../Grakn";
+import { RemoteThingType, ThingType } from "../../internal";
+import { Grakn } from "../../internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "grakn-protocol/concept_pb";
-import { QueryIterator } from "../Concept";
-import { BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../Thing/Attribute";
+import { QueryIterator } from "../../internal";
+import { BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../../internal";
 import ValueType = AttributeType.ValueType;
-import { Merge } from "../../common/utils";
+import { Merge } from "../../internal";
 
 export interface AttributeType extends ThingType {
     getValueType(): ValueType;

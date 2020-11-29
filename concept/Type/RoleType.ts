@@ -1,9 +1,9 @@
-import { QueryIterator } from "../Concept";
-import { RelationType } from "./RelationType";
-import { RemoteThingType, ThingType } from "./ThingType";
-import { Grakn } from "../../Grakn";
+import { QueryIterator } from "../../internal";
+import { RelationType } from "../../internal";
+import { RemoteThingType, ThingType } from "../../internal";
+import { Grakn } from "../../internal";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../common/utils";
+import { Merge } from "../../internal";
 
 export interface RoleType extends ThingType {
     getScope(): string;

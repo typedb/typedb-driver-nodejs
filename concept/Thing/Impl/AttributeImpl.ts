@@ -1,6 +1,6 @@
-import { Attribute, RemoteAttribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute, RemoteBooleanAttribute, RemoteLongAttribute, RemoteStringAttribute, RemoteDoubleAttribute, RemoteDateTimeAttribute } from "../Attribute";
-import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
-import { ThingType } from "../../Type/ThingType";
+import { Attribute, RemoteAttribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute, RemoteBooleanAttribute, RemoteLongAttribute, RemoteStringAttribute, RemoteDoubleAttribute, RemoteDateTimeAttribute } from "../../../internal";
+import { ThingImpl, RemoteThingImpl } from "../../../internal";
+import { ThingType } from "../../../internal";
 import { QueryIterator } from "../../Concept";
 import { AttributeTypeImpl, BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl, DoubleAttributeTypeImpl, LongAttributeTypeImpl, StringAttributeTypeImpl } from "../../Type/Impl/AttributeTypeImpl";
 import { AttributeType } from "../../Type/AttributeType";

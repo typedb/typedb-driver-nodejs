@@ -1,21 +1,21 @@
-import { ThingType } from "./Type/ThingType";
-import { EntityType } from "./Type/EntityType";
-import { RelationType } from "./Type/RelationType";
-import { AttributeType } from "./Type/AttributeType";
+import { ThingType } from "../internal";
+import { EntityType } from "../internal";
+import { RelationType } from "../internal";
+import { AttributeType } from "../internal";
 import ConceptProto from "grakn-protocol/concept_pb";
 import ProtoConceptManager = ConceptProto.ConceptManager;
 import TransactionProto from "grakn-protocol/transaction_pb";
-import { EntityTypeImpl } from "./Type/Impl/EntityTypeImpl";
-import { Type } from "./Type/Type";
-import { TypeImpl } from "./Type/Impl/TypeImpl";
-import { Rule } from "./Type/Rule";
-import { RuleImpl } from "./Type/Impl/RuleImpl";
-import { RPCTransaction } from "../rpc/RPCTransaction";
-import { Protobuilder } from "../common/ProtoBuilder";
-import { RelationTypeImpl } from "./Type/Impl/RelationTypeImpl";
-import { AttributeTypeImpl } from "./Type/Impl/AttributeTypeImpl";
-import { Thing } from "./Thing/Thing";
-import { ThingImpl } from "./Thing/Impl/ThingImpl";
+import { EntityTypeImpl } from "../internal";
+import { Type } from "../internal";
+import { TypeImpl } from "../internal";
+import { Rule } from "../internal";
+import { RuleImpl } from "../internal";
+import { RPCTransaction } from "../internal";
+import { Protobuilder } from "../internal";
+import { RelationTypeImpl } from "../internal";
+import { AttributeTypeImpl } from "../internal";
+import { Thing } from "../internal";
+import { ThingImpl } from "../internal";
 
 export class ConceptManager {
     private readonly _rpcTransaction: RPCTransaction;

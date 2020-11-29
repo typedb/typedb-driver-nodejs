@@ -1,10 +1,10 @@
-import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
-import { RoleType, RemoteRoleType } from "../RoleType";
-import { QueryIterator } from "../../Concept";
+import { ThingTypeImpl, RemoteThingTypeImpl } from "../../../internal";
+import { RoleType, RemoteRoleType } from "../../../internal";
+import { QueryIterator } from "../../../internal";
 import { Type as TypeProto } from "grakn-protocol/concept_pb";
-import { Grakn } from "../../../Grakn";
+import { Grakn } from "../../../internal";
 import Transaction = Grakn.Transaction;
-import { RelationTypeImpl } from "./RelationTypeImpl";
+import { RelationTypeImpl } from "../../../internal";
 
 export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
     private readonly _scope: string;

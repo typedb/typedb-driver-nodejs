@@ -1,4 +1,4 @@
-import { Grakn } from "../../Grakn";
+import { Grakn } from "../../internal";
 import Transaction = Grakn.Transaction;
 
 export interface Rule {
