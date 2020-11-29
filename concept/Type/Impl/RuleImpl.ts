@@ -1,5 +1,5 @@
 import { RemoteRule, Rule } from "../Rule";
-import { Rule as RuleProto } from "protobuf/concept_pb";
+import { Rule as RuleProto } from "grakn-protocol/concept_pb";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 

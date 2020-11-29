@@ -4,7 +4,7 @@ import { Type } from "../../Type/Type";
 import { QueryIterator } from "../../Concept";
 import { AttributeType } from "../../Type/AttributeType";
 import { RoleType } from "../../Type/RoleType";
-import { Thing as ProtoThing } from "protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/concept_pb";
 import { EntityImpl } from "./EntityImpl";
 import { RelationImpl } from "./RelationImpl";
 import { AttributeImpl } from "./AttributeImpl";
@@ -23,13 +23,13 @@ export abstract class ThingImpl implements Thing {
         this._iid = iid;
     }
 
-    static of(thingProto: ProtoThing): ThingImpl {
+    static of(thingProto: ConceptProto.Thing): ThingImpl {
         switch (thingProto.getEncoding()) {
-            case ProtoThing.ENCODING.ENTITY:
+            case ConceptProto.Thing.ENCODING.ENTITY:
                 return EntityImpl.of(thingProto);
-            case ProtoThing.ENCODING.RELATION:
+            case ConceptProto.Thing.ENCODING.RELATION:
                 return RelationImpl.of(thingProto);
-            case ProtoThing.ENCODING.ATTRIBUTE:
+            case ConceptProto.Thing.ENCODING.ATTRIBUTE:
                 return AttributeImpl.of(thingProto);
             default:
                 throw "Bad encoding"

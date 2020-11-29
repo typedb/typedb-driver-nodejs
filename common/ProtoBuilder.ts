@@ -1,9 +1,9 @@
 import {GraknOptions} from "../GraknOptions";
-import {Options} from "protobuf/options_pb";
-import {Transaction} from "protobuf/transaction_pb";
+import options_pb from "grakn-protocol/options_pb";
+const { Options } = options_pb;
 
 export namespace Protobuilder {
-    export function options(options: GraknOptions): Options {
+    export function options(options: GraknOptions) {
         let optionsProto = new Options();
         if (options.infer() != null) optionsProto.setInfer(options.infer() as boolean);
         if (options.explain() != null) optionsProto.setExplain(options.explain() as boolean);

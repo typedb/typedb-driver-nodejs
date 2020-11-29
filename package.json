@@ -15,11 +15,10 @@
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
     "google-protobuf": "3.12.4",
+    "grakn-protocol": "0.0.1",
     "uuid": "8.3.1"
   },
   "devDependencies": {
-    "@babel/core": "7.12.9",
-    "@babel/register": "7.12.1",
     "@bazel/typescript": "2.3.1",
     "@cucumber/cucumber": "7.0.0-rc.0",
     "@types/google-protobuf": "3.7.4",

@@ -1,12 +1,9 @@
 import { RemoteThingType, ThingType } from "./ThingType";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
-// TODO
-import { AttributeType as AttributeTypeProto } from "protobuf/concept_pb";
-import ProtoValueType = AttributeTypeProto.VALUE_TYPE;
+import ConceptProto from "grakn-protocol/concept_pb";
 import { QueryIterator } from "../Concept";
-import { BooleanAttribute, DateTimeAttribute, DoubleAttribute,
-    LongAttribute, StringAttribute } from "../Thing/Attribute";
+import { BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../Thing/Attribute";
 import ValueType = AttributeType.ValueType;
 import { Merge } from "../../common/utils";
 
@@ -125,17 +122,17 @@ export namespace AttributeType {
     }
 
     export namespace ValueType {
-        export function of(valueType: ProtoValueType): ValueType {
+        export function of(valueType: ConceptProto.AttributeType.VALUE_TYPE): ValueType {
             switch (valueType) {
-                case ProtoValueType.STRING:
+                case ConceptProto.AttributeType.VALUE_TYPE.STRING:
                     return ValueType.STRING;
-                case ProtoValueType.BOOLEAN:
+                case ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN:
                     return ValueType.BOOLEAN;
-                case ProtoValueType.LONG:
+                case ConceptProto.AttributeType.VALUE_TYPE.LONG:
                     return ValueType.LONG;
-                case ProtoValueType.DOUBLE:
+                case ConceptProto.AttributeType.VALUE_TYPE.DOUBLE:
                     return ValueType.DOUBLE;
-                case ProtoValueType.DATETIME:
+                case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
                     return ValueType.DATETIME;
                 default:
                     throw "Bad value type";

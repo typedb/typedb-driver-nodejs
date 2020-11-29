@@ -1,11 +1,11 @@
 import {Grakn} from "../Grakn"
 import {GraknOptions} from "../GraknOptions";
-import {Channel, ChannelCredentials, closeClient} from "@grpc/grpc-js";
+import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
 import {RPCDatabaseManager} from "./RPCDatabaseManager";
-import {GraknClient as GraknGrpc} from "protobuf/grakn_grpc_pb";
+import {GraknClient as GraknGrpc} from "grakn-protocol/grakn_grpc_pb";
 import {RPCSession} from "./RPCSession";
 
-const DEFAULT_URI = "localhost:1729";
+export const DEFAULT_URI = "localhost:1729";
 
 export class GraknClient implements Grakn.Client {
     private readonly _databases: Grakn.DatabaseManager;
@@ -29,5 +29,4 @@ export class GraknClient implements Grakn.Client {
         // TODO: test that this does not throw
         closeClient(this._graknGrpc as any);
     }
-
 }

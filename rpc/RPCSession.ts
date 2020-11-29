@@ -1,6 +1,7 @@
 import { Grakn } from "../Grakn";
-import { GraknClient as GraknGrpc } from "protobuf/grakn_grpc_pb"
-import { Session } from "protobuf/session_pb";
+import GraknProto from "grakn-protocol/grakn_grpc_pb";
+import GraknGrpc = GraknProto.GraknClient;
+import SessionProto from "grakn-protocol/session_pb";
 import { Protobuilder } from "../common/ProtoBuilder";
 import { GraknOptions } from "../GraknOptions";
 import { RPCTransaction } from "./RPCTransaction";
@@ -19,7 +20,7 @@ export class RPCSession implements Grakn.Session {
     }
 
     async open(options: GraknOptions): Promise<Grakn.Session> {
-        const openReq = new Session.Open.Req()
+        const openReq = new SessionProto.Session.Open.Req()
             .setDatabase(this._database)
             .setType(sessionType(this._type))
             .setOptions(Protobuilder.options(options));
@@ -30,14 +31,14 @@ export class RPCSession implements Grakn.Session {
                 else resolve();
             });
         });
-        this._sessionId = ((await openPromise) as Session.Open.Res).getSessionId_asB64();
+        this._sessionId = ((await openPromise) as SessionProto.Session.Open.Res).getSessionId_asB64();
         return this;
     }
 
     async close(): Promise<void> {
         if (this._isOpen) {
             this._isOpen = false;
-            const closeReq = new Session.Close.Req()
+            const closeReq = new SessionProto.Session.Close.Req()
                 .setSessionId(this._sessionId);
             const closePromise = new Promise((resolve, reject) => {
                 this._grpcClient.session_close(closeReq, (err) => {
@@ -67,12 +68,12 @@ export class RPCSession implements Grakn.Session {
     }
 }
 
-function sessionType(type: Grakn.SessionType): Session.Type {
+function sessionType(type: Grakn.SessionType): SessionProto.Session.Type {
     switch (type) {
         case Grakn.SessionType.DATA:
-            return Session.Type.DATA;
+            return SessionProto.Session.Type.DATA;
         case Grakn.SessionType.SCHEMA:
-            return Session.Type.SCHEMA;
+            return SessionProto.Session.Type.SCHEMA;
         default:
             throw "Unrecognized Type";
     }

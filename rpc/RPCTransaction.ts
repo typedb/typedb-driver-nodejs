@@ -1,10 +1,10 @@
 import { Grakn } from "../Grakn";
 import { ConceptManager } from "../concept/ConceptManager";
-import { Transaction } from "protobuf/transaction_pb";
+import TransactionProto from "grakn-protocol/transaction_pb";
 import { Protobuilder } from "../common/ProtoBuilder";
-import { GraknClient as GraknGrpc } from "protobuf/grakn_grpc_pb"
+import GraknProto from "grakn-protocol/grakn_grpc_pb";
+import GraknGrpc = GraknProto.GraknClient;
 import { GraknOptions } from "../GraknOptions";
-import { v4 as uuidv4 } from "uuid";
 import { QueryManager } from "../query/QueryManager";
 import { ClientDuplexStream } from "@grpc/grpc-js";
 
@@ -13,7 +13,7 @@ export class RPCTransaction implements Grakn.Transaction {
     private _conceptManager: ConceptManager;
     private _queryManager: QueryManager;
     private _collectors: ResponseCollectors;
-    private _stream: ClientDuplexStream<Transaction.Req, Transaction.Res>
+    private _stream: ClientDuplexStream<TransactionProto.Transaction.Req, TransactionProto.Transaction.Res>
     private _streamIsOpen: boolean;
     private _grpcClient: GraknGrpc;
     private _transactionWasOpened: boolean;
@@ -34,11 +34,11 @@ export class RPCTransaction implements Grakn.Transaction {
         this._stream = this._grpcClient.transaction();
 
         this._streamIsOpen = true;
-        let openRequest = new Transaction.Req()
+        let openRequest = new TransactionProto.Transaction.Req()
             .setOpenReq(
-                new Transaction.Open.Req()
+                new TransactionProto.Transaction.Open.Req()
                     .setSessionId(sessionId)
-                    .setType(this._type === Grakn.TransactionType.READ ? Transaction.Type.READ : Transaction.Type.WRITE)
+                    .setType(this._type === Grakn.TransactionType.READ ? TransactionProto.Transaction.Type.READ : TransactionProto.Transaction.Type.WRITE)
                     .setOptions(Protobuilder.options(options))
             )
         let startTime = new Date().getTime();
@@ -66,17 +66,17 @@ export class RPCTransaction implements Grakn.Transaction {
     }
 
     public async commit(): Promise<void> {
-        let commitReq = new Transaction.Req()
+        let commitReq = new TransactionProto.Transaction.Req()
             .setCommitReq(
-                new Transaction.Commit.Req()
+                new TransactionProto.Transaction.Commit.Req()
             )
         await this.execute(commitReq)
     }
 
     public async rollback(): Promise<void> {
-        let rollbackReq = new Transaction.Req()
+        let rollbackReq = new TransactionProto.Transaction.Req()
             .setRollbackReq(
-                new Transaction.Rollback.Req()
+                new TransactionProto.Transaction.Rollback.Req()
             )
         await this.execute(rollbackReq)
     }
@@ -92,26 +92,26 @@ export class RPCTransaction implements Grakn.Transaction {
         }
     }
 
-    public async execute(request: Transaction.Req, transformResponse = (res: Transaction.Res) => res ): Promise<Transaction.Res> {
+    public async execute(request: TransactionProto.Transaction.Req, transformResponse = (res: TransactionProto.Transaction.Res) => res ): Promise<TransactionProto.Transaction.Res> {
         let responseCollector = new SingleResponseCollector();
-        let requestId = uuidv4();
+        let requestId = "bob"; // TODO: newGuid
         request.setId(requestId.toString());
         this._collectors.put(requestId, responseCollector);
         throw "not implented"
     }
 
-    public stream(request: Transaction.Req, transformResponse = (res: Transaction.Res) => res ): Promise<Transaction.Res> {
+    public stream(request: TransactionProto.Transaction.Req, transformResponse = (res: TransactionProto.Transaction.Res) => res ): Promise<TransactionProto.Transaction.Res> {
         let responseCollector = new MultipleResponseCollector();
-        let requestId = uuidv4();
+        let requestId = "bob"; // TODO: newGuid
         request.setId(requestId.toString());
         request.setLatencyMillis(this._networkLatencyMillis);
         this._collectors.put(requestId, responseCollector);
         throw "not implemented"
     }
 
-    private setResponseObservers(stream: ClientDuplexStream<Transaction.Req, Transaction.Res>) {
+    private setResponseObservers(stream: ClientDuplexStream<TransactionProto.Transaction.Req, TransactionProto.Transaction.Res>) {
         //TODO: LOOK INTO WHY OTHER EVENT TYPES (drain, metadata, etc) EXIST HERE
-        stream.on("data", (res: Transaction.Res) => {
+        stream.on("data", (res: TransactionProto.Transaction.Res) => {
             const requestId = res.getId();
             const collector = this._collectors.get(requestId);
             if (!collector) throw "Unknown request ID " + requestId;
@@ -168,40 +168,40 @@ abstract class ResponseCollector {
         if (!(response instanceof OkResponse) || this.isLastResponse(response.read())) this._isDone = true;
     }
 
-    take(): Transaction.Res {
+    take(): TransactionProto.Transaction.Res {
         return this._responseBuffer.shift().read();
     }
 
-    abstract isLastResponse(response: Transaction.Res): boolean;
+    abstract isLastResponse(response: TransactionProto.Transaction.Res): boolean;
 
 
 }
 
 class SingleResponseCollector extends ResponseCollector {
-    isLastResponse(response: Transaction.Res): boolean {
+    isLastResponse(response: TransactionProto.Transaction.Res): boolean {
         return true
     }
 }
 
 class MultipleResponseCollector extends ResponseCollector {
-    isLastResponse(response: Transaction.Res): boolean {
+    isLastResponse(response: TransactionProto.Transaction.Res): boolean {
         return response.getDone();
     }
 }
 
 abstract class Response {
-    abstract read(): Transaction.Res;
+    abstract read(): TransactionProto.Transaction.Res;
 }
 
 class OkResponse extends Response {
-    private readonly _res: Transaction.Res;
+    private readonly _res: TransactionProto.Transaction.Res;
 
-    constructor(res: Transaction.Res) {
+    constructor(res: TransactionProto.Transaction.Res) {
         super()
         this._res = res;
     }
 
-    read(): Transaction.Res {
+    read(): TransactionProto.Transaction.Res {
         return this._res;
     }
 
@@ -219,7 +219,7 @@ class ErrorResponse extends Response {
         this._error = error;
     }
 
-    read(): Transaction.Res {
+    read(): TransactionProto.Transaction.Res {
         throw this._error;
     }
 

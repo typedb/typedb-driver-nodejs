@@ -3,7 +3,7 @@ import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttri
     RemoteAttributeType, RemoteBooleanAttributeType, RemoteDateTimeAttributeType, RemoteDoubleAttributeType,
     RemoteLongAttributeType, RemoteStringAttributeType, StringAttributeType } from "../AttributeType";
 import { Grakn } from "../../../Grakn";
-import { AttributeType as AttributeTypeProto, Type as TypeProto } from "protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/concept_pb";
 import { QueryIterator } from "../../Concept";
 import Transaction = Grakn.Transaction;
 import ValueType = AttributeType.ValueType;
@@ -21,19 +21,19 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         super(label, isRoot);
     }
 
-    static of(type: TypeProto) {
+    static of(type: ConceptProto.Type) {
         switch (type.getValueType()) {
-            case AttributeTypeProto.VALUE_TYPE.BOOLEAN:
+            case ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN:
                 return new BooleanAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case AttributeTypeProto.VALUE_TYPE.LONG:
+            case ConceptProto.AttributeType.VALUE_TYPE.LONG:
                 return new LongAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case AttributeTypeProto.VALUE_TYPE.DOUBLE:
+            case ConceptProto.AttributeType.VALUE_TYPE.DOUBLE:
                 return new DoubleAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case AttributeTypeProto.VALUE_TYPE.STRING:
+            case ConceptProto.AttributeType.VALUE_TYPE.STRING:
                 return new StringAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case AttributeTypeProto.VALUE_TYPE.DATETIME:
+            case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
                 return new DateTimeAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case AttributeTypeProto.VALUE_TYPE.OBJECT:
+            case ConceptProto.AttributeType.VALUE_TYPE.OBJECT:
                 assert(type.getRoot());
                 return new AttributeTypeImpl(type.getLabel(), type.getRoot());
             default:

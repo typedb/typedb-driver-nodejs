@@ -1,6 +1,7 @@
-import { GraknClient as GraknGrpc } from "protobuf/grakn_grpc_pb"
+import { GraknClient as GraknGrpc } from "grakn-protocol/grakn_grpc_pb"
 import { Grakn } from "../Grakn";
-import { Database } from "protobuf/database_pb";
+import database_pb from "grakn-protocol/database_pb";
+const { Database } = database_pb;
 
 export class RPCDatabaseManager implements Grakn.DatabaseManager {
     private _grpcClient: GraknGrpc;
@@ -14,7 +15,7 @@ export class RPCDatabaseManager implements Grakn.DatabaseManager {
         return new Promise((resolve, reject) => {
             this._grpcClient.database_contains(containsRequest, (err) => {
                 if (err) reject(err);
-                else resolve();
+                else resolve(true);
             });
         });
     }

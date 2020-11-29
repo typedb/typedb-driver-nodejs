@@ -1,7 +1,6 @@
 import { Type, RemoteType } from "../Type";
 import { QueryIterator } from "../../Concept";
-// TODO
-import { Type as TypeProto } from "protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/concept_pb";
 import { RoleTypeImpl } from "./RoleTypeImpl";
 import { ThingTypeImpl } from "./ThingTypeImpl";
 import { Grakn } from "../../../Grakn";
@@ -18,9 +17,9 @@ export abstract class TypeImpl implements Type {
         this._root = root;
     }
 
-    static of(typeProto: TypeProto): TypeImpl {
+    static of(typeProto: ConceptProto.Type): TypeImpl {
         switch (typeProto.getEncoding()) {
-            case TypeProto.ENCODING.ROLE_TYPE:
+            case ConceptProto.Type.ENCODING.ROLE_TYPE:
                 return RoleTypeImpl.of(typeProto);
             default:
                 return ThingTypeImpl.of(typeProto);

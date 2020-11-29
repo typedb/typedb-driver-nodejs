@@ -1,7 +1,7 @@
 import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
 import { RoleType, RemoteRoleType } from "../RoleType";
 import { QueryIterator } from "../../Concept";
-import { Type as TypeProto } from "protobuf/concept_pb";
+import { Type as TypeProto } from "grakn-protocol/concept_pb";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import { RelationTypeImpl } from "./RelationTypeImpl";

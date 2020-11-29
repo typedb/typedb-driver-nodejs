@@ -4,7 +4,7 @@ import { EntityType } from "../EntityType";
 import { QueryIterator } from "../../Concept";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Type as TypeProto } from "protobuf/concept_pb";
+import { Type as TypeProto } from "grakn-protocol/concept_pb";
 import { EntityImpl } from "../../Thing/Impl/EntityImpl";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {

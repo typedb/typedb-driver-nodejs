@@ -5,12 +5,12 @@ import { AttributeType } from "../AttributeType";
 import { RoleType } from "../RoleType";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Type as TypeProto } from "protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/concept_pb";
+import TypeProto = ConceptProto.Type;
 import { EntityTypeImpl } from "./EntityTypeImpl";
 import { RelationTypeImpl } from "./RelationTypeImpl";
 import { AttributeTypeImpl } from "./AttributeTypeImpl";
 import assert from "assert";
-
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
     protected constructor(label: string, isRoot: boolean) {

@@ -2,8 +2,9 @@ import { ThingType } from "./Type/ThingType";
 import { EntityType } from "./Type/EntityType";
 import { RelationType } from "./Type/RelationType";
 import { AttributeType } from "./Type/AttributeType";
-import { ConceptManager as ProtoConceptManager } from "protobuf/concept_pb";
-import { Transaction } from "protobuf/transaction_pb";
+import ConceptProto from "grakn-protocol/concept_pb";
+import ProtoConceptManager = ConceptProto.ConceptManager;
+import TransactionProto from "grakn-protocol/transaction_pb";
 import { EntityTypeImpl } from "./Type/Impl/EntityTypeImpl";
 import { Type } from "./Type/Type";
 import { TypeImpl } from "./Type/Impl/TypeImpl";
@@ -137,7 +138,7 @@ export class ConceptManager {
     }
 
     private execute(conceptManagerReq: ProtoConceptManager.Req): ProtoConceptManager.Res {
-        const transactionReq = new Transaction.Req()
+        const transactionReq = new TransactionProto.Transaction.Req()
             .setConceptManagerReq(conceptManagerReq)
         //return this._rpcTransaction.execute(transactionReq).getConceptManagerRes()
         throw "not implemented conceptmanager.execute"
