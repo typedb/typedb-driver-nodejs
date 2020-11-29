@@ -101,14 +101,14 @@ NODEJS_TEST_DEPENDENCIES = [
 
 genrule(
     name = "grakn-artifact-path",
-    srcs = ["@graknlabs_grakn_core_artifact//file"],
+    srcs = ["@graknlabs_grakn_core_artifact_mac//file"],
     outs = ["grakn-artifact-path.txt"],
-    cmd = "echo $(location @graknlabs_grakn_core_artifact//file) > \"$@\"",
+    cmd = "echo $(location @graknlabs_grakn_core_artifact_mac//file) > \"$@\"",
 )
 
 artifact_extractor(
     name = "grakn-extractor",
-    artifact = "@graknlabs_grakn_core_artifact//file",
+    artifact = "@graknlabs_grakn_core_artifact_mac//file",
 )
 
 #release_validate_deps(
