@@ -77,6 +77,7 @@ function stop_grakn(distribution_file_name, port) {
 }
 function main() {
     var _a = process.argv.slice(2), func = _a[0], args = _a.slice(1);
+    console.log(args);
     switch (func) {
         case "start":
             return start_grakn(args[0], parseInt(args[1]));

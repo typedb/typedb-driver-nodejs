@@ -36,9 +36,15 @@ load("@npm//@bazel/typescript:index.bzl", "ts_project")
 
 ts_project(
     name = "_client_nodejs",
-    srcs = glob([
-        "GraknClient.ts",
-    ]) + ["@graknlabs_protocol//grpc/nodejs:protocol"],
+#    srcs = glob([
+#        "Grakn.ts",
+#        "GraknOptions.ts",
+#        "common/*.ts",
+#        "concept/*.ts",
+#        "query/*.ts",
+#        "rpc/*.ts"
+#    ]),
+    srcs = ["@graknlabs_protocol//grpc/nodejs:protocol"],
     tsconfig = "tsconfig.json",
     deps = [],
     declaration = True,

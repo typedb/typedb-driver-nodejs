@@ -18,7 +18,8 @@
     "uuid": "8.3.1"
   },
   "devDependencies": {
-    "@bazel/jasmine": "2.0.3",
+    "@babel/core": "7.12.9",
+    "@babel/register": "7.12.1",
     "@bazel/typescript": "2.3.1",
     "@cucumber/cucumber": "7.0.0-rc.0",
     "@types/google-protobuf": "3.7.4",

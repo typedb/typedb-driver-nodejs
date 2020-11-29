@@ -20,7 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3afd65fc-ae34-4c54-baa2-69e40fddb03e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/test/babel-typescript-register.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BUILD" beforeDir="false" afterPath="$PROJECT_DIR$/BUILD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.bazelrc" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.bazelrc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.bazelversion" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/.bazelversion" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/.circleci/config.yml" beforeDir="false" />
@@ -96,10 +99,11 @@
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/cucumber_test.sh" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/test/rules.bzl" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bazel-client-nodejs/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/bazel-client-nodejs/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/GraknCoreRunner.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/GraknCoreRunner.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/GraknCoreRunner.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test/GraknCoreRunner.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cucumber_test.sh" beforeDir="false" afterPath="$PROJECT_DIR$/test/cucumber_test.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +170,7 @@
       <workItem from="1605705630451" duration="144000" />
       <workItem from="1606135242632" duration="36221000" />
       <workItem from="1606320926491" duration="13457000" />
-      <workItem from="1606405019277" duration="67162000" />
+      <workItem from="1606405019277" duration="73813000" />
     </task>
     <servers />
   </component>
@@ -174,6 +178,7 @@
     <option name="version" value="2" />
     <option name="exactExcludedFiles">
       <list>
+        <option value="$PROJECT_DIR$/test/GraknCoreRunner.js" />
         <option value="$PROJECT_DIR$/test/GraknCoreRunner.js" />
       </list>
     </option>
