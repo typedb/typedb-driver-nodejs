@@ -108,9 +108,6 @@ github_deps()
 ################################
 
 # Load repositories
-load("//dependencies/graknlabs:repositories.bzl", "graknlabs_protocol")
-graknlabs_protocol()
-
 load("//dependencies/graknlabs:repositories.bzl", "graknlabs_behaviour")
 graknlabs_behaviour()
 
