@@ -51,9 +51,12 @@ pip_repositories()
 # Load //builder/nodejs
 load("@graknlabs_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
-load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")
 
 # Load package.json
+node_repositories(
+    preserve_symlinks = False,
+)
 npm_install(
     name = "npm",
     package_json = "//:package.json",
@@ -108,9 +111,6 @@ github_deps()
 ################################
 
 # Load repositories
-load("//dependencies/graknlabs:repositories.bzl", "graknlabs_protocol")
-graknlabs_protocol()
-
 load("//dependencies/graknlabs:repositories.bzl", "graknlabs_behaviour")
 graknlabs_behaviour()
 
