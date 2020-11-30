@@ -46,13 +46,10 @@ export class RPCTransaction implements Grakn.Transaction {
                     .setOptions(ProtoBuilder.options(options))
             );
         const startTime = new Date().getTime();
-        console.log(`startTime: ${startTime}`);
         const res = await this.execute(openRequest);
         const endTime = new Date().getTime();
-        console.log(`endTime: ${endTime}`);
         this._networkLatencyMillis = endTime - startTime - res.getOpenRes().getProcessingTimeMillis();
         this._transactionWasOpened = true;
-        console.log("Transaction opened");
         return this;
     }
 
@@ -78,7 +75,6 @@ export class RPCTransaction implements Grakn.Transaction {
                 new TransactionProto.Transaction.Commit.Req()
             )
         await this.execute(commitReq);
-        console.log("Transaction committed");
     }
 
     public async rollback(): Promise<void> {
@@ -92,7 +88,6 @@ export class RPCTransaction implements Grakn.Transaction {
     async close(): Promise<void> {
         if (this._streamIsOpen) {
             this._streamIsOpen = false;
-            console.log("Transaction closed");
             // TODO: close stream, somehow?
         }
         if (!this._transactionWasClosed) {
@@ -124,7 +119,6 @@ export class RPCTransaction implements Grakn.Transaction {
         this._stream = this._grpcClient.transaction();
 
         this._stream.on("data", (res) => {
-            console.log(res);
             const requestId = res.getId();
             const collector = this._collectors.get(requestId);
             if (!collector) throw "Unknown request ID " + requestId;

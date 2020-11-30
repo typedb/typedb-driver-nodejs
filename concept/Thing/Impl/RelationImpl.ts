@@ -6,10 +6,15 @@ import { RoleType } from "../../Type/RoleType";
 import { QueryIterator } from "../../Concept";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 
 export class RelationImpl extends ThingImpl implements Relation {
     protected constructor(iid: string) {
         super(iid)
+    }
+
+    static of(protoThing: ConceptProto.Thing): RelationImpl {
+        return new RelationImpl(protoThing.getIid_asB64());
     }
 
     asRemote(transaction: Transaction): RemoteRelationImpl {

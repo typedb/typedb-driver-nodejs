@@ -10,7 +10,7 @@ export interface EntityType extends ThingType {
 }
 
 export interface RemoteEntityType extends Merge<RemoteThingType, EntityType> {
-    create(): Entity;
+    create(): Promise<Entity>;
 
     setSupertype(superEntityType: EntityType): void;
     getSupertype(): EntityType;

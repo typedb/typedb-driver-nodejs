@@ -4,7 +4,7 @@ import { EntityType } from "../EntityType";
 import { QueryIterator } from "../../Concept";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { EntityImpl } from "../../Thing/Impl/EntityImpl";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
@@ -12,7 +12,7 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         super(label, isRoot);
     }
 
-    static of(typeProto: TypeProto): EntityTypeImpl {
+    static of(typeProto: ConceptProto.Type): EntityTypeImpl {
         return new EntityTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
@@ -50,7 +50,9 @@ export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteE
         throw "Not yet implemented";
     }
 
-    create(): EntityImpl {
-        throw "Not yet implemented"
+    create(): Promise<EntityImpl> {
+        const method = new ConceptProto.Type.Req()
+            .setEntityTypeCreateReq(new ConceptProto.EntityType.Create.Req());
+        return this.execute(method).then(res => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
     }
 }

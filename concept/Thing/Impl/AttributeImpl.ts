@@ -8,10 +8,15 @@ import ValueClass = AttributeType.ValueClass;
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import { Merge } from "../../../common/utils";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 
 export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl implements Attribute<T> {
     protected constructor(iid: string) {
         super(iid);
+    }
+
+    static of(protoThing: ConceptProto.Thing): AttributeImpl<ValueClass> {
+        throw "circular reference"; // TODO
     }
 
     abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
@@ -43,6 +48,10 @@ export class BooleanAttributeImpl extends AttributeImpl<boolean> implements Bool
     constructor(iid: string, value: boolean) {
         super(iid);
         this.value = value;
+    }
+
+    static of(protoThing: ConceptProto.Thing): BooleanAttributeImpl {
+        return new BooleanAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getBoolean());
     }
 
     asRemote(transaction: Transaction): RemoteBooleanAttributeImpl {
@@ -83,6 +92,10 @@ export class LongAttributeImpl extends AttributeImpl<number> implements LongAttr
         this.value = value;
     }
 
+    static of(protoThing: ConceptProto.Thing): LongAttributeImpl {
+        return new LongAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getLong());
+    }
+
     asRemote(transaction: Transaction): RemoteLongAttributeImpl {
         return new RemoteLongAttributeImpl(transaction, this.getIID(), this.value);
     }
@@ -119,6 +132,10 @@ export class StringAttributeImpl extends AttributeImpl<string> implements Attrib
     constructor(iid: string, value: string) {
         super(iid);
         this.value = value;
+    }
+
+    static of(protoThing: ConceptProto.Thing): StringAttributeImpl {
+        return new StringAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getString());
     }
 
     asRemote(transaction: Transaction): RemoteStringAttributeImpl {
@@ -159,6 +176,10 @@ export class DoubleAttributeImpl extends AttributeImpl<number> implements Attrib
         this.value = value;
     }
 
+    static of(protoThing: ConceptProto.Thing): DoubleAttributeImpl {
+        return new DoubleAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getDouble());
+    }
+
     asRemote(transaction: Transaction): RemoteDoubleAttributeImpl {
         return new RemoteDoubleAttributeImpl(transaction, this.getIID(), this.value);
     }
@@ -197,6 +218,10 @@ export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTi
     constructor(iid: string, value: Date) {
         super(iid);
         this.value = value;
+    }
+
+    static of(protoThing: ConceptProto.Thing): DateTimeAttributeImpl {
+        return new DateTimeAttributeImpl(protoThing.getIid_asB64(), new Date(protoThing.getValue().getDateTime()));
     }
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeImpl {

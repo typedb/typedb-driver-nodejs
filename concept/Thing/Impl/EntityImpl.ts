@@ -3,10 +3,16 @@ import { Entity, RemoteEntity } from "../Entity";
 import { EntityTypeImpl } from "../../Type/Impl/EntityTypeImpl";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 
 export class EntityImpl extends ThingImpl implements Entity {
     protected constructor(iid: string) {
         super(iid);
+    }
+
+    static of(protoThing: ConceptProto.Thing): EntityImpl {
+        // TODO: we should probably implement Bytes.bytesToHexString from @graknlabs_common
+        return new EntityImpl(protoThing.getIid_asB64());
     }
 
     asRemote(transaction: Transaction): RemoteEntityImpl {

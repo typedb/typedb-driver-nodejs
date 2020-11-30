@@ -32,7 +32,6 @@ export class RPCSession implements Grakn.Session {
             });
         });
         this._sessionId = res.getSessionId_asB64();
-        console.log(this._sessionId);
         return this;
     }
 
