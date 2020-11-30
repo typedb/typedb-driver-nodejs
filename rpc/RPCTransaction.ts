@@ -171,10 +171,6 @@ class ResponseCollectors {
         this._map[uuid] = collector;
     }
 
-    remove(uuid: string) {
-        delete this._map[uuid];
-    }
-
     clearWithError(error: ErrorResponse) {
         Object.keys(this._map).forEach((requestId) => this._map[requestId].add(error));
         for (const requestId in this._map) delete this._map[requestId];
