@@ -4,7 +4,7 @@ import { Type } from "../../Type/Type";
 import { QueryIterator } from "../../Concept";
 import { AttributeType } from "../../Type/AttributeType";
 import { RoleType } from "../../Type/RoleType";
-import ConceptProto from "grakn-protocol/concept_pb";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { EntityImpl } from "./EntityImpl";
 import { RelationImpl } from "./RelationImpl";
 import { AttributeImpl } from "./AttributeImpl";

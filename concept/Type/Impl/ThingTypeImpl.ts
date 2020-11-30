@@ -5,7 +5,7 @@ import { AttributeType } from "../AttributeType";
 import { RoleType } from "../RoleType";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import ConceptProto from "grakn-protocol/concept_pb";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import TypeProto = ConceptProto.Type;
 import { EntityTypeImpl } from "./EntityTypeImpl";
 import { RelationTypeImpl } from "./RelationTypeImpl";

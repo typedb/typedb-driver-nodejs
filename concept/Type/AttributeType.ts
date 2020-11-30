@@ -1,7 +1,8 @@
 import { RemoteThingType, ThingType } from "./ThingType";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
-import ConceptProto from "grakn-protocol/concept_pb";
+// TODO
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { QueryIterator } from "../Concept";
 import { BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../Thing/Attribute";
 import ValueType = AttributeType.ValueType;

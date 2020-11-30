@@ -1,8 +1,8 @@
 import { Grakn } from "../Grakn";
 import { ConceptManager } from "../concept/ConceptManager";
-import TransactionProto from "grakn-protocol/transaction_pb";
+import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb"
 import { ProtoBuilder } from "../common/ProtoBuilder";
-import GraknProto from "grakn-protocol/grakn_grpc_pb";
+import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import { GraknOptions } from "../GraknOptions";
 import { QueryManager } from "../query/QueryManager";

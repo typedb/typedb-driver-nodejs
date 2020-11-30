@@ -1,5 +1,5 @@
 import {GraknOptions} from "../GraknOptions";
-import options_pb from "grakn-protocol/options_pb";
+import options_pb from "graknlabs-grpc-protocol/protobuf/options_pb"
 const { Options } = options_pb;
 
 export namespace ProtoBuilder {

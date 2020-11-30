@@ -3,7 +3,7 @@ import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttri
     RemoteAttributeType, RemoteBooleanAttributeType, RemoteDateTimeAttributeType, RemoteDoubleAttributeType,
     RemoteLongAttributeType, RemoteStringAttributeType, StringAttributeType } from "../AttributeType";
 import { Grakn } from "../../../Grakn";
-import ConceptProto from "grakn-protocol/concept_pb";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { QueryIterator } from "../../Concept";
 import Transaction = Grakn.Transaction;
 import ValueType = AttributeType.ValueType;

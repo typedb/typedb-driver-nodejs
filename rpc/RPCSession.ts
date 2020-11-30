@@ -1,7 +1,7 @@
 import { Grakn } from "../Grakn";
-import GraknProto from "grakn-protocol/grakn_grpc_pb";
+import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
-import SessionProto from "grakn-protocol/session_pb";
+import SessionProto from "graknlabs-grpc-protocol/protobuf/session_pb";
 import { ProtoBuilder } from "../common/ProtoBuilder";
 import { GraknOptions } from "../GraknOptions";
 import { RPCTransaction } from "./RPCTransaction";

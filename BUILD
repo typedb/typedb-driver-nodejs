@@ -32,22 +32,25 @@ load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_deps")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
-load("@npm//@bazel/typescript:index.bzl", "ts_project")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
 
-ts_project(
+ts_library(
     name = "_client_nodejs",
-#    srcs = glob([
-#        "Grakn.ts",
-#        "GraknOptions.ts",
-#        "common/*.ts",
-#        "concept/*.ts",
-#        "query/*.ts",
-#        "rpc/*.ts"
-#    ]),
-    srcs = ["@graknlabs_protocol//grpc/nodejs:protocol"],
+    srcs = glob([
+        "Grakn.ts",
+        "GraknOptions.ts",
+        "common/**/*.ts",
+        "concept/**/*.ts",
+        "query/**/*.ts",
+        "rpc/**/*.ts",
+    ]),
     tsconfig = "tsconfig.json",
-    deps = [],
-    declaration = True,
+    deps = [
+        "@npm//@grpc/grpc-js",
+        "@npm//graknlabs-grpc-dependencies",
+        "@npm//uuid",
+        "@npm//@types/node",
+    ],
 )
 
 pkg_npm(

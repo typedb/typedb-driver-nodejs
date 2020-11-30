@@ -5,7 +5,7 @@ import { QueryIterator } from "../../Concept";
 import { RoleType } from "../RoleType";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Type as TypeProto } from "grakn-protocol/concept_pb";
+import { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     protected constructor(label: string, isRoot: boolean) {
