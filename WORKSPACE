@@ -53,6 +53,15 @@ load("@graknlabs_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")
 
+# Load //tool/checkstyle
+load("@graknlabs_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
+checkstyle_deps()
+
+####################
+# Load npm modules #
+####################
+
+
 # Load package.json
 node_repositories(
     preserve_symlinks = False,
