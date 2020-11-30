@@ -54,6 +54,7 @@ ts_library(
 
 pkg_npm(
     name = "client-nodejs",
+    package_name = "grakn-client",
     srcs = glob([
        "package.json",
        "README.md",
