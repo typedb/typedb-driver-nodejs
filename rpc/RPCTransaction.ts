@@ -46,8 +46,10 @@ export class RPCTransaction implements Grakn.Transaction {
                     .setOptions(ProtoBuilder.options(options))
             );
         const startTime = new Date().getTime();
+        console.log(`startTime: ${startTime}`);
         const res = await this.execute(openRequest);
         const endTime = new Date().getTime();
+        console.log(`endTime: ${endTime}`);
         this._networkLatencyMillis = endTime - startTime - res.getOpenRes().getProcessingTimeMillis();
         this._transactionWasOpened = true;
         console.log("Transaction opened");
@@ -104,6 +106,8 @@ export class RPCTransaction implements Grakn.Transaction {
         const requestId = uuidv4();
         request.setId(requestId);
         this._collectors.put(requestId, responseCollector);
+        // TODO: we can optionally inject the callback here - perhaps that would be cleaner than using ResponseCollectors?
+        this._stream.write(request);
         return responseCollector.take();
     }
 
@@ -153,7 +157,7 @@ class ResponseCollectors {
     }
 
     put(uuid: string, collector: ResponseCollector) {
-        if (!this._transaction.isOpen()) throw "Transaction not open."
+        if (this._transaction["_transactionWasClosed"]) throw "The transaction has been closed and no further operation is allowed."
         this._map[uuid] = collector;
     }
 
