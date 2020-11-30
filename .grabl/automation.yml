@@ -36,7 +36,6 @@ build:
     test:
       machine: graknlabs-ubuntu-20.04
       script: |
-        npm install
         ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
         ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
         ARTIFACT_EMAIL=$REPO_GRAKN_EMAIL \
