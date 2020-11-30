@@ -72,6 +72,7 @@ pkg_npm(
 assemble_npm(
     name = "assemble-npm",
     target = ":client-nodejs",
+    tags = ["no-remote"],
 )
 
 deploy_npm(
