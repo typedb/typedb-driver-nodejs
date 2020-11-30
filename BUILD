@@ -44,6 +44,8 @@ ts_library(
         "query/**/*.ts",
         "rpc/**/*.ts",
     ]),
+    module_name = "grakn-client",
+    module_root = ".",
     tsconfig = "tsconfig.json",
     deps = [
         "@npm//@grpc/grpc-js",
