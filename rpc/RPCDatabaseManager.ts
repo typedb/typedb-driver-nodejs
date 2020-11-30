@@ -11,19 +11,21 @@ export class RPCDatabaseManager implements Grakn.DatabaseManager {
     }
 
     contains(name: string): Promise<boolean> {
-        const containsRequest = new Database.Contains.Req().setName(name);
+        if (!name) throw "Database name cannot be null or empty.";
+        const req = new Database.Contains.Req().setName(name);
         return new Promise((resolve, reject) => {
-            this._grpcClient.database_contains(containsRequest, (err) => {
+            this._grpcClient.database_contains(req, (err, res) => {
                 if (err) reject(err);
-                else resolve(true);
+                else resolve(res.getContains());
             });
         });
     }
 
     create(name: string): Promise<void> {
-        const createRequest = new Database.Create.Req().setName(name);
+        if (!name) throw "Database name cannot be null or empty.";
+        const req = new Database.Create.Req().setName(name);
         return new Promise((resolve, reject) => {
-            this._grpcClient.database_create(createRequest, (err) => {
+            this._grpcClient.database_create(req, (err) => {
                 if (err) reject(err);
                 else resolve();
             });
@@ -31,9 +33,10 @@ export class RPCDatabaseManager implements Grakn.DatabaseManager {
     }
 
     delete(name: string): Promise<void> {
-        const deleteRequest = new Database.Delete.Req().setName(name);
+        if (!name) throw "Database name cannot be null or empty.";
+        const req = new Database.Delete.Req().setName(name);
         return new Promise((resolve, reject) => {
-            this._grpcClient.database_delete(deleteRequest, (err) => {
+            this._grpcClient.database_delete(req, (err) => {
                 if (err) reject(err);
                 else resolve();
             });
@@ -43,9 +46,9 @@ export class RPCDatabaseManager implements Grakn.DatabaseManager {
     all(): Promise<string[]> {
         const allRequest = new Database.All.Req();
         return new Promise((resolve, reject) => {
-            this._grpcClient.database_all(allRequest, (err) => {
+            this._grpcClient.database_all(allRequest, (err, res) => {
                 if (err) reject(err);
-                else resolve();
+                else resolve(res.getNamesList());
             });
         });
     }

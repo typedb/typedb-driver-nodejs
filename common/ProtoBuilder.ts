@@ -2,7 +2,7 @@ import {GraknOptions} from "../GraknOptions";
 import options_pb from "grakn-protocol/options_pb";
 const { Options } = options_pb;
 
-export namespace Protobuilder {
+export namespace ProtoBuilder {
     export function options(options: GraknOptions) {
         let optionsProto = new Options();
         if (options.infer() != null) optionsProto.setInfer(options.infer() as boolean);

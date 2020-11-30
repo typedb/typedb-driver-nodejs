@@ -11,7 +11,7 @@ import { TypeImpl } from "./Type/Impl/TypeImpl";
 import { Rule } from "./Type/Rule";
 import { RuleImpl } from "./Type/Impl/RuleImpl";
 import { RPCTransaction } from "../rpc/RPCTransaction";
-import { Protobuilder } from "../common/ProtoBuilder";
+import { ProtoBuilder } from "../common/ProtoBuilder";
 import { RelationTypeImpl } from "./Type/Impl/RelationTypeImpl";
 import { AttributeTypeImpl } from "./Type/Impl/AttributeTypeImpl";
 import { Thing } from "./Thing/Thing";

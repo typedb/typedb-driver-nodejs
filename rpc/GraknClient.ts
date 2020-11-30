@@ -16,8 +16,8 @@ export class GraknClient implements Grakn.Client {
         this._databases = new RPCDatabaseManager(this._graknGrpc);
     }
 
-    async session(databaseName: string, type: Grakn.SessionType, options?: GraknOptions): Promise<Grakn.Session> {
-        const session = new RPCSession(this._graknGrpc, databaseName, type);
+    async session(database: string, type: Grakn.SessionType, options?: GraknOptions): Promise<Grakn.Session> {
+        const session = new RPCSession(this._graknGrpc, database, type);
         return session.open(options);
     }
 
@@ -26,7 +26,6 @@ export class GraknClient implements Grakn.Client {
     }
 
     close(): void {
-        // TODO: test that this does not throw
-        closeClient(this._graknGrpc as any);
+        closeClient(this._graknGrpc);
     }
 }

@@ -1,21 +1,24 @@
 import { Grakn } from "../Grakn";
 import { ConceptManager } from "../concept/ConceptManager";
 import TransactionProto from "grakn-protocol/transaction_pb";
-import { Protobuilder } from "../common/ProtoBuilder";
+import { ProtoBuilder } from "../common/ProtoBuilder";
 import GraknProto from "grakn-protocol/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import { GraknOptions } from "../GraknOptions";
 import { QueryManager } from "../query/QueryManager";
 import { ClientDuplexStream } from "@grpc/grpc-js";
+import { uuidv4 } from "../common/utils";
+import { BlockingQueue } from "./BlockingQueue";
 
 export class RPCTransaction implements Grakn.Transaction {
-    private _type: Grakn.TransactionType;
-    private _conceptManager: ConceptManager;
-    private _queryManager: QueryManager;
-    private _collectors: ResponseCollectors;
+    private readonly _type: Grakn.TransactionType;
+    private readonly _conceptManager: ConceptManager;
+    private readonly _queryManager: QueryManager;
+    private readonly _collectors: ResponseCollectors;
+    private readonly _grpcClient: GraknGrpc;
+
     private _stream: ClientDuplexStream<TransactionProto.Transaction.Req, TransactionProto.Transaction.Res>
     private _streamIsOpen: boolean;
-    private _grpcClient: GraknGrpc;
     private _transactionWasOpened: boolean;
     private _transactionWasClosed: boolean;
     private _networkLatencyMillis: number;
@@ -24,28 +27,30 @@ export class RPCTransaction implements Grakn.Transaction {
         this._type = type;
         this._conceptManager = new ConceptManager(this);
         this._queryManager = new QueryManager(this);
+        this._collectors = new ResponseCollectors(this);
         this._transactionWasClosed = false;
         this._transactionWasOpened = false;
         this._streamIsOpen = false;
         this._grpcClient = grpcClient;
     }
 
-    public async open(sessionId: string, options?: GraknOptions): Promise<RPCTransaction> {
-        this._stream = this._grpcClient.transaction();
-
+    async open(sessionId: string, options?: GraknOptions): Promise<RPCTransaction> {
+        this.openTransactionStream();
         this._streamIsOpen = true;
-        let openRequest = new TransactionProto.Transaction.Req()
+
+        const openRequest = new TransactionProto.Transaction.Req()
             .setOpenReq(
                 new TransactionProto.Transaction.Open.Req()
                     .setSessionId(sessionId)
                     .setType(this._type === Grakn.TransactionType.READ ? TransactionProto.Transaction.Type.READ : TransactionProto.Transaction.Type.WRITE)
-                    .setOptions(Protobuilder.options(options))
-            )
-        let startTime = new Date().getTime();
-        let res = await this.execute(openRequest);
-        let endTime = new Date().getTime();
+                    .setOptions(ProtoBuilder.options(options))
+            );
+        const startTime = new Date().getTime();
+        const res = await this.execute(openRequest);
+        const endTime = new Date().getTime();
         this._networkLatencyMillis = endTime - startTime - res.getOpenRes().getProcessingTimeMillis();
         this._transactionWasOpened = true;
+        console.log("Transaction opened");
         return this;
     }
 
@@ -70,7 +75,8 @@ export class RPCTransaction implements Grakn.Transaction {
             .setCommitReq(
                 new TransactionProto.Transaction.Commit.Req()
             )
-        await this.execute(commitReq)
+        await this.execute(commitReq);
+        console.log("Transaction committed");
     }
 
     public async rollback(): Promise<void> {
@@ -78,13 +84,14 @@ export class RPCTransaction implements Grakn.Transaction {
             .setRollbackReq(
                 new TransactionProto.Transaction.Rollback.Req()
             )
-        await this.execute(rollbackReq)
+        await this.execute(rollbackReq);
     }
 
-    public async close(): Promise<void> {
+    async close(): Promise<void> {
         if (this._streamIsOpen) {
             this._streamIsOpen = false;
-            //Close the stream?
+            console.log("Transaction closed");
+            // TODO: close stream, somehow?
         }
         if (!this._transactionWasClosed) {
             this._transactionWasClosed = true;
@@ -92,71 +99,81 @@ export class RPCTransaction implements Grakn.Transaction {
         }
     }
 
-    public async execute(request: TransactionProto.Transaction.Req, transformResponse = (res: TransactionProto.Transaction.Res) => res ): Promise<TransactionProto.Transaction.Res> {
-        let responseCollector = new SingleResponseCollector();
-        let requestId = "bob"; // TODO: newGuid
-        request.setId(requestId.toString());
+    execute(request: TransactionProto.Transaction.Req): Promise<TransactionProto.Transaction.Res> {
+        const responseCollector = new SingleResponseCollector();
+        const requestId = uuidv4();
+        request.setId(requestId);
         this._collectors.put(requestId, responseCollector);
-        throw "not implented"
+        return responseCollector.take();
     }
 
-    public stream(request: TransactionProto.Transaction.Req, transformResponse = (res: TransactionProto.Transaction.Res) => res ): Promise<TransactionProto.Transaction.Res> {
-        let responseCollector = new MultipleResponseCollector();
-        let requestId = "bob"; // TODO: newGuid
-        request.setId(requestId.toString());
+    stream(request: TransactionProto.Transaction.Req, transformResponse = (res: TransactionProto.Transaction.Res) => res): Promise<TransactionProto.Transaction.Res> {
+        const responseCollector = new MultipleResponseCollector();
+        const requestId = uuidv4();
+        request.setId(requestId);
         request.setLatencyMillis(this._networkLatencyMillis);
         this._collectors.put(requestId, responseCollector);
         throw "not implemented"
     }
 
-    private setResponseObservers(stream: ClientDuplexStream<TransactionProto.Transaction.Req, TransactionProto.Transaction.Res>) {
-        //TODO: LOOK INTO WHY OTHER EVENT TYPES (drain, metadata, etc) EXIST HERE
-        stream.on("data", (res: TransactionProto.Transaction.Res) => {
+    private openTransactionStream() {
+        this._stream = this._grpcClient.transaction();
+
+        this._stream.on("data", (res) => {
+            console.log(res);
             const requestId = res.getId();
             const collector = this._collectors.get(requestId);
             if (!collector) throw "Unknown request ID " + requestId;
             collector.add(new OkResponse(res));
             if (collector.isDone()) this._collectors.remove(requestId);
         });
-        //TODO: END
-        //TODO: ERROR
+
+        this._stream.on("error", (err) => {
+            console.error(err);
+        });
+
+        this._stream.on("end", () => {
+            this._streamIsOpen = false;
+            this.close();
+        });
+        // TODO: look into _stream.on(status) + any other events
     }
 }
 
 class ResponseCollectors {
-    private _map: Map<string, ResponseCollector>;
-    private _transaction: RPCTransaction;
+    private readonly _map: { [requestId: string]: ResponseCollector };
+    private readonly _transaction: RPCTransaction;
     constructor(transaction: RPCTransaction) {
-        this._map = new Map<string, ResponseCollector>()
+        this._map = {};
         this._transaction = transaction;
     }
 
     get(uuid: string) {
-        return this._map.get(uuid);
+        return this._map[uuid];
     }
 
     put(uuid: string, collector: ResponseCollector) {
         if (!this._transaction.isOpen()) throw "Transaction not open."
-        this._map.set(uuid, collector);
+        this._map[uuid] = collector;
     }
 
     remove(uuid: string) {
-        this._map.delete(uuid);
+        delete this._map[uuid];
     }
 
     clearWithError(error: ErrorResponse) {
-        this._map.forEach((collector) => collector.add(error));
-        this._map.clear();
+        Object.keys(this._map).forEach((requestId) => this._map[requestId].add(error));
+        for (const requestId in this._map) delete this._map[requestId];
     }
 }
 
 abstract class ResponseCollector {
     private _isDone: boolean;
-    private _responseBuffer: Response[];
+    private _responseBuffer: BlockingQueue<Response>;
 
     constructor() {
         this._isDone = false;
-        this._responseBuffer = [];
+        this._responseBuffer = new BlockingQueue<Response>();
     }
 
     isDone(): boolean {
@@ -164,22 +181,21 @@ abstract class ResponseCollector {
     }
 
     add(response: Response): void {
-        this._responseBuffer.push(response);
+        this._responseBuffer.add(response);
         if (!(response instanceof OkResponse) || this.isLastResponse(response.read())) this._isDone = true;
     }
 
-    take(): TransactionProto.Transaction.Res {
-        return this._responseBuffer.shift().read();
+    async take(): Promise<TransactionProto.Transaction.Res> {
+        const response = await this._responseBuffer.take();
+        return response.read();
     }
 
     abstract isLastResponse(response: TransactionProto.Transaction.Res): boolean;
-
-
 }
 
 class SingleResponseCollector extends ResponseCollector {
     isLastResponse(response: TransactionProto.Transaction.Res): boolean {
-        return true
+        return true;
     }
 }
 
@@ -208,7 +224,6 @@ class OkResponse extends Response {
     toString(): string {
         return "OkResponse {" + this._res.toString() + "}";
     }
-
 }
 
 class ErrorResponse extends Response {
@@ -226,5 +241,4 @@ class ErrorResponse extends Response {
     toString(): string {
         return "ErrorResponse {" + this._error.toString() + "}";
     }
-
 }

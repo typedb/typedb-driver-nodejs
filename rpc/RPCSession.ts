@@ -2,7 +2,7 @@ import { Grakn } from "../Grakn";
 import GraknProto from "grakn-protocol/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import SessionProto from "grakn-protocol/session_pb";
-import { Protobuilder } from "../common/ProtoBuilder";
+import { ProtoBuilder } from "../common/ProtoBuilder";
 import { GraknOptions } from "../GraknOptions";
 import { RPCTransaction } from "./RPCTransaction";
 
@@ -19,52 +19,51 @@ export class RPCSession implements Grakn.Session {
         this._grpcClient = grpcClient;
     }
 
-    async open(options: GraknOptions): Promise<Grakn.Session> {
+    async open(options: GraknOptions = new GraknOptions()): Promise<Grakn.Session> {
         const openReq = new SessionProto.Session.Open.Req()
             .setDatabase(this._database)
             .setType(sessionType(this._type))
-            .setOptions(Protobuilder.options(options));
+            .setOptions(ProtoBuilder.options(options));
         this._isOpen = true;
-        const openPromise = new Promise((resolve, reject) => {
-            this._grpcClient.session_open(openReq, (err) => {
+        const res = await new Promise<SessionProto.Session.Open.Res>((resolve, reject) => {
+            this._grpcClient.session_open(openReq, (err, res) => {
                 if (err) reject(err);
-                else resolve();
+                else resolve(res);
             });
         });
-        this._sessionId = ((await openPromise) as SessionProto.Session.Open.Res).getSessionId_asB64();
+        this._sessionId = res.getSessionId_asB64();
+        console.log(this._sessionId);
         return this;
     }
 
-    async close(): Promise<void> {
-        if (this._isOpen) {
-            this._isOpen = false;
-            const closeReq = new SessionProto.Session.Close.Req()
-                .setSessionId(this._sessionId);
-            const closePromise = new Promise((resolve, reject) => {
-                this._grpcClient.session_close(closeReq, (err) => {
-                    if (err) reject(err);
-                    else resolve();
-                });
-            });
-            await closePromise;
-        }
+    transaction(type: Grakn.TransactionType, options: GraknOptions = new GraknOptions()): Promise<Grakn.Transaction> {
+        const transaction = new RPCTransaction(this._grpcClient, type);
+        return transaction.open(this._sessionId, options);
     }
 
-    database(): string {
-        return this._database;
+    type(): Grakn.SessionType {
+        return this._type;
     }
 
     isOpen(): boolean {
         return this._isOpen;
     }
 
-    transaction(type: Grakn.TransactionType, options?: GraknOptions): Promise<Grakn.Transaction> {
-        const transaction = new RPCTransaction(this._grpcClient, type)
-        return transaction.open(this._sessionId, options);
+    async close(): Promise<void> {
+        if (this._isOpen) {
+            this._isOpen = false;
+            const req = new SessionProto.Session.Close.Req().setSessionId(this._sessionId);
+            await new Promise((resolve, reject) => {
+                this._grpcClient.session_close(req, (err) => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+        }
     }
 
-    type(): Grakn.SessionType {
-        return this._type;
+    database(): string {
+        return this._database;
     }
 }
 
