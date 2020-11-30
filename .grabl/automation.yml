@@ -28,11 +28,6 @@ build:
         bazel build --config=rbe //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
         bazel test --config=rbe $(bazel query 'kind(checkstyle_test, //...)')
-    build-dependency:
-      machine: graknlabs-ubuntu-20.04
-      # TODO do we need this?
-      script: |
-        bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
     test:
       machine: graknlabs-ubuntu-20.04
       script: |
