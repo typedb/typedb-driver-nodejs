@@ -16,7 +16,7 @@
 #
 
 workspace(
-    name = "graknlabs_client_nodejs",
+    name = "grakn-client",
     managed_directories = {"@npm": ["node_modules"]},
 )
 
