@@ -2,11 +2,11 @@ import { RemoteThingType, ThingType } from "./ThingType";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
 // TODO
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { QueryIterator } from "../Concept";
 import { BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../Thing/Attribute";
 import ValueType = AttributeType.ValueType;
 import { Merge } from "../../common/utils";
+import { Stream } from "../../rpc/Stream";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 
 export interface AttributeType extends ThingType {
     getValueType(): ValueType;
@@ -20,11 +20,11 @@ export interface RemoteAttributeType extends Merge<RemoteThingType, AttributeTyp
 
     setSupertype(type: AttributeType): void;
     getSupertype(): AttributeType;
-    getSupertypes(): QueryIterator;
-    getSubtypes(): QueryIterator;
-    getInstances(): QueryIterator;
-    getOwners(): QueryIterator;
-    getOwners(onlyKey: boolean): QueryIterator;
+    getSupertypes(): Stream<any>;
+    getSubtypes(): Stream<any>;
+    getInstances(): Stream<any>;
+    getOwners(): Stream<any>;
+    getOwners(onlyKey: boolean): Stream<any>;
 }
 
 export interface BooleanAttributeType extends AttributeType {
@@ -36,9 +36,9 @@ export interface RemoteBooleanAttributeType extends Merge<RemoteAttributeType, B
 
     setSupertype(type: BooleanAttributeType): void;
     getSupertype(): BooleanAttributeType;
-    getSupertypes(): QueryIterator;
-    getSubtypes(): QueryIterator;
-    getInstances(): QueryIterator;
+    getSupertypes(): Stream<any>;
+    getSubtypes(): Stream<any>;
+    getInstances(): Stream<any>;
 
     put(value: boolean): BooleanAttribute;
     get(value: boolean): BooleanAttribute;
@@ -53,9 +53,9 @@ export interface RemoteLongAttributeType extends Merge<RemoteAttributeType, Long
 
     setSupertype(type: LongAttributeType): void;
     getSupertype(): LongAttributeType;
-    getSupertypes(): QueryIterator;
-    getSubtypes(): QueryIterator;
-    getInstances(): QueryIterator;
+    getSupertypes(): Stream<any>;
+    getSubtypes(): Stream<any>;
+    getInstances(): Stream<any>;
 
     put(value: number): LongAttribute;
     get(value: number): LongAttribute;
@@ -70,9 +70,9 @@ export interface RemoteDoubleAttributeType extends Merge<RemoteAttributeType, Do
 
     setSupertype(type: DoubleAttributeType): void;
     getSupertype(): DoubleAttributeType;
-    getSupertypes(): QueryIterator;
-    getSubtypes(): QueryIterator;
-    getInstances(): QueryIterator;
+    getSupertypes(): Stream<any>;
+    getSubtypes(): Stream<any>;
+    getInstances(): Stream<any>;
 
     put(value: number): DoubleAttribute;
     get(value: number): DoubleAttribute;
@@ -87,9 +87,9 @@ export interface RemoteStringAttributeType extends Merge<RemoteAttributeType, St
 
     setSupertype(type: StringAttributeType): void;
     getSupertype(): StringAttributeType;
-    getSupertypes(): QueryIterator;
-    getSubtypes(): QueryIterator;
-    getInstances(): QueryIterator;
+    getSupertypes(): Stream<any>;
+    getSubtypes(): Stream<any>;
+    getInstances(): Stream<any>;
 
     put(value: string): StringAttribute;
     get(value: string): StringAttribute;
@@ -104,9 +104,9 @@ export interface RemoteDateTimeAttributeType extends Merge<RemoteAttributeType, 
 
     setSupertype(type: DateTimeAttributeType): void;
     getSupertype(): DateTimeAttributeType;
-    getSupertypes(): QueryIterator;
-    getSubtypes(): QueryIterator;
-    getInstances(): QueryIterator;
+    getSupertypes(): Stream<any>;
+    getSubtypes(): Stream<any>;
+    getInstances(): Stream<any>;
 
     put(value: Date): DateTimeAttribute;
     get(value: Date): DateTimeAttribute;

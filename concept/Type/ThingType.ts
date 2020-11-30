@@ -1,10 +1,11 @@
-import { QueryIterator } from "../Concept";
 import { AttributeType } from "./AttributeType";
 import { RoleType } from "./RoleType";
 import { RemoteType, Type } from "./Type";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
 import { Merge } from "../../common/utils";
+import { Stream } from "../../rpc/Stream";
+import { Thing } from "../Thing/Thing";
 
 export interface ThingType extends Type {
     asRemote(transaction: Transaction): RemoteThingType;
@@ -12,9 +13,9 @@ export interface ThingType extends Type {
 
 export interface RemoteThingType extends Merge<RemoteType, ThingType> {
     getSupertype(): ThingType;
-    getSupertypes(): QueryIterator;
-    getSubtypes(): QueryIterator;
-    getInstances(): QueryIterator;
+    getSupertypes(): Stream<any>;
+    getSubtypes(): Stream<any>;
+    getInstances(): Stream<Thing>;
 
     setLabel(label: string): void;
 
@@ -29,11 +30,11 @@ export interface RemoteThingType extends Merge<RemoteType, ThingType> {
     setOwns(attributeType: AttributeType, overriddenType: AttributeType): void;
     setOwns(attributeType: AttributeType, isKey: boolean, otherType: AttributeType): void;
 
-    getPlays(): QueryIterator;
-    getOwns(): QueryIterator;
-    getOwns(valueType: AttributeType.ValueType): QueryIterator;
-    getOwns(keysOnly: boolean): QueryIterator;
-    getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): QueryIterator;
+    getPlays(): Stream<any>;
+    getOwns(): Stream<any>;
+    getOwns(valueType: AttributeType.ValueType): Stream<any>;
+    getOwns(keysOnly: boolean): Stream<any>;
+    getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<any>;
 
     unsetPlays(role: RoleType): void;
     unsetOwns(attributeType: AttributeType): void;

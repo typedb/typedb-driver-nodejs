@@ -1,6 +1,6 @@
 import { Grakn } from "../Grakn";
 import { ConceptManager } from "../concept/ConceptManager";
-import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb"
+import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import { ProtoBuilder } from "../common/ProtoBuilder";
 import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
@@ -8,7 +8,8 @@ import { GraknOptions } from "../GraknOptions";
 import { QueryManager } from "../query/QueryManager";
 import { ClientDuplexStream } from "@grpc/grpc-js";
 import { uuidv4 } from "../common/utils";
-import { BlockingQueue } from "./BlockingQueue";
+import { BlockingQueue } from "../common/BlockingQueue";
+import { Stream } from "./Stream";
 
 export class RPCTransaction implements Grakn.Transaction {
     private readonly _type: Grakn.TransactionType;
@@ -17,7 +18,7 @@ export class RPCTransaction implements Grakn.Transaction {
     private readonly _collectors: ResponseCollectors;
     private readonly _grpcClient: GraknGrpc;
 
-    private _stream: ClientDuplexStream<TransactionProto.Transaction.Req, TransactionProto.Transaction.Res>
+    private _stream: ClientDuplexStream<TransactionProto.Transaction.Req, TransactionProto.Transaction.Res>;
     private _streamIsOpen: boolean;
     private _transactionWasOpened: boolean;
     private _transactionWasClosed: boolean;
@@ -46,9 +47,9 @@ export class RPCTransaction implements Grakn.Transaction {
                     .setOptions(ProtoBuilder.options(options))
             );
         const startTime = new Date().getTime();
-        const res = await this.execute(openRequest);
+        const res = await this.execute(openRequest, res => res.getOpenRes());
         const endTime = new Date().getTime();
-        this._networkLatencyMillis = endTime - startTime - res.getOpenRes().getProcessingTimeMillis();
+        this._networkLatencyMillis = endTime - startTime - res.getProcessingTimeMillis();
         this._transactionWasOpened = true;
         return this;
     }
@@ -70,18 +71,14 @@ export class RPCTransaction implements Grakn.Transaction {
     }
 
     public async commit(): Promise<void> {
-        let commitReq = new TransactionProto.Transaction.Req()
-            .setCommitReq(
-                new TransactionProto.Transaction.Commit.Req()
-            )
+        const commitReq = new TransactionProto.Transaction.Req()
+            .setCommitReq(new TransactionProto.Transaction.Commit.Req());
         await this.execute(commitReq);
     }
 
     public async rollback(): Promise<void> {
-        let rollbackReq = new TransactionProto.Transaction.Req()
-            .setRollbackReq(
-                new TransactionProto.Transaction.Rollback.Req()
-            )
+        const rollbackReq = new TransactionProto.Transaction.Req()
+            .setRollbackReq(new TransactionProto.Transaction.Rollback.Req());
         await this.execute(rollbackReq);
     }
 
@@ -96,23 +93,24 @@ export class RPCTransaction implements Grakn.Transaction {
         }
     }
 
-    execute(request: TransactionProto.Transaction.Req): Promise<TransactionProto.Transaction.Res> {
+    execute<T>(request: TransactionProto.Transaction.Req, transformResponse: (res: TransactionProto.Transaction.Res) => T = () => null): Promise<T> {
         const responseCollector = new SingleResponseCollector();
         const requestId = uuidv4();
         request.setId(requestId);
         this._collectors.put(requestId, responseCollector);
         // TODO: we can optionally inject the callback here - perhaps that would be cleaner than using ResponseCollectors?
         this._stream.write(request);
-        return responseCollector.take();
+        return responseCollector.take().then(transformResponse);
     }
 
-    stream(request: TransactionProto.Transaction.Req, transformResponse = (res: TransactionProto.Transaction.Res) => res): Promise<TransactionProto.Transaction.Res> {
+    stream<T>(request: TransactionProto.Transaction.Req, transformResponse: (res: TransactionProto.Transaction.Res) => T[]): Stream<T> {
         const responseCollector = new MultipleResponseCollector();
         const requestId = uuidv4();
         request.setId(requestId);
         request.setLatencyMillis(this._networkLatencyMillis);
         this._collectors.put(requestId, responseCollector);
-        throw "not implemented"
+        this._stream.write(request);
+        return new Stream<T>(requestId, this._stream, responseCollector, transformResponse);
     }
 
     private openTransactionStream() {
@@ -197,7 +195,7 @@ class SingleResponseCollector extends ResponseCollector {
     }
 }
 
-class MultipleResponseCollector extends ResponseCollector {
+export class MultipleResponseCollector extends ResponseCollector {
     isLastResponse(response: TransactionProto.Transaction.Res): boolean {
         return response.getDone();
     }

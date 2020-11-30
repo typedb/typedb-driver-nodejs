@@ -15,6 +15,7 @@ import { RelationTypeImpl } from "./Type/Impl/RelationTypeImpl";
 import { AttributeTypeImpl } from "./Type/Impl/AttributeTypeImpl";
 import { Thing } from "./Thing/Thing";
 import { ThingImpl } from "./Thing/Impl/ThingImpl";
+import { ConceptProtoReader } from "./Proto/ConceptProtoReader";
 
 export class ConceptManager {
     private readonly _rpcTransaction: RPCTransaction;
@@ -93,7 +94,7 @@ export class ConceptManager {
             .setGetThingReq(new ProtoConceptManager.GetThing.Req().setIid(iid));
         const res = await this.execute(req);
         if (res.getGetThingRes().getResCase() === ProtoConceptManager.GetThing.Res.ResCase.THING)
-            return ThingImpl.of(res.getGetThingRes().getThing());
+            return ConceptProtoReader.thing(res.getGetThingRes().getThing());
         else
             return null;
     }
@@ -119,7 +120,6 @@ export class ConceptManager {
     private async execute(conceptManagerReq: ProtoConceptManager.Req): Promise<ProtoConceptManager.Res> {
         const transactionReq = new TransactionProto.Transaction.Req()
             .setConceptManagerReq(conceptManagerReq);
-        const res = await this._rpcTransaction.execute(transactionReq);
-        return res.getConceptManagerRes();
+        return await this._rpcTransaction.execute(transactionReq, res => res.getConceptManagerRes());
     }
 }

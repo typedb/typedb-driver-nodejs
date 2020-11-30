@@ -4,7 +4,6 @@ import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttri
     RemoteLongAttributeType, RemoteStringAttributeType, StringAttributeType } from "../AttributeType";
 import { Grakn } from "../../../Grakn";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { QueryIterator } from "../../Concept";
 import Transaction = Grakn.Transaction;
 import ValueType = AttributeType.ValueType;
 import isKeyable = AttributeType.ValueType.isKeyable;
@@ -12,6 +11,7 @@ import { AttributeImpl, BooleanAttributeImpl, DateTimeAttributeImpl, DoubleAttri
     LongAttributeImpl, StringAttributeImpl } from "../../Thing/Impl/AttributeImpl";
 import ValueClass = AttributeType.ValueClass;
 import assert from "assert";
+import { Stream } from "../../../rpc/Stream";
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
@@ -80,19 +80,19 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
         throw "Not implemented yet";
     }
 
-    getSupertypes(): QueryIterator {
+    getSupertypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): QueryIterator {
+    getSubtypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getInstances(): QueryIterator {
+    getInstances(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getOwners(onlyKey?: boolean): QueryIterator {
+    getOwners(onlyKey?: boolean): Stream<any> {
         throw "Not implemented yet";
     }
 
@@ -138,15 +138,15 @@ export class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl impl
         throw "Not implemented yet";
     }
 
-    getSupertypes(): QueryIterator {
+    getSupertypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): QueryIterator {
+    getSubtypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getInstances(): QueryIterator {
+    getInstances(): Stream<any> {
         throw "Not implemented yet";
     }
 
@@ -196,15 +196,15 @@ export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl impleme
         throw "Not implemented yet";
     }
 
-    getSupertypes(): QueryIterator {
+    getSupertypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): QueryIterator {
+    getSubtypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getInstances(): QueryIterator {
+    getInstances(): Stream<any> {
         throw "Not implemented yet";
     }
 
@@ -254,15 +254,15 @@ export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         throw "Not implemented yet";
     }
 
-    getSupertypes(): QueryIterator {
+    getSupertypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): QueryIterator {
+    getSubtypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getInstances(): QueryIterator {
+    getInstances(): Stream<any> {
         throw "Not implemented yet";
     }
 
@@ -312,15 +312,15 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         throw "Not implemented yet";
     }
 
-    getSupertypes(): QueryIterator {
+    getSupertypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): QueryIterator {
+    getSubtypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getInstances(): QueryIterator {
+    getInstances(): Stream<any> {
         throw "Not implemented yet";
     }
 
@@ -370,15 +370,15 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
         throw "Not implemented yet";
     }
 
-    getSupertypes(): QueryIterator {
+    getSupertypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): QueryIterator {
+    getSubtypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getInstances(): QueryIterator {
+    getInstances(): Stream<any> {
         throw "Not implemented yet";
     }
 

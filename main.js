@@ -100,6 +100,19 @@ async function run() {
     }
 
     try {
+        stoneLion = stoneLion.asRemote(tx);
+        const stoneLionsStream = stoneLion.getInstances();
+        const stoneLions = await stoneLionsStream.collect();
+        console.log(`getInstances - SUCCESS - There are ${stoneLions.length} stone lions.`);
+    } catch (err) {
+        console.error(`getInstances - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    try {
         await tx.commit();
         console.log("commit data write tx - SUCCESS");
     } catch (err) {

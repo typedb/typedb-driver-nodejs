@@ -6,6 +6,9 @@ import { ThingTypeImpl } from "./ThingTypeImpl";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import { RPCTransaction } from "../../../rpc/RPCTransaction";
+import { Stream } from "../../../rpc/Stream";
+import { ThingImpl } from "../../Thing/Impl/ThingImpl";
+import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
 
 export abstract class TypeImpl implements Type {
     private readonly _label: string;
@@ -97,10 +100,16 @@ export abstract class RemoteTypeImpl implements RemoteType {
         return `${RemoteTypeImpl.name}[label:${this._label}]`;
     }
 
+    protected thingStream(method: ConceptProto.Type.Req, thingGetter: (res: ConceptProto.Type.Res) => ConceptProto.Thing[]): Stream<ThingImpl> {
+        const request = new TransactionProto.Transaction.Req()
+            .setTypeReq(method.setLabel(this._label));
+        return this._rpcTransaction.stream(request, res => thingGetter(res.getTypeRes()).map(ConceptProtoReader.thing));
+    }
+
     protected execute(method: ConceptProto.Type.Req): Promise<ConceptProto.Type.Res> {
         const request = new TransactionProto.Transaction.Req()
             .setTypeReq(method.setLabel(this._label));
-        return this._rpcTransaction.execute(request).then(res => res.getTypeRes());
+        return this._rpcTransaction.execute(request, res => res.getTypeRes());
     }
 
     abstract asRemote(transaction: Transaction): RemoteTypeImpl;

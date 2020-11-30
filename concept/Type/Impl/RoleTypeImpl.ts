@@ -1,10 +1,10 @@
 import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
 import { RoleType, RemoteRoleType } from "../RoleType";
-import { QueryIterator } from "../../Concept";
 import { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import { RelationTypeImpl } from "./RelationTypeImpl";
+import { Stream } from "../../../rpc/Stream";
 
 export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
     private readonly _scope: string;
@@ -43,12 +43,12 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
         throw "Not yet implemented"
     }
 
-    getSupertypes(): QueryIterator {
-        return new QueryIterator();
+    getSupertypes(): Stream<any> {
+        throw "Not yet implemented";
     }
 
-    getSubtypes(): QueryIterator {
-        return new QueryIterator();
+    getSubtypes(): Stream<any> {
+        throw "Not yet implemented";
     }
 
     getScope(): string {
@@ -63,12 +63,12 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
         throw "Not yet implemented";
     }
 
-    getRelations(): QueryIterator {
-        return new QueryIterator();
+    getRelations(): Stream<any> {
+        throw "Not yet implemented";
     }
 
-    getPlayers(): QueryIterator {
-        return new QueryIterator();
+    getPlayers(): Stream<any> {
+        throw "Not yet implemented";
     }
 
     toString(): string {

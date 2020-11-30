@@ -1,11 +1,11 @@
 import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
 import { Relation } from "../../Thing/Relation";
 import { RelationType, RemoteRelationType } from "../RelationType";
-import { QueryIterator } from "../../Concept";
 import { RoleType } from "../RoleType";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import { Stream } from "../../../rpc/Stream";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     protected constructor(label: string, isRoot: boolean) {
@@ -26,8 +26,8 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
         super(transaction, label, isRoot);
     }
 
-    getInstances(): QueryIterator {
-        return new QueryIterator();
+    getInstances(): Stream<any> {
+        throw "Not yet implemented";
     }
 
     asRemote(transaction: Transaction): RemoteRelationTypeImpl {
@@ -38,11 +38,11 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
         throw "Not yet implemented";
     }
 
-    getSupertypes(): QueryIterator {
+    getSupertypes(): Stream<any> {
         throw "Not yet implemented";
     }
 
-    getSubtypes(): QueryIterator {
+    getSubtypes(): Stream<any> {
         throw "Not yet implemented";
     }
 
@@ -55,8 +55,8 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
     }
 
     getRelates(roleLabel: string): RoleType;
-    getRelates(): QueryIterator;
-    getRelates(roleLabel?: string): RoleType | QueryIterator {
+    getRelates(): Stream<any>;
+    getRelates(roleLabel?: string): RoleType | Stream<any> {
         throw "Not yet implemented";
     }
 

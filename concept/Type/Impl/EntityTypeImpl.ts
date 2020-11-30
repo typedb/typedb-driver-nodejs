@@ -1,11 +1,11 @@
 import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
 import { RemoteEntityType } from "../EntityType";
 import { EntityType } from "../EntityType";
-import { QueryIterator } from "../../Concept";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { EntityImpl } from "../../Thing/Impl/EntityImpl";
+import { Stream } from "../../../rpc/Stream";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     protected constructor(label: string, isRoot: boolean) {
@@ -34,19 +34,19 @@ export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteE
         throw "Not yet implemented"
     }
 
-    getInstances(): QueryIterator {
-        throw "Not yet implemented"
+    getInstances(): Stream<EntityImpl> {
+        return super.getInstances() as Stream<EntityImpl>;
     }
 
     asRemote(transaction: Transaction): RemoteEntityTypeImpl {
         return new RemoteEntityTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertypes(): QueryIterator {
+    getSupertypes(): Stream<any> {
         throw "Not yet implemented";
     }
 
-    getSubtypes(): QueryIterator {
+    getSubtypes(): Stream<any> {
         throw "Not yet implemented";
     }
 

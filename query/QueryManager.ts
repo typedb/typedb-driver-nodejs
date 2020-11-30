@@ -6,6 +6,8 @@ import Graql = QueryProto.Graql;
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import Transaction = TransactionProto.Transaction;
 import { ProtoBuilder } from "../common/ProtoBuilder";
+import { Stream } from "../rpc/Stream";
+import { ConceptMap } from "../concept/Answer/ConceptMap";
 
 export class QueryManager {
     private readonly _rpcTransaction: RPCTransaction;
@@ -13,13 +15,13 @@ export class QueryManager {
         this._rpcTransaction = transaction;
     }
 
-    public match(query: string, options?: GraknOptions): Promise<Transaction.Res> {
+    public match(query: string, options?: GraknOptions): Stream<ConceptMap> {
         const matchQuery = new Query.Req().setMatchReq(
             new Graql.Match.Req().setQuery(query));
         return this.iterateQuery(matchQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getMatchRes().getAnswerList());
     }
 
-    public insert(query: string, options?: GraknOptions): Promise<Transaction.Res> {
+    public insert(query: string, options?: GraknOptions): Stream<ConceptMap> {
         const insertQuery = new Query.Req().setInsertReq(
             new Graql.Insert.Req().setQuery(query));
         return this.iterateQuery(insertQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getInsertRes().getAnswerList());
@@ -45,17 +47,13 @@ export class QueryManager {
 
     private async runQuery(request: Query.Req, options: GraknOptions): Promise<void> {
         const transactionRequest = new Transaction.Req()
-            .setQueryReq(
-                request.setOptions(ProtoBuilder.options(options))
-            )
+            .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
         await this._rpcTransaction.execute(transactionRequest);
     }
 
-    private async iterateQuery(request: Query.Req, options: GraknOptions, responseReader: (res: Transaction.Res) => any): Promise<Transaction.Res> {
+    private iterateQuery<T>(request: Query.Req, options: GraknOptions, responseReader: (res: Transaction.Res) => T[]): Stream<T> {
         const transactionRequest = new Transaction.Req()
-            .setQueryReq(
-                request.setOptions(ProtoBuilder.options(options))
-            )
+            .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
         return this._rpcTransaction.stream(transactionRequest, responseReader);
     }
 }

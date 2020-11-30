@@ -1,16 +1,14 @@
 import { TypeImpl, RemoteTypeImpl } from "./TypeImpl";
 import { ThingType, RemoteThingType } from "../ThingType";
-import { QueryIterator } from "../../Concept";
 import { AttributeType } from "../AttributeType";
 import { RoleType } from "../RoleType";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import TypeProto = ConceptProto.Type;
-import { EntityTypeImpl } from "./EntityTypeImpl";
-import { RelationTypeImpl } from "./RelationTypeImpl";
-import { AttributeTypeImpl } from "./AttributeTypeImpl";
 import assert from "assert";
+import { Stream } from "../../../rpc/Stream";
+import { Thing } from "../../Thing/Thing";
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
     protected constructor(label: string, isRoot: boolean) {
@@ -50,16 +48,18 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
         throw "Behaviour not yet implemented";
     }
 
-    getSupertypes(): QueryIterator {
+    getSupertypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): QueryIterator {
+    getSubtypes(): Stream<any> {
         throw "Not implemented yet";
     }
 
-    getInstances(): QueryIterator {
-        throw "Not implemented yet";
+    getInstances(): Stream<Thing> {
+        const request = new ConceptProto.Type.Req()
+            .setThingTypeGetInstancesReq(new ConceptProto.ThingType.GetInstances.Req());
+        return this.thingStream(request, res => res.getThingTypeGetInstancesRes().getThingList());
     }
 
     setAbstract(): void {
@@ -70,14 +70,14 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
         throw "Not implemented yet";
     }
 
-    getPlays(): QueryIterator {
-        return new QueryIterator();
+    getPlays(): Stream<any> {
+        throw "Not implemented yet";
     }
 
-    getOwns(): QueryIterator;
-    getOwns(keysOnly: boolean): QueryIterator;
-    getOwns(keysOnly?: boolean): QueryIterator {
-        return new QueryIterator();
+    getOwns(): Stream<any>;
+    getOwns(keysOnly: boolean): Stream<any>;
+    getOwns(keysOnly?: boolean): Stream<any> {
+        throw "Not implemented yet";
     }
 
     setOwns(attributeType: AttributeType): void;
