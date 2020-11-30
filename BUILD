@@ -47,8 +47,7 @@ ts_library(
     tsconfig = "tsconfig.json",
     deps = [
         "@npm//@grpc/grpc-js",
-        "@npm//graknlabs-grpc-dependencies",
-        "@npm//uuid",
+        "@npm//graknlabs-grpc-protocol",
         "@npm//@types/node",
     ],
 )
