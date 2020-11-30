@@ -1,7 +1,6 @@
 {
   "name": "grakn-client",
   "version": "2.0.0",
-  "type": "module",
   "description": "Grakn Client for Node.js",
   "main": "dist/GraknClient.js",
   "types": "dist/GraknClient.d.ts",
@@ -23,8 +22,8 @@
     "@types/google-protobuf": "3.7.4",
     "@types/node": "14.14.10",
     "fs-extra": "7.0.1",
-    "grpc-tools": "1.10.0",
     "grpc_tools_node_protoc_ts": "5.0.1",
+    "grpc-tools": "1.10.0",
     "jest": "^26.6.3",
     "properties-reader": "0.3.1",
     "tmp": "0.1.0",

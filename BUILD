@@ -132,6 +132,9 @@ checkstyle_test(
         "query/**/*.ts",
         "rpc/**/*.ts",
     ]),
+    exclude = glob([
+        "node_modules/**/*.*",
+    ]),
     license_type = "apache",
 )
 

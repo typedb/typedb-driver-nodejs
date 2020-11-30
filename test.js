@@ -1,5 +1,5 @@
-import { GraknClient } from "./dist/rpc/GraknClient";
-import { Grakn } from "./dist/Grakn";
+const { GraknClient } = require("./dist/rpc/GraknClient");
+const { Grakn } = require("./dist/Grakn");
 const { SessionType, TransactionType } = Grakn;
 
 async function run() {
