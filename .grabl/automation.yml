@@ -46,7 +46,6 @@ build:
         owner: graknlabs
         branch: master
       machine: graknlabs-ubuntu-20.04
-      # TODO CHECK IF EMAIL IS NEEDED
       script: |
         curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
