@@ -20,22 +20,6 @@ export abstract class ThingImpl implements Thing {
         this._iid = iid;
     }
 
-    static of(thingProto: ConceptProto.Thing): ThingImpl {
-        switch (thingProto.getEncoding()) {
-            case ConceptProto.Thing.ENCODING.ENTITY:
-                throw "no" // TODO: resolve circular ref
-                // return EntityImpl.of(thingProto);
-            case ConceptProto.Thing.ENCODING.RELATION:
-                throw "no" // TODO: resolve circular ref
-                // return RelationImpl.of(thingProto);
-            case ConceptProto.Thing.ENCODING.ATTRIBUTE:
-                throw "no" // TODO: resolve circular ref
-                // return AttributeImpl.of(thingProto);
-            default:
-                throw "Bad encoding"
-        }
-    }
-
     getIID(): string {
         return this._iid;
     }

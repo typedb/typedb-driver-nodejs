@@ -94,7 +94,7 @@ export class RPCTransaction implements Grakn.Transaction {
     }
 
     execute<T>(request: TransactionProto.Transaction.Req, transformResponse: (res: TransactionProto.Transaction.Res) => T = () => null): Promise<T> {
-        const responseCollector = new SingleResponseCollector();
+        const responseCollector = new ResponseCollector();
         const requestId = uuidv4();
         request.setId(requestId);
         this._collectors.put(requestId, responseCollector);
@@ -104,7 +104,7 @@ export class RPCTransaction implements Grakn.Transaction {
     }
 
     stream<T>(request: TransactionProto.Transaction.Req, transformResponse: (res: TransactionProto.Transaction.Res) => T[]): Stream<T> {
-        const responseCollector = new MultipleResponseCollector();
+        const responseCollector = new ResponseCollector();
         const requestId = uuidv4();
         request.setId(requestId);
         request.setLatencyMillis(this._networkLatencyMillis);
@@ -121,7 +121,6 @@ export class RPCTransaction implements Grakn.Transaction {
             const collector = this._collectors.get(requestId);
             if (!collector) throw "Unknown request ID " + requestId;
             collector.add(new OkResponse(res));
-            if (collector.isDone()) this._collectors.remove(requestId);
         });
 
         this._stream.on("error", (err) => {
@@ -163,41 +162,20 @@ class ResponseCollectors {
     }
 }
 
-abstract class ResponseCollector {
-    private _isDone: boolean;
+export class ResponseCollector {
     private _responseBuffer: BlockingQueue<Response>;
 
     constructor() {
-        this._isDone = false;
         this._responseBuffer = new BlockingQueue<Response>();
-    }
-
-    isDone(): boolean {
-        return this._isDone;
     }
 
     add(response: Response): void {
         this._responseBuffer.add(response);
-        if (!(response instanceof OkResponse) || this.isLastResponse(response.read())) this._isDone = true;
     }
 
     async take(): Promise<TransactionProto.Transaction.Res> {
         const response = await this._responseBuffer.take();
         return response.read();
-    }
-
-    abstract isLastResponse(response: TransactionProto.Transaction.Res): boolean;
-}
-
-class SingleResponseCollector extends ResponseCollector {
-    isLastResponse(response: TransactionProto.Transaction.Res): boolean {
-        return true;
-    }
-}
-
-export class MultipleResponseCollector extends ResponseCollector {
-    isLastResponse(response: TransactionProto.Transaction.Res): boolean {
-        return response.getDone();
     }
 }
 

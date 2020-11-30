@@ -1,18 +1,18 @@
 import { ClientWritableStream } from "@grpc/grpc-js";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
-import { MultipleResponseCollector } from "./RPCTransaction";
+import { ResponseCollector } from "./RPCTransaction";
 
 export class Stream<T> implements Iterable<Promise<T>> {
 
     private readonly _requestId: string;
     private readonly _writableStream: ClientWritableStream<TransactionProto.Transaction.Req>;
-    private readonly _responseCollector: MultipleResponseCollector;
+    private readonly _responseCollector: ResponseCollector;
     private readonly _transformResponse: (res: TransactionProto.Transaction.Res) => T[];
 
     private _receivedAnswers: T[];
 
     public constructor(requestId: string, writableStream: ClientWritableStream<TransactionProto.Transaction.Req>,
-                       responseCollector: MultipleResponseCollector, transformResponse: (res: TransactionProto.Transaction.Res) => T[]) {
+                       responseCollector: ResponseCollector, transformResponse: (res: TransactionProto.Transaction.Res) => T[]) {
         this._requestId = requestId;
         this._transformResponse = transformResponse;
         this._writableStream = writableStream;
