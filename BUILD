@@ -120,6 +120,21 @@ artifact_extractor(
 #    tags = ["manual"]  # in order for bazel test //... to not fail
 #)
 
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob([
+        "Grakn.ts",
+        "GraknOptions.ts",
+        "common/**/*.ts",
+        "concept/**/*.ts",
+        "query/**/*.ts",
+        "rpc/**/*.ts",
+    ]),
+    license_type = "apache",
+)
+
 # CI targets that are not declared in any BUILD file, but are called externally
 filegroup(
     name = "ci",
