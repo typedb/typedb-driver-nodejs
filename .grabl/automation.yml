@@ -23,6 +23,7 @@ build:
       script: |
         ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
         ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
+        ARTIFACT_EMAIL=$REPO_GRAKN_EMAIL \
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel build --config=rbe //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
@@ -37,8 +38,9 @@ build:
       script: |
         ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
         ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
+        ARTIFACT_EMAIL=$REPO_GRAKN_EMAIL \
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //:test-integration
+        bazel test //:...
     deploy-npm-snapshot:
       filter:
         owner: graknlabs
@@ -52,6 +54,7 @@ build:
         sudo apt install -y expect
         export DEPLOY_NPM_USERNAME=$REPO_GRAKN_USERNAME
         export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
+        export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
       dependencies: [build, build-dependency, test]
 

@@ -1,6 +1,6 @@
 {
   "name": "grakn-client",
-  "version": "0.0.0-development",
+  "version": "2.0.0",
   "type": "module",
   "description": "Grakn Client for Node.js",
   "main": "dist/GraknClient.js",
@@ -21,11 +21,10 @@
     "@bazel/typescript": "2.3.1",
     "@cucumber/cucumber": "7.0.0-rc.0",
     "@types/google-protobuf": "3.7.4",
+    "@types/node": "14.14.10",
     "fs-extra": "7.0.1",
     "grpc-tools": "1.10.0",
     "grpc_tools_node_protoc_ts": "5.0.1",
-    "jasmine": "3.6.1",
-    "jasmine-reporters": "2.3.2",
     "properties-reader": "0.3.1",
     "tmp": "0.1.0",
     "typescript": "3.9.7"
