@@ -2,11 +2,10 @@
   "name": "grakn-client",
   "version": "2.0.0",
   "description": "Grakn Client for Node.js",
-  "main": "dist/GraknClient.js",
-  "types": "dist/GraknClient.d.ts",
   "author": "Grakn Labs",
   "license": "Apache-2.0",
   "homepage": "https://grakn.ai",
+  "type": "commonjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/graknlabs/client-nodejs"
