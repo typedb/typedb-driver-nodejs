@@ -60,15 +60,13 @@ pkg_npm(
        ".npmignore",
     ]),
     deps = [
-        "@graknlabs_protocol//grpc/nodejs:protocol",
+        "@npm//graknlabs-grpc-protocol",
         "@npm//@grpc/grpc-js",
         "@npm//google-protobuf",
         ":_client_nodejs",
     ],
     visibility = ["//visibility:public"],
-    vendor_external = [
-        "@graknlabs_protocol"
-    ]
+    vendor_external = [],
 )
 
 assemble_npm(
