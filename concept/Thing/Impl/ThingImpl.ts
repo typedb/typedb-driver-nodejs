@@ -26,11 +26,14 @@ export abstract class ThingImpl implements Thing {
     static of(thingProto: ConceptProto.Thing): ThingImpl {
         switch (thingProto.getEncoding()) {
             case ConceptProto.Thing.ENCODING.ENTITY:
-                return EntityImpl.of(thingProto);
+                throw "no" // TODO: resolve circular ref
+                // return EntityImpl.of(thingProto);
             case ConceptProto.Thing.ENCODING.RELATION:
-                return RelationImpl.of(thingProto);
+                throw "no" // TODO: resolve circular ref
+                // return RelationImpl.of(thingProto);
             case ConceptProto.Thing.ENCODING.ATTRIBUTE:
-                return AttributeImpl.of(thingProto);
+                throw "no" // TODO: resolve circular ref
+                // return AttributeImpl.of(thingProto);
             default:
                 throw "Bad encoding"
         }

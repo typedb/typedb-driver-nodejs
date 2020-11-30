@@ -1,7 +1,7 @@
 import { Type, RemoteType } from "../Type";
 import { QueryIterator } from "../../Concept";
 import ConceptProto from "grakn-protocol/concept_pb";
-import { RoleTypeImpl } from "./RoleTypeImpl";
+// import { RoleTypeImpl } from "./RoleTypeImpl";
 import { ThingTypeImpl } from "./ThingTypeImpl";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
@@ -20,7 +20,8 @@ export abstract class TypeImpl implements Type {
     static of(typeProto: ConceptProto.Type): TypeImpl {
         switch (typeProto.getEncoding()) {
             case ConceptProto.Type.ENCODING.ROLE_TYPE:
-                return RoleTypeImpl.of(typeProto);
+                throw "no" // TODO: resolve circular reference
+                // return RoleTypeImpl.of(typeProto);
             default:
                 return ThingTypeImpl.of(typeProto);
         }

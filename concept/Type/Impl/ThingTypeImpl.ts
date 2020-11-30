@@ -24,11 +24,14 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
     static of(typeProto: TypeProto): ThingTypeImpl {
         switch (typeProto.getEncoding()) {
             case TypeProto.ENCODING.ENTITY_TYPE:
-                return EntityTypeImpl.of(typeProto);
+                throw "no" // TODO: resolve circular ref
+                // return EntityTypeImpl.of(typeProto);
             case TypeProto.ENCODING.RELATION_TYPE:
-                return RelationTypeImpl.of(typeProto);
+                throw "no" // TODO: resolve circular ref
+                // return RelationTypeImpl.of(typeProto);
             case TypeProto.ENCODING.ATTRIBUTE_TYPE:
-                return AttributeTypeImpl.of(typeProto);
+                throw "no" // TODO: resolve circular ref
+                // return AttributeTypeImpl.of(typeProto);
             case TypeProto.ENCODING.THING_TYPE:
                 assert(typeProto.getRoot());
                 return new ThingTypeImpl(typeProto.getLabel(), typeProto.getRoot());
