@@ -55,7 +55,7 @@ build:
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
       dependencies: [build, test]
 
-    test-deployment:
+    test-deployment-npm:
 #      filter:
 #        owner: graknlabs
 #        branch: master
@@ -66,10 +66,14 @@ build:
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
         ./dist/grakn-core-all-linux/grakn server &
-        source /opt/circleci/.nvm/nvm.sh
+        # -- to be moved to image itself --
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+        # -- to be moved to image itself --
         nvm install v10.15.3
         nvm use --delete-prefix v10.15.3
-        cd tests/deployment/
+        cd test/deployment/
         echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
         npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
         npm install jest --global
