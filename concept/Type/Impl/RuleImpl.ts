@@ -55,7 +55,7 @@ export class RuleImpl implements Rule {
     }
 
     toString(): string {
-        return `${RuleImpl.name}[label:${this._label}]`;
+        return `${this.constructor.name}[label:${this._label}]`;
     }
 }
 

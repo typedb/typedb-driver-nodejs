@@ -41,7 +41,7 @@ export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
         return this._scope;
     }
 
-    asRemote(transaction: Transaction): RemoteRoleType {
+    asRemote(transaction: Transaction): RemoteRoleTypeImpl {
         return new RemoteRoleTypeImpl(transaction, this.getLabel(), this.getScope(), this.isRoot());
     }
 
@@ -58,39 +58,39 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
         this._scope = scope;
     }
 
-    getSupertype(): RoleTypeImpl {
+    getScope(): string {
+        return this._scope;
+    }
+
+    getSupertype(): Promise<RoleTypeImpl> {
         throw "Not yet implemented"
     }
 
-    getSupertypes(): Stream<any> {
+    getSupertypes(): Stream<RoleTypeImpl> {
         throw "Not yet implemented";
     }
 
-    getSubtypes(): Stream<any> {
+    getSubtypes(): Stream<RoleTypeImpl> {
         throw "Not yet implemented";
-    }
-
-    getScope(): string {
-        return this._scope;
     }
 
     asRemote(transaction: Transaction): RemoteRoleTypeImpl {
         return new RemoteRoleTypeImpl(transaction, this.getLabel(), this._scope, this.isRoot())
     }
 
-    getRelation(): RelationTypeImpl {
+    getRelation(): Promise<RelationTypeImpl> {
         throw "Not yet implemented";
     }
 
-    getRelations(): Stream<any> {
+    getRelations(): Stream<RelationTypeImpl> {
         throw "Not yet implemented";
     }
 
-    getPlayers(): Stream<any> {
+    getPlayers(): Stream<ThingTypeImpl> {
         throw "Not yet implemented";
     }
 
     toString(): string {
-        return `${RemoteRoleTypeImpl.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
+        return `${this.constructor.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
     }
 }

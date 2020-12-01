@@ -45,11 +45,11 @@ export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteE
         super(transaction, label, isRoot);
     }
 
-    setSupertype(superEntityType: EntityType): void {
+    setSupertype(superEntityType: EntityType): Promise<void> {
         throw "Not yet Implemented"
     }
 
-    getSupertype(): EntityTypeImpl {
+    getSupertype(): Promise<EntityTypeImpl> {
         throw "Not yet implemented"
     }
 
@@ -61,17 +61,16 @@ export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteE
         return new RemoteEntityTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertypes(): Stream<any> {
+    getSupertypes(): Stream<EntityTypeImpl> {
         throw "Not yet implemented";
     }
 
-    getSubtypes(): Stream<any> {
+    getSubtypes(): Stream<EntityTypeImpl> {
         throw "Not yet implemented";
     }
 
     create(): Promise<EntityImpl> {
-        const method = new ConceptProto.Type.Req()
-            .setEntityTypeCreateReq(new ConceptProto.EntityType.Create.Req());
+        const method = new ConceptProto.Type.Req().setEntityTypeCreateReq(new ConceptProto.EntityType.Create.Req());
         return this.execute(method).then(res => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
     }
 }

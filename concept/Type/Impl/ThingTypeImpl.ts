@@ -24,37 +24,19 @@ import { RoleType } from "../RoleType";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import TypeProto = ConceptProto.Type;
-import assert from "assert";
 import { Stream } from "../../../rpc/Stream";
-import { Thing } from "../../Thing/Thing";
+import { ThingImpl } from "../../Thing/Impl/ThingImpl";
+import { RoleTypeImpl } from "./RoleTypeImpl";
+import { AttributeTypeImpl } from "./AttributeTypeImpl";
+import { ConceptProtoBuilder } from "../../Proto/ConceptProtoBuilder";
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
-    protected constructor(label: string, isRoot: boolean) {
+    constructor(label: string, isRoot: boolean) {
         super(label, isRoot);
     }
 
     asRemote(transaction: Transaction): RemoteThingType {
-        return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot())
-    }
-
-    static of(typeProto: TypeProto): ThingTypeImpl {
-        switch (typeProto.getEncoding()) {
-            case TypeProto.ENCODING.ENTITY_TYPE:
-                throw "no" // TODO: resolve circular ref
-                // return EntityTypeImpl.of(typeProto);
-            case TypeProto.ENCODING.RELATION_TYPE:
-                throw "no" // TODO: resolve circular ref
-                // return RelationTypeImpl.of(typeProto);
-            case TypeProto.ENCODING.ATTRIBUTE_TYPE:
-                throw "no" // TODO: resolve circular ref
-                // return AttributeTypeImpl.of(typeProto);
-            case TypeProto.ENCODING.THING_TYPE:
-                assert(typeProto.getRoot());
-                return new ThingTypeImpl(typeProto.getLabel(), typeProto.getRoot());
-            default:
-                throw "Bad encoding";
-        }
+        return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 }
 
@@ -63,64 +45,86 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
         super(transaction, label, isRoot);
     }
 
-    getSupertype(): ThingTypeImpl {
-        throw "Behaviour not yet implemented";
+    protected setSupertype(thingType: ThingType): Promise<void> {
+        return super.setSupertype(thingType);
     }
 
-    getSupertypes(): Stream<any> {
-        throw "Not implemented yet";
+    getSupertype(): Promise<ThingTypeImpl> {
+        return super.getSupertype() as Promise<ThingTypeImpl>;
     }
 
-    getSubtypes(): Stream<any> {
-        throw "Not implemented yet";
+    getSupertypes(): Stream<ThingTypeImpl> {
+        return super.getSupertypes() as Stream<ThingTypeImpl>;
     }
 
-    getInstances(): Stream<Thing> {
-        const request = new ConceptProto.Type.Req()
-            .setThingTypeGetInstancesReq(new ConceptProto.ThingType.GetInstances.Req());
+    getSubtypes(): Stream<ThingTypeImpl> {
+        return super.getSubtypes() as Stream<ThingTypeImpl>;
+    }
+
+    getInstances(): Stream<ThingImpl> {
+        const request = new ConceptProto.Type.Req().setThingTypeGetInstancesReq(new ConceptProto.ThingType.GetInstances.Req());
         return this.thingStream(request, res => res.getThingTypeGetInstancesRes().getThingList());
     }
 
-    setAbstract(): void {
-        throw "Not implemented yet";
+    async setAbstract(): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req().setThingTypeSetAbstractReq(new ConceptProto.ThingType.SetAbstract.Req()));
     }
 
-    unsetAbstract(): void {
-        throw "Not implemented yet";
+    async unsetAbstract(): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req().setThingTypeUnsetAbstractReq(new ConceptProto.ThingType.UnsetAbstract.Req()));
     }
 
-    getPlays(): Stream<any> {
-        throw "Not implemented yet";
+    async setPlays(role: RoleType): Promise<void>;
+    async setPlays(role: RoleType, overriddenType: RoleType): Promise<void>;
+    async setPlays(role: RoleType, overriddenType?: RoleType): Promise<void> {
+        const setPlaysReq = new ConceptProto.ThingType.SetPlays.Req().setRole(ConceptProtoBuilder.type(role));
+        if (overriddenType) setPlaysReq.setOverriddenRole(ConceptProtoBuilder.type(overriddenType));
+        await this.execute(new ConceptProto.Type.Req().setThingTypeSetPlaysReq(setPlaysReq));
     }
 
-    getOwns(): Stream<any>;
-    getOwns(keysOnly: boolean): Stream<any>;
-    getOwns(keysOnly?: boolean): Stream<any> {
-        throw "Not implemented yet";
+    async setOwns(attributeType: AttributeType): Promise<void>;
+    async setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
+    async setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
+    async setOwns(attributeType: AttributeType, isKey: boolean, overriddenType: AttributeType): Promise<void>;
+    async setOwns(attributeType: AttributeType, isKeyOrOverriddenType?: boolean | AttributeType, overriddenType?: AttributeType): Promise<void> {
+        const setOwnsReq = new ConceptProto.ThingType.SetOwns.Req().setAttributeType(ConceptProtoBuilder.type(attributeType))
+            .setIsKey(typeof isKeyOrOverriddenType === "boolean" ? isKeyOrOverriddenType : false);
+        let overriddenType1: AttributeType;
+        if (isKeyOrOverriddenType instanceof AttributeTypeImpl) overriddenType1 = isKeyOrOverriddenType;
+        else if (overriddenType) overriddenType1 = overriddenType;
+        if (overriddenType1) setOwnsReq.setOverriddenType(ConceptProtoBuilder.type(overriddenType1));
+        await this.execute(new ConceptProto.Type.Req().setThingTypeSetOwnsReq(setOwnsReq));
     }
 
-    setOwns(attributeType: AttributeType): void;
-    setOwns(attributeType: AttributeType, isKey: boolean): void;
-    setOwns(attributeType: AttributeType, overriddenType: AttributeType): void;
-    setOwns(attributeType: AttributeType, isKey: boolean, otherType: AttributeType): void;
-    setOwns(attributeType: AttributeType, isKey?: boolean | AttributeType, otherType?: AttributeType): void {
+    getPlays(): Stream<RoleTypeImpl> {
+        const request = new ConceptProto.Type.Req().setThingTypeGetPlaysReq(new ConceptProto.ThingType.GetPlays.Req());
+        return this.typeStream(request, res => res.getThingTypeGetPlaysRes().getRoleList()) as Stream<RoleTypeImpl>;
     }
 
-    setPlays(role: RoleType): void;
-    setPlays(role: RoleType, overriddenType: RoleType): void;
-    setPlays(role: RoleType, overriddenType?: RoleType): void {
-        throw "Not implemented yet";
+    getOwns(): Stream<AttributeTypeImpl>;
+    getOwns(valueType: AttributeType.ValueType): Stream<AttributeTypeImpl>;
+    getOwns(keysOnly: boolean): Stream<AttributeTypeImpl>;
+    getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeTypeImpl>;
+    getOwns(valueTypeOrKeysOnly?: AttributeType.ValueType | boolean, keysOnly?: boolean): Stream<AttributeTypeImpl> {
+        const getOwnsReq = new ConceptProto.ThingType.GetOwns.Req()
+            .setKeysOnly(typeof valueTypeOrKeysOnly === "boolean" ? valueTypeOrKeysOnly : typeof keysOnly === "boolean" ? keysOnly : false);
+        // Here we take advantage of the fact that AttributeType.ValueType is a numeric enum
+        if (typeof valueTypeOrKeysOnly === "number") getOwnsReq.setValueType(ConceptProtoBuilder.valueType(valueTypeOrKeysOnly));
+        const request = new ConceptProto.Type.Req().setThingTypeGetOwnsReq(getOwnsReq);
+        return this.typeStream(request, res => res.getThingTypeGetOwnsRes().getAttributeTypeList()) as Stream<AttributeTypeImpl>;
     }
 
-    unsetOwns(attributeType: AttributeType): void {
-        throw "Not implemented yet";
+    async unsetPlays(role: RoleType): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req().setThingTypeUnsetPlaysReq(
+            new ConceptProto.ThingType.UnsetPlays.Req().setRole(ConceptProtoBuilder.type(role))));
     }
 
-    unsetPlays(role: RoleType): void {
-        throw "Not implemented yet";
+    async unsetOwns(attributeType: AttributeType): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req().setThingTypeUnsetOwnsReq(
+            new ConceptProto.ThingType.UnsetOwns.Req().setAttributetype(ConceptProtoBuilder.type(attributeType))));
     }
 
     asRemote(transaction: Transaction): RemoteThingTypeImpl {
-        return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot())
+        return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 }

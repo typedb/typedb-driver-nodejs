@@ -25,6 +25,8 @@ import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { Stream } from "../../../rpc/Stream";
+import { RelationImpl } from "../../Thing/Impl/RelationImpl";
+import { RoleTypeImpl } from "./RoleTypeImpl";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     protected constructor(label: string, isRoot: boolean) {
@@ -45,7 +47,7 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
         super(transaction, label, isRoot);
     }
 
-    getInstances(): Stream<any> {
+    getInstances(): Stream<RelationImpl> {
         throw "Not yet implemented";
     }
 
@@ -53,39 +55,39 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
         return new RemoteRelationTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
 
-    getSupertype(): RelationTypeImpl {
+    getSupertype(): Promise<RelationTypeImpl> {
         throw "Not yet implemented";
     }
 
-    getSupertypes(): Stream<any> {
+    getSupertypes(): Stream<RelationTypeImpl> {
         throw "Not yet implemented";
     }
 
-    getSubtypes(): Stream<any> {
+    getSubtypes(): Stream<RelationTypeImpl> {
         throw "Not yet implemented";
     }
 
-    setSupertype(superRelationType: RelationType): void {
+    setSupertype(superRelationType: RelationType): Promise<void> {
         throw "Not yet implemented";
     }
 
-    create(): Relation {
+    create(): Promise<RelationImpl> {
         throw "As yet unimplemented"
     }
 
-    getRelates(roleLabel: string): RoleType;
-    getRelates(): Stream<any>;
-    getRelates(roleLabel?: string): RoleType | Stream<any> {
+    getRelates(roleLabel: string): Promise<RoleTypeImpl>;
+    getRelates(): Stream<RoleTypeImpl>;
+    getRelates(roleLabel?: string): Promise<RoleTypeImpl> | Stream<RoleTypeImpl> {
         throw "Not yet implemented";
     }
 
-    setRelates(roleLabel: string): void;
-    setRelates(roleLabel: string, overriddenLabel: string): void;
-    setRelates(roleLabel: string, overriddenLabel?: string): void {
+    setRelates(roleLabel: string): Promise<void>;
+    setRelates(roleLabel: string, overriddenLabel: string): Promise<void>;
+    setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {
         throw "Not yet implemented";
     }
 
-    unsetRelates(roleLabel: string): void {
+    unsetRelates(roleLabel: string): Promise<void> {
         throw "Not yet implemented";
     }
 }

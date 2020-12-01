@@ -48,7 +48,7 @@ export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
         return this;
     }
 
-    getType(): EntityTypeImpl {
+    getType(): Promise<EntityTypeImpl> {
         throw "Not yet implemented"
     }
 }

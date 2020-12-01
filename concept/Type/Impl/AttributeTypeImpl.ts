@@ -31,33 +31,15 @@ import { AttributeImpl, BooleanAttributeImpl, DateTimeAttributeImpl, DoubleAttri
 import ValueClass = AttributeType.ValueClass;
 import assert from "assert";
 import { Stream } from "../../../rpc/Stream";
+import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
+import { ConceptProtoBuilder } from "../../Proto/ConceptProtoBuilder";
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     private static ROOT_LABEL = "attribute";
 
-    protected constructor(label: string, isRoot: boolean) {
+    constructor(label: string, isRoot: boolean) {
         super(label, isRoot);
-    }
-
-    static of(type: ConceptProto.Type) {
-        switch (type.getValueType()) {
-            case ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN:
-                return new BooleanAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.LONG:
-                return new LongAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.DOUBLE:
-                return new DoubleAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.STRING:
-                return new StringAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
-                return new DateTimeAttributeTypeImpl(type.getLabel(), type.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.OBJECT:
-                assert(type.getRoot());
-                return new AttributeTypeImpl(type.getLabel(), type.getRoot());
-            default:
-                throw "Bad value type";
-        }
     }
 
     getValueType(): ValueType {
@@ -87,40 +69,46 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
         return isKeyable(this.getValueType());
     }
 
+    setSupertype(attributeType: AttributeType): Promise<void> {
+        return super.setSupertype(attributeType);
+    }
+
+    getSupertype(): Promise<AttributeTypeImpl> {
+        return super.getSupertype() as Promise<AttributeTypeImpl>;
+    }
+
+    getSupertypes(): Stream<AttributeTypeImpl> {
+        return super.getSupertypes() as Stream<AttributeTypeImpl>;
+    }
+
+    getSubtypes(): Stream<AttributeTypeImpl> {
+        return super.getSubtypes() as Stream<AttributeTypeImpl>;
+    }
+
+    getInstances(): Stream<AttributeImpl<any>> {
+        return super.getInstances() as Stream<AttributeImpl<any>>;
+    }
+
+    getOwners(): Stream<ThingTypeImpl>;
+    getOwners(onlyKey?: boolean): Stream<ThingTypeImpl> {
+        const method = new ConceptProto.Type.Req()
+            .setAttributeTypeGetOwnersReq(new ConceptProto.AttributeType.GetOwners.Req().setOnlykey(onlyKey || false));
+        return this.typeStream(method, res => res.getAttributeTypeGetOwnersRes().getOwnerList()) as Stream<ThingTypeImpl>;
+    }
+
+    protected async putInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<any>> {
+        const method = new ConceptProto.Type.Req().setAttributeTypePutReq(new ConceptProto.AttributeType.Put.Req().setValue(valueProto));
+        return ConceptProtoReader.attribute(await this.execute(method).then(res => res.getAttributeTypePutRes().getAttribute()));
+    }
+
+    protected async getInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<any>> {
+        const method = new ConceptProto.Type.Req().setAttributeTypeGetReq(new ConceptProto.AttributeType.Get.Req().setValue(valueProto));
+        const response = await this.execute(method).then(res => res.getAttributeTypeGetRes());
+        return response.getResCase() === ConceptProto.AttributeType.Get.Res.ResCase.ATTRIBUTE ? ConceptProtoReader.attribute(response.getAttribute()) : null;
+    }
+
     asRemote(transaction: Transaction): RemoteAttributeTypeImpl {
-        return new RemoteAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
-    }
-
-    setSupertype(type: AttributeType): void {
-        throw "Not implemented yet";
-    }
-
-    getSupertype(): AttributeTypeImpl {
-        throw "Not implemented yet";
-    }
-
-    getSupertypes(): Stream<any> {
-        throw "Not implemented yet";
-    }
-
-    getSubtypes(): Stream<any> {
-        throw "Not implemented yet";
-    }
-
-    getInstances(): Stream<any> {
-        throw "Not implemented yet";
-    }
-
-    getOwners(onlyKey?: boolean): Stream<any> {
-        throw "Not implemented yet";
-    }
-
-    protected putInternal<T extends ValueClass>(value: T): AttributeImpl<T> {
-        throw "Not implemented yet";
-    }
-
-    protected getInternal<T extends ValueClass>(value: T): AttributeImpl<T> {
-        throw "Not implemented yet";
+        return new RemoteAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 }
 
@@ -128,6 +116,10 @@ export class BooleanAttributeTypeImpl extends AttributeTypeImpl implements Boole
 
     constructor(label: string, isRoot: boolean) {
         super(label, isRoot);
+    }
+
+    static of(typeProto: ConceptProto.Type): BooleanAttributeTypeImpl {
+        return new BooleanAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
     getValueType(): ValueType {
@@ -153,32 +145,32 @@ export class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl impl
         return new RemoteBooleanAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertype(): BooleanAttributeTypeImpl {
-        throw "Not implemented yet";
+    getSupertype(): Promise<BooleanAttributeTypeImpl> {
+        return super.getSupertype() as Promise<BooleanAttributeTypeImpl>;
     }
 
-    getSupertypes(): Stream<any> {
-        throw "Not implemented yet";
+    getSupertypes(): Stream<BooleanAttributeTypeImpl> {
+        return super.getSupertypes() as Stream<BooleanAttributeTypeImpl>;
     }
 
-    getSubtypes(): Stream<any> {
-        throw "Not implemented yet";
+    getSubtypes(): Stream<BooleanAttributeTypeImpl> {
+        return super.getSubtypes() as Stream<BooleanAttributeTypeImpl>;
     }
 
-    getInstances(): Stream<any> {
-        throw "Not implemented yet";
+    getInstances(): Stream<BooleanAttributeImpl> {
+        return super.getInstances() as Stream<BooleanAttributeImpl>;
     }
 
-    setSupertype(type: BooleanAttributeType): void {
-        super.setSupertype(type);
+    setSupertype(type: BooleanAttributeType): Promise<void> {
+        return super.setSupertype(type);
     }
 
-    put(value: boolean): BooleanAttributeImpl {
-        return this.putInternal(value) as BooleanAttributeImpl;
+    put(value: boolean): Promise<BooleanAttributeImpl> {
+        return this.putInternal(ConceptProtoBuilder.booleanAttributeValue(value)) as Promise<BooleanAttributeImpl>;
     }
 
-    get(value: boolean): BooleanAttributeImpl {
-        return this.getInternal(value) as BooleanAttributeImpl;
+    get(value: boolean): Promise<BooleanAttributeImpl> {
+        return await this.getInternal(value) as BooleanAttributeImpl;
     }
 }
 
@@ -186,6 +178,10 @@ export class LongAttributeTypeImpl extends AttributeTypeImpl implements LongAttr
 
     constructor(label: string, isRoot: boolean) {
         super(label, isRoot);
+    }
+
+    static of(typeProto: ConceptProto.Type): LongAttributeTypeImpl {
+        return new LongAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
     getValueType(): ValueType {
@@ -211,32 +207,32 @@ export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl impleme
         return new RemoteLongAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertype(): LongAttributeTypeImpl {
+    getSupertype(): Promise<LongAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getSupertypes(): Stream<any> {
+    getSupertypes(): Stream<LongAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): Stream<any> {
+    getSubtypes(): Stream<LongAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getInstances(): Stream<any> {
+    getInstances(): Stream<LongAttributeImpl> {
         throw "Not implemented yet";
     }
 
-    setSupertype(type: LongAttributeType): void {
-        super.setSupertype(type);
+    setSupertype(type: LongAttributeType): Promise<void> {
+        return super.setSupertype(type);
     }
 
-    put(value: number): LongAttributeImpl {
-        return this.putInternal(value) as LongAttributeImpl;
+    async put(value: number): Promise<LongAttributeImpl> {
+        return await this.putInternal(value) as LongAttributeImpl;
     }
 
-    get(value: number): LongAttributeImpl {
-        return this.getInternal(value) as LongAttributeImpl;
+    async get(value: number): Promise<LongAttributeImpl> {
+        return await this.getInternal(value) as LongAttributeImpl;
     }
 }
 
@@ -244,6 +240,10 @@ export class DoubleAttributeTypeImpl extends AttributeTypeImpl implements Double
 
     constructor(label: string, isRoot: boolean) {
         super(label, isRoot);
+    }
+
+    static of(typeProto: ConceptProto.Type): DoubleAttributeTypeImpl {
+        return new DoubleAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
     getValueType(): ValueType {
@@ -269,32 +269,32 @@ export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         return new RemoteDoubleAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertype(): DoubleAttributeTypeImpl {
+    getSupertype(): Promise<DoubleAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getSupertypes(): Stream<any> {
+    getSupertypes(): Stream<DoubleAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): Stream<any> {
+    getSubtypes(): Stream<DoubleAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getInstances(): Stream<any> {
+    getInstances(): Stream<DoubleAttributeImpl> {
         throw "Not implemented yet";
     }
 
-    setSupertype(type: DoubleAttributeType): void {
-        super.setSupertype(type);
+    setSupertype(type: DoubleAttributeType): Promise<void> {
+        return super.setSupertype(type);
     }
 
-    put(value: number): DoubleAttributeImpl {
-        return this.putInternal(value) as DoubleAttributeImpl;
+    async put(value: number): Promise<DoubleAttributeImpl> {
+        return await this.putInternal(value) as DoubleAttributeImpl;
     }
 
-    get(value: number): DoubleAttributeImpl {
-        return this.getInternal(value) as DoubleAttributeImpl;
+    async get(value: number): Promise<DoubleAttributeImpl> {
+        return await this.getInternal(value) as DoubleAttributeImpl;
     }
 }
 
@@ -302,6 +302,10 @@ export class StringAttributeTypeImpl extends AttributeTypeImpl implements String
 
     constructor(label: string, isRoot: boolean) {
         super(label, isRoot);
+    }
+
+    static of(typeProto: ConceptProto.Type): StringAttributeTypeImpl {
+        return new StringAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
     getValueType(): ValueType {
@@ -327,32 +331,32 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         return new RemoteStringAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertype(): StringAttributeTypeImpl {
+    getSupertype(): Promise<StringAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getSupertypes(): Stream<any> {
+    getSupertypes(): Stream<StringAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): Stream<any> {
+    getSubtypes(): Stream<StringAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getInstances(): Stream<any> {
+    getInstances(): Stream<StringAttributeImpl> {
         throw "Not implemented yet";
     }
 
-    setSupertype(type: StringAttributeType): void {
-        super.setSupertype(type);
+    setSupertype(type: StringAttributeType): Promise<void> {
+        return super.setSupertype(type);
     }
 
-    put(value: string): StringAttributeImpl {
-        return this.putInternal(value) as StringAttributeImpl;
+    async put(value: string): Promise<StringAttributeImpl> {
+        return await this.putInternal(value) as StringAttributeImpl;
     }
 
-    get(value: string): StringAttributeImpl {
-        return this.getInternal(value) as StringAttributeImpl;
+    async get(value: string): Promise<StringAttributeImpl> {
+        return await this.getInternal(value) as StringAttributeImpl;
     }
 }
 
@@ -360,6 +364,10 @@ export class DateTimeAttributeTypeImpl extends AttributeTypeImpl implements Date
 
     constructor(label: string, isRoot: boolean) {
         super(label, isRoot);
+    }
+
+    static of(typeProto: ConceptProto.Type): DateTimeAttributeTypeImpl {
+        return new DateTimeAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
     getValueType(): ValueType {
@@ -385,31 +393,31 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
         return new RemoteDateTimeAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertype(): DateTimeAttributeTypeImpl {
+    getSupertype(): Promise<DateTimeAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getSupertypes(): Stream<any> {
+    getSupertypes(): Stream<DateTimeAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getSubtypes(): Stream<any> {
+    getSubtypes(): Stream<DateTimeAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
-    getInstances(): Stream<any> {
+    getInstances(): Stream<DateTimeAttributeImpl> {
         throw "Not implemented yet";
     }
 
-    setSupertype(type: DateTimeAttributeType): void {
-        super.setSupertype(type);
+    setSupertype(type: DateTimeAttributeType): Promise<void> {
+        return super.setSupertype(type);
     }
 
-    put(value: Date): DateTimeAttributeImpl {
-        return this.putInternal(value) as DateTimeAttributeImpl;
+    async put(value: Date): Promise<DateTimeAttributeImpl> {
+        return await this.putInternal(value) as DateTimeAttributeImpl;
     }
 
-    get(value: Date): DateTimeAttributeImpl {
-        return this.getInternal(value) as DateTimeAttributeImpl;
+    async get(value: Date): Promise<DateTimeAttributeImpl> {
+        return await this.getInternal(value) as DateTimeAttributeImpl;
     }
 }

@@ -22,10 +22,10 @@ import { Relation, RemoteRelation } from "../Relation";
 import { Thing } from "../Thing";
 import { RelationTypeImpl } from "../../Type/Impl/RelationTypeImpl";
 import { RoleType } from "../../Type/RoleType";
-import { QueryIterator } from "../../Concept";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import { Stream } from "../../../rpc/Stream";
 
 export class RelationImpl extends ThingImpl implements Relation {
     protected constructor(iid: string) {
@@ -50,23 +50,23 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
         return new RemoteRelationImpl(transaction, this.getIID());
     }
 
-    getType(): RelationTypeImpl {
+    getType(): Promise<RelationTypeImpl> {
         throw "As yet unimplemented"
     }
 
-    getPlayersByRoleType(): [RoleType, Thing[]] {
+    getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>> {
         throw "Not implemented"
     }
 
-    getPlayers(roleTypes: RoleType[]): QueryIterator {
-        return new QueryIterator();
+    getPlayers(roleTypes: RoleType[]): Stream<ThingImpl> {
+        throw "Not yet implemented";
     }
 
-    addPlayer(roleType: RoleType, player: Thing) {
+    addPlayer(roleType: RoleType, player: Thing): Promise<void> {
         throw "Not implemented";
     }
 
-    removePlayer(roleType: RoleType, player: Thing) {
+    removePlayer(roleType: RoleType, player: Thing): Promise<void> {
         throw "Not implemented";
     }
 }

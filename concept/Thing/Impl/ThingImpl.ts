@@ -18,15 +18,17 @@
  */
 
 import { Thing, RemoteThing } from "../Thing";
-import { Attribute } from "../Attribute";
+import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../Attribute";
 import { Type } from "../../Type/Type";
-import { QueryIterator } from "../../Concept";
-import { AttributeType } from "../../Type/AttributeType";
+import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType, LongAttributeType, StringAttributeType } from "../../Type/AttributeType";
 import { RoleType } from "../../Type/RoleType";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { ThingTypeImpl } from "../../Type/Impl/ThingTypeImpl";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
+import { Stream } from "../../../rpc/Stream";
+import { RoleTypeImpl } from "../../Type/Impl/RoleTypeImpl";
+import { RelationImpl } from "./RelationImpl";
 
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;
@@ -65,56 +67,55 @@ export abstract class RemoteThingImpl implements RemoteThing {
         this._transaction = transaction;
     }
 
-    getType(): ThingTypeImpl {
-        throw "Not implemented yet";
-    }
-
-    isInferred(): boolean {
-        throw "Not implemented yet";
-    }
-
-    abstract asRemote(transaction: Transaction): RemoteThing;
-
-    delete(): void {
-        throw "Not implemented yet";
-    }
-
     getIID(): string {
         return this._iid;
     }
 
-    isDeleted(): boolean {
-        return false;
+    getType(): Promise<ThingTypeImpl> {
+        throw "Not implemented yet";
+    }
+
+    isInferred(): Promise<boolean> {
+        throw "Not implemented yet";
     }
 
     isRemote(): boolean {
         return true;
     }
 
-    getHas(onlyKey: boolean): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeTypes: AttributeType[]): QueryIterator;
-    getHas(onlyKey: boolean | Type | AttributeType[]): QueryIterator {
-        return new QueryIterator();
-    }
-
-    getPlays(): QueryIterator {
-        return new QueryIterator();
-    }
-
-    getRelations(roleTypes: RoleType[]): QueryIterator {
-        return new QueryIterator();
-    }
-
-    setHas(attribute: Attribute<AttributeType.ValueClass>): void {
+    getHas(onlyKey: boolean): Stream<Attribute<any>>;
+    getHas(attributeType: BooleanAttributeType): Stream<BooleanAttribute>;
+    getHas(attributeType: LongAttributeType): Stream<LongAttribute>;
+    getHas(attributeType: DoubleAttributeType): Stream<DoubleAttribute>;
+    getHas(attributeType: StringAttributeType): Stream<StringAttribute>;
+    getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttribute>;
+    getHas(attributeTypes: AttributeType[]): Stream<Attribute<any>>;
+    getHas(arg: boolean | Type | AttributeType[]): Stream<Attribute<any>> | Stream<BooleanAttribute> | Stream<LongAttribute>
+        | Stream<DoubleAttribute> | Stream<StringAttribute> | Stream<DateTimeAttribute> {
         throw "Not implemented yet";
     }
 
-    unsetHas(attribute: Attribute<AttributeType.ValueClass>): void {
+    getPlays(): Stream<RoleTypeImpl> {
+        throw "Not implemented yet";
+    }
+
+    getRelations(roleTypes: RoleType[]): Stream<RelationImpl> {
+        throw "Not implemented yet";
+    }
+
+    setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
+        throw "Not implemented yet";
+    }
+
+    unsetHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
+        throw "Not implemented yet";
+    }
+
+    delete(): Promise<void> {
+        throw "Not implemented yet";
+    }
+
+    isDeleted(): Promise<boolean> {
         throw "Not implemented yet";
     }
 
@@ -125,4 +126,6 @@ export abstract class RemoteThingImpl implements RemoteThing {
     toString(): string {
         return `${RemoteThingImpl.name}[iid:${this._iid}]`;
     }
+
+    abstract asRemote(transaction: Transaction): RemoteThing;
 }
