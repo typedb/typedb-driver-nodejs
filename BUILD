@@ -115,7 +115,7 @@ artifact_extractor(
     artifact = "@graknlabs_grakn_core_artifact_mac//file",
 )
 
-# TODO: add it back
+# TODO: add it back once we're able to depend on @graknlabs_protocol as bazel rather than artifact dependency
 # release_validate_deps(
 #    name = "release-validate-deps",
 #    refs = "@graknlabs_client_nodejs_workspace_refs//:refs.json",
