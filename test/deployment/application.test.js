@@ -1,39 +1,45 @@
-const GraknClient = require("grakn-client");
+const {GraknClient} = require("grakn-client/rpc/GraknClient");
+const {Grakn} = require("grakn-client/Grakn");
+const SessionType = Grakn.SessionType;
+const TransactionType = Grakn.TransactionType;
+
 jest.setTimeout(15000);
 
 let client;
-let session;
-let tx;
 
 beforeEach(async () => {
-    client = new GraknClient("localhost:48555");
-    session = await client.session("testkeyspace");
-    tx = await session.transaction().write();
+    client = new GraknClient();
+    await client.databases().create("thisisadatabase");
 })
 
 afterEach(async () => {
-    await session.close();
+    await client.databases().delete("thisisadatabase");
     client.close();
 });
 
 
-
-
 describe("Basic GraknClient Tests", () => {
-
-    test("define", async () => {
-        const defined = await tx.query("define person sub entity, has name; name sub attribute, value string;");
+    test("define with concepts client", async () => {
+        let session = await client.session("thisisadatabase", SessionType.SCHEMA);
+        let tx = await session.transaction(TransactionType.WRITE);
+        await tx.concepts().putEntityType("lion");
         await tx.commit();
+        await session.close();
+    });
+
+    test("define by running query", async () => {
+        let session = await client.session("thisisadatabase", SessionType.SCHEMA);
+        let tx = await session.transaction(TransactionType.WRITE);
+        await tx.query("define person sub entity, has name; name sub attribute, value string;");
+        await tx.commit();
+        await session.close();
     });
 
     test("match", async () => {
-        const types = await tx.query("match $x sub thing; get;");
+        let session = await client.session("thisisadatabase", SessionType.DATA);
+        let tx = await session.transaction(TransactionType.WRITE);
+        await tx.query("match $x sub thing; get;");
         await tx.close();
-    });
-
-    test("insert", async () => {
-        const defined = await tx.query("define person sub entity, has name; name sub attribute, value string;");
-        const inserted = await tx.query("insert $x isa person, has name \"john\";");
-        await tx.commit();
+        await session.close();
     });
 });

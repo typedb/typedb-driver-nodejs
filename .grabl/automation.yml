@@ -73,7 +73,7 @@ build:
         # -- to be moved to image itself --
         nvm install v10.15.3
         nvm use --delete-prefix v10.15.3
-        cd tests/deployment/
+        cd test/deployment/
         echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
         npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
         npm install jest --global
