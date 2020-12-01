@@ -15,7 +15,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-version: VERSION
+config:
+  version-candidate: VERSION
+
 build:
   correctness:
     build:
@@ -77,10 +79,11 @@ release:
   filter:
     owner: graknlabs
     branch: master
-  validation:
-    validate-dependencies:
-      machine: graknlabs-ubuntu-20.04
-      script: bazel test //:release-validate-deps --test_output=streamed
+  # TODO: add it back once we're able to depend on @graknlabs_protocol as bazel rather than artifact dependency
+  # validation:
+  #   validate-dependencies:
+  #     machine: graknlabs-ubuntu-20.04
+  #     script: bazel test //:release-validate-deps --test_output=streamed
   deployment:
     deploy-github:
       machine: graknlabs-ubuntu-20.04
@@ -96,10 +99,10 @@ release:
       script: |
         export DEPLOY_NPM_USERNAME=$REPO_NPM_USERNAME
         export DEPLOY_NPM_PASSWORD=$REPO_NPM_PASSWORD
+        export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
         curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update -y
         sudo apt install -y expect
         bazel run --define version=$(cat VERSION) //:deploy-npm -- release
       dependencies: [deploy-github]
-
