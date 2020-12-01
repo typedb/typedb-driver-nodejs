@@ -38,7 +38,7 @@ export interface RemoteRelationType extends Merge<RemoteThingType, RelationType>
     setRelates(roleLabel: string, overriddenLabel: string): Promise<void>;
     unsetRelates(roleLabel: string): Promise<void>;
 
-    setSupertype(superRelationType: RelationType): Promise<void>;
+    setSupertype(relationType: RelationType): Promise<void>;
     getSupertype(): Promise<RelationType>;
     getSupertypes(): Stream<RelationType>;
     getSubtypes(): Stream<RelationType>;

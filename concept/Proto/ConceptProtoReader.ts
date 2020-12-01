@@ -29,12 +29,8 @@ import { RoleTypeImpl } from "../Type/Impl/RoleTypeImpl";
 import assert from "assert";
 import { EntityTypeImpl } from "../Type/Impl/EntityTypeImpl";
 import { RelationTypeImpl } from "../Type/Impl/RelationTypeImpl";
-import {
-    AttributeTypeImpl,
-    BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl,
-    DoubleAttributeTypeImpl,
-    LongAttributeTypeImpl, StringAttributeTypeImpl
-} from "../Type/Impl/AttributeTypeImpl";
+import { AttributeTypeImpl, BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl, DoubleAttributeTypeImpl,
+    LongAttributeTypeImpl, StringAttributeTypeImpl } from "../Type/Impl/AttributeTypeImpl";
 
 export namespace ConceptProtoReader {
     // This method cannot live in ThingImpl itself, because doing so creates a circular class reference

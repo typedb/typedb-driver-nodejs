@@ -18,15 +18,14 @@
  */
 
 import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
-import { Relation } from "../../Thing/Relation";
 import { RelationType, RemoteRelationType } from "../RelationType";
-import { RoleType } from "../RoleType";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto, { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { Stream } from "../../../rpc/Stream";
 import { RelationImpl } from "../../Thing/Impl/RelationImpl";
 import { RoleTypeImpl } from "./RoleTypeImpl";
+import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     protected constructor(label: string, isRoot: boolean) {
@@ -47,47 +46,63 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
         super(transaction, label, isRoot);
     }
 
-    getInstances(): Stream<RelationImpl> {
-        throw "Not yet implemented";
-    }
-
     asRemote(transaction: Transaction): RemoteRelationTypeImpl {
         return new RemoteRelationTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
 
-    getSupertype(): Promise<RelationTypeImpl> {
-        throw "Not yet implemented";
-    }
-
-    getSupertypes(): Stream<RelationTypeImpl> {
-        throw "Not yet implemented";
-    }
-
-    getSubtypes(): Stream<RelationTypeImpl> {
-        throw "Not yet implemented";
-    }
-
-    setSupertype(superRelationType: RelationType): Promise<void> {
-        throw "Not yet implemented";
-    }
-
     create(): Promise<RelationImpl> {
-        throw "As yet unimplemented"
+        const method = new ConceptProto.Type.Req().setRelationTypeCreateReq(new ConceptProto.RelationType.Create.Req());
+        return this.execute(method).then(res => RelationImpl.of(res.getRelationTypeCreateRes().getRelation()));
     }
 
     getRelates(roleLabel: string): Promise<RoleTypeImpl>;
     getRelates(): Stream<RoleTypeImpl>;
     getRelates(roleLabel?: string): Promise<RoleTypeImpl> | Stream<RoleTypeImpl> {
-        throw "Not yet implemented";
+        if (roleLabel != null) {
+            const method = new ConceptProto.Type.Req().setRelationTypeGetRelatesForRoleLabelReq(
+                new ConceptProto.RelationType.GetRelatesForRoleLabel.Req().setLabel(roleLabel));
+            return this.execute(method).then(res => {
+                const getRelatesRes = res.getRelationTypeGetRelatesForRoleLabelRes();
+                if (getRelatesRes.hasRoleType()) return ConceptProtoReader.type(getRelatesRes.getRoleType()) as RoleTypeImpl;
+                else return null;
+            });
+        }
+
+        return this.typeStream(
+            new ConceptProto.Type.Req().setRelationTypeGetRelatesReq(new ConceptProto.RelationType.GetRelates.Req()),
+            res => res.getRelationTypeGetRelatesRes().getRoleList()) as Stream<RoleTypeImpl>;
     }
 
     setRelates(roleLabel: string): Promise<void>;
     setRelates(roleLabel: string, overriddenLabel: string): Promise<void>;
-    setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {
-        throw "Not yet implemented";
+    async setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {
+        const setRelatesReq = new ConceptProto.RelationType.SetRelates.Req().setLabel(roleLabel);
+        if (overriddenLabel != null) setRelatesReq.setOverriddenLabel(overriddenLabel);
+        await this.execute(new ConceptProto.Type.Req().setRelationTypeSetRelatesReq(setRelatesReq));
     }
 
-    unsetRelates(roleLabel: string): Promise<void> {
-        throw "Not yet implemented";
+    async unsetRelates(roleLabel: string): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req()
+            .setRelationTypeUnsetRelatesReq(new ConceptProto.RelationType.UnsetRelates.Req().setLabel(roleLabel)));
+    }
+
+    setSupertype(relationType: RelationType): Promise<void> {
+        return super.setSupertype(relationType);
+    }
+
+    getSupertype(): Promise<RelationTypeImpl> {
+        return super.getSupertype() as Promise<RelationTypeImpl>;
+    }
+
+    getSupertypes(): Stream<RelationTypeImpl> {
+        return super.getSupertypes() as Stream<RelationTypeImpl>;
+    }
+
+    getSubtypes(): Stream<RelationTypeImpl> {
+        return super.getSubtypes() as Stream<RelationTypeImpl>;
+    }
+
+    getInstances(): Stream<RelationImpl> {
+        return super.getInstances() as Stream<RelationImpl>;
     }
 }

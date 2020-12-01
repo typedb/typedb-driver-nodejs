@@ -25,6 +25,9 @@ import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { EntityImpl } from "../../Thing/Impl/EntityImpl";
 import { Stream } from "../../../rpc/Stream";
+import { DateTimeAttributeImpl } from "../../Thing/Impl/AttributeImpl";
+import { DateTimeAttributeType } from "../AttributeType";
+import { DateTimeAttributeTypeImpl } from "./AttributeTypeImpl";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     protected constructor(label: string, isRoot: boolean) {
@@ -45,32 +48,32 @@ export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteE
         super(transaction, label, isRoot);
     }
 
-    setSupertype(superEntityType: EntityType): Promise<void> {
-        throw "Not yet Implemented"
+    create(): Promise<EntityImpl> {
+        const method = new ConceptProto.Type.Req().setEntityTypeCreateReq(new ConceptProto.EntityType.Create.Req());
+        return this.execute(method).then(res => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
     }
 
     getSupertype(): Promise<EntityTypeImpl> {
-        throw "Not yet implemented"
+        return super.getSupertype() as Promise<EntityTypeImpl>;
+    }
+
+    getSupertypes(): Stream<EntityTypeImpl> {
+        return super.getSupertypes() as Stream<EntityTypeImpl>;
+    }
+
+    getSubtypes(): Stream<EntityTypeImpl> {
+        return super.getSubtypes() as Stream<EntityTypeImpl>;
     }
 
     getInstances(): Stream<EntityImpl> {
         return super.getInstances() as Stream<EntityImpl>;
     }
 
+    setSupertype(type: EntityType): Promise<void> {
+        return super.setSupertype(type);
+    }
+
     asRemote(transaction: Transaction): RemoteEntityTypeImpl {
         return new RemoteEntityTypeImpl(transaction, this.getLabel(), this.isRoot());
-    }
-
-    getSupertypes(): Stream<EntityTypeImpl> {
-        throw "Not yet implemented";
-    }
-
-    getSubtypes(): Stream<EntityTypeImpl> {
-        throw "Not yet implemented";
-    }
-
-    create(): Promise<EntityImpl> {
-        const method = new ConceptProto.Type.Req().setEntityTypeCreateReq(new ConceptProto.EntityType.Create.Req());
-        return this.execute(method).then(res => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
     }
 }

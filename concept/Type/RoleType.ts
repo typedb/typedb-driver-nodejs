@@ -37,7 +37,7 @@ export interface RemoteRoleType extends Merge<RemoteThingType, RoleType> {
     getSupertypes(): Stream<RoleType>;
     getSubtypes(): Stream<RoleType>;
 
-    getRelation(): Promise<RelationType>;
-    getRelations(): Stream<RelationType>;
+    getRelationType(): Promise<RelationType>;
+    getRelationTypes(): Stream<RelationType>;
     getPlayers(): Stream<ThingType>;
 }

@@ -206,19 +206,19 @@ export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl impleme
     }
 
     getSupertype(): Promise<LongAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSupertype() as Promise<LongAttributeTypeImpl>;
     }
 
     getSupertypes(): Stream<LongAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSupertypes() as Stream<LongAttributeTypeImpl>;
     }
 
     getSubtypes(): Stream<LongAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSubtypes() as Stream<LongAttributeTypeImpl>;
     }
 
     getInstances(): Stream<LongAttributeImpl> {
-        throw "Not implemented yet";
+        return super.getInstances() as Stream<LongAttributeImpl>;
     }
 
     setSupertype(type: LongAttributeType): Promise<void> {
@@ -268,19 +268,19 @@ export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl imple
     }
 
     getSupertype(): Promise<DoubleAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSupertype() as Promise<DoubleAttributeTypeImpl>;
     }
 
     getSupertypes(): Stream<DoubleAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSupertypes() as Stream<DoubleAttributeTypeImpl>;
     }
 
     getSubtypes(): Stream<DoubleAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSubtypes() as Stream<DoubleAttributeTypeImpl>;
     }
 
     getInstances(): Stream<DoubleAttributeImpl> {
-        throw "Not implemented yet";
+        return super.getInstances() as Stream<DoubleAttributeImpl>;
     }
 
     setSupertype(type: DoubleAttributeType): Promise<void> {
@@ -330,19 +330,19 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
     }
 
     getSupertype(): Promise<StringAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSupertype() as Promise<StringAttributeTypeImpl>;
     }
 
     getSupertypes(): Stream<StringAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSupertypes() as Stream<StringAttributeTypeImpl>;
     }
 
     getSubtypes(): Stream<StringAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSubtypes() as Stream<StringAttributeTypeImpl>;
     }
 
     getInstances(): Stream<StringAttributeImpl> {
-        throw "Not implemented yet";
+        return super.getInstances() as Stream<StringAttributeImpl>;
     }
 
     setSupertype(type: StringAttributeType): Promise<void> {
@@ -392,19 +392,19 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
     }
 
     getSupertype(): Promise<DateTimeAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSupertype() as Promise<DateTimeAttributeTypeImpl>;
     }
 
     getSupertypes(): Stream<DateTimeAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSupertypes() as Stream<DateTimeAttributeTypeImpl>;
     }
 
     getSubtypes(): Stream<DateTimeAttributeTypeImpl> {
-        throw "Not implemented yet";
+        return super.getSubtypes() as Stream<DateTimeAttributeTypeImpl>;
     }
 
     getInstances(): Stream<DateTimeAttributeImpl> {
-        throw "Not implemented yet";
+        return super.getInstances() as Stream<DateTimeAttributeImpl>;
     }
 
     setSupertype(type: DateTimeAttributeType): Promise<void> {

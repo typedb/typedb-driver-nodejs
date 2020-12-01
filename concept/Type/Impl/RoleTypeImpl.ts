@@ -19,11 +19,12 @@
 
 import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
 import { RoleType, RemoteRoleType } from "../RoleType";
-import { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import { RelationTypeImpl } from "./RelationTypeImpl";
 import { Stream } from "../../../rpc/Stream";
+import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
 
 export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
     private readonly _scope: string;
@@ -33,7 +34,7 @@ export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
         this._scope = scope;
     }
 
-    static of(typeProto: TypeProto): RoleTypeImpl {
+    static of(typeProto: ConceptProto.Type): RoleTypeImpl {
         return new RoleTypeImpl(typeProto.getLabel(), typeProto.getScope(), typeProto.getRoot());
     }
 
@@ -46,7 +47,7 @@ export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
     }
 
     toString(): string {
-        return `${RoleTypeImpl.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
+        return `${this.constructor.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
     }
 }
 
@@ -63,31 +64,37 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
     }
 
     getSupertype(): Promise<RoleTypeImpl> {
-        throw "Not yet implemented"
+        return super.getSupertype() as Promise<RoleTypeImpl>;
     }
 
     getSupertypes(): Stream<RoleTypeImpl> {
-        throw "Not yet implemented";
+        return super.getSupertypes() as Stream<RoleTypeImpl>;
     }
 
     getSubtypes(): Stream<RoleTypeImpl> {
-        throw "Not yet implemented";
+        return super.getSubtypes() as Stream<RoleTypeImpl>;
     }
 
     asRemote(transaction: Transaction): RemoteRoleTypeImpl {
         return new RemoteRoleTypeImpl(transaction, this.getLabel(), this._scope, this.isRoot())
     }
 
-    getRelation(): Promise<RelationTypeImpl> {
-        throw "Not yet implemented";
+    async getRelationType(): Promise<RelationTypeImpl> {
+        const method = new ConceptProto.Type.Req().setRoleTypeGetRelationTypeReq(new ConceptProto.RoleType.GetRelationType.Req());
+        const response = (await this.execute(method)).getRoleTypeGetRelationTypeRes();
+        return ConceptProtoReader.type(response.getRelationtype()) as RelationTypeImpl;
     }
 
-    getRelations(): Stream<RelationTypeImpl> {
-        throw "Not yet implemented";
+    getRelationTypes(): Stream<RelationTypeImpl> {
+        return this.typeStream(
+            new ConceptProto.Type.Req().setRoleTypeGetRelationTypesReq(new ConceptProto.RoleType.GetRelationTypes.Req()),
+            res => res.getRoleTypeGetRelationTypesRes().getRelationtypeList()) as Stream<RelationTypeImpl>;
     }
 
     getPlayers(): Stream<ThingTypeImpl> {
-        throw "Not yet implemented";
+        return this.typeStream(
+            new ConceptProto.Type.Req().setRoleTypeGetPlayersReq(new ConceptProto.RoleType.GetPlayers.Req()),
+            res => res.getRoleTypeGetPlayersRes().getThingtypeList()) as Stream<ThingTypeImpl>;
     }
 
     toString(): string {
