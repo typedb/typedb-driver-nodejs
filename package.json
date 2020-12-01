@@ -10,6 +10,10 @@
     "type": "git",
     "url": "https://github.com/graknlabs/client-nodejs"
   },
+  "scripts": {
+    "pretest": "tsc",
+    "test": "node --experimental-specifier-resolution=node test.js"
+  },
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
     "google-protobuf": "3.12.4",
@@ -27,6 +31,5 @@
     "properties-reader": "0.3.1",
     "tmp": "0.1.0",
     "typescript": "3.9.7"
-  },
-  "test": "node --experimental-specifier-resolution=node test.js"
+  }
 }
