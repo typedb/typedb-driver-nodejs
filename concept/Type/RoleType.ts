@@ -33,11 +33,11 @@ export interface RoleType extends ThingType {
 export interface RemoteRoleType extends Merge<RemoteThingType, RoleType> {
     asRemote(transaction: Transaction): RemoteRoleType;
 
-    getSupertype(): RoleType;
-    getSupertypes(): Stream<any>;
-    getSubtypes(): Stream<any>;
+    getSupertype(): Promise<RoleType>;
+    getSupertypes(): Stream<RoleType>;
+    getSubtypes(): Stream<RoleType>;
 
-    getRelation(): RelationType;
-    getRelations(): Stream<any>;
-    getPlayers(): Stream<any>;
+    getRelation(): Promise<RelationType>;
+    getRelations(): Stream<RelationType>;
+    getPlayers(): Stream<ThingType>;
 }

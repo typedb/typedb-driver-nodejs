@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import {GraknOptions} from "../GraknOptions";
+import { GraknOptions } from "../GraknOptions";
 import options_pb from "graknlabs-grpc-protocol/protobuf/options_pb"
 const { Options } = options_pb;
 

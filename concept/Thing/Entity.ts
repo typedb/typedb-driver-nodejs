@@ -28,6 +28,6 @@ export interface Entity extends Thing {
 }
 
 export interface RemoteEntity extends Merge<RemoteThing, Entity> {
-    getType(): EntityType;
+    getType(): Promise<EntityType>;
     asRemote(transaction: Transaction): RemoteEntity;
 }

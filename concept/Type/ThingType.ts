@@ -31,32 +31,33 @@ export interface ThingType extends Type {
 }
 
 export interface RemoteThingType extends Merge<RemoteType, ThingType> {
-    getSupertype(): ThingType;
-    getSupertypes(): Stream<any>;
-    getSubtypes(): Stream<any>;
+    getSupertype(): Promise<ThingType>;
+    getSupertypes(): Stream<ThingType>;
+    getSubtypes(): Stream<ThingType>;
     getInstances(): Stream<Thing>;
 
-    setLabel(label: string): void;
+    setLabel(label: string): Promise<void>;
 
-    setAbstract(): void;
-    unsetAbstract(): void;
+    setAbstract(): Promise<void>;
+    unsetAbstract(): Promise<void>;
 
-    setPlays(role: RoleType): void;
-    setPlays(role: RoleType, overriddenType: RoleType): void;
+    setPlays(role: RoleType): Promise<void>;
+    setPlays(role: RoleType, overriddenType: RoleType): Promise<void>;
 
-    setOwns(attributeType: AttributeType): void;
-    setOwns(attributeType: AttributeType, isKey: boolean): void;
-    setOwns(attributeType: AttributeType, overriddenType: AttributeType): void;
-    setOwns(attributeType: AttributeType, isKey: boolean, otherType: AttributeType): void;
+    setOwns(attributeType: AttributeType): Promise<void>;
+    setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
+    setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
+    setOwns(attributeType: AttributeType, isKey: boolean, otherType: AttributeType): Promise<void>;
 
-    getPlays(): Stream<any>;
-    getOwns(): Stream<any>;
-    getOwns(valueType: AttributeType.ValueType): Stream<any>;
-    getOwns(keysOnly: boolean): Stream<any>;
-    getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<any>;
+    getPlays(): Stream<RoleType>;
 
-    unsetPlays(role: RoleType): void;
-    unsetOwns(attributeType: AttributeType): void;
+    getOwns(): Stream<AttributeType>;
+    getOwns(valueType: AttributeType.ValueType): Stream<AttributeType>;
+    getOwns(keysOnly: boolean): Stream<AttributeType>;
+    getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
+
+    unsetPlays(role: RoleType): Promise<void>;
+    unsetOwns(attributeType: AttributeType): Promise<void>;
 
     asRemote(transaction: Transaction): RemoteThingType;
 }

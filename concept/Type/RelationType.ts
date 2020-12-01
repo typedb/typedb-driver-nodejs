@@ -30,18 +30,19 @@ export interface RelationType extends ThingType {
 }
 
 export interface RemoteRelationType extends Merge<RemoteThingType, RelationType> {
-    create(): Relation;
+    create(): Promise<Relation>;
 
-    setSupertype(superRelationType: RelationType): void;
-    getRelates(roleLabel: string): RoleType;
-    getRelates(): Stream<any>;
-    setRelates(roleLabel: string): void;
-    setRelates(roleLabel: string, overriddenLabel: string): void;
-    unsetRelates(roleLabel: string): void;
+    getRelates(roleLabel: string): Promise<RoleType>;
+    getRelates(): Stream<RoleType>;
+    setRelates(roleLabel: string): Promise<void>;
+    setRelates(roleLabel: string, overriddenLabel: string): Promise<void>;
+    unsetRelates(roleLabel: string): Promise<void>;
 
-    getSupertypes(): Stream<any>;
-    getSubtypes(): Stream<any>;
-    getInstances(): Stream<any>;
+    setSupertype(superRelationType: RelationType): Promise<void>;
+    getSupertype(): Promise<RelationType>;
+    getSupertypes(): Stream<RelationType>;
+    getSubtypes(): Stream<RelationType>;
+    getInstances(): Stream<Relation>;
 
     asRemote(transaction: Transaction): RemoteRelationType;
 }

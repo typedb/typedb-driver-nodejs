@@ -17,38 +17,39 @@
  * under the License.
  */
 
-import { Attribute } from "./Attribute";
-import { Concept, RemoteConcept, QueryIterator } from "../Concept";
-import { Type } from "../Type/Type";
+import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "./Attribute";
+import { Concept, RemoteConcept } from "../Concept";
 import { ThingType } from "../Type/ThingType";
-import { AttributeType } from "../Type/AttributeType";
+import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType, LongAttributeType, StringAttributeType } from "../Type/AttributeType";
 import { RoleType } from "../Type/RoleType";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
 import { Merge } from "../../common/utils";
+import { Stream } from "../../rpc/Stream";
+import { Relation } from "./Relation";
 
 export interface Thing extends Concept {
     getIID(): string;
-
     asRemote(transaction: Transaction): RemoteThing;
 }
 
 export interface RemoteThing extends Merge<RemoteConcept, Thing> {
-    getType(): ThingType;
-    isInferred(): boolean;
+    getType(): Promise<ThingType>;
+    isInferred(): Promise<boolean>;
 
-    setHas(attribute: Attribute<any>): void;
-    unsetHas(attribute: Attribute<any>): void;
+    setHas(attribute: Attribute<any>): Promise<void>;
+    unsetHas(attribute: Attribute<any>): Promise<void>;
 
-    getHas(onlyKey: boolean): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeTypes: AttributeType[]): QueryIterator;
-    getPlays(): QueryIterator;
-    getRelations(roleTypes: RoleType[]): QueryIterator;
+    getHas(onlyKey: boolean): Stream<Attribute<any>>;
+    getHas(attributeType: BooleanAttributeType): Stream<BooleanAttribute>;
+    getHas(attributeType: LongAttributeType): Stream<LongAttribute>;
+    getHas(attributeType: DoubleAttributeType): Stream<DoubleAttribute>;
+    getHas(attributeType: StringAttributeType): Stream<StringAttribute>;
+    getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttribute>;
+    getHas(attributeTypes: AttributeType[]): Stream<Attribute<any>>;
+
+    getPlays(): Stream<RoleType>;
+    getRelations(roleTypes: RoleType[]): Stream<Relation>;
 
     asRemote(transaction: Transaction): RemoteThing;
 }

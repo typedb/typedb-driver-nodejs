@@ -73,4 +73,8 @@ export class Stream<T> implements Iterable<Promise<T>> {
         }
         return answers;
     }
+
+    map<TResult>(callbackFn: (value: T) => TResult): Stream<TResult> {
+        return new Stream(this._requestId, this._writableStream, this._responseCollector, res => this._transformResponse(res).map(callbackFn));
+    }
 }

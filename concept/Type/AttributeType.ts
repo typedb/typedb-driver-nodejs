@@ -20,8 +20,7 @@
 import { RemoteThingType, ThingType } from "./ThingType";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
-// TODO
-import { BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../Thing/Attribute";
+import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../Thing/Attribute";
 import ValueType = AttributeType.ValueType;
 import { Merge } from "../../common/utils";
 import { Stream } from "../../rpc/Stream";
@@ -35,15 +34,15 @@ export interface AttributeType extends ThingType {
 }
 
 export interface RemoteAttributeType extends Merge<RemoteThingType, AttributeType> {
-    asRemote(transaction: Transaction): RemoteAttributeType;
+    setSupertype(type: AttributeType): Promise<void>;
+    getSupertype(): Promise<AttributeType>;
+    getSupertypes(): Stream<AttributeType>;
+    getSubtypes(): Stream<AttributeType>;
+    getInstances(): Stream<Attribute<any>>;
+    getOwners(): Stream<ThingType>;
+    getOwners(onlyKey: boolean): Stream<ThingType>;
 
-    setSupertype(type: AttributeType): void;
-    getSupertype(): AttributeType;
-    getSupertypes(): Stream<any>;
-    getSubtypes(): Stream<any>;
-    getInstances(): Stream<any>;
-    getOwners(): Stream<any>;
-    getOwners(onlyKey: boolean): Stream<any>;
+    asRemote(transaction: Transaction): RemoteAttributeType;
 }
 
 export interface BooleanAttributeType extends AttributeType {
@@ -53,14 +52,14 @@ export interface BooleanAttributeType extends AttributeType {
 export interface RemoteBooleanAttributeType extends Merge<RemoteAttributeType, BooleanAttributeType> {
     asRemote(transaction: Transaction): RemoteBooleanAttributeType;
 
-    setSupertype(type: BooleanAttributeType): void;
-    getSupertype(): BooleanAttributeType;
-    getSupertypes(): Stream<any>;
-    getSubtypes(): Stream<any>;
-    getInstances(): Stream<any>;
+    setSupertype(type: BooleanAttributeType): Promise<void>;
+    getSupertype(): Promise<BooleanAttributeType>;
+    getSupertypes(): Stream<BooleanAttributeType>;
+    getSubtypes(): Stream<BooleanAttributeType>;
+    getInstances(): Stream<BooleanAttribute>;
 
-    put(value: boolean): BooleanAttribute;
-    get(value: boolean): BooleanAttribute;
+    put(value: boolean): Promise<BooleanAttribute>;
+    get(value: boolean): Promise<BooleanAttribute>;
 }
 
 export interface LongAttributeType extends AttributeType {
@@ -70,14 +69,14 @@ export interface LongAttributeType extends AttributeType {
 export interface RemoteLongAttributeType extends Merge<RemoteAttributeType, LongAttributeType> {
     asRemote(transaction: Transaction): RemoteLongAttributeType;
 
-    setSupertype(type: LongAttributeType): void;
-    getSupertype(): LongAttributeType;
-    getSupertypes(): Stream<any>;
-    getSubtypes(): Stream<any>;
-    getInstances(): Stream<any>;
+    setSupertype(type: LongAttributeType): Promise<void>;
+    getSupertype(): Promise<LongAttributeType>;
+    getSupertypes(): Stream<LongAttributeType>;
+    getSubtypes(): Stream<LongAttributeType>;
+    getInstances(): Stream<LongAttribute>;
 
-    put(value: number): LongAttribute;
-    get(value: number): LongAttribute;
+    put(value: number): Promise<LongAttribute>;
+    get(value: number): Promise<LongAttribute>;
 }
 
 export interface DoubleAttributeType extends AttributeType {
@@ -87,14 +86,14 @@ export interface DoubleAttributeType extends AttributeType {
 export interface RemoteDoubleAttributeType extends Merge<RemoteAttributeType, DoubleAttributeType> {
     asRemote(transaction: Transaction): RemoteDoubleAttributeType;
 
-    setSupertype(type: DoubleAttributeType): void;
-    getSupertype(): DoubleAttributeType;
-    getSupertypes(): Stream<any>;
-    getSubtypes(): Stream<any>;
-    getInstances(): Stream<any>;
+    setSupertype(type: DoubleAttributeType): Promise<void>;
+    getSupertype(): Promise<DoubleAttributeType>;
+    getSupertypes(): Stream<DoubleAttributeType>;
+    getSubtypes(): Stream<DoubleAttributeType>;
+    getInstances(): Stream<DoubleAttribute>;
 
-    put(value: number): DoubleAttribute;
-    get(value: number): DoubleAttribute;
+    put(value: number): Promise<DoubleAttribute>;
+    get(value: number): Promise<DoubleAttribute>;
 }
 
 export interface StringAttributeType extends AttributeType {
@@ -104,14 +103,14 @@ export interface StringAttributeType extends AttributeType {
 export interface RemoteStringAttributeType extends Merge<RemoteAttributeType, StringAttributeType> {
     asRemote(transaction: Transaction): RemoteStringAttributeType;
 
-    setSupertype(type: StringAttributeType): void;
-    getSupertype(): StringAttributeType;
-    getSupertypes(): Stream<any>;
-    getSubtypes(): Stream<any>;
-    getInstances(): Stream<any>;
+    setSupertype(type: StringAttributeType): Promise<void>;
+    getSupertype(): Promise<StringAttributeType>;
+    getSupertypes(): Stream<StringAttributeType>;
+    getSubtypes(): Stream<StringAttributeType>;
+    getInstances(): Stream<StringAttribute>;
 
-    put(value: string): StringAttribute;
-    get(value: string): StringAttribute;
+    put(value: string): Promise<StringAttribute>;
+    get(value: string): Promise<StringAttribute>;
 }
 
 export interface DateTimeAttributeType extends AttributeType {
@@ -121,14 +120,14 @@ export interface DateTimeAttributeType extends AttributeType {
 export interface RemoteDateTimeAttributeType extends Merge<RemoteAttributeType, DateTimeAttributeType> {
     asRemote(transaction: Transaction): RemoteDateTimeAttributeType;
 
-    setSupertype(type: DateTimeAttributeType): void;
-    getSupertype(): DateTimeAttributeType;
-    getSupertypes(): Stream<any>;
-    getSubtypes(): Stream<any>;
-    getInstances(): Stream<any>;
+    setSupertype(type: DateTimeAttributeType): Promise<void>;
+    getSupertype(): Promise<DateTimeAttributeType>;
+    getSupertypes(): Stream<DateTimeAttributeType>;
+    getSubtypes(): Stream<DateTimeAttributeType>;
+    getInstances(): Stream<DateTimeAttribute>;
 
-    put(value: Date): DateTimeAttribute;
-    get(value: Date): DateTimeAttribute;
+    put(value: Date): Promise<DateTimeAttribute>;
+    get(value: Date): Promise<DateTimeAttribute>;
 }
 
 export namespace AttributeType {

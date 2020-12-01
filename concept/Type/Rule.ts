@@ -20,6 +20,7 @@
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
 
+// TODO: migrate to Concept.Schema package
 export interface Rule {
     getLabel(): string;
     getWhen(): string;

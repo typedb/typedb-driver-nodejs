@@ -20,23 +20,23 @@
 import { Thing, RemoteThing } from "./Thing";
 import { RelationType } from "../Type/RelationType";
 import { RoleType } from "../Type/RoleType";
-import { QueryIterator } from "../Concept";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
 import { Merge } from "../../common/utils";
+import { Stream } from "../../rpc/Stream";
 
 export interface Relation extends Thing {
     asRemote(transaction: Transaction): RemoteRelation;
 }
 
 export interface RemoteRelation extends Merge<RemoteThing, Relation> {
-    getType(): RelationType;
+    getType(): Promise<RelationType>;
 
-    addPlayer(roleType: RoleType, player: Thing): void;
-    removePlayer(roleType: RoleType, player: Thing): void;
+    addPlayer(roleType: RoleType, player: Thing): Promise<void>;
+    removePlayer(roleType: RoleType, player: Thing): Promise<void>;
 
-    getPlayers(roleTypes: RoleType[]): QueryIterator;
-    getPlayersByRoleType(): [RoleType, Thing[]];
+    getPlayers(roleTypes: RoleType[]): Stream<Thing>;
+    getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>>;
 
     asRemote(transaction: Transaction): RemoteRelation;
 }

@@ -31,7 +31,7 @@ export interface Attribute<T extends ValueClass> extends Thing {
 }
 
 export interface RemoteAttribute<T extends ValueClass> extends Merge<RemoteThing, Attribute<T>> {
-    getType(): AttributeType;
+    getType(): Promise<AttributeType>;
     asRemote(transaction: Transaction): RemoteAttribute<T>;
 }
 

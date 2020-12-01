@@ -17,10 +17,11 @@
  * under the License.
  */
 
-import { Concept, RemoteConcept, QueryIterator } from "../Concept";
+import { Concept, RemoteConcept } from "../Concept";
 import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
 import { Merge } from "../../common/utils";
+import { Stream } from "../../rpc/Stream";
 
 export interface Type extends Concept {
     getLabel(): string;
@@ -30,12 +31,12 @@ export interface Type extends Concept {
 }
 
 export interface RemoteType extends Merge<RemoteConcept, Type> {
-    setLabel(label: string): void;
-    isAbstract(): boolean;
+    setLabel(label: string): Promise<void>;
+    isAbstract(): Promise<boolean>;
 
-    getSupertype(): Type;
-    getSupertypes(): QueryIterator;
-    getSubtypes(): QueryIterator;
+    getSupertype(): Promise<Type>;
+    getSupertypes(): Stream<Type>;
+    getSubtypes(): Stream<Type>;
 
-    asRemote(transaction: Transaction): RemoteType;
+    asRemote(transaction: Transaction): RemoteType; /* Required for `RemoteType` to take precedence over `RemoteConcept` in sub-interfaces */
 }
