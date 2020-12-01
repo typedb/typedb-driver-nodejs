@@ -29,6 +29,10 @@ import Transaction = Grakn.Transaction;
 import { Stream } from "../../../rpc/Stream";
 import { RoleTypeImpl } from "../../Type/Impl/RoleTypeImpl";
 import { RelationImpl } from "./RelationImpl";
+import { TypeImpl } from "../../Type/Impl/TypeImpl";
+import { RPCTransaction } from "../../../rpc/RPCTransaction";
+import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
 
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;
@@ -58,13 +62,13 @@ export abstract class ThingImpl implements Thing {
 
 export abstract class RemoteThingImpl implements RemoteThing {
     private readonly _iid: string;
-    private readonly _transaction: Transaction;
+    private readonly _rpcTransaction: RPCTransaction;
 
-    protected constructor(transaction: Transaction, iid: string) {
+    protected constructor(transaction: RPCTransaction, iid: string) {
         if (!transaction) throw "Transaction Missing"
         if (!iid) throw "IID Missing"
         this._iid = iid;
-        this._transaction = transaction;
+        this._rpcTransaction = transaction;
     }
 
     getIID(): string {
@@ -72,7 +76,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
     }
 
     getType(): Promise<ThingTypeImpl> {
-        throw "Not implemented yet";
+        const request = new ConceptProto.Thing.GetType()
     }
 
     isInferred(): Promise<boolean> {
@@ -120,7 +124,22 @@ export abstract class RemoteThingImpl implements RemoteThing {
     }
 
     protected get transaction(): Transaction {
-        return this._transaction;
+        return this._rpcTransaction;
+    }
+
+    protected typeStream(method: ConceptProto.Thing.Req, typeGetter: (res: ConceptProto.Thing.Res) => ConceptProto.Type[]): Stream<TypeImpl> {
+        const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(this._iid));
+        return this._rpcTransaction.stream(request, res => typeGetter(res.getThingRes()).map(ConceptProtoReader.type));
+    }
+
+    protected thingStream(method: ConceptProto.Thing.Req, thingGetter: (res: ConceptProto.Thing.Res) => ConceptProto.Thing[]): Stream<ThingImpl> {
+        const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(this._iid));
+        return this._rpcTransaction.stream(request, res => thingGetter(res.getThingRes()).map(ConceptProtoReader.thing));
+    }
+
+    protected execute(method: ConceptProto.Thing.Req): Promise<ConceptProto.Thing.Res> {
+        const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(this._iid));
+        return this._rpcTransaction.execute(request, res => res.getThingRes());
     }
 
     toString(): string {
