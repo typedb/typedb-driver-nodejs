@@ -30,9 +30,10 @@ import { Stream } from "../../../rpc/Stream";
 import { RoleTypeImpl } from "../../Type/Impl/RoleTypeImpl";
 import { RelationImpl } from "./RelationImpl";
 import { TypeImpl } from "../../Type/Impl/TypeImpl";
-import { RPCTransaction } from "../../../rpc/RPCTransaction";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
+import { ConceptProtoBuilder } from "../../Proto/ConceptProtoBuilder";
+import { RPCTransaction } from "../../../rpc/RPCTransaction";
 
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;
@@ -64,23 +65,24 @@ export abstract class RemoteThingImpl implements RemoteThing {
     private readonly _iid: string;
     private readonly _rpcTransaction: RPCTransaction;
 
-    protected constructor(transaction: RPCTransaction, iid: string) {
+    protected constructor(transaction: Transaction, iid: string) {
         if (!transaction) throw "Transaction Missing"
         if (!iid) throw "IID Missing"
         this._iid = iid;
-        this._rpcTransaction = transaction;
+        this._rpcTransaction = transaction as RPCTransaction;
     }
 
     getIID(): string {
         return this._iid;
     }
 
-    getType(): Promise<ThingTypeImpl> {
-        const request = new ConceptProto.Thing.GetType()
+    async getType(): Promise<ThingTypeImpl> {
+        const response = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
+        return ConceptProtoReader.type(response.getThingGetTypeRes().getThingType()) as ThingTypeImpl
     }
 
-    isInferred(): Promise<boolean> {
-        throw "Not implemented yet";
+    async isInferred(): Promise<boolean> {
+        return (await this.execute(new ConceptProto.Thing.Req().setThingIsInferredReq(new ConceptProto.Thing.IsInferred.Req()))).getThingIsInferredRes().getInferred();
     }
 
     isRemote(): boolean {
@@ -129,7 +131,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
 
     protected typeStream(method: ConceptProto.Thing.Req, typeGetter: (res: ConceptProto.Thing.Res) => ConceptProto.Type[]): Stream<TypeImpl> {
         const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(this._iid));
-        return this._rpcTransaction.stream(request, res => typeGetter(res.getThingRes()).map(ConceptProtoReader.type));
+        return (this._rpcTransaction).stream(request, res => typeGetter(res.getThingRes()).map(ConceptProtoReader.type));
     }
 
     protected thingStream(method: ConceptProto.Thing.Req, thingGetter: (res: ConceptProto.Thing.Res) => ConceptProto.Thing[]): Stream<ThingImpl> {
