@@ -89,8 +89,9 @@ deploy_github(
     release_description = "//:RELEASE_TEMPLATE.md",
     title = "Grakn Client Node.js",
     title_append_version = True,
-    organisation = deployment["npm.snapshot"],
-    repository = deployment["npm.release"],
+    organisation = github_deployment["github.organisation"],
+    repository = github_deployment["github.repository"],
+    draft = False
 )
 
 NODEJS_TEST_DEPENDENCIES = [
@@ -114,14 +115,15 @@ artifact_extractor(
     artifact = "@graknlabs_grakn_core_artifact_mac//file",
 )
 
-#release_validate_deps(
+# TODO: add it back once we're able to depend on @graknlabs_protocol as bazel rather than artifact dependency
+# release_validate_deps(
 #    name = "release-validate-deps",
 #    refs = "@graknlabs_client_nodejs_workspace_refs//:refs.json",
 #    tagged_deps = [
-#        "@graknlabs_protocol",
+#      "@graknlabs_protocol",
 #    ],
 #    tags = ["manual"]  # in order for bazel test //... to not fail
-#)
+# )
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
