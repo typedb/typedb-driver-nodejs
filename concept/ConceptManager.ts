@@ -87,7 +87,7 @@ export class ConceptManager {
         const req = new ConceptProto.ConceptManager.Req()
             .setPutAttributeTypeReq(new ConceptProto.ConceptManager.PutAttributeType.Req().setLabel(label));
         const res = await this.execute(req);
-        return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType());
+        return ConceptProtoReader.attributeType(res.getPutAttributeTypeRes().getAttributeType());
     }
 
     async getAttributeType(label: string): Promise<AttributeType> {
@@ -121,7 +121,7 @@ export class ConceptManager {
             .setGetTypeReq(new ConceptProto.ConceptManager.GetType.Req().setLabel(label));
         const res = await this.execute(req);
         if (res.getGetTypeRes().getResCase() === ConceptProto.ConceptManager.GetType.Res.ResCase.TYPE)
-            return TypeImpl.of(res.getGetTypeRes().getType());
+            return ConceptProtoReader.type(res.getGetTypeRes().getType());
         else
             return null;
     }

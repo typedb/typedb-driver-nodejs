@@ -99,8 +99,7 @@ function main() {
             return "";
         case "help":
         default:
-            console.error("Help to follow once I have a better idea what's going on.");
-            break
+            throw "Help to follow once I have a better idea what's going on.";
     }
 }
 

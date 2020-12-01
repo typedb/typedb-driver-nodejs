@@ -85,7 +85,7 @@ export namespace ConceptProtoReader {
             case ConceptProto.Type.ENCODING.RELATION_TYPE:
                 return RelationTypeImpl.of(typeProto);
             case ConceptProto.Type.ENCODING.ATTRIBUTE_TYPE:
-                return AttributeTypeImpl.of(typeProto);
+                return attributeType(typeProto);
             case ConceptProto.Type.ENCODING.THING_TYPE:
                 assert(typeProto.getRoot());
                 return new ThingTypeImpl(typeProto.getLabel(), typeProto.getRoot());

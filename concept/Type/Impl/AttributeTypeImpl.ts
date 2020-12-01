@@ -28,8 +28,6 @@ import ValueType = AttributeType.ValueType;
 import isKeyable = AttributeType.ValueType.isKeyable;
 import { AttributeImpl, BooleanAttributeImpl, DateTimeAttributeImpl, DoubleAttributeImpl,
     LongAttributeImpl, StringAttributeImpl } from "../../Thing/Impl/AttributeImpl";
-import ValueClass = AttributeType.ValueClass;
-import assert from "assert";
 import { Stream } from "../../../rpc/Stream";
 import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
 import { ConceptProtoBuilder } from "../../Proto/ConceptProtoBuilder";
@@ -170,7 +168,7 @@ export class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl impl
     }
 
     get(value: boolean): Promise<BooleanAttributeImpl> {
-        return await this.getInternal(value) as BooleanAttributeImpl;
+        return this.getInternal(ConceptProtoBuilder.booleanAttributeValue(value)) as Promise<BooleanAttributeImpl>;
     }
 }
 
@@ -227,12 +225,12 @@ export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl impleme
         return super.setSupertype(type);
     }
 
-    async put(value: number): Promise<LongAttributeImpl> {
-        return await this.putInternal(value) as LongAttributeImpl;
+    put(value: number): Promise<LongAttributeImpl> {
+        return this.putInternal(ConceptProtoBuilder.longAttributeValue(value)) as Promise<LongAttributeImpl>;
     }
 
-    async get(value: number): Promise<LongAttributeImpl> {
-        return await this.getInternal(value) as LongAttributeImpl;
+    get(value: number): Promise<LongAttributeImpl> {
+        return this.getInternal(ConceptProtoBuilder.longAttributeValue(value)) as Promise<LongAttributeImpl>;
     }
 }
 
@@ -289,12 +287,12 @@ export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         return super.setSupertype(type);
     }
 
-    async put(value: number): Promise<DoubleAttributeImpl> {
-        return await this.putInternal(value) as DoubleAttributeImpl;
+    put(value: number): Promise<DoubleAttributeImpl> {
+        return this.putInternal(ConceptProtoBuilder.doubleAttributeValue(value)) as Promise<DoubleAttributeImpl>;
     }
 
-    async get(value: number): Promise<DoubleAttributeImpl> {
-        return await this.getInternal(value) as DoubleAttributeImpl;
+    get(value: number): Promise<DoubleAttributeImpl> {
+        return this.getInternal(ConceptProtoBuilder.doubleAttributeValue(value)) as Promise<DoubleAttributeImpl>;
     }
 }
 
@@ -351,12 +349,12 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         return super.setSupertype(type);
     }
 
-    async put(value: string): Promise<StringAttributeImpl> {
-        return await this.putInternal(value) as StringAttributeImpl;
+    put(value: string): Promise<StringAttributeImpl> {
+        return this.putInternal(ConceptProtoBuilder.stringAttributeValue(value)) as Promise<StringAttributeImpl>;
     }
 
-    async get(value: string): Promise<StringAttributeImpl> {
-        return await this.getInternal(value) as StringAttributeImpl;
+    get(value: string): Promise<StringAttributeImpl> {
+        return this.getInternal(ConceptProtoBuilder.stringAttributeValue(value)) as Promise<StringAttributeImpl>;
     }
 }
 
@@ -413,11 +411,11 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
         return super.setSupertype(type);
     }
 
-    async put(value: Date): Promise<DateTimeAttributeImpl> {
-        return await this.putInternal(value) as DateTimeAttributeImpl;
+    put(value: Date): Promise<DateTimeAttributeImpl> {
+        return this.putInternal(ConceptProtoBuilder.dateTimeAttributeValue(value)) as Promise<DateTimeAttributeImpl>;
     }
 
-    async get(value: Date): Promise<DateTimeAttributeImpl> {
-        return await this.getInternal(value) as DateTimeAttributeImpl;
+    get(value: Date): Promise<DateTimeAttributeImpl> {
+        return this.getInternal(ConceptProtoBuilder.dateTimeAttributeValue(value)) as Promise<DateTimeAttributeImpl>;
     }
 }
