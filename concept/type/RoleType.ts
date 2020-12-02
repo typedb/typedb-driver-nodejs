@@ -29,6 +29,7 @@ import Transaction = Grakn.Transaction;
 
 export interface RoleType extends ThingType {
     getScope(): string;
+    getScopedLabel(): string;
 
     asRemote(transaction: Transaction): RemoteRoleType;
 }

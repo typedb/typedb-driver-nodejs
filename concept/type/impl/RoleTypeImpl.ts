@@ -46,6 +46,10 @@ export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
         return this._scope;
     }
 
+    getScopedLabel(): string {
+        return `${this._scope}:${this.getLabel()}`;
+    }
+
     asRemote(transaction: Transaction): RemoteRoleTypeImpl {
         return new RemoteRoleTypeImpl(transaction, this.getLabel(), this.getScope(), this.isRoot());
     }
@@ -65,6 +69,10 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
 
     getScope(): string {
         return this._scope;
+    }
+
+    getScopedLabel(): string {
+        return `${this._scope}:${this.getLabel()}`;
     }
 
     getSupertype(): Promise<RoleTypeImpl> {
