@@ -106,7 +106,7 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
     getOwners(): Stream<ThingTypeImpl>;
     getOwners(onlyKey?: boolean): Stream<ThingTypeImpl> {
         const method = new ConceptProto.Type.Req()
-            .setAttributeTypeGetOwnersReq(new ConceptProto.AttributeType.GetOwners.Req().setOnlykey(onlyKey || false));
+            .setAttributeTypeGetOwnersReq(new ConceptProto.AttributeType.GetOwners.Req().setOnlyKey(onlyKey || false));
         return this.typeStream(method, res => res.getAttributeTypeGetOwnersRes().getOwnerList()) as Stream<ThingTypeImpl>;
     }
 

@@ -126,7 +126,7 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
 
     async unsetOwns(attributeType: AttributeType): Promise<void> {
         await this.execute(new ConceptProto.Type.Req().setThingTypeUnsetOwnsReq(
-            new ConceptProto.ThingType.UnsetOwns.Req().setAttributetype(ConceptProtoBuilder.type(attributeType))));
+            new ConceptProto.ThingType.UnsetOwns.Req().setAttributeType(ConceptProtoBuilder.type(attributeType))));
     }
 
     asRemote(transaction: Transaction): RemoteThingTypeImpl {
