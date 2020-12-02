@@ -17,15 +17,15 @@
  * under the License.
  */
 
-import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
-import { RelationType, RemoteRelationType } from "../RelationType";
-import { Grakn } from "../../../Grakn";
+import { ThingTypeImpl, RemoteThingTypeImpl } from "../../../_internal";
+import { RelationType, RemoteRelationType } from "../../../_internal";
+import { Grakn } from "../../../_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto, { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { Stream } from "../../../rpc/Stream";
-import { RelationImpl } from "../../Thing/Impl/RelationImpl";
-import { RoleTypeImpl } from "./RoleTypeImpl";
-import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
+import { Stream } from "../../../_internal";
+import { RelationImpl } from "../../../_internal";
+import { RoleTypeImpl } from "../../../_internal";
+import { ConceptProtoReader } from "../../../_internal";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     protected constructor(label: string, isRoot: boolean) {

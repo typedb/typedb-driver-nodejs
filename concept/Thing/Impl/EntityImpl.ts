@@ -17,10 +17,10 @@
  * under the License.
  */
 
-import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
-import { Entity, RemoteEntity } from "../Entity";
-import { EntityTypeImpl } from "../../Type/Impl/EntityTypeImpl";
-import { Grakn } from "../../../Grakn";
+import { ThingImpl, RemoteThingImpl } from "../../../_internal";
+import { Entity, RemoteEntity } from "../../../_internal";
+import { EntityTypeImpl } from "../../../_internal";
+import { Grakn } from "../../../_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 

@@ -17,17 +17,14 @@
  * under the License.
  */
 
-import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
-import { RemoteEntityType } from "../EntityType";
-import { EntityType } from "../EntityType";
-import { Grakn } from "../../../Grakn";
+import { ThingTypeImpl, RemoteThingTypeImpl } from "../../../_internal";
+import { RemoteEntityType } from "../../../_internal";
+import { EntityType } from "../../../_internal";
+import { Grakn } from "../../../_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { EntityImpl } from "../../Thing/Impl/EntityImpl";
-import { Stream } from "../../../rpc/Stream";
-import { DateTimeAttributeImpl } from "../../Thing/Impl/AttributeImpl";
-import { DateTimeAttributeType } from "../AttributeType";
-import { DateTimeAttributeTypeImpl } from "./AttributeTypeImpl";
+import { EntityImpl } from "../../../_internal";
+import { Stream } from "../../../_internal";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     protected constructor(label: string, isRoot: boolean) {

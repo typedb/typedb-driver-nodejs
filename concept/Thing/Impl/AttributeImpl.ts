@@ -19,18 +19,18 @@
 
 import { Attribute, RemoteAttribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute,
     StringAttribute, RemoteBooleanAttribute, RemoteLongAttribute, RemoteStringAttribute, RemoteDoubleAttribute,
-    RemoteDateTimeAttribute } from "../Attribute";
-import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
-import { ThingType } from "../../Type/ThingType";
+    RemoteDateTimeAttribute } from "../../../_internal";
+import { ThingImpl, RemoteThingImpl } from "../../../_internal";
+import { ThingType } from "../../../_internal";
 import { AttributeTypeImpl, BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl, DoubleAttributeTypeImpl,
-    LongAttributeTypeImpl, StringAttributeTypeImpl } from "../../Type/Impl/AttributeTypeImpl";
-import { AttributeType } from "../../Type/AttributeType";
+    LongAttributeTypeImpl, StringAttributeTypeImpl } from "../../../_internal";
+import { AttributeType } from "../../../_internal";
 import ValueClass = AttributeType.ValueClass;
-import { Grakn } from "../../../Grakn";
+import { Grakn } from "../../../_internal";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../../common/utils";
+import { Merge } from "../../../_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { Stream } from "../../../rpc/Stream";
+import { Stream } from "../../../_internal";
 
 export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl implements Attribute<T> {
     protected constructor(iid: string) {

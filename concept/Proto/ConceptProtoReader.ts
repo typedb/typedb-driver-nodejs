@@ -18,19 +18,19 @@
  */
 
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { ThingImpl } from "../Thing/Impl/ThingImpl";
-import { EntityImpl } from "../Thing/Impl/EntityImpl";
-import { RelationImpl } from "../Thing/Impl/RelationImpl";
+import { ThingImpl } from "../../_internal"
+import { EntityImpl } from "../../_internal";
+import { RelationImpl } from "../../_internal";
 import { AttributeImpl, BooleanAttributeImpl, DateTimeAttributeImpl, DoubleAttributeImpl, LongAttributeImpl,
     StringAttributeImpl } from "../Thing/Impl/AttributeImpl";
-import { TypeImpl } from "../Type/Impl/TypeImpl";
-import { ThingTypeImpl } from "../Type/Impl/ThingTypeImpl";
-import { RoleTypeImpl } from "../Type/Impl/RoleTypeImpl";
+import { TypeImpl } from "../../_internal";
+import { ThingTypeImpl } from "../../_internal";
+import { RoleTypeImpl } from "../../_internal";
 import assert from "assert";
-import { EntityTypeImpl } from "../Type/Impl/EntityTypeImpl";
-import { RelationTypeImpl } from "../Type/Impl/RelationTypeImpl";
+import { EntityTypeImpl } from "../../_internal";
+import { RelationTypeImpl } from "../../_internal";
 import { AttributeTypeImpl, BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl, DoubleAttributeTypeImpl,
-    LongAttributeTypeImpl, StringAttributeTypeImpl } from "../Type/Impl/AttributeTypeImpl";
+    LongAttributeTypeImpl, StringAttributeTypeImpl } from "../../_internal";
 
 export namespace ConceptProtoReader {
     // This method cannot live in ThingImpl itself, because doing so creates a circular class reference

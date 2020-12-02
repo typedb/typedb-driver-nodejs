@@ -17,20 +17,20 @@
  * under the License.
  */
 
-import { RemoteThingTypeImpl, ThingTypeImpl } from "./ThingTypeImpl";
+import { RemoteThingTypeImpl, ThingTypeImpl } from "../../../_internal";
 import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType, LongAttributeType,
     RemoteAttributeType, RemoteBooleanAttributeType, RemoteDateTimeAttributeType, RemoteDoubleAttributeType,
-    RemoteLongAttributeType, RemoteStringAttributeType, StringAttributeType } from "../AttributeType";
-import { Grakn } from "../../../Grakn";
+    RemoteLongAttributeType, RemoteStringAttributeType, StringAttributeType } from "../../../_internal";
+import { Grakn } from "../../../_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
 import ValueType = AttributeType.ValueType;
 import isKeyable = AttributeType.ValueType.isKeyable;
 import { AttributeImpl, BooleanAttributeImpl, DateTimeAttributeImpl, DoubleAttributeImpl,
-    LongAttributeImpl, StringAttributeImpl } from "../../Thing/Impl/AttributeImpl";
-import { Stream } from "../../../rpc/Stream";
-import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
-import { ConceptProtoBuilder } from "../../Proto/ConceptProtoBuilder";
+    LongAttributeImpl, StringAttributeImpl } from "../../../_internal";
+import { Stream } from "../../../_internal";
+import { ConceptProtoReader } from "../../../_internal";
+import { ConceptProtoBuilder } from "../../../_internal";
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 

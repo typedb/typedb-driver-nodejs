@@ -17,23 +17,23 @@
  * under the License.
  */
 
-import { Thing, RemoteThing } from "../Thing";
-import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../Attribute";
-import { Type } from "../../Type/Type";
-import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType, LongAttributeType, StringAttributeType } from "../../Type/AttributeType";
-import { RoleType } from "../../Type/RoleType";
+import { Thing, RemoteThing } from "../../../_internal";
+import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../../../_internal";
+import { Type } from "../../../_internal";
+import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType, LongAttributeType, StringAttributeType } from "../../../_internal";
+import { RoleType } from "../../../_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { ThingTypeImpl } from "../../Type/Impl/ThingTypeImpl";
-import { Grakn } from "../../../Grakn";
+import { ThingTypeImpl } from "../../../_internal";
+import { Grakn } from "../../../_internal";
 import Transaction = Grakn.Transaction;
-import { Stream } from "../../../rpc/Stream";
-import { RoleTypeImpl } from "../../Type/Impl/RoleTypeImpl";
-import { RelationImpl } from "./RelationImpl";
-import { TypeImpl } from "../../Type/Impl/TypeImpl";
+import { Stream } from "../../../_internal";
+import { RoleTypeImpl } from "../../../_internal";
+import { RelationImpl } from "../../../_internal";
+import { TypeImpl } from "../../../_internal";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
-import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
-import { ConceptProtoBuilder } from "../../Proto/ConceptProtoBuilder";
-import { RPCTransaction } from "../../../rpc/RPCTransaction";
+import { ConceptProtoReader } from "../../../_internal";
+import { ConceptProtoBuilder } from "../../../_internal";
+import { RPCTransaction } from "../../../_internal";
 
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;
