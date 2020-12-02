@@ -95,19 +95,19 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
     async getRelationType(): Promise<RelationTypeImpl> {
         const method = new ConceptProto.Type.Req().setRoleTypeGetRelationTypeReq(new ConceptProto.RoleType.GetRelationType.Req());
         const response = (await this.execute(method)).getRoleTypeGetRelationTypeRes();
-        return ConceptProtoReader.type(response.getRelationtype()) as RelationTypeImpl;
+        return ConceptProtoReader.type(response.getRelationType()) as RelationTypeImpl;
     }
 
     getRelationTypes(): Stream<RelationTypeImpl> {
         return this.typeStream(
             new ConceptProto.Type.Req().setRoleTypeGetRelationTypesReq(new ConceptProto.RoleType.GetRelationTypes.Req()),
-            res => res.getRoleTypeGetRelationTypesRes().getRelationtypeList()) as Stream<RelationTypeImpl>;
+            res => res.getRoleTypeGetRelationTypesRes().getRelationTypeList()) as Stream<RelationTypeImpl>;
     }
 
     getPlayers(): Stream<ThingTypeImpl> {
         return this.typeStream(
             new ConceptProto.Type.Req().setRoleTypeGetPlayersReq(new ConceptProto.RoleType.GetPlayers.Req()),
-            res => res.getRoleTypeGetPlayersRes().getThingtypeList()) as Stream<ThingTypeImpl>;
+            res => res.getRoleTypeGetPlayersRes().getThingTypeList()) as Stream<ThingTypeImpl>;
     }
 
     protected typeStream(method: ConceptProto.Type.Req, typeGetter: (res: ConceptProto.Type.Res) => ConceptProto.Type[]): Stream<TypeImpl> {
