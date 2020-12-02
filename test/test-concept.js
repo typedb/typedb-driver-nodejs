@@ -17,9 +17,9 @@
  * under the License.
  */
 
-const { GraknClient } = require("./dist/rpc/GraknClient");
-const { Grakn } = require("./dist/Grakn");
-const { AttributeType } = require("./dist/concept/Type/AttributeType");
+const { GraknClient } = require("../dist/rpc/GraknClient");
+const { Grakn } = require("../dist/Grakn");
+const { AttributeType } = require("../dist/concept/type/AttributeType");
 const { SessionType, TransactionType } = Grakn;
 
 async function run() {
