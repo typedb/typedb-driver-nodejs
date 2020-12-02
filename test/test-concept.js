@@ -323,30 +323,28 @@ async function run() {
     try {
         session = await client.session("grakn", SessionType.DATA);
         tx = await session.transaction(TransactionType.WRITE);
-        for (let i = 0; i < 10; i++) lion.asRemote(tx).create();
-        console.log("create 10 lions - SUCCESS");
+        for (let i = 0; i < 10; i++) stoneLion.asRemote(tx).create();
+        const lions = await lion.asRemote(tx).getInstances().collect();
+        assert(lions.length === 10);
+        const firstLion = lions[0];
+        const lionType = await firstLion.asRemote(tx).getType();
+        await tx.commit();
+        await tx.close();
+        console.log(`create - SUCCESS - There are ${lions.length} lions.`);
+        assert(lionType.getLabel() === "stone-lion");
+        console.log(`getType - SUCCESS - After looking more closely, it turns out that there are ${lions.length} stone lions.`);
     } catch (err) {
-        console.error(`create 10 lions - ERROR: ${err.stack || err}`);
+        console.error(`create / getType - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();
         return;
     }
 
-    try {
-        lion = lion.asRemote(tx);
-        const lionsStream = lion.getInstances();
-        const lions = await lionsStream.collect();
-        await tx.close();
-        assert(lions.length === 10);
-        console.log(`getInstances - SUCCESS - There are ${lions.length} lions.`);
-    } catch (err) {
-        console.error(`getInstances - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
-        client.close();
-        return;
-    }
+    // try {
+    //     tx = await session.transaction(TransactionType.WRITE);
+    //     const lionInstance =
+    // }
 
     try {
         tx = await session.transaction(TransactionType.WRITE);

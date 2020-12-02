@@ -65,7 +65,7 @@ export abstract class ThingImpl implements Thing {
     // TODO: all error messages should be extracted into ErrorMessage class or namespace
     protected constructor(iid: string) {
         if (!iid) {
-            throw "IID Missing"
+            throw "IID Missing";
         }
         this._iid = iid;
     }
@@ -90,8 +90,8 @@ export abstract class RemoteThingImpl implements RemoteThing {
     private readonly _rpcTransaction: RPCTransaction;
 
     protected constructor(transaction: Transaction, iid: string) {
-        if (!transaction) throw "Transaction Missing"
-        if (!iid) throw "IID Missing"
+        if (!transaction) throw "Transaction Missing";
+        if (!iid) throw "IID Missing";
         this._iid = iid;
         this._rpcTransaction = transaction as RPCTransaction;
     }
@@ -102,7 +102,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
 
     async getType(): Promise<ThingTypeImpl> {
         const response = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
-        return ConceptProtoReader.type(response.getThingGetTypeRes().getThingType()) as ThingTypeImpl
+        return ConceptProtoReader.type(response.getThingGetTypeRes().getThingType()) as ThingTypeImpl;
     }
 
     async isInferred(): Promise<boolean> {
@@ -113,15 +113,15 @@ export abstract class RemoteThingImpl implements RemoteThing {
         return true;
     }
 
-    getHas(onlyKey: boolean): Stream<Attribute<any>>;
-    getHas(attributeType: BooleanAttributeType): Stream<BooleanAttribute>;
-    getHas(attributeType: LongAttributeType): Stream<LongAttribute>;
-    getHas(attributeType: DoubleAttributeType): Stream<DoubleAttribute>;
-    getHas(attributeType: StringAttributeType): Stream<StringAttribute>;
-    getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttribute>;
-    getHas(attributeTypes: AttributeType[]): Stream<Attribute<any>>;
-    getHas(arg: boolean | Type | AttributeType[]): Stream<Attribute<any>> | Stream<BooleanAttribute> | Stream<LongAttribute>
-        | Stream<DoubleAttribute> | Stream<StringAttribute> | Stream<DateTimeAttribute> {
+    getHas(onlyKey: boolean): Stream<AttributeImpl<any>>;
+    getHas(attributeType: BooleanAttributeType): Stream<BooleanAttributeImpl>;
+    getHas(attributeType: LongAttributeType): Stream<LongAttributeImpl>;
+    getHas(attributeType: DoubleAttributeType): Stream<DoubleAttributeImpl>;
+    getHas(attributeType: StringAttributeType): Stream<StringAttributeImpl>;
+    getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttributeImpl>;
+    getHas(attributeTypes: AttributeType[]): Stream<AttributeImpl<any>>;
+    getHas(arg: boolean | Type | AttributeType[]): Stream<AttributeImpl<any>> | Stream<BooleanAttributeImpl> | Stream<LongAttributeImpl>
+        | Stream<DoubleAttributeImpl> | Stream<StringAttributeImpl> | Stream<DateTimeAttributeImpl> {
         if (typeof arg === "boolean") {
             const method = new ConceptProto.Thing.Req()
                 .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setKeysOnly(arg));
@@ -132,31 +132,14 @@ export abstract class RemoteThingImpl implements RemoteThing {
                 .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList(ConceptProtoBuilder.types(arg)));
             return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
         }
-        if (arg instanceof BooleanAttributeTypeImpl) {
-            const method = new ConceptProto.Thing.Req()
-                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<BooleanAttributeImpl>;
-        }
-        if (arg instanceof LongAttributeTypeImpl) {
-            const method = new ConceptProto.Thing.Req()
-                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<LongAttributeImpl>;
-        }
-        if (arg instanceof DoubleAttributeTypeImpl) {
-            const method = new ConceptProto.Thing.Req()
-                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<DoubleAttributeImpl>;
-        }
-        if (arg instanceof StringAttributeTypeImpl) {
-            const method = new ConceptProto.Thing.Req()
-                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<StringAttributeImpl>;
-        }
-        if (arg instanceof DateTimeAttributeTypeImpl) {
-            const method = new ConceptProto.Thing.Req()
-                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<DateTimeAttributeImpl>;
-        }
+        const method = new ConceptProto.Thing.Req()
+            .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
+        const stream = this.thingStream(method, res => res.getThingGetHasRes().getAttributeList());
+        if (arg instanceof BooleanAttributeTypeImpl) return stream as Stream<BooleanAttributeImpl>;
+        if (arg instanceof LongAttributeTypeImpl) return stream as Stream<LongAttributeImpl>;
+        if (arg instanceof DoubleAttributeTypeImpl) return stream as Stream<DoubleAttributeImpl>;
+        if (arg instanceof StringAttributeTypeImpl) return stream as Stream<StringAttributeImpl>;
+        if (arg instanceof DateTimeAttributeTypeImpl) return stream as Stream<DateTimeAttributeImpl>;
         throw "Argument was not valid."
     }
 
