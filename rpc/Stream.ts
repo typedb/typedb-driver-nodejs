@@ -74,8 +74,7 @@ export class Stream<T> implements AsyncIterable<T> {
     async collect(): Promise<T[]> {
         const answers: T[] = [];
         for await (const answer of this) {
-            if (answer != null) answers.push(answer);
-            else break;
+            answers.push(answer);
         }
         return answers;
     }
