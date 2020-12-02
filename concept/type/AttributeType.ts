@@ -140,12 +140,12 @@ export interface RemoteDateTimeAttributeType extends Merge<RemoteAttributeType, 
 
 export namespace AttributeType {
     export enum ValueType {
-        OBJECT,
-        BOOLEAN,
-        LONG,
-        DOUBLE,
-        STRING,
-        DATETIME,
+        OBJECT = "OBJECT",
+        BOOLEAN = "BOOLEAN",
+        LONG = "LONG",
+        DOUBLE = "DOUBLE",
+        STRING = "STRING",
+        DATETIME = "DATETIME",
     }
 
     export namespace ValueType {

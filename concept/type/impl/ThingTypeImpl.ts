@@ -113,8 +113,8 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
     getOwns(valueTypeOrKeysOnly?: AttributeType.ValueType | boolean, keysOnly?: boolean): Stream<AttributeTypeImpl> {
         const getOwnsReq = new ConceptProto.ThingType.GetOwns.Req()
             .setKeysOnly(typeof valueTypeOrKeysOnly === "boolean" ? valueTypeOrKeysOnly : typeof keysOnly === "boolean" ? keysOnly : false);
-        // Here we take advantage of the fact that AttributeType.ValueType is a numeric enum
-        if (typeof valueTypeOrKeysOnly === "number") getOwnsReq.setValueType(ConceptProtoBuilder.valueType(valueTypeOrKeysOnly));
+        // Here we take advantage of the fact that AttributeType.ValueType is a string enum
+        if (typeof valueTypeOrKeysOnly === "string") getOwnsReq.setValueType(ConceptProtoBuilder.valueType(valueTypeOrKeysOnly));
         const request = new ConceptProto.Type.Req().setThingTypeGetOwnsReq(getOwnsReq);
         return this.typeStream(request, res => res.getThingTypeGetOwnsRes().getAttributeTypeList()) as Stream<AttributeTypeImpl>;
     }
