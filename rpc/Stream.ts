@@ -22,8 +22,9 @@ import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import {
     ResponseCollector,
 } from "../dependencies_internal";
+import { Map } from "google-protobuf";
 
-export class Stream<T> implements Iterable<Promise<T>> {
+export class Stream<T> implements AsyncIterable<T> {
 
     private readonly _requestId: string;
     private readonly _writableStream: ClientWritableStream<TransactionProto.Transaction.Req>;
@@ -40,8 +41,12 @@ export class Stream<T> implements Iterable<Promise<T>> {
         this._responseCollector = responseCollector;
     }
 
-    *[Symbol.iterator](): Iterator<Promise<T>> {
-        while (true) yield this.next();
+    async* [Symbol.asyncIterator](): AsyncIterator<T, any, undefined> {
+        while (true) {
+            const next = await this.next()
+            if (next != null) yield next;
+            else break;
+        }
     }
 
     async next(): Promise<T> {
@@ -68,8 +73,7 @@ export class Stream<T> implements Iterable<Promise<T>> {
 
     async collect(): Promise<T[]> {
         const answers: T[] = [];
-        for (const getAnswer of this) {
-            const answer = await getAnswer;
+        for await (const answer of this) {
             if (answer != null) answers.push(answer);
             else break;
         }
