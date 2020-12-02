@@ -98,31 +98,44 @@ export abstract class RemoteThingImpl implements RemoteThing {
     getHas(attributeTypes: AttributeType[]): Stream<Attribute<any>>;
     getHas(arg: boolean | Type | AttributeType[]): Stream<Attribute<any>> | Stream<BooleanAttribute> | Stream<LongAttribute>
         | Stream<DoubleAttribute> | Stream<StringAttribute> | Stream<DateTimeAttribute> {
-        throw "Not implemented yet";
+        if (typeof arg === "boolean") {
+            const method =new ConceptProto.Thing.Req()
+                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setKeysOnly(arg));
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as unknown as Stream<Attribute<any>>
+        }
+        throw "Not yet implemented"
     }
 
     getPlays(): Stream<RoleTypeImpl> {
-        throw "Not implemented yet";
+        const method = new ConceptProto.Thing.Req().setThingGetPlaysReq(new ConceptProto.Thing.GetPlays.Req());
+        return this.typeStream(method, res => res.getThingGetPlaysRes().getRoleTypeList()) as Stream<RoleTypeImpl>;
     }
 
     getRelations(roleTypes: RoleType[]): Stream<RelationImpl> {
-        throw "Not implemented yet";
+        const method = new ConceptProto.Thing.Req().setThingGetRelationsReq(new ConceptProto.Thing.GetRelations.Req());
+        return this.thingStream(method, res => res.getThingGetRelationsRes().getRelationList()) as Stream<RelationImpl>;
     }
 
-    setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
-        throw "Not implemented yet";
+    async setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
+        await this.execute(new ConceptProto.Thing.Req().setThingSetHasReq(
+            new ConceptProto.Thing.SetHas.Req().setAttribute(ConceptProtoBuilder.thing(attribute))
+        ));
     }
 
-    unsetHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
-        throw "Not implemented yet";
+    async unsetHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
+        await this.execute(new ConceptProto.Thing.Req().setThingUnsetHasReq(
+            new ConceptProto.Thing.UnsetHas.Req().setAttribute(ConceptProtoBuilder.thing(attribute))
+        ));
     }
 
-    delete(): Promise<void> {
-        throw "Not implemented yet";
+    async delete(): Promise<void> {
+        await this.execute(new ConceptProto.Thing.Req().setThingDeleteReq(
+            new ConceptProto.Thing.Delete.Req()
+        ));
     }
 
-    isDeleted(): Promise<boolean> {
-        throw "Not implemented yet";
+    async isDeleted(): Promise<boolean> {
+        return (await this._rpcTransaction.concepts().getThing(this._iid)).getIID() != null;
     }
 
     protected get transaction(): Transaction {
