@@ -22,7 +22,7 @@ import {
     GraknOptions,
     RPCDatabaseManager,
     RPCSession,
-} from "../_internal";
+} from "../dependencies_internal";
 import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
 import {GraknClient as GraknGrpc} from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
 

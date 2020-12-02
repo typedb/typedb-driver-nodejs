@@ -19,15 +19,22 @@
 
 import {
     Grakn,
-} from "../dependencies_internal";
+} from "../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 
-export interface Concept {
-    asRemote(transaction: Transaction): RemoteConcept;
-    isRemote(): boolean;
+export interface Rule {
+    getLabel(): string;
+    getWhen(): string;
+    getThen(): string;
+
+    asRemote(transaction: Transaction): RemoteRule;
 }
 
-export interface RemoteConcept extends Concept {
-    delete(): Promise<void>;
-    isDeleted(): Promise<boolean>;
+export interface RemoteRule extends Rule {
+    setLabel(label: string): void;
+
+    delete(): void;
+    isDeleted(): boolean;
+
+    asRemote(transaction: Transaction): RemoteRule;
 }

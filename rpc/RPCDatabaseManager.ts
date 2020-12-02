@@ -20,7 +20,7 @@
 import { GraknClient as GraknGrpc } from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb"
 import {
     Grakn
-} from "../_internal";
+} from "../dependencies_internal";
 //import { Database } from "graknlabs-grpc-protocol/protobuf/database_pb";
 import database_pb from "graknlabs-grpc-protocol/protobuf/database_pb";
 const { Database } = database_pb;

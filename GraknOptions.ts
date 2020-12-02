@@ -1,4 +1,4 @@
-import {CreateGraknError} from "./_internal";
+import {CreateGraknError} from "./dependencies_internal";
 
 export class GraknOptions {
     private _infer: boolean;

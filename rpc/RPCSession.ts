@@ -22,7 +22,7 @@ import {
     ProtoBuilder,
     GraknOptions,
     RPCTransaction,
-} from "../_internal";
+} from "../dependencies_internal";
 import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import SessionProto from "graknlabs-grpc-protocol/protobuf/session_pb";

@@ -26,7 +26,7 @@ import {
     uuidv4,
     BlockingQueue,
     Stream,
-} from "../_internal";
+} from "../dependencies_internal";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;

@@ -23,7 +23,7 @@ import {
     ProtoBuilder,
     Stream,
     ConceptMap,
-} from "../_internal";
+} from "../dependencies_internal";
 import QueryProto from "graknlabs-grpc-protocol/protobuf/query_pb";
 import Query = QueryProto.Query;
 import Graql = QueryProto.Graql;

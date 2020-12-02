@@ -18,16 +18,28 @@
  */
 
 import {
+    Thing,
+    RemoteThing,
     Grakn,
-} from "../dependencies_internal";
+    RelationType,
+    RoleType,
+    Merge,
+    Stream,
+} from "../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 
-export interface Concept {
-    asRemote(transaction: Transaction): RemoteConcept;
-    isRemote(): boolean;
+export interface Relation extends Thing {
+    asRemote(transaction: Transaction): RemoteRelation;
 }
 
-export interface RemoteConcept extends Concept {
-    delete(): Promise<void>;
-    isDeleted(): Promise<boolean>;
+export interface RemoteRelation extends Merge<RemoteThing, Relation> {
+    getType(): Promise<RelationType>;
+
+    addPlayer(roleType: RoleType, player: Thing): Promise<void>;
+    removePlayer(roleType: RoleType, player: Thing): Promise<void>;
+
+    getPlayers(roleTypes: RoleType[]): Stream<Thing>;
+    getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>>;
+
+    asRemote(transaction: Transaction): RemoteRelation;
 }

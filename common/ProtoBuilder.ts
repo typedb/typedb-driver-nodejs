@@ -1,4 +1,4 @@
-import {GraknOptions} from "../_internal";
+import {GraknOptions} from "../dependencies_internal";
 import options_pb from "graknlabs-grpc-protocol/protobuf/options_pb";
 const { Options } = options_pb;
 

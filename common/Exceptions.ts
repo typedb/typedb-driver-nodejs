@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import {RemoteConcept} from "../_internal";
+import {RemoteConcept} from "../dependencies_internal";
 
 export function CreateGraknError(error: string, additionalInfo = "") {
     return new Error(additionalInfo ? error + "/nAdditional information: " + additionalInfo : error)

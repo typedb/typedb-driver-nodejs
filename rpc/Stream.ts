@@ -21,7 +21,7 @@ import { ClientWritableStream } from "@grpc/grpc-js";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import {
     ResponseCollector,
-} from "../_internal";
+} from "../dependencies_internal";
 
 export class Stream<T> implements Iterable<Promise<T>> {
 

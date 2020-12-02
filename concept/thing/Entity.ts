@@ -18,16 +18,19 @@
  */
 
 import {
+    Thing,
+    RemoteThing,
+    EntityType,
     Grakn,
-} from "../dependencies_internal";
+    Merge,
+} from "../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 
-export interface Concept {
-    asRemote(transaction: Transaction): RemoteConcept;
-    isRemote(): boolean;
+export interface Entity extends Thing {
+    asRemote(transaction: Transaction): RemoteEntity;
 }
 
-export interface RemoteConcept extends Concept {
-    delete(): Promise<void>;
-    isDeleted(): Promise<boolean>;
+export interface RemoteEntity extends Merge<RemoteThing, Entity> {
+    getType(): Promise<EntityType>;
+    asRemote(transaction: Transaction): RemoteEntity;
 }

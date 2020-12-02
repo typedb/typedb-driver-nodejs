@@ -32,7 +32,7 @@ import {
     RelationTypeImpl,
     AttributeTypeImpl,
     Thing,
-} from "../_internal";
+} from "../dependencies_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 
