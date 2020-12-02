@@ -22,7 +22,6 @@ import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import {
     ResponseCollector,
 } from "../dependencies_internal";
-import { Map } from "google-protobuf";
 
 export class Stream<T> implements AsyncIterable<T> {
 

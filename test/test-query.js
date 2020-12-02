@@ -21,6 +21,7 @@ const { GraknClient } = require("../dist/rpc/GraknClient");
 const { Grakn } = require("../dist/Grakn");
 const { AttributeType } = require("../dist/concept/type/AttributeType");
 const { SessionType, TransactionType } = Grakn;
+const assert = require("assert");
 
 async function run() {
     const client = new GraknClient();
@@ -40,17 +41,9 @@ async function run() {
     }
 
     let session;
-    try {
-        session = await client.session("grakn", SessionType.SCHEMA);
-        console.log("open schema session - SUCCESS");
-    } catch (err) {
-        console.error(`open schema session - ERROR: ${err.stack || err}`);
-        client.close();
-        return;
-    }
-
     let tx;
     try {
+        session = await client.session("grakn", SessionType.SCHEMA);
         tx = await session.transaction(TransactionType.WRITE);
         console.log("open schema write tx - SUCCESS");
     } catch (err) {
@@ -166,15 +159,21 @@ async function run() {
     }
 
     try {
-        await tx.query().insert("insert $x isa lion, has name \"Steve\", has rank \"Duke\", has power-level 12;");
+        let firstLionStream = await tx.query().insert("insert $x isa lion, has name \"Steve\", has rank \"Duke\", has power-level 12;");
+        assert((await firstLionStream.collect()).length === 1);
         await tx.query().insert("insert $x isa lion, has name \"Chandra\", has rank \"Baron\", has power-level 7;");
         await tx.query().insert("insert $x isa lion, has name \"Asuka\", has rank \"Duchess\", has power-level 3;");
-        await tx.query().insert("insert $x isa lion, has name \"Etienne\", has rank \"Lowborn\", has power-level 13;");
+        await tx.query().insert("insert $x isa lion, has name \"Sergey\", has rank \"Lowborn\", has power-level 13;");
         await tx.query().insert("insert $x isa lion, has name \"Amélie\", has rank \"Marchioness\", has power-level 20;");
         let lionType = await tx.concepts().getEntityType("lion");
+        let nameType = await tx.concepts().getAttributeType("name");
+        let lionNames = [];
         for await (let lion of lionType.asRemote(tx).getInstances()) {
-            console.log(lion);
+            for await (let lionName of lion.asRemote(tx).getHas(nameType)) {
+                lionNames.push(lionName.getValue());
+            }
         }
+        assert(JSON.stringify(lionNames.sort()) === JSON.stringify(["Amélie", "Asuka", "Chandra", "Sergey", "Steve"]))
         console.log("insert entity query - SUCCESS");
     } catch (err) {
         console.error(`insert entity query - ERROR: ${err.stack || err}`);
