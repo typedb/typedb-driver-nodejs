@@ -24,8 +24,22 @@ const { SessionType, TransactionType } = Grakn;
 
 async function run() {
     const client = new GraknClient();
-        // const names = await client.databases().all();
-        // console.log(names);
+
+    try {
+        const names = await client.databases().all();
+        console.log(`get databases - SUCCESS - the databases are [${names}]`);
+        if (names.includes("grakn")) {
+            await client.databases().delete("grakn");
+            console.log(`delete database - SUCCESS - 'grakn' has been deleted`);
+        }
+        await client.databases().create("grakn");
+        console.log("create database - SUCCESS - 'grakn' has been created");
+    } catch (err) {
+        console.error(`database operations - ERROR: ${err.stack || err}`);
+        client.close();
+        return;
+    }
+
     let session;
     try {
         session = await client.session("grakn", SessionType.SCHEMA);
@@ -47,18 +61,12 @@ async function run() {
         return;
     }
 
-    let stoneLion, lionFamily, lionCub, maneSize;
+    let lion, lionFamily, lionCub, maneSize;
     try {
-        stoneLion = await tx.concepts().putEntityType("lion");
-        lionFamily = await tx.concepts().putRelationType("lion-family");
-        await lionFamily.asRemote(tx).setRelates("lion-cub");
-        lionCub = await lionFamily.asRemote(tx).getRelates().collect().then(roles => roles[0]);
-        await stoneLion.asRemote(tx).setPlays(lionCub);
-        maneSize = await tx.concepts().putAttributeType("mane-size", AttributeType.ValueType.LONG);
-        await stoneLion.asRemote(tx).setOwns(maneSize);
-        console.log("put types - SUCCESS");
+        lion = await tx.concepts().putEntityType("lion");
+        console.log("put entity type - SUCCESS");
     } catch (err) {
-        console.error(`put types - ERROR: ${err.stack || err}`);
+        console.error(`put entity type - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();
@@ -85,6 +93,166 @@ async function run() {
         client.close();
         return;
     }
+
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        lionFamily = await tx.concepts().putRelationType("lion-family");
+        await lionFamily.asRemote(tx).setRelates("lion-cub");
+        lionCub = await lionFamily.asRemote(tx).getRelates().collect().then(roles => roles[0]);
+        await lion.asRemote(tx).setPlays(lionCub);
+        await tx.commit();
+        await tx.close();
+        console.log("commit relation type, relates and plays - SUCCESS");
+    } catch (err) {
+        console.error(`commit relation type, relates and plays - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        maneSize = await tx.concepts().putAttributeType("mane-size", AttributeType.ValueType.LONG);
+        await lion.asRemote(tx).setOwns(maneSize);
+        await tx.commit();
+        await tx.close();
+        console.log("commit attribute type + owns - SUCCESS");
+    } catch (err) {
+        console.error(`commit attribute type + owns - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    let stoneLion;
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        stoneLion = await tx.concepts().putEntityType("stone-lion");
+        await stoneLion.asRemote(tx).setSupertype(lion);
+        await tx.commit();
+        await tx.close();
+        console.log("set supertype - SUCCESS");
+    } catch (err) {
+        console.error(`set supertype - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    try {
+        tx = await session.transaction(TransactionType.READ);
+        const supertypeOfLion = await lion.asRemote(tx).getSupertype();
+        await tx.close();
+        console.log(`get supertype - SUCCESS - the supertype of 'lion' is '${supertypeOfLion.getLabel()}'.`);
+    } catch (err) {
+        console.error(`get supertype - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    try {
+        tx = await session.transaction(TransactionType.READ);
+        const supertypesOfStoneLion = await stoneLion.asRemote(tx).getSupertypes().collect();
+        await tx.close();
+        console.log(`get supertypes - SUCCESS - the supertypes of 'stone-lion' are [${supertypesOfStoneLion.map(x => x.getLabel())}].`);
+    } catch (err) {
+        console.error(`get supertypes - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    try {
+        tx = await session.transaction(TransactionType.READ);
+        const subtypesOfLion = await lion.asRemote(tx).getSubtypes().collect();
+        await tx.close();
+        console.log(`get subtypes - SUCCESS - the subtypes of 'lion' are [${subtypesOfLion.map(x => x.getLabel())}].`);
+    } catch (err) {
+        console.error(`get subtypes - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        const monkey = await tx.concepts().putEntityType("monkey");
+        await monkey.asRemote(tx).setLabel("orangutan");
+        const newLabel = await tx.concepts().getEntityType("orangutan").then(entityType => entityType.getLabel());
+        /* no commit */
+        await tx.close();
+        console.log(`set label - SUCCESS - 'monkey' has been renamed to '${newLabel}'.`);
+    } catch (err) {
+        console.error(`set label - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        const whale = await tx.concepts().putEntityType("whale");
+        await whale.asRemote(tx).setAbstract();
+        const isAbstractAfterSet = await whale.asRemote(tx).isAbstract();
+        console.log(`set abstract - SUCCESS - 'whale' ${isAbstractAfterSet ? "is" : "is not"} abstract.`);
+        await whale.asRemote(tx).unsetAbstract();
+        const isAbstractAfterUnset = await whale.asRemote(tx).isAbstract();
+        /* no commit */
+        await tx.close();
+        console.log(`unset abstract - SUCCESS - 'whale' ${isAbstractAfterUnset ? "is still" : "is no longer"} abstract.`);
+    } catch (err) {
+        console.error(`set label - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    let parentship, fathership, person, man, parent, father;
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        parentship = await tx.concepts().putRelationType("parentship");
+        await parentship.asRemote(tx).setRelates("parent");
+        fathership = await tx.concepts().putRelationType("fathership");
+        await fathership.asRemote(tx).setSupertype(parentship);
+        await fathership.asRemote(tx).setRelates("father", "parent");
+        person = await tx.concepts().putEntityType("person");
+        parent = await parentship.asRemote(tx).getRelates("parent");
+        await person.asRemote(tx).setPlays(parent);
+        man = await tx.concepts().putEntityType("man");
+        await man.asRemote(tx).setSupertype(person);
+        father = await fathership.asRemote(tx).getRelates("father");
+        await man.asRemote(tx).setPlays(father, parent);
+        const playingRoles = await man.asRemote(tx).getPlays().collect();
+        console.log(`get/set relates/plays, overriding a super-role - SUCCESS - 'man' plays [${playingRoles.map(role => role.getScopedLabel())}].`);
+        await tx.commit();
+        await tx.close();
+    } catch (err) {
+        console.error(`get/set relates/plays, overriding a super-role - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    // let email, workEmail, customer;
+    // try {
+    //     tx = await session.transaction(TransactionType.WRITE);
+    //     email = await tx.concepts().putAttributeType("email", AttributeType.ValueType.STRING);
+    //     await email.asRemote(tx).setAbstract();
+    //     workEmail = await tx.concepts().putAttributeType("work-email", AttributeType.ValueType.STRING);
+    //     await workEmail.asRemote(tx).setSupertype(workEmail);
+    //     await person.asRemote(tx).setAbstract();
+    //     await person.asRemote(tx).setOwns(email,)
+    // }
 
     try {
         await session.close();
@@ -115,10 +283,10 @@ async function run() {
     }
 
     try {
-        for (let i = 0; i < 10; i++) stoneLion.asRemote(tx).create();
-        console.log("create 10 stone lions - SUCCESS");
+        for (let i = 0; i < 10; i++) lion.asRemote(tx).create();
+        console.log("create 10 lions - SUCCESS");
     } catch (err) {
-        console.error(`create 10 stone lions - ERROR: ${err.stack || err}`);
+        console.error(`create 10 lions - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();
@@ -126,10 +294,10 @@ async function run() {
     }
 
     try {
-        stoneLion = stoneLion.asRemote(tx);
-        const stoneLionsStream = stoneLion.getInstances();
-        const stoneLions = await stoneLionsStream.collect();
-        console.log(`getInstances - SUCCESS - There are ${stoneLions.length} stone lions.`);
+        lion = lion.asRemote(tx);
+        const lionsStream = lion.getInstances();
+        const lions = await lionsStream.collect();
+        console.log(`getInstances - SUCCESS - There are ${lions.length} lions.`);
     } catch (err) {
         console.error(`getInstances - ERROR: ${err.stack || err}`);
         await tx.close();
