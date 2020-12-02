@@ -113,7 +113,7 @@ genrule(
 
 artifact_extractor(
     name = "grakn-extractor",
-    artifact = "@graknlabs_grakn_core_artifact_mac//file",
+    artifact = "@graknlabs_grakn_core_artifact_linux//file",
 )
 
 # TODO: add it back once we're able to depend on @graknlabs_protocol as bazel rather than artifact dependency
