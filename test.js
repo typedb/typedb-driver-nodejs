@@ -1,5 +1,6 @@
 const { GraknClient } = require("./dist/rpc/GraknClient");
 const { Grakn } = require("./dist/Grakn");
+const { AttributeType } = require("./dist/concept/Type/AttributeType");
 const { SessionType, TransactionType } = Grakn;
 
 async function run() {
@@ -27,12 +28,18 @@ async function run() {
         return;
     }
 
-    let stoneLion;
+    let stoneLion, lionFamily, lionCub, maneSize;
     try {
         stoneLion = await tx.concepts().putEntityType("lion");
-        console.log("putEntityType - SUCCESS");
+        lionFamily = await tx.concepts().putRelationType("lion-family");
+        await lionFamily.asRemote(tx).setRelates("lion-cub");
+        lionCub = await lionFamily.asRemote(tx).getRelates().collect().then(roles => roles[0]);
+        await stoneLion.asRemote(tx).setPlays(lionCub);
+        maneSize = await tx.concepts().putAttributeType("mane-size", AttributeType.ValueType.LONG);
+        await stoneLion.asRemote(tx).setOwns(maneSize);
+        console.log("put types - SUCCESS");
     } catch (err) {
-        console.error(`putEntityType - ERROR: ${err.stack || err}`);
+        console.error(`put types - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();

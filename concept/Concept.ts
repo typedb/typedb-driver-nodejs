@@ -1,4 +1,4 @@
-import { Grakn } from "../internal";
+import { Grakn } from "../_internal";
 import Transaction = Grakn.Transaction;
 
 export interface Concept {

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { RemoteRule, Rule } from "../Rule";
+import { RemoteRule, Rule } from "../../../_internal";
 import { Rule as RuleProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;

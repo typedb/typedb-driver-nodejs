@@ -37,8 +37,7 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 ts_library(
     name = "_client_nodejs",
     srcs = glob([
-        "Grakn.ts",
-        "GraknOptions.ts",
+        "*.ts",
         "common/**/*.ts",
         "concept/**/*.ts",
         "query/**/*.ts",

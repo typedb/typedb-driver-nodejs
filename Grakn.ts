@@ -1,6 +1,6 @@
-import { GraknOptions } from "./internal";
-import { ConceptManager } from "./internal";
-import { QueryManager } from "./internal";
+import { GraknOptions } from "./_internal";
+import { ConceptManager } from "./_internal";
+import { QueryManager } from "./_internal";
 
 export namespace Grakn {
     export interface Client {

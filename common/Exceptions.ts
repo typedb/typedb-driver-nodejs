@@ -1,4 +1,3 @@
-import {RemoteConcept} from "../internal";
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,7 +17,7 @@ import {RemoteConcept} from "../internal";
  * under the License.
  */
 
-import {RemoteConcept} from "../concept/Concept";
+import {RemoteConcept} from "../_internal";
 
 export function CreateGraknError(error: string, additionalInfo = "") {
     return new Error(additionalInfo ? error + "/nAdditional information: " + additionalInfo : error)

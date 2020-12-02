@@ -17,18 +17,18 @@
  * under the License.
  */
 
-import { TypeImpl, RemoteTypeImpl } from "./TypeImpl";
-import { ThingType, RemoteThingType } from "../ThingType";
-import { AttributeType } from "../AttributeType";
-import { RoleType } from "../RoleType";
-import { Grakn } from "../../../Grakn";
+import { TypeImpl, RemoteTypeImpl } from "../../../_internal";
+import { ThingType, RemoteThingType } from "../../../_internal";
+import { AttributeType } from "../../../_internal";
+import { RoleType } from "../../../_internal";
+import { Grakn } from "../../../_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { Stream } from "../../../rpc/Stream";
-import { ThingImpl } from "../../Thing/Impl/ThingImpl";
-import { RoleTypeImpl } from "./RoleTypeImpl";
-import { AttributeTypeImpl } from "./AttributeTypeImpl";
-import { ConceptProtoBuilder } from "../../Proto/ConceptProtoBuilder";
+import { Stream } from "../../../_internal";
+import { ThingImpl } from "../../../_internal";
+import { RoleTypeImpl } from "../../../_internal";
+import { AttributeTypeImpl } from "../../../_internal";
+import { ConceptProtoBuilder } from "../../../_internal";
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
     constructor(label: string, isRoot: boolean) {

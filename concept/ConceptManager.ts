@@ -1,21 +1,21 @@
-import { ThingType } from "../internal";
-import { EntityType } from "../internal";
-import { RelationType } from "../internal";
-import { AttributeType } from "../internal";
-import ConceptProto from "grakn-protocol/concept_pb";
+import { ConceptProtoBuilder, ConceptProtoReader, ThingType } from "../_internal";
+import { EntityType } from "../_internal";
+import { RelationType } from "../_internal";
+import { AttributeType } from "../_internal";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import ProtoConceptManager = ConceptProto.ConceptManager;
-import TransactionProto from "grakn-protocol/transaction_pb";
-import { EntityTypeImpl } from "../internal";
-import { Type } from "../internal";
-import { TypeImpl } from "../internal";
-import { Rule } from "../internal";
-import { RuleImpl } from "../internal";
-import { RPCTransaction } from "../internal";
-import { Protobuilder } from "../internal";
-import { RelationTypeImpl } from "../internal";
-import { AttributeTypeImpl } from "../internal";
-import { Thing } from "../internal";
-import { ThingImpl } from "../internal";
+import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import { EntityTypeImpl } from "../_internal";
+import { Type } from "../_internal";
+import { TypeImpl } from "../_internal";
+import { Rule } from "../_internal";
+import { RuleImpl } from "../_internal";
+import { RPCTransaction } from "../_internal";
+import { ProtoBuilder } from "../_internal";
+import { RelationTypeImpl } from "../_internal";
+import { AttributeTypeImpl } from "../_internal";
+import { Thing } from "../_internal";
+import { ThingImpl } from "../_internal";
 
 export class ConceptManager {
     private readonly _rpcTransaction: RPCTransaction;
@@ -66,9 +66,11 @@ export class ConceptManager {
         else return null;
     }
 
-    async putAttributeType(label: string): Promise<AttributeType> {
+    async putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType> {
         const req = new ConceptProto.ConceptManager.Req()
-            .setPutAttributeTypeReq(new ConceptProto.ConceptManager.PutAttributeType.Req().setLabel(label));
+            .setPutAttributeTypeReq(new ConceptProto.ConceptManager.PutAttributeType.Req()
+                .setLabel(label)
+                .setValueType(ConceptProtoBuilder.valueType(valueType)));
         const res = await this.execute(req);
         return ConceptProtoReader.attributeType(res.getPutAttributeTypeRes().getAttributeType());
     }

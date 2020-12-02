@@ -18,11 +18,11 @@
  */
 
 import {Grakn} from "../Grakn"
-import {GraknOptions} from "../GraknOptions";
+import {GraknOptions} from "../_internal";
 import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
-import {RPCDatabaseManager} from "./RPCDatabaseManager";
+import {RPCDatabaseManager} from "../_internal";
 import {GraknClient as GraknGrpc} from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
-import {RPCSession} from "./RPCSession";
+import {RPCSession} from "../_internal";
 
 export const DEFAULT_URI = "localhost:1729";
 

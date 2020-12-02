@@ -17,16 +17,16 @@
  * under the License.
  */
 
-import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "./Attribute";
-import { Concept, RemoteConcept } from "../Concept";
-import { ThingType } from "../Type/ThingType";
-import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType, LongAttributeType, StringAttributeType } from "../Type/AttributeType";
-import { RoleType } from "../Type/RoleType";
-import { Grakn } from "../../Grakn";
+import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../../_internal";
+import { Concept, RemoteConcept } from "../../_internal";
+import { ThingType } from "../../_internal";
+import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType, LongAttributeType, StringAttributeType } from "../../_internal";
+import { RoleType } from "../../_internal";
+import { Grakn } from "../../_internal";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../common/utils";
-import { Stream } from "../../rpc/Stream";
-import { Relation } from "./Relation";
+import { Merge } from "../../_internal";
+import { Stream } from "../../_internal";
+import { Relation } from "../../_internal";
 
 export interface Thing extends Concept {
     getIID(): string;

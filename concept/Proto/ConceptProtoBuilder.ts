@@ -17,18 +17,18 @@
  * under the License.
  */
 
-import { Type } from "../Type/Type";
+import { Type } from "../../_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { Thing } from "../Thing/Thing";
-import { AttributeType } from "../Type/AttributeType";
-import { RoleTypeImpl } from "../Type/Impl/RoleTypeImpl";
-import { EntityImpl } from "../Thing/Impl/EntityImpl";
-import { RelationImpl } from "../Thing/Impl/RelationImpl";
-import { AttributeImpl } from "../Thing/Impl/AttributeImpl";
-import { EntityTypeImpl } from "../Type/Impl/EntityTypeImpl";
-import { RelationTypeImpl } from "../Type/Impl/RelationTypeImpl";
-import { AttributeTypeImpl } from "../Type/Impl/AttributeTypeImpl";
-import { ThingTypeImpl } from "../Type/Impl/ThingTypeImpl";
+import { Thing } from "../../_internal";
+import { AttributeType } from "../../_internal";
+import { RoleTypeImpl } from "../../_internal";
+import { EntityImpl } from "../../_internal";
+import { RelationImpl } from "../../_internal";
+import { AttributeImpl } from "../../_internal";
+import { EntityTypeImpl } from "../../_internal";
+import { RelationTypeImpl } from "../../_internal";
+import { AttributeTypeImpl } from "../../_internal";
+import { ThingTypeImpl } from "../../_internal";
 
 export namespace ConceptProtoBuilder {
 

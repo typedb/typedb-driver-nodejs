@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import { RelationType } from "./RelationType";
-import { RemoteThingType, ThingType } from "./ThingType";
-import { Grakn } from "../../Grakn";
+import { RelationType } from "../../_internal";
+import { RemoteThingType, ThingType } from "../../_internal";
+import { Grakn } from "../../_internal";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../common/utils";
-import { Stream } from "../../rpc/Stream";
+import { Merge } from "../../_internal";
+import { Stream } from "../../_internal";
 
 export interface RoleType extends ThingType {
     getScope(): string;
