@@ -99,7 +99,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
     getHas(arg: boolean | Type | AttributeType[]): Stream<Attribute<any>> | Stream<BooleanAttribute> | Stream<LongAttribute>
         | Stream<DoubleAttribute> | Stream<StringAttribute> | Stream<DateTimeAttribute> {
         if (typeof arg === "boolean") {
-            const method =new ConceptProto.Thing.Req()
+            const method = new ConceptProto.Thing.Req()
                 .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setKeysOnly(arg));
             return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as unknown as Stream<Attribute<any>>
         }

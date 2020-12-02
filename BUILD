@@ -140,7 +140,6 @@ checkstyle_test(
         "query/**/*.ts",
         "rpc/**/*.ts",
         ".grabl/automation.yml",
-        ".circleci/config.yml",
     ]),
     exclude = glob([
         "dist/**/*.*",
