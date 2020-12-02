@@ -203,12 +203,14 @@ async function run() {
         father = await fathership.asRemote(tx).getRelates("father");
         await man.asRemote(tx).setPlays(father, parent);
         const playingRoles = (await man.asRemote(tx).getPlays().collect()).map(role => role.getScopedLabel());
+        const roleplayers = (await father.asRemote(tx).getPlayers().collect()).map(player => player.getLabel());
         await tx.commit();
         await tx.close();
         assert(playingRoles.includes("fathership:father"));
-        console.log(`get/set relates/plays, overriding a super-role - SUCCESS - 'man' plays [${playingRoles}].`);
+        assert(roleplayers.includes("man"));
+        console.log(`get/set relates/plays/players, overriding a super-role - SUCCESS - 'man' plays [${playingRoles}]; 'fathership:father' is played by [${roleplayers}].`);
     } catch (err) {
-        console.error(`get/set relates/plays, overriding a super-role - ERROR: ${err.stack || err}`);
+        console.error(`get/set relates/plays/players, overriding a super-role - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();

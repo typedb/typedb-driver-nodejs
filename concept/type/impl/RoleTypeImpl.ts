@@ -26,6 +26,7 @@ import {
     RelationTypeImpl,
     Stream,
     ConceptProtoReader,
+    TypeImpl,
 } from "../../../dependencies_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
@@ -107,6 +108,14 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
         return this.typeStream(
             new ConceptProto.Type.Req().setRoleTypeGetPlayersReq(new ConceptProto.RoleType.GetPlayers.Req()),
             res => res.getRoleTypeGetPlayersRes().getThingtypeList()) as Stream<ThingTypeImpl>;
+    }
+
+    protected typeStream(method: ConceptProto.Type.Req, typeGetter: (res: ConceptProto.Type.Res) => ConceptProto.Type[]): Stream<TypeImpl> {
+        return super.typeStream(method.setScope(this._scope), typeGetter);
+    }
+
+    protected execute(method: ConceptProto.Type.Req): Promise<ConceptProto.Type.Res> {
+        return super.execute(method.setScope(this._scope));
     }
 
     toString(): string {
