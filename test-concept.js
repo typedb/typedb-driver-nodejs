@@ -186,7 +186,7 @@ async function run() {
         const monkey = await tx.concepts().putEntityType("monkey");
         await monkey.asRemote(tx).setLabel("orangutan");
         const newLabel = await tx.concepts().getEntityType("orangutan").then(entityType => entityType.getLabel());
-        /* no commit */
+        await tx.rollback();
         await tx.close();
         console.log(`set label - SUCCESS - 'monkey' has been renamed to '${newLabel}'.`);
     } catch (err) {
@@ -205,7 +205,7 @@ async function run() {
         console.log(`set abstract - SUCCESS - 'whale' ${isAbstractAfterSet ? "is" : "is not"} abstract.`);
         await whale.asRemote(tx).unsetAbstract();
         const isAbstractAfterUnset = await whale.asRemote(tx).isAbstract();
-        /* no commit */
+        await tx.rollback();
         await tx.close();
         console.log(`unset abstract - SUCCESS - 'whale' ${isAbstractAfterUnset ? "is still" : "is no longer"} abstract.`);
     } catch (err) {
@@ -232,9 +232,9 @@ async function run() {
         father = await fathership.asRemote(tx).getRelates("father");
         await man.asRemote(tx).setPlays(father, parent);
         const playingRoles = await man.asRemote(tx).getPlays().collect();
-        console.log(`get/set relates/plays, overriding a super-role - SUCCESS - 'man' plays [${playingRoles.map(role => role.getScopedLabel())}].`);
         await tx.commit();
         await tx.close();
+        console.log(`get/set relates/plays, overriding a super-role - SUCCESS - 'man' plays [${playingRoles.map(role => role.getScopedLabel())}].`);
     } catch (err) {
         console.error(`get/set relates/plays, overriding a super-role - ERROR: ${err.stack || err}`);
         await tx.close();
@@ -243,16 +243,49 @@ async function run() {
         return;
     }
 
-    // let email, workEmail, customer;
-    // try {
-    //     tx = await session.transaction(TransactionType.WRITE);
-    //     email = await tx.concepts().putAttributeType("email", AttributeType.ValueType.STRING);
-    //     await email.asRemote(tx).setAbstract();
-    //     workEmail = await tx.concepts().putAttributeType("work-email", AttributeType.ValueType.STRING);
-    //     await workEmail.asRemote(tx).setSupertype(workEmail);
-    //     await person.asRemote(tx).setAbstract();
-    //     await person.asRemote(tx).setOwns(email,)
-    // }
+    let email, workEmail, customer, age;
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        email = await tx.concepts().putAttributeType("email", AttributeType.ValueType.STRING);
+        await email.asRemote(tx).setAbstract();
+        workEmail = await tx.concepts().putAttributeType("work-email", AttributeType.ValueType.STRING);
+        await workEmail.asRemote(tx).setSupertype(email);
+        age = await tx.concepts().putAttributeType("age", AttributeType.ValueType.LONG);
+        await person.asRemote(tx).setAbstract();
+        await person.asRemote(tx).setOwns(email, true);
+        await person.asRemote(tx).setOwns(age, false);
+        customer = await tx.concepts().putEntityType("customer");
+        await customer.asRemote(tx).setSupertype(person);
+        await customer.asRemote(tx).setOwns(workEmail, true, email);
+        const ownedAttributes = await customer.asRemote(tx).getOwns().collect();
+        const ownedKeys = await customer.asRemote(tx).getOwns(true).collect();
+        const ownedDateTimes = await customer.asRemote(tx).getOwns(AttributeType.ValueType.DATETIME, false).collect();
+        await tx.commit();
+        await tx.close();
+        console.log(`get/set owns, overriding a super-attribute - SUCCESS - 'customer' owns [${ownedAttributes.map(x => x.getLabel())}], ` +
+            `of which [${ownedKeys.map(x => x.getLabel())}] are keys, and [${ownedDateTimes.map((x => x.getLabel()))}] are datetimes`);
+    } catch (err) {
+        console.error(`get/set owns, overriding a super-attribute - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        await person.asRemote(tx).unsetOwns(age);
+        await person.asRemote(tx).unsetPlays(parent);
+        await tx.rollback();
+        await tx.close();
+        console.log(`unset owns/plays - SUCCESS`);
+    } catch (err) {
+        console.error(`unset owns/plays - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
 
     try {
         await session.close();

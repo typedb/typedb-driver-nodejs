@@ -14,7 +14,9 @@
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
     "pretest": "npm run build",
-    "test": "node --experimental-specifier-resolution=node test.js"
+    "test": "npm run test-concept && npm run test-connection",
+    "test-concept": "node --experimental-specifier-resolution=node test-concept.js",
+    "test-connection": "node --experimental-specifier-resolution=node test-connection.js"
   },
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
