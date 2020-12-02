@@ -130,6 +130,28 @@ async function run() {
         return;
     }
 
+    // try {
+    //     tx = await session.transaction(TransactionType.WRITE);
+    //     await tx.query().define(
+    //         "define strongest-lion-wins sub rule, when {" +
+    //             "($w isa lion, has power-level $wp); " +
+    //             "($l isa lion, has power-level $lp); " +
+    //             "$wp > $lp;" +
+    //         "}, then {" +
+    //             "(victor:$w, loser:$l) isa lionfight;" +
+    //         "};"
+    //     )
+    //     await tx.commit();
+    //     await tx.close();
+    //     console.log("define rule query - SUCCESS");
+    // } catch (err) {
+    //     console.error(`define rule query - ERROR: ${err.stack || err}`);
+    //     await tx.close();
+    //     await session.close();
+    //     client.close();
+    //     return;
+    // }
+
     try {
         await session.close();
         console.log("close schema session - SUCCESS");
@@ -204,20 +226,6 @@ async function run() {
         client.close();
         return;
     }
-
-    // try {
-    //     tx = await session.transaction(TransactionType.WRITE);
-    //     for await (let lion of tx.query().match("match $x isa lion, has power-level $p;")) {
-    //         console.log(lion);
-    //     }
-    //     console.log("match entity query - SUCCESS");
-    // } catch (err) {
-    //     console.error(`match entity query - ERROR: ${err.stack || err}`);
-    //     await tx.close();
-    //     await session.close();
-    //     client.close();
-    //     return;
-    // }
 
     try {
         await session.close();
