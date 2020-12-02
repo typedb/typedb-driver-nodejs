@@ -42,7 +42,7 @@ import {
     AttributeType,
     Grakn,
     Merge,
-    Stream,
+    Stream, ConceptProtoBuilder, ConceptProtoReader, RelationTypeImpl,
 } from "../../../dependencies_internal";
 import ValueClass = AttributeType.ValueClass;
 import Transaction = Grakn.Transaction;
@@ -64,11 +64,15 @@ export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteTh
     }
 
     getOwners(ownerType: ThingType): Stream<ThingImpl> {
-        throw "Not implemented yet";
+        const method = new ConceptProto.Thing.Req().setAttributeGetOwnersReq(
+            new ConceptProto.Attribute.GetOwners.Req().setThingType(ConceptProtoBuilder.type(ownerType))
+        );
+        return this.thingStream(method, res => res.getAttributeGetOwnersRes().getThingList()) as Stream<ThingImpl>;
     }
 
-    getType(): Promise<AttributeTypeImpl> {
-        throw "Not implemented yet";
+    async getType(): Promise<AttributeTypeImpl> {
+        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
+        return ConceptProtoReader.thingType(res.getThingGetTypeRes().getThingType()) as AttributeTypeImpl;
     }
 
     abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
@@ -109,8 +113,9 @@ export class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> imp
         return this._value;
     }
 
-    getType(): Promise<BooleanAttributeTypeImpl> {
-        throw "Not implemented yet"
+    async getType(): Promise<BooleanAttributeTypeImpl> {
+        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
+        return BooleanAttributeTypeImpl.of(res.getThingGetTypeRes().getThingType());
     }
 
     asRemote(transaction: Transaction): RemoteBooleanAttributeImpl {
@@ -151,8 +156,9 @@ export class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> impleme
         return this._value;
     }
 
-    getType(): Promise<LongAttributeTypeImpl> {
-        throw "Of not present"
+    async getType(): Promise<LongAttributeTypeImpl> {
+        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
+        return LongAttributeTypeImpl.of(res.getThingGetTypeRes().getThingType());
     }
 
     asRemote(transaction: Transaction): RemoteLongAttributeImpl {
@@ -194,8 +200,9 @@ export class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> imple
         return this._value;
     }
 
-    getType(): Promise<DoubleAttributeTypeImpl> {
-        throw "Not implemented yet";
+    async getType(): Promise<DoubleAttributeTypeImpl> {
+        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
+        return DoubleAttributeTypeImpl.of(res.getThingGetTypeRes().getThingType());
     }
 
     asRemote(transaction: Transaction): RemoteDoubleAttributeImpl {
@@ -236,8 +243,9 @@ export class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> imple
         return this._value;
     }
 
-    getType(): Promise<StringAttributeTypeImpl> {
-        throw "Of not present"
+    async getType(): Promise<StringAttributeTypeImpl> {
+        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
+        return StringAttributeTypeImpl.of(res.getThingGetTypeRes().getThingType());
     }
 
     asRemote(transaction: Transaction): RemoteStringAttributeImpl {
@@ -279,8 +287,9 @@ class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements M
         return this._value;
     }
 
-    getType(): Promise<DateTimeAttributeTypeImpl> {
-        throw "Of not present"
+    async getType(): Promise<DateTimeAttributeTypeImpl> {
+        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
+        return DateTimeAttributeTypeImpl.of(res.getThingGetTypeRes().getThingType());
     }
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeImpl {
