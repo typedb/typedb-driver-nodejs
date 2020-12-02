@@ -21,6 +21,7 @@ const { GraknClient } = require("../dist/rpc/GraknClient");
 const { Grakn } = require("../dist/Grakn");
 const { AttributeType } = require("../dist/concept/type/AttributeType");
 const { SessionType, TransactionType } = Grakn;
+const assert = require("assert");
 
 async function run() {
     const client = new GraknClient();
@@ -40,55 +41,22 @@ async function run() {
         return;
     }
 
-    let session;
-    try {
-        session = await client.session("grakn", SessionType.SCHEMA);
-        console.log("open schema session - SUCCESS");
-    } catch (err) {
-        console.error(`open schema session - ERROR: ${err.stack || err}`);
-        client.close();
-        return;
-    }
+    ///////////////////////
+    // SCHEMA OPERATIONS //
+    ///////////////////////
 
-    let tx;
-    try {
-        tx = await session.transaction(TransactionType.WRITE);
-        console.log("open schema write tx - SUCCESS");
-    } catch (err) {
-        console.error(`open schema write tx - ERROR: ${err.stack || err}`);
-        await session.close();
-        client.close();
-        return;
-    }
-
+    let session, tx;
     let lion, lionFamily, lionCub, maneSize;
     try {
+        session = await client.session("grakn", SessionType.SCHEMA);
+        tx = await session.transaction(TransactionType.WRITE);
         lion = await tx.concepts().putEntityType("lion");
+        await tx.commit();
+        await tx.close();
         console.log("put entity type - SUCCESS");
     } catch (err) {
         console.error(`put entity type - ERROR: ${err.stack || err}`);
         await tx.close();
-        await session.close();
-        client.close();
-        return;
-    }
-
-    try {
-        await tx.commit();
-        console.log("commit schema write tx - SUCCESS");
-    } catch (err) {
-        console.error(`commit schema write tx - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
-        client.close();
-        return;
-    }
-
-    try {
-        await tx.close();
-        console.log("close schema write tx - SUCCESS");
-    } catch (err) {
-        console.error(`close schema write tx - ERROR: ${err.stack || err}`);
         await session.close();
         client.close();
         return;
@@ -188,6 +156,7 @@ async function run() {
         const newLabel = await tx.concepts().getEntityType("orangutan").then(entityType => entityType.getLabel());
         await tx.rollback();
         await tx.close();
+        assert(newLabel === "orangutan");
         console.log(`set label - SUCCESS - 'monkey' has been renamed to '${newLabel}'.`);
     } catch (err) {
         console.error(`set label - ERROR: ${err.stack || err}`);
@@ -202,9 +171,11 @@ async function run() {
         const whale = await tx.concepts().putEntityType("whale");
         await whale.asRemote(tx).setAbstract();
         const isAbstractAfterSet = await whale.asRemote(tx).isAbstract();
+        assert(isAbstractAfterSet);
         console.log(`set abstract - SUCCESS - 'whale' ${isAbstractAfterSet ? "is" : "is not"} abstract.`);
         await whale.asRemote(tx).unsetAbstract();
         const isAbstractAfterUnset = await whale.asRemote(tx).isAbstract();
+        assert(!isAbstractAfterUnset);
         await tx.rollback();
         await tx.close();
         console.log(`unset abstract - SUCCESS - 'whale' ${isAbstractAfterUnset ? "is still" : "is no longer"} abstract.`);
@@ -231,10 +202,11 @@ async function run() {
         await man.asRemote(tx).setSupertype(person);
         father = await fathership.asRemote(tx).getRelates("father");
         await man.asRemote(tx).setPlays(father, parent);
-        const playingRoles = await man.asRemote(tx).getPlays().collect();
+        const playingRoles = (await man.asRemote(tx).getPlays().collect()).map(role => role.getScopedLabel());
         await tx.commit();
         await tx.close();
-        console.log(`get/set relates/plays, overriding a super-role - SUCCESS - 'man' plays [${playingRoles.map(role => role.getScopedLabel())}].`);
+        assert(playingRoles.includes("fathership:father"));
+        console.log(`get/set relates/plays, overriding a super-role - SUCCESS - 'man' plays [${playingRoles}].`);
     } catch (err) {
         console.error(`get/set relates/plays, overriding a super-role - ERROR: ${err.stack || err}`);
         await tx.close();
@@ -262,6 +234,9 @@ async function run() {
         const ownedDateTimes = await customer.asRemote(tx).getOwns(AttributeType.ValueType.DATETIME, false).collect();
         await tx.commit();
         await tx.close();
+        assert(ownedAttributes.length === 2);
+        assert(ownedKeys.length === 1);
+        assert(ownedDateTimes.length === 0);
         console.log(`get/set owns, overriding a super-attribute - SUCCESS - 'customer' owns [${ownedAttributes.map(x => x.getLabel())}], ` +
             `of which [${ownedKeys.map(x => x.getLabel())}] are keys, and [${ownedDateTimes.map((x => x.getLabel()))}] are datetimes`);
     } catch (err) {
@@ -276,11 +251,39 @@ async function run() {
         tx = await session.transaction(TransactionType.WRITE);
         await person.asRemote(tx).unsetOwns(age);
         await person.asRemote(tx).unsetPlays(parent);
+        await fathership.asRemote(tx).unsetRelates("father");
+        const personOwns = (await person.asRemote(tx).getOwns().collect()).map(x => x.getLabel());
+        const personPlays = (await person.asRemote(tx).getPlays().collect()).map(x => x.getLabel());
+        const fathershipRelates = (await fathership.asRemote(tx).getRelates().collect()).map(x => x.getLabel());
         await tx.rollback();
         await tx.close();
-        console.log(`unset owns/plays - SUCCESS`);
+        assert(!personOwns.includes("age"));
+        assert(!personPlays.includes("parent"));
+        assert(!fathershipRelates.includes("father"));
+        console.log(`unset owns/plays/relates - SUCCESS - 'person' owns [${personOwns}], `
+            + `'person' plays [${personPlays}], 'fathership' relates [${fathershipRelates}]`);
     } catch (err) {
-        console.error(`unset owns/plays - ERROR: ${err.stack || err}`);
+        console.error(`unset owns/plays/relates - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
+
+    let password, shoeSize, volume, isAlive, startDate;
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        password = await tx.concepts().putAttributeType("password", AttributeType.ValueType.STRING);
+        shoeSize = await tx.concepts().putAttributeType("shoe-size", AttributeType.ValueType.LONG);
+        volume = await tx.concepts().putAttributeType("volume", AttributeType.ValueType.DOUBLE);
+        isAlive = await tx.concepts().putAttributeType("is-alive", AttributeType.ValueType.BOOLEAN);
+        startDate = await tx.concepts().putAttributeType("start-date", AttributeType.ValueType.DATETIME);
+        await tx.commit();
+        await tx.close();
+        console.log(`put all 5 attribute value types - SUCCESS - password is a ${password.getValueType()}, shoe-size is a ${shoeSize.getValueType()}, `
+            + `volume is a ${volume.getValueType()}, is-alive is a ${isAlive.getValueType()} and start-date is a ${startDate.getValueType()}`);
+    } catch (err) {
+        console.error(`put all 5 attribute value types - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();
@@ -296,26 +299,13 @@ async function run() {
         return;
     }
 
+    /////////////////////
+    // DATA OPERATIONS //
+    /////////////////////
+
     try {
         session = await client.session("grakn", SessionType.DATA);
-        console.log("open data session - SUCCESS");
-    } catch (err) {
-        console.error(`open data session - ERROR: ${err.stack || err}`);
-        client.close();
-        return;
-    }
-
-    try {
         tx = await session.transaction(TransactionType.WRITE);
-        console.log("open data write tx - SUCCESS");
-    } catch (err) {
-        console.error(`open data write tx - ERROR: ${err.stack || err}`);
-        await session.close();
-        client.close();
-        return;
-    }
-
-    try {
         for (let i = 0; i < 10; i++) lion.asRemote(tx).create();
         console.log("create 10 lions - SUCCESS");
     } catch (err) {
@@ -330,6 +320,8 @@ async function run() {
         lion = lion.asRemote(tx);
         const lionsStream = lion.getInstances();
         const lions = await lionsStream.collect();
+        await tx.close();
+        assert(lions.length === 10);
         console.log(`getInstances - SUCCESS - There are ${lions.length} lions.`);
     } catch (err) {
         console.error(`getInstances - ERROR: ${err.stack || err}`);
@@ -340,10 +332,18 @@ async function run() {
     }
 
     try {
+        tx = await session.transaction(TransactionType.WRITE);
+        const passwordAttr = await password.asRemote(tx).put("rosebud");
+        const shoeSizeAttr = await shoeSize.asRemote(tx).put(9);
+        const volumeAttr = await volume.asRemote(tx).put(1.618);
+        const isAliveAttr = await isAlive.asRemote(tx).put(!!"hopefully");
+        const startDateAttr = await startDate.asRemote(tx).put(new Date());
         await tx.commit();
-        console.log("commit data write tx - SUCCESS");
+        await tx.close();
+        console.log(`put 5 different types of attributes - SUCCESS - password is ${passwordAttr.getValue()}, shoe-size is ${shoeSizeAttr.getValue()}, `
+            + `volume is ${volumeAttr.getValue()}, is-alive is ${isAliveAttr.getValue()} and start-date is ${startDateAttr.getValue()}`);
     } catch (err) {
-        console.error(`commit data write tx - ERROR: ${err.stack || err}`);
+        console.error(`put 5 different types of attributes - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();
@@ -351,30 +351,12 @@ async function run() {
     }
 
     try {
-        await tx.close();
-        console.log("close data write tx - SUCCESS");
-    } catch (err) {
-        console.error(`close data write tx - ERROR: ${err.stack || err}`);
         await session.close();
         client.close();
-        return;
-    }
-
-    try {
-        await session.close();
-        console.log("close data session - SUCCESS");
+        console.log("close session and client - SUCCESS");
     } catch (err) {
-        console.error(`close data session - ERROR: ${err.stack || err}`);
+        console.error(`close session and client - ERROR: ${err.stack || err}`);
         client.close();
-        return;
-    }
-
-    try {
-        client.close();
-        console.log("client.close - SUCCESS");
-    } catch (err) {
-        console.error(`client.close - ERROR: ${err.stack || err}`);
-        return;
     }
 }
 
