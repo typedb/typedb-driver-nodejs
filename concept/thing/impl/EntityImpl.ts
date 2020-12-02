@@ -23,7 +23,7 @@ import {
     Entity,
     RemoteEntity,
     EntityTypeImpl,
-    Grakn,
+    Grakn, ConceptProtoReader,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
@@ -49,10 +49,11 @@ export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
     }
 
     public asRemote(transaction: Transaction): RemoteEntityImpl {
-        return this;
+        return new RemoteEntityImpl(transaction, this.getIID());
     }
 
-    getType(): Promise<EntityTypeImpl> {
-        throw "Not yet implemented"
+    async getType(): Promise<EntityTypeImpl> {
+        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
+        return ConceptProtoReader.thingType(res.getThingGetTypeRes().getThingType()) as EntityTypeImpl;
     }
 }

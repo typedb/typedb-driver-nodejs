@@ -27,9 +27,14 @@ import {
     RoleType,
     Grakn,
     Stream,
+    EntityTypeImpl,
+    ConceptProtoReader,
+    RPCTransaction,
+    RoleTypeImpl, ConceptProtoBuilder,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 
 export class RelationImpl extends ThingImpl implements Relation {
     protected constructor(iid: string) {
@@ -54,23 +59,50 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
         return new RemoteRelationImpl(transaction, this.getIID());
     }
 
-    getType(): Promise<RelationTypeImpl> {
-        throw "As yet unimplemented"
+    async getType(): Promise<RelationTypeImpl> {
+        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
+        return ConceptProtoReader.thingType(res.getThingGetTypeRes().getThingType()) as RelationTypeImpl;
     }
 
-    getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>> {
-        throw "Not implemented"
+    async getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>> {
+        const method = new ConceptProto.Thing.Req()
+            .setRelationGetPlayersByRoleTypeReq(new ConceptProto.Relation.GetPlayersByRoleType.Req())
+            .setIid(this.getIID());
+        const request = new TransactionProto.Transaction.Req().setThingReq(method);
+        const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypeWithPlayerList())
+        const rolePlayerMap = new Map<RoleTypeImpl, ThingImpl[]>();
+        for await (const rolePlayerPair of stream) {
+            const rolePlayer = rolePlayerPair as ConceptProto.Relation.GetPlayersByRoleType.RoleTypeWithPlayer;
+            const role = ConceptProtoReader.thingType(rolePlayer.getRoleType()) as RoleTypeImpl;
+            const player = ConceptProtoReader.thing(rolePlayer.getPlayer());
+            if (!rolePlayerMap.has(role)) {
+                rolePlayerMap.set(role, [])
+            }
+            rolePlayerMap.get(role).push(player)
+        }
+        return rolePlayerMap;
     }
 
     getPlayers(roleTypes: RoleType[]): Stream<ThingImpl> {
-        throw "Not yet implemented";
+        const method = new ConceptProto.Thing.Req().setRelationGetPlayersReq(
+            new ConceptProto.Relation.GetPlayers.Req().setRoleTypesList(roleTypes.map(roleType => ConceptProtoBuilder.type(roleType)))
+        );
+        return this.thingStream(method, res => res.getRelationGetPlayersRes().getThingList()) as Stream<ThingImpl>;
     }
 
-    addPlayer(roleType: RoleType, player: Thing): Promise<void> {
-        throw "Not implemented";
+    async addPlayer(roleType: RoleType, player: Thing): Promise<void> {
+        await this.execute(new ConceptProto.Thing.Req().setRelationAddPlayerReq(
+            new ConceptProto.Relation.AddPlayer.Req()
+                .setPlayer(ConceptProtoBuilder.thing(player))
+                .setRoleType(ConceptProtoBuilder.type(roleType))
+        ));
     }
 
-    removePlayer(roleType: RoleType, player: Thing): Promise<void> {
-        throw "Not implemented";
+    async removePlayer(roleType: RoleType, player: Thing): Promise<void> {
+        await this.execute(new ConceptProto.Thing.Req().setRelationRemovePlayerReq(
+            new ConceptProto.Relation.RemovePlayer.Req()
+                .setPlayer(ConceptProtoBuilder.thing(player))
+                .setRoleType(ConceptProtoBuilder.type(roleType))
+        ));
     }
 }

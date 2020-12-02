@@ -17,18 +17,22 @@
  * under the License.
  */
 
-import { Type } from "../../dependencies_internal";
+// TODO: Can we get rid of this?
+
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { Thing } from "../../dependencies_internal";
-import { AttributeType } from "../../dependencies_internal";
-import { RoleTypeImpl } from "../../dependencies_internal";
-import { EntityImpl } from "../../dependencies_internal";
-import { RelationImpl } from "../../dependencies_internal";
-import { AttributeImpl } from "../../dependencies_internal";
-import { EntityTypeImpl } from "../../dependencies_internal";
-import { RelationTypeImpl } from "../../dependencies_internal";
-import { AttributeTypeImpl } from "../../dependencies_internal";
-import { ThingTypeImpl } from "../../dependencies_internal";
+import {
+    Type,
+    Thing,
+    AttributeType,
+    RoleTypeImpl,
+    EntityImpl ,
+    RelationImpl,
+    AttributeImpl,
+    EntityTypeImpl ,
+    RelationTypeImpl ,
+    AttributeTypeImpl ,
+    ThingTypeImpl,
+} from "../../dependencies_internal";
 
 export namespace ConceptProtoBuilder {
 

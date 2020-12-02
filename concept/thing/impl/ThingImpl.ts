@@ -43,6 +43,17 @@ import {
     ConceptProtoReader,
     ConceptProtoBuilder,
     RPCTransaction,
+    BooleanAttributeTypeImpl,
+    DateTimeAttributeTypeImpl,
+    DoubleAttributeTypeImpl,
+    StringAttributeTypeImpl,
+    LongAttributeTypeImpl,
+    AttributeImpl,
+    BooleanAttributeImpl,
+    DateTimeAttributeImpl,
+    DoubleAttributeImpl,
+    LongAttributeImpl,
+    StringAttributeImpl,
 } from "../../../dependencies_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
@@ -114,9 +125,39 @@ export abstract class RemoteThingImpl implements RemoteThing {
         if (typeof arg === "boolean") {
             const method = new ConceptProto.Thing.Req()
                 .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setKeysOnly(arg));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as unknown as Stream<Attribute<any>>
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
         }
-        throw "Not yet implemented"
+        if (Array.isArray(arg)) {
+            const method = new ConceptProto.Thing.Req()
+                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList(ConceptProtoBuilder.types(arg)));
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
+        }
+        if (arg instanceof BooleanAttributeTypeImpl) {
+            const method = new ConceptProto.Thing.Req()
+                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<BooleanAttributeImpl>;
+        }
+        if (arg instanceof LongAttributeTypeImpl) {
+            const method = new ConceptProto.Thing.Req()
+                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<LongAttributeImpl>;
+        }
+        if (arg instanceof DoubleAttributeTypeImpl) {
+            const method = new ConceptProto.Thing.Req()
+                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<DoubleAttributeImpl>;
+        }
+        if (arg instanceof StringAttributeTypeImpl) {
+            const method = new ConceptProto.Thing.Req()
+                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<StringAttributeImpl>;
+        }
+        if (arg instanceof DateTimeAttributeTypeImpl) {
+            const method = new ConceptProto.Thing.Req()
+                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<DateTimeAttributeImpl>;
+        }
+        throw "Argument was not valid."
     }
 
     getPlays(): Stream<RoleTypeImpl> {

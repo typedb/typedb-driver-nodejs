@@ -17,20 +17,32 @@
  * under the License.
  */
 
+// TODO: Can we get rid of this?
+
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { ThingImpl } from "../../dependencies_internal"
-import { EntityImpl } from "../../dependencies_internal";
-import { RelationImpl } from "../../dependencies_internal";
-import { AttributeImpl, BooleanAttributeImpl, DateTimeAttributeImpl, DoubleAttributeImpl, LongAttributeImpl,
-    StringAttributeImpl } from "../thing/impl/AttributeImpl";
-import { TypeImpl } from "../../dependencies_internal";
-import { ThingTypeImpl } from "../../dependencies_internal";
-import { RoleTypeImpl } from "../../dependencies_internal";
 import assert from "assert";
-import { EntityTypeImpl } from "../../dependencies_internal";
-import { RelationTypeImpl } from "../../dependencies_internal";
-import { AttributeTypeImpl, BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl, DoubleAttributeTypeImpl,
-    LongAttributeTypeImpl, StringAttributeTypeImpl } from "../../dependencies_internal";
+import {
+    AttributeTypeImpl,
+    BooleanAttributeTypeImpl,
+    DateTimeAttributeTypeImpl,
+    DoubleAttributeTypeImpl,
+    LongAttributeTypeImpl,
+    StringAttributeTypeImpl,
+    ThingImpl,
+    EntityImpl,
+    RelationImpl,
+    AttributeImpl,
+    BooleanAttributeImpl,
+    DateTimeAttributeImpl,
+    DoubleAttributeImpl,
+    LongAttributeImpl,
+    StringAttributeImpl,
+    TypeImpl,
+    ThingTypeImpl,
+    RoleTypeImpl,
+    EntityTypeImpl,
+    RelationTypeImpl,
+} from "../../dependencies_internal";
 
 export namespace ConceptProtoReader {
     // This method cannot live in ThingImpl itself, because doing so creates a circular class reference
