@@ -41,9 +41,9 @@ build:
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
       #bazel test //...
     deploy-npm-snapshot:
-#      filter:
-#        owner: graknlabs
-#        branch: master
+      filter:
+        owner: graknlabs
+        branch: master
       machine: graknlabs-ubuntu-20.04
       script: |
         curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
@@ -57,9 +57,9 @@ build:
       dependencies: [build, test]
 
     test-deployment-npm:
-#      filter:
-#        owner: graknlabs
-#        branch: master
+      filter:
+        owner: graknlabs
+        branch: master
       machine: graknlabs-ubuntu-20.04
       script: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
@@ -102,7 +102,6 @@ release:
         bazel run --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
     deploy-npm-release:
       machine: graknlabs-ubuntu-20.04
-      #TODO once again, check if email needed
       script: |
         export DEPLOY_NPM_USERNAME=$REPO_NPM_USERNAME
         export DEPLOY_NPM_PASSWORD=$REPO_NPM_PASSWORD
