@@ -20,9 +20,10 @@
 import {
     RemoteRule,
     Rule,
-    Grakn,
+    Grakn, RPCTransaction,
 } from "../../../dependencies_internal";
-import { Rule as RuleProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import Transaction = Grakn.Transaction;
 
 export class RuleImpl implements Rule {
@@ -37,7 +38,7 @@ export class RuleImpl implements Rule {
         this._then = then;
     }
 
-    static of(ruleProto: RuleProto): RuleImpl {
+    static of(ruleProto: ConceptProto.Rule): RuleImpl {
         return new RuleImpl(ruleProto.getLabel(), ruleProto.getWhen(), ruleProto.getThen());
     }
 
@@ -57,6 +58,10 @@ export class RuleImpl implements Rule {
         return new RemoteRuleImpl(transaction, this.getLabel(), this.getWhen(), this.getThen());
     }
 
+    isRemote(): boolean {
+        return false;
+    }
+
     toString(): string {
         return `${this.constructor.name}[label:${this._label}]`;
     }
@@ -66,10 +71,10 @@ export class RemoteRuleImpl implements RemoteRule {
     private _label: string;
     private readonly _when: string;
     private readonly _then: string;
-    private readonly _transaction: Transaction;
+    private readonly _rpcTransaction: RPCTransaction;
 
     constructor(transaction: Transaction, label: string, when: string, then: string) {
-        this._transaction = transaction;
+        this._rpcTransaction = transaction as RPCTransaction;
         this._label = label;
         this._when = when;
         this._then = then;
@@ -87,24 +92,33 @@ export class RemoteRuleImpl implements RemoteRule {
         return this._when;
     }
 
-    setLabel(label: string): void {
+    async setLabel(label: string): Promise<void> {
+        await this.execute(new ConceptProto.Rule.Req().setRuleSetLabelReq(new ConceptProto.Rule.SetLabel.Req().setLabel(label)));
         this._label = label;
-        throw "Not yet implemented"; // TODO: rpc call
     }
 
-    delete(): void {
-        throw "Not yet implemented";
+    async delete(): Promise<void> {
+        await this.execute(new ConceptProto.Rule.Req().setRuleDeleteReq(new ConceptProto.Rule.Delete.Req()));
     }
 
-    isDeleted(): boolean {
-        throw "Not yet applicable"
+    async isDeleted(): Promise<boolean> {
+        return !(await this.rpcTransaction.concepts().getRule(this._label));
     }
 
     asRemote(transaction: Transaction): RemoteRule {
         return new RemoteRuleImpl(transaction, this.getLabel(), this.getWhen(), this.getThen());
     }
 
-    protected get transaction(): Transaction {
-        return this._transaction;
+    isRemote(): boolean {
+        return true;
+    }
+
+    protected execute(method: ConceptProto.Rule.Req): Promise<ConceptProto.Rule.Res> {
+        const request = new TransactionProto.Transaction.Req().setRuleReq(method);
+        return this._rpcTransaction.execute(request, res => res.getRuleRes());
+    }
+
+    protected get rpcTransaction(): RPCTransaction {
+        return this._rpcTransaction;
     }
 }

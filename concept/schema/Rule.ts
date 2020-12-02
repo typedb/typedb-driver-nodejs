@@ -17,9 +17,7 @@
  * under the License.
  */
 
-import {
-    Grakn,
-} from "../../dependencies_internal";
+import { Grakn } from "../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 
 export interface Rule {
@@ -28,13 +26,14 @@ export interface Rule {
     getThen(): string;
 
     asRemote(transaction: Transaction): RemoteRule;
+    isRemote(): boolean;
 }
 
 export interface RemoteRule extends Rule {
-    setLabel(label: string): void;
+    setLabel(label: string): Promise<void>;
 
-    delete(): void;
-    isDeleted(): boolean;
+    delete(): Promise<void>;
+    isDeleted(): Promise<boolean>;
 
     asRemote(transaction: Transaction): RemoteRule;
 }

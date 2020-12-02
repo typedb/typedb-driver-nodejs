@@ -42,7 +42,7 @@ import {
     AttributeType,
     Grakn,
     Merge,
-    Stream, ConceptProtoBuilder, ConceptProtoReader, RelationTypeImpl,
+    Stream, ConceptProtoBuilder, ConceptProtoReader,
 } from "../../../dependencies_internal";
 import ValueClass = AttributeType.ValueClass;
 import Transaction = Grakn.Transaction;
