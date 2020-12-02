@@ -17,15 +17,19 @@
  * under the License.
  */
 
-import { ThingImpl, RemoteThingImpl } from "../../../_internal";
-import { Relation, RemoteRelation } from "../../../_internal";
-import { Thing } from "../../../_internal";
-import { RelationTypeImpl } from "../../../_internal";
-import { RoleType } from "../../../_internal";
-import { Grakn } from "../../../_internal";
+import {
+    ThingImpl,
+    RemoteThingImpl,
+    Relation,
+    RemoteRelation,
+    Thing,
+    RelationTypeImpl,
+    RoleType,
+    Grakn,
+    Stream,
+} from "../../../_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { Stream } from "../../../_internal";
 
 export class RelationImpl extends ThingImpl implements Relation {
     protected constructor(iid: string) {

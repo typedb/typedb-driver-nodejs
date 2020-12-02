@@ -17,12 +17,15 @@
  * under the License.
  */
 
-import { Thing, RemoteThing } from "../../_internal";
-import { AttributeType } from "../../_internal";
+import {
+    Thing,
+    RemoteThing,
+    AttributeType,
+    Grakn,
+    Merge,
+} from "../../_internal";
 import ValueClass = AttributeType.ValueClass;
-import { Grakn } from "../../_internal";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../_internal";
 
 export interface Attribute<T extends ValueClass> extends Thing {
     getValue(): T;

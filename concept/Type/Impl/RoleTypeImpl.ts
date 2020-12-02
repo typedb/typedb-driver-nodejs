@@ -17,14 +17,18 @@
  * under the License.
  */
 
-import { ThingTypeImpl, RemoteThingTypeImpl } from "../../../_internal";
-import { RoleType, RemoteRoleType } from "../../../_internal";
+import {
+    ThingTypeImpl,
+    RemoteThingTypeImpl,
+    RoleType,
+    RemoteRoleType,
+    Grakn,
+    RelationTypeImpl,
+    Stream,
+    ConceptProtoReader,
+} from "../../../_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { Grakn } from "../../../_internal";
 import Transaction = Grakn.Transaction;
-import { RelationTypeImpl } from "../../../_internal";
-import { Stream } from "../../../_internal";
-import { ConceptProtoReader } from "../../../_internal";
 
 export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
     private readonly _scope: string;

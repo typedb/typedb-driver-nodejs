@@ -17,11 +17,14 @@
  * under the License.
  */
 
-import { Concept, RemoteConcept } from "../../_internal";
-import { Grakn } from "../../_internal";
+import {
+    Concept,
+    RemoteConcept,
+    Grakn,
+    Merge,
+    Stream,
+} from "../../_internal";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../_internal";
-import { Stream } from "../../_internal";
 
 export interface Type extends Concept {
     getLabel(): string;

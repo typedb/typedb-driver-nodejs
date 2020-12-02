@@ -17,7 +17,9 @@
  * under the License.
  */
 
-import { Grakn } from "../../_internal";
+import {
+    Grakn,
+} from "../../_internal";
 import Transaction = Grakn.Transaction;
 
 export interface Rule {

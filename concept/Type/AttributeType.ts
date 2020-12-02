@@ -17,13 +17,21 @@
  * under the License.
  */
 
-import { RemoteThingType, ThingType } from "../../_internal";
-import { Grakn } from "../../_internal";
 import Transaction = Grakn.Transaction;
-import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../../_internal";
+import {
+    Attribute,
+    BooleanAttribute,
+    DateTimeAttribute,
+    DoubleAttribute,
+    LongAttribute,
+    StringAttribute,
+    Grakn,
+    RemoteThingType,
+    ThingType,
+    Merge,
+    Stream,
+} from "../../_internal";
 import ValueType = AttributeType.ValueType;
-import { Merge } from "../../_internal";
-import { Stream } from "../../_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 
 export interface AttributeType extends ThingType {

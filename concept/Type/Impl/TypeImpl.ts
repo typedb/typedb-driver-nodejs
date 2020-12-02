@@ -17,15 +17,18 @@
  * under the License.
  */
 
-import { RemoteType, Type } from "../../../_internal";
+import {
+    RemoteType,
+    Type,
+    Grakn,
+    RPCTransaction,
+    Stream,
+    ThingImpl,
+    ConceptProtoBuilder,
+    ConceptProtoReader,
+} from "../../../_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
-import { Grakn } from "../../../_internal";
-import { RPCTransaction } from "../../../_internal";
-import { Stream } from "../../../_internal";
-import { ThingImpl } from "../../../_internal";
-import { ConceptProtoReader } from "../../../_internal";
-import { ConceptProtoBuilder } from "../../../_internal";
 import Transaction = Grakn.Transaction;
 
 export abstract class TypeImpl implements Type {

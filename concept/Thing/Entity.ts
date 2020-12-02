@@ -17,11 +17,14 @@
  * under the License.
  */
 
-import { Thing, RemoteThing } from "../../_internal";
-import { EntityType } from "../../_internal";
-import { Grakn } from "../../_internal";
+import {
+    Thing,
+    RemoteThing,
+    EntityType,
+    Grakn,
+    Merge,
+} from "../../_internal";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../_internal";
 
 export interface Entity extends Thing {
     asRemote(transaction: Transaction): RemoteEntity;

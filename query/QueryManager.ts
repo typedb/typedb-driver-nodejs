@@ -17,16 +17,18 @@
  * under the License.
  */
 
-import { RPCTransaction } from "../rpc/RPCTransaction";
-import { GraknOptions } from "../GraknOptions";
+import {
+    RPCTransaction,
+    GraknOptions,
+    ProtoBuilder,
+    Stream,
+    ConceptMap,
+} from "../_internal";
 import QueryProto from "graknlabs-grpc-protocol/protobuf/query_pb";
 import Query = QueryProto.Query;
 import Graql = QueryProto.Graql;
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import Transaction = TransactionProto.Transaction;
-import { ProtoBuilder } from "../common/ProtoBuilder";
-import { Stream } from "../rpc/Stream";
-import { ConceptMap } from "../concept/Answer/ConceptMap";
 
 export class QueryManager {
     private readonly _rpcTransaction: RPCTransaction;
