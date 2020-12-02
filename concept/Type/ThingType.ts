@@ -17,14 +17,17 @@
  * under the License.
  */
 
-import { AttributeType } from "../../_internal"
-import { RoleType } from "../../_internal";
-import { RemoteType, Type } from "../../_internal";
-import { Grakn } from "../../_internal";
+import {
+    AttributeType,
+    RoleType,
+    RemoteType,
+    Type,
+    Grakn,
+    Merge,
+    Stream,
+    Thing,
+} from "../../_internal"
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../_internal";
-import { Stream } from "../../_internal";
-import { Thing } from "../../_internal";
 
 export interface ThingType extends Type {
     asRemote(transaction: Transaction): RemoteThingType;

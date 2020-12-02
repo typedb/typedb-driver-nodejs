@@ -17,13 +17,15 @@
  * under the License.
  */
 
-import { Grakn } from "../Grakn";
+import {
+    Grakn,
+    ProtoBuilder,
+    GraknOptions,
+    RPCTransaction,
+} from "../_internal";
 import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import SessionProto from "graknlabs-grpc-protocol/protobuf/session_pb";
-import { ProtoBuilder } from "../common/ProtoBuilder";
-import { GraknOptions } from "../GraknOptions";
-import { RPCTransaction } from "./RPCTransaction";
 
 export class RPCSession implements Grakn.Session {
     private readonly _grpcClient: GraknGrpc;

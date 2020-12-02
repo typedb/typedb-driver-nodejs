@@ -17,23 +17,36 @@
  * under the License.
  */
 
-import { Thing, RemoteThing } from "../../../_internal";
-import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../../../_internal";
-import { Type } from "../../../_internal";
-import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType, LongAttributeType, StringAttributeType } from "../../../_internal";
-import { RoleType } from "../../../_internal";
+import {
+    Thing,
+    RemoteThing,
+    Attribute,
+    BooleanAttribute,
+    DateTimeAttribute,
+    DoubleAttribute,
+    LongAttribute,
+    StringAttribute,
+    Type,
+    AttributeType,
+    BooleanAttributeType,
+    DateTimeAttributeType,
+    DoubleAttributeType,
+    LongAttributeType,
+    StringAttributeType,
+    RoleType,
+    Grakn,
+    ThingTypeImpl,
+    RoleTypeImpl,
+    Stream,
+    RelationImpl,
+    TypeImpl,
+    ConceptProtoReader,
+    ConceptProtoBuilder,
+    RPCTransaction,
+} from "../../../_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import { ThingTypeImpl } from "../../../_internal";
-import { Grakn } from "../../../_internal";
 import Transaction = Grakn.Transaction;
-import { Stream } from "../../../_internal";
-import { RoleTypeImpl } from "../../../_internal";
-import { RelationImpl } from "../../../_internal";
-import { TypeImpl } from "../../../_internal";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
-import { ConceptProtoReader } from "../../../_internal";
-import { ConceptProtoBuilder } from "../../../_internal";
-import { RPCTransaction } from "../../../_internal";
 
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;

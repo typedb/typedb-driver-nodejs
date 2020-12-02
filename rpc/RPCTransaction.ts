@@ -17,18 +17,20 @@
  * under the License.
  */
 
-import { Grakn } from "../Grakn";
-import { ConceptManager } from "../concept/ConceptManager";
+import {
+    Grakn,
+    ConceptManager,
+    ProtoBuilder,
+    GraknOptions,
+    QueryManager,
+    uuidv4,
+    BlockingQueue,
+    Stream,
+} from "../_internal";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
-import { ProtoBuilder } from "../common/ProtoBuilder";
 import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
-import { GraknOptions } from "../_internal";
-import { QueryManager } from "../_internal";
 import { ClientDuplexStream } from "@grpc/grpc-js";
-import { uuidv4 } from "../common/utils";
-import { BlockingQueue } from "../common/BlockingQueue";
-import { Stream } from "./Stream";
 
 export class RPCTransaction implements Grakn.Transaction {
     private readonly _type: Grakn.TransactionType;
