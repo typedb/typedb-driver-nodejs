@@ -1,32 +1,33 @@
 {
   "name": "grakn-client",
-  "version": "0.0.0-development",
-  "type": "module",
+  "version": "2.0.0",
   "description": "Grakn Client for Node.js",
-  "main": "dist/GraknClient.js",
-  "types": "dist/GraknClient.d.ts",
   "author": "Grakn Labs",
   "license": "Apache-2.0",
   "homepage": "https://grakn.ai",
+  "type": "commonjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/graknlabs/client-nodejs"
   },
+  "scripts": {
+    "pretest": "tsc",
+    "test": "node --experimental-specifier-resolution=node test.js"
+  },
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
     "google-protobuf": "3.12.4",
-    "grakn-protocol": "0.0.1",
-    "uuid": "8.3.1"
+    "graknlabs-grpc-protocol": "https://repo.grakn.ai/repository/npm-snapshot/graknlabs-grpc-protocol/-/graknlabs-grpc-protocol-0.0.0-30700a60dadabbddabff0c6b3b96e2dc9def0ce8.tgz"
   },
   "devDependencies": {
     "@bazel/typescript": "2.3.1",
     "@cucumber/cucumber": "7.0.0-rc.0",
     "@types/google-protobuf": "3.7.4",
+    "@types/node": "14.14.10",
     "fs-extra": "7.0.1",
-    "grpc-tools": "1.10.0",
     "grpc_tools_node_protoc_ts": "5.0.1",
-    "jasmine": "3.6.1",
-    "jasmine-reporters": "2.3.2",
+    "grpc-tools": "1.10.0",
+    "jest": "^26.6.3",
     "properties-reader": "0.3.1",
     "tmp": "0.1.0",
     "typescript": "3.9.7"

@@ -1,28 +1,48 @@
-import { ThingType, RemoteThingType } from "../../internal";
-import { Relation } from "../../internal";
-import { RoleType } from "../../internal";
-import { QueryIterator } from "../../internal";
-import { Grakn } from "../../internal";
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import { ThingType, RemoteThingType } from "./ThingType";
+import { Relation } from "../Thing/Relation";
+import { RoleType } from "./RoleType";
+import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../internal";
+import { Merge } from "../../common/utils";
+import { Stream } from "../../rpc/Stream";
 
 export interface RelationType extends ThingType {
     asRemote(transaction: Transaction): RemoteRelationType;
 }
 
 export interface RemoteRelationType extends Merge<RemoteThingType, RelationType> {
-    create(): Relation;
+    create(): Promise<Relation>;
 
-    setSupertype(superRelationType: RelationType): void;
-    getRelates(roleLabel: string): RoleType;
-    getRelates(): QueryIterator;
-    setRelates(roleLabel: string): void;
-    setRelates(roleLabel: string, overriddenLabel: string): void;
-    unsetRelates(roleLabel: string): void;
+    getRelates(roleLabel: string): Promise<RoleType>;
+    getRelates(): Stream<RoleType>;
+    setRelates(roleLabel: string): Promise<void>;
+    setRelates(roleLabel: string, overriddenLabel: string): Promise<void>;
+    unsetRelates(roleLabel: string): Promise<void>;
 
-    getSupertypes(): QueryIterator;
-    getSubtypes(): QueryIterator;
-    getInstances(): QueryIterator;
+    setSupertype(relationType: RelationType): Promise<void>;
+    getSupertype(): Promise<RelationType>;
+    getSupertypes(): Stream<RelationType>;
+    getSubtypes(): Stream<RelationType>;
+    getInstances(): Stream<Relation>;
 
     asRemote(transaction: Transaction): RemoteRelationType;
 }

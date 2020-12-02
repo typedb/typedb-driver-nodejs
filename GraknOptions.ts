@@ -1,9 +1,9 @@
 import {CreateGraknError} from "./internal";
 
 export class GraknOptions {
-    private _infer:      boolean | null;
-    private _explain:    boolean | null;
-    private _batchSize:  number  | null;
+    private _infer: boolean;
+    private _explain: boolean;
+    private _batchSize: number;
 
     constructor() {
         this._infer = null;
@@ -11,29 +11,29 @@ export class GraknOptions {
         this._batchSize = null;
     }
 
-    public infer(): boolean | null {
+    infer(): boolean {
         return this._infer;
     }
 
-    public set_infer(infer: boolean): GraknOptions {
+    setInfer(infer: boolean): GraknOptions {
         this._infer = infer;
         return this;
     }
 
-    public explain(): boolean | null {
+    explain(): boolean {
         return this._explain;
     }
 
-    public set_explain(explain: boolean): GraknOptions {
+    setExplain(explain: boolean): GraknOptions {
         this._explain = explain;
         return this;
     }
 
-    public batchSize(): number | null {
+    batchSize(): number {
         return this._batchSize;
     }
 
-    public set_batchSize(batchSize: number): GraknOptions {
+    setBatchSize(batchSize: number): GraknOptions {
         if (batchSize < 1) {
             throw "Attempted to set nonpositive batch size."
         }

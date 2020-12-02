@@ -1,9 +1,28 @@
-import { QueryIterator } from "../../internal";
-import { RelationType } from "../../internal";
-import { RemoteThingType, ThingType } from "../../internal";
-import { Grakn } from "../../internal";
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import { RelationType } from "./RelationType";
+import { RemoteThingType, ThingType } from "./ThingType";
+import { Grakn } from "../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Merge } from "../../internal";
+import { Merge } from "../../common/utils";
+import { Stream } from "../../rpc/Stream";
 
 export interface RoleType extends ThingType {
     getScope(): string;
@@ -14,11 +33,11 @@ export interface RoleType extends ThingType {
 export interface RemoteRoleType extends Merge<RemoteThingType, RoleType> {
     asRemote(transaction: Transaction): RemoteRoleType;
 
-    getSupertype():     RoleType;
-    getSupertypes():    QueryIterator;
-    getSubtypes():      QueryIterator;
+    getSupertype(): Promise<RoleType>;
+    getSupertypes(): Stream<RoleType>;
+    getSubtypes(): Stream<RoleType>;
 
-    getRelation():      RelationType;
-    getRelations():     QueryIterator;
-    getPlayers():       QueryIterator;
+    getRelationType(): Promise<RelationType>;
+    getRelationTypes(): Stream<RelationType>;
+    getPlayers(): Stream<ThingType>;
 }

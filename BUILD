@@ -32,41 +32,44 @@ load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_deps")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
-load("@npm//@bazel/typescript:index.bzl", "ts_project")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
 
-ts_project(
+ts_library(
     name = "_client_nodejs",
-#    srcs = glob([
-#        "Grakn.ts",
-#        "GraknOptions.ts",
-#        "common/*.ts",
-#        "concept/*.ts",
-#        "query/*.ts",
-#        "rpc/*.ts"
-#    ]),
-    srcs = ["@graknlabs_protocol//grpc/nodejs:protocol"],
+    srcs = glob([
+        "Grakn.ts",
+        "GraknOptions.ts",
+        "common/**/*.ts",
+        "concept/**/*.ts",
+        "query/**/*.ts",
+        "rpc/**/*.ts",
+    ]),
+    module_name = "grakn-client",
+    module_root = ".",
     tsconfig = "tsconfig.json",
-    deps = [],
-    declaration = True,
+    deps = [
+        "@npm//@grpc/grpc-js",
+        "@npm//graknlabs-grpc-protocol",
+        "@npm//@types/node",
+    ],
 )
 
 pkg_npm(
     name = "client-nodejs",
+    package_name = "grakn-client",
     srcs = glob([
        "package.json",
        "README.md",
        ".npmignore",
     ]),
     deps = [
-        "@graknlabs_protocol//grpc/nodejs:protocol",
+        "@npm//graknlabs-grpc-protocol",
         "@npm//@grpc/grpc-js",
         "@npm//google-protobuf",
         ":_client_nodejs",
     ],
     visibility = ["//visibility:public"],
-    vendor_external = [
-        "@graknlabs_protocol"
-    ]
+    vendor_external = [],
 )
 
 assemble_npm(
@@ -86,8 +89,9 @@ deploy_github(
     release_description = "//:RELEASE_TEMPLATE.md",
     title = "Grakn Client Node.js",
     title_append_version = True,
-    organisation = deployment["npm.snapshot"],
-    repository = deployment["npm.release"],
+    organisation = github_deployment["github.organisation"],
+    repository = github_deployment["github.repository"],
+    draft = False
 )
 
 NODEJS_TEST_DEPENDENCIES = [
@@ -111,14 +115,33 @@ artifact_extractor(
     artifact = "@graknlabs_grakn_core_artifact_mac//file",
 )
 
-#release_validate_deps(
+# TODO: add it back once we're able to depend on @graknlabs_protocol as bazel rather than artifact dependency
+# release_validate_deps(
 #    name = "release-validate-deps",
 #    refs = "@graknlabs_client_nodejs_workspace_refs//:refs.json",
 #    tagged_deps = [
-#        "@graknlabs_protocol",
+#      "@graknlabs_protocol",
 #    ],
 #    tags = ["manual"]  # in order for bazel test //... to not fail
-#)
+# )
+
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob([
+        "Grakn.ts",
+        "GraknOptions.ts",
+        "common/**/*.ts",
+        "concept/**/*.ts",
+        "query/**/*.ts",
+        "rpc/**/*.ts",
+    ]),
+    exclude = glob([
+        "node_modules/**/*.*",
+    ]),
+    license_type = "apache",
+)
 
 # CI targets that are not declared in any BUILD file, but are called externally
 filegroup(

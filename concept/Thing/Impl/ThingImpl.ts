@@ -1,16 +1,34 @@
-import { Thing, RemoteThing } from "../../../internal";
-import { Attribute } from "../../../internal";
-import { Type } from "../../../internal";
-import { QueryIterator } from "../../../internal";
-import { AttributeType } from "../../../internal";
-import { RoleType } from "../../../internal";
-import ConceptProto from "grakn-protocol/concept_pb";
-import { EntityImpl } from "../../../internal";
-import { RelationImpl } from "../../../internal";
-import { AttributeImpl } from "../../../internal";
-import { ThingTypeImpl } from "../../../internal";
-import { Grakn } from "../../../internal";
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import { Thing, RemoteThing } from "../Thing";
+import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute } from "../Attribute";
+import { Type } from "../../Type/Type";
+import { AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType, LongAttributeType, StringAttributeType } from "../../Type/AttributeType";
+import { RoleType } from "../../Type/RoleType";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import { ThingTypeImpl } from "../../Type/Impl/ThingTypeImpl";
+import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
+import { Stream } from "../../../rpc/Stream";
+import { RoleTypeImpl } from "../../Type/Impl/RoleTypeImpl";
+import { RelationImpl } from "./RelationImpl";
 
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;
@@ -21,19 +39,6 @@ export abstract class ThingImpl implements Thing {
             throw "IID Missing"
         }
         this._iid = iid;
-    }
-
-    static of(thingProto: ConceptProto.Thing): ThingImpl {
-        switch (thingProto.getEncoding()) {
-            case ConceptProto.Thing.ENCODING.ENTITY:
-                return EntityImpl.of(thingProto);
-            case ConceptProto.Thing.ENCODING.RELATION:
-                return RelationImpl.of(thingProto);
-            case ConceptProto.Thing.ENCODING.ATTRIBUTE:
-                return AttributeImpl.of(thingProto);
-            default:
-                throw "Bad encoding"
-        }
     }
 
     getIID(): string {
@@ -62,56 +67,55 @@ export abstract class RemoteThingImpl implements RemoteThing {
         this._transaction = transaction;
     }
 
-    getType(): ThingTypeImpl {
-        throw "Not implemented yet";
-    }
-
-    isInferred(): boolean {
-        throw "Not implemented yet";
-    }
-
-    abstract asRemote(transaction: Transaction): RemoteThing;
-
-    delete(): void {
-        throw "Not implemented yet";
-    }
-
     getIID(): string {
         return this._iid;
     }
 
-    isDeleted(): boolean {
-        return false;
+    getType(): Promise<ThingTypeImpl> {
+        throw "Not implemented yet";
+    }
+
+    isInferred(): Promise<boolean> {
+        throw "Not implemented yet";
     }
 
     isRemote(): boolean {
         return true;
     }
 
-    getHas(onlyKey: boolean): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeType: Type): QueryIterator;
-    getHas(attributeTypes: AttributeType[]): QueryIterator;
-    getHas(onlyKey: boolean | Type | AttributeType[]): QueryIterator {
-        return new QueryIterator();
-    }
-
-    getPlays(): QueryIterator {
-        return new QueryIterator();
-    }
-
-    getRelations(roleTypes: RoleType[]): QueryIterator {
-        return new QueryIterator();
-    }
-
-    setHas(attribute: Attribute<AttributeType.ValueClass>): void {
+    getHas(onlyKey: boolean): Stream<Attribute<any>>;
+    getHas(attributeType: BooleanAttributeType): Stream<BooleanAttribute>;
+    getHas(attributeType: LongAttributeType): Stream<LongAttribute>;
+    getHas(attributeType: DoubleAttributeType): Stream<DoubleAttribute>;
+    getHas(attributeType: StringAttributeType): Stream<StringAttribute>;
+    getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttribute>;
+    getHas(attributeTypes: AttributeType[]): Stream<Attribute<any>>;
+    getHas(arg: boolean | Type | AttributeType[]): Stream<Attribute<any>> | Stream<BooleanAttribute> | Stream<LongAttribute>
+        | Stream<DoubleAttribute> | Stream<StringAttribute> | Stream<DateTimeAttribute> {
         throw "Not implemented yet";
     }
 
-    unsetHas(attribute: Attribute<AttributeType.ValueClass>): void {
+    getPlays(): Stream<RoleTypeImpl> {
+        throw "Not implemented yet";
+    }
+
+    getRelations(roleTypes: RoleType[]): Stream<RelationImpl> {
+        throw "Not implemented yet";
+    }
+
+    setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
+        throw "Not implemented yet";
+    }
+
+    unsetHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
+        throw "Not implemented yet";
+    }
+
+    delete(): Promise<void> {
+        throw "Not implemented yet";
+    }
+
+    isDeleted(): Promise<boolean> {
         throw "Not implemented yet";
     }
 
@@ -122,4 +126,6 @@ export abstract class RemoteThingImpl implements RemoteThing {
     toString(): string {
         return `${RemoteThingImpl.name}[iid:${this._iid}]`;
     }
+
+    abstract asRemote(transaction: Transaction): RemoteThing;
 }

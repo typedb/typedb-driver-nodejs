@@ -1,11 +1,31 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
-import { Relation } from "../../Thing/Relation";
 import { RelationType, RemoteRelationType } from "../RelationType";
-import { QueryIterator } from "../../Concept";
-import { RoleType } from "../RoleType";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Type as TypeProto } from "grakn-protocol/concept_pb";
+import ConceptProto, { Type as TypeProto } from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import { Stream } from "../../../rpc/Stream";
+import { RelationImpl } from "../../Thing/Impl/RelationImpl";
+import { RoleTypeImpl } from "./RoleTypeImpl";
+import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     protected constructor(label: string, isRoot: boolean) {
@@ -26,47 +46,63 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
         super(transaction, label, isRoot);
     }
 
-    getInstances(): QueryIterator {
-        return new QueryIterator();
-    }
-
     asRemote(transaction: Transaction): RemoteRelationTypeImpl {
         return new RemoteRelationTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
 
-    getSupertype(): RelationTypeImpl {
-        throw "Not yet implemented";
+    create(): Promise<RelationImpl> {
+        const method = new ConceptProto.Type.Req().setRelationTypeCreateReq(new ConceptProto.RelationType.Create.Req());
+        return this.execute(method).then(res => RelationImpl.of(res.getRelationTypeCreateRes().getRelation()));
     }
 
-    getSupertypes(): QueryIterator {
-        throw "Not yet implemented";
+    getRelates(roleLabel: string): Promise<RoleTypeImpl>;
+    getRelates(): Stream<RoleTypeImpl>;
+    getRelates(roleLabel?: string): Promise<RoleTypeImpl> | Stream<RoleTypeImpl> {
+        if (roleLabel != null) {
+            const method = new ConceptProto.Type.Req().setRelationTypeGetRelatesForRoleLabelReq(
+                new ConceptProto.RelationType.GetRelatesForRoleLabel.Req().setLabel(roleLabel));
+            return this.execute(method).then(res => {
+                const getRelatesRes = res.getRelationTypeGetRelatesForRoleLabelRes();
+                if (getRelatesRes.hasRoleType()) return ConceptProtoReader.type(getRelatesRes.getRoleType()) as RoleTypeImpl;
+                else return null;
+            });
+        }
+
+        return this.typeStream(
+            new ConceptProto.Type.Req().setRelationTypeGetRelatesReq(new ConceptProto.RelationType.GetRelates.Req()),
+            res => res.getRelationTypeGetRelatesRes().getRoleList()) as Stream<RoleTypeImpl>;
     }
 
-    getSubtypes(): QueryIterator {
-        throw "Not yet implemented";
+    setRelates(roleLabel: string): Promise<void>;
+    setRelates(roleLabel: string, overriddenLabel: string): Promise<void>;
+    async setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {
+        const setRelatesReq = new ConceptProto.RelationType.SetRelates.Req().setLabel(roleLabel);
+        if (overriddenLabel != null) setRelatesReq.setOverriddenLabel(overriddenLabel);
+        await this.execute(new ConceptProto.Type.Req().setRelationTypeSetRelatesReq(setRelatesReq));
     }
 
-    setSupertype(superRelationType: RelationType): void {
-        throw "Not yet implemented";
+    async unsetRelates(roleLabel: string): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req()
+            .setRelationTypeUnsetRelatesReq(new ConceptProto.RelationType.UnsetRelates.Req().setLabel(roleLabel)));
     }
 
-    create(): Relation {
-        throw "As yet unimplemented"
+    setSupertype(relationType: RelationType): Promise<void> {
+        return super.setSupertype(relationType);
     }
 
-    getRelates(roleLabel: string): RoleType;
-    getRelates(): QueryIterator;
-    getRelates(roleLabel?: string): RoleType | QueryIterator {
-        throw "Not yet implemented";
+    getSupertype(): Promise<RelationTypeImpl> {
+        return super.getSupertype() as Promise<RelationTypeImpl>;
     }
 
-    setRelates(roleLabel: string): void;
-    setRelates(roleLabel: string, overriddenLabel: string): void;
-    setRelates(roleLabel: string, overriddenLabel?: string): void {
-        throw "Not yet implemented";
+    getSupertypes(): Stream<RelationTypeImpl> {
+        return super.getSupertypes() as Stream<RelationTypeImpl>;
     }
 
-    unsetRelates(roleLabel: string): void {
-        throw "Not yet implemented";
+    getSubtypes(): Stream<RelationTypeImpl> {
+        return super.getSubtypes() as Stream<RelationTypeImpl>;
+    }
+
+    getInstances(): Stream<RelationImpl> {
+        return super.getInstances() as Stream<RelationImpl>;
     }
 }

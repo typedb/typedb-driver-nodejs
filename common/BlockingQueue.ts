@@ -17,11 +17,30 @@
  * under the License.
  */
 
-export type Merge<L, R> = L & Pick<R, Exclude<keyof R, keyof L>>;
+export class BlockingQueue<T> {
 
-export function uuidv4(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
+    private readonly _promises: Promise<T>[];
+    private readonly _resolvers: ((t: T) => void)[];
+
+    constructor() {
+        this._promises = [];
+        this._resolvers = [];
+    }
+
+    private addPromise(): void {
+        this._promises.push(new Promise(resolve => {
+            this._resolvers.push(resolve);
+        }));
+    }
+
+    add(t: T): void {
+        if (!this._resolvers.length) this.addPromise();
+        const resolve = this._resolvers.shift();
+        resolve(t);
+    }
+
+    take(): Promise<T> {
+        if (!this._promises.length) this.addPromise();
+        return this._promises.shift();
+    }
 }

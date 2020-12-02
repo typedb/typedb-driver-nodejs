@@ -1,10 +1,30 @@
-import { ThingTypeImpl, RemoteThingTypeImpl } from "../../../internal";
-import { RoleType, RemoteRoleType } from "../../../internal";
-import { QueryIterator } from "../../../internal";
-import { Type as TypeProto } from "grakn-protocol/concept_pb";
-import { Grakn } from "../../../internal";
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
+import { RoleType, RemoteRoleType } from "../RoleType";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { RelationTypeImpl } from "../../../internal";
+import { RelationTypeImpl } from "./RelationTypeImpl";
+import { Stream } from "../../../rpc/Stream";
+import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
 
 export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
     private readonly _scope: string;
@@ -14,7 +34,7 @@ export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
         this._scope = scope;
     }
 
-    static of(typeProto: TypeProto): RoleTypeImpl {
+    static of(typeProto: ConceptProto.Type): RoleTypeImpl {
         return new RoleTypeImpl(typeProto.getLabel(), typeProto.getScope(), typeProto.getRoot());
     }
 
@@ -22,12 +42,12 @@ export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
         return this._scope;
     }
 
-    asRemote(transaction: Transaction): RemoteRoleType {
+    asRemote(transaction: Transaction): RemoteRoleTypeImpl {
         return new RemoteRoleTypeImpl(transaction, this.getLabel(), this.getScope(), this.isRoot());
     }
 
     toString(): string {
-        return `${RoleTypeImpl.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
+        return `${this.constructor.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
     }
 }
 
@@ -39,39 +59,45 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
         this._scope = scope;
     }
 
-    getSupertype(): RoleTypeImpl {
-        throw "Not yet implemented"
-    }
-
-    getSupertypes(): QueryIterator {
-        return new QueryIterator();
-    }
-
-    getSubtypes(): QueryIterator {
-        return new QueryIterator();
-    }
-
     getScope(): string {
         return this._scope;
+    }
+
+    getSupertype(): Promise<RoleTypeImpl> {
+        return super.getSupertype() as Promise<RoleTypeImpl>;
+    }
+
+    getSupertypes(): Stream<RoleTypeImpl> {
+        return super.getSupertypes() as Stream<RoleTypeImpl>;
+    }
+
+    getSubtypes(): Stream<RoleTypeImpl> {
+        return super.getSubtypes() as Stream<RoleTypeImpl>;
     }
 
     asRemote(transaction: Transaction): RemoteRoleTypeImpl {
         return new RemoteRoleTypeImpl(transaction, this.getLabel(), this._scope, this.isRoot())
     }
 
-    getRelation(): RelationTypeImpl {
-        throw "Not yet implemented";
+    async getRelationType(): Promise<RelationTypeImpl> {
+        const method = new ConceptProto.Type.Req().setRoleTypeGetRelationTypeReq(new ConceptProto.RoleType.GetRelationType.Req());
+        const response = (await this.execute(method)).getRoleTypeGetRelationTypeRes();
+        return ConceptProtoReader.type(response.getRelationtype()) as RelationTypeImpl;
     }
 
-    getRelations(): QueryIterator {
-        return new QueryIterator();
+    getRelationTypes(): Stream<RelationTypeImpl> {
+        return this.typeStream(
+            new ConceptProto.Type.Req().setRoleTypeGetRelationTypesReq(new ConceptProto.RoleType.GetRelationTypes.Req()),
+            res => res.getRoleTypeGetRelationTypesRes().getRelationtypeList()) as Stream<RelationTypeImpl>;
     }
 
-    getPlayers(): QueryIterator {
-        return new QueryIterator();
+    getPlayers(): Stream<ThingTypeImpl> {
+        return this.typeStream(
+            new ConceptProto.Type.Req().setRoleTypeGetPlayersReq(new ConceptProto.RoleType.GetPlayers.Req()),
+            res => res.getRoleTypeGetPlayersRes().getThingtypeList()) as Stream<ThingTypeImpl>;
     }
 
     toString(): string {
-        return `${RemoteRoleTypeImpl.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
+        return `${this.constructor.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
     }
 }

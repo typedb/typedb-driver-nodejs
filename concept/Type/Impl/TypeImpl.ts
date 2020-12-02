@@ -1,9 +1,31 @@
-import { Type, RemoteType } from "../../../internal";
-import { QueryIterator } from "../../../internal";
-import ConceptProto from "grakn-protocol/concept_pb";
-import { RoleTypeImpl } from "../../../internal";
-import { ThingTypeImpl } from "../../../internal";
-import { Grakn } from "../../../internal";
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import { RemoteType, Type } from "../Type";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import { Grakn } from "../../../Grakn";
+import { RPCTransaction } from "../../../rpc/RPCTransaction";
+import { Stream } from "../../../rpc/Stream";
+import { ThingImpl } from "../../Thing/Impl/ThingImpl";
+import { ConceptProtoReader } from "../../Proto/ConceptProtoReader";
+import { ConceptProtoBuilder } from "../../Proto/ConceptProtoBuilder";
 import Transaction = Grakn.Transaction;
 
 export abstract class TypeImpl implements Type {
@@ -11,19 +33,10 @@ export abstract class TypeImpl implements Type {
     private readonly _root: boolean;
 
     protected constructor(label: string, root: boolean) {
-        if (!label) throw "Type Label missing.";
+        if (!label) throw "Label cannot be null or empty.";
 
         this._label = label;
         this._root = root;
-    }
-
-    static of(typeProto: ConceptProto.Type): TypeImpl {
-        switch (typeProto.getEncoding()) {
-            case ConceptProto.Type.ENCODING.ROLE_TYPE:
-                return RoleTypeImpl.of(typeProto);
-            default:
-                return ThingTypeImpl.of(typeProto);
-        }
     }
 
     getLabel(): string {
@@ -39,22 +52,21 @@ export abstract class TypeImpl implements Type {
     }
 
     toString(): string {
-        return `${TypeImpl.name}[label:${this._label}]`;
+        return `${this.constructor.name}[label:${this._label}]`;
     }
 
     abstract asRemote(transaction: Transaction): RemoteType;
 }
 
 export abstract class RemoteTypeImpl implements RemoteType {
-    // TODO: protected readonly _rpcTransaction: RPCTransaction
-    private readonly _rpcTransaction: Transaction;
+    private readonly _rpcTransaction: RPCTransaction;
     private _label: string;
     private readonly _isRoot: boolean;
 
     protected constructor(transaction: Transaction, label: string, isRoot: boolean) {
-        if (!transaction) throw "Transaction Missing";
-        if (!label) throw "IID Missing";
-        this._rpcTransaction = transaction;
+        if (!transaction) throw "Transaction can not be null.";
+        if (!label) throw "Label cannot be null or empty.";
+        this._rpcTransaction = transaction as RPCTransaction;
         this._label = label;
         this._isRoot = isRoot;
     }
@@ -71,33 +83,71 @@ export abstract class RemoteTypeImpl implements RemoteType {
         return true;
     }
 
-    setLabel(label: string): void {
+    async setLabel(label: string): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req()
+            .setTypeSetLabelReq(new ConceptProto.Type.SetLabel.Req().setLabel(label)));
         this._label = label;
-        throw "Not implemented yet"; // TODO: issue RPC call
     }
 
-    isAbstract(): boolean {
-        throw "Not implemented yet";
+    async isAbstract(): Promise<boolean> {
+        return (await this.execute(new ConceptProto.Type.Req()
+            .setTypeIsAbstractReq(new ConceptProto.Type.IsAbstract.Req())))
+            .getTypeIsAbstractRes().getAbstract();
     }
 
-    delete(): void {
-        throw "Not implemented yet";
+    protected async setSupertype(type: Type): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req()
+            .setTypeSetSupertypeReq(new ConceptProto.Type.SetSupertype.Req().setType(ConceptProtoBuilder.type(type))));
     }
 
-    isDeleted(): boolean {
-        return false;
+    async getSupertype(): Promise<TypeImpl> {
+        const response: ConceptProto.Type.GetSupertype.Res = (await this.execute(new ConceptProto.Type.Req()
+            .setTypeGetSupertypeReq(new ConceptProto.Type.GetSupertype.Req())))
+            .getTypeGetSupertypeRes();
+
+        return response.getResCase() === ConceptProto.Type.GetSupertype.Res.ResCase.TYPE ? ConceptProtoReader.type(response.getType()) : null;
+    }
+
+    getSupertypes(): Stream<TypeImpl> {
+        const method = new ConceptProto.Type.Req().setTypeGetSupertypesReq(new ConceptProto.Type.GetSupertypes.Req());
+        return this.typeStream(method, res => res.getTypeGetSupertypesRes().getTypeList());
+    }
+
+    getSubtypes(): Stream<TypeImpl> {
+        const method = new ConceptProto.Type.Req().setTypeGetSubtypesReq(new ConceptProto.Type.GetSubtypes.Req());
+        return this.typeStream(method, res => res.getTypeGetSubtypesRes().getTypeList());
+    }
+
+    async delete(): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req().setTypeDeleteReq(new ConceptProto.Type.Delete.Req()));
+    }
+
+    async isDeleted(): Promise<boolean> {
+        return !(await this._rpcTransaction.concepts().getType(this._label));
     }
 
     protected get transaction(): Transaction {
         return this._rpcTransaction;
     }
 
+    protected typeStream(method: ConceptProto.Type.Req, typeGetter: (res: ConceptProto.Type.Res) => ConceptProto.Type[]): Stream<TypeImpl> {
+        const request = new TransactionProto.Transaction.Req().setTypeReq(method.setLabel(this._label));
+        return this._rpcTransaction.stream(request, res => typeGetter(res.getTypeRes()).map(ConceptProtoReader.type));
+    }
+
+    protected thingStream(method: ConceptProto.Type.Req, thingGetter: (res: ConceptProto.Type.Res) => ConceptProto.Thing[]): Stream<ThingImpl> {
+        const request = new TransactionProto.Transaction.Req().setTypeReq(method.setLabel(this._label));
+        return this._rpcTransaction.stream(request, res => thingGetter(res.getTypeRes()).map(ConceptProtoReader.thing));
+    }
+
+    protected execute(method: ConceptProto.Type.Req): Promise<ConceptProto.Type.Res> {
+        const request = new TransactionProto.Transaction.Req().setTypeReq(method.setLabel(this._label));
+        return this._rpcTransaction.execute(request, res => res.getTypeRes());
+    }
+
     toString(): string {
-        return `${RemoteTypeImpl.name}[label:${this._label}]`;
+        return `${this.constructor.name}[label:${this._label}]`;
     }
 
     abstract asRemote(transaction: Transaction): RemoteTypeImpl;
-    abstract getSupertype(): TypeImpl;
-    abstract getSubtypes(): QueryIterator;
-    abstract getSupertypes(): QueryIterator;
 }

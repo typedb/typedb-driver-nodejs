@@ -1,18 +1,40 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import { ThingTypeImpl, RemoteThingTypeImpl } from "./ThingTypeImpl";
 import { RemoteEntityType } from "../EntityType";
 import { EntityType } from "../EntityType";
-import { QueryIterator } from "../../Concept";
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
-import { Type as TypeProto } from "grakn-protocol/concept_pb";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import { EntityImpl } from "../../Thing/Impl/EntityImpl";
+import { Stream } from "../../../rpc/Stream";
+import { DateTimeAttributeImpl } from "../../Thing/Impl/AttributeImpl";
+import { DateTimeAttributeType } from "../AttributeType";
+import { DateTimeAttributeTypeImpl } from "./AttributeTypeImpl";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     protected constructor(label: string, isRoot: boolean) {
         super(label, isRoot);
     }
 
-    static of(typeProto: TypeProto): EntityTypeImpl {
+    static of(typeProto: ConceptProto.Type): EntityTypeImpl {
         return new EntityTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
@@ -26,31 +48,32 @@ export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteE
         super(transaction, label, isRoot);
     }
 
-    setSupertype(superEntityType: EntityType): void {
-        throw "Not yet Implemented"
+    create(): Promise<EntityImpl> {
+        const method = new ConceptProto.Type.Req().setEntityTypeCreateReq(new ConceptProto.EntityType.Create.Req());
+        return this.execute(method).then(res => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
     }
 
-    getSupertype(): EntityTypeImpl {
-        throw "Not yet implemented"
+    getSupertype(): Promise<EntityTypeImpl> {
+        return super.getSupertype() as Promise<EntityTypeImpl>;
     }
 
-    getInstances(): QueryIterator {
-        throw "Not yet implemented"
+    getSupertypes(): Stream<EntityTypeImpl> {
+        return super.getSupertypes() as Stream<EntityTypeImpl>;
+    }
+
+    getSubtypes(): Stream<EntityTypeImpl> {
+        return super.getSubtypes() as Stream<EntityTypeImpl>;
+    }
+
+    getInstances(): Stream<EntityImpl> {
+        return super.getInstances() as Stream<EntityImpl>;
+    }
+
+    setSupertype(type: EntityType): Promise<void> {
+        return super.setSupertype(type);
     }
 
     asRemote(transaction: Transaction): RemoteEntityTypeImpl {
         return new RemoteEntityTypeImpl(transaction, this.getLabel(), this.isRoot());
-    }
-
-    getSupertypes(): QueryIterator {
-        throw "Not yet implemented";
-    }
-
-    getSubtypes(): QueryIterator {
-        throw "Not yet implemented";
-    }
-
-    create(): EntityImpl {
-        throw "Not yet implemented"
     }
 }

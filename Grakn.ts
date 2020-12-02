@@ -22,8 +22,6 @@ export namespace Grakn {
     }
 
     export interface Session {
-        open(options?: GraknOptions): Promise<Session>;
-
         transaction(type: TransactionType, options?: GraknOptions): Promise<Transaction>;
 
         type(): SessionType;
@@ -41,8 +39,6 @@ export namespace Grakn {
     }
 
     export interface Transaction {
-        open(sessionId:string, options?: GraknOptions): Promise<Transaction>
-
         type(): TransactionType;
 
         isOpen(): boolean;

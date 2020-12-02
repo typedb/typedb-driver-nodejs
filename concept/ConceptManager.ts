@@ -24,123 +24,102 @@ export class ConceptManager {
         this._rpcTransaction = rpcTransaction;
     }
 
-    public getRootThingType(): ThingType {
-        return this.getType("thing") as ThingType;
+    async getRootThingType(): Promise<ThingType> {
+        return await this.getType("thing") as ThingType;
     }
 
-    public getRootEntityType(): EntityType {
-        return this.getType("entity") as EntityType;
+    async getRootEntityType(): Promise<EntityType> {
+        return await this.getType("entity") as EntityType;
     }
 
-    public getRootRelationType(): RelationType {
-        return this.getType("relation") as RelationType;
+    async getRootRelationType(): Promise<RelationType> {
+        return await this.getType("relation") as RelationType;
     }
 
-    public getRootAttributeType(): AttributeType {
-        return this.getType("attribute") as AttributeType;
+    async getRootAttributeType(): Promise<AttributeType> {
+        return await this.getType("attribute") as AttributeType;
     }
 
-    public putEntityType(label: string): EntityType {
-        const req = new ProtoConceptManager.Req()
-            .setPutEntityTypeReq(
-                new ProtoConceptManager.PutEntityType.Req()
-                    .setLabel(label)
-            )
-        const res = this.execute(req);
-        return EntityTypeImpl.of(res.getPutEntityTypeRes().getEntityType())
+    async putEntityType(label: string): Promise<EntityType> {
+        const req = new ConceptProto.ConceptManager.Req()
+            .setPutEntityTypeReq(new ConceptProto.ConceptManager.PutEntityType.Req().setLabel(label));
+        const res = await this.execute(req);
+        return EntityTypeImpl.of(res.getPutEntityTypeRes().getEntityType());
     }
 
-    public getEntityType(label: string): EntityType | null {
-        const concept = this.getType(label)
-        if (concept instanceof EntityTypeImpl) return concept as EntityType;
-        return null;
+    async getEntityType(label: string): Promise<EntityType> {
+        const type = await this.getType(label);
+        if (type instanceof EntityTypeImpl) return type as EntityType;
+        else return null;
     }
 
-    public putRelationType(label: string): RelationType {
-        const req = new ProtoConceptManager.Req()
-            .setPutRelationTypeReq(
-                new ProtoConceptManager.PutRelationType.Req()
-                    .setLabel(label)
-            )
-        const res = this.execute(req);
-        return RelationTypeImpl.of(res.getPutRelationTypeRes().getRelationType())
+    async putRelationType(label: string): Promise<RelationType> {
+        const req = new ConceptProto.ConceptManager.Req()
+            .setPutRelationTypeReq(new ConceptProto.ConceptManager.PutRelationType.Req().setLabel(label));
+        const res = await this.execute(req);
+        return RelationTypeImpl.of(res.getPutRelationTypeRes().getRelationType());
     }
 
-    public getRelationType(label: string): RelationType | null {
-        const concept = this.getType(label)
-        if (concept instanceof RelationTypeImpl) return concept as RelationType;
-        return null;
+    async getRelationType(label: string): Promise<RelationType> {
+        const type = await this.getType(label);
+        if (type instanceof RelationTypeImpl) return type as RelationType;
+        else return null;
     }
 
-    public putAttributeType(label: string): AttributeType {
-        const req = new ProtoConceptManager.Req()
-            .setPutAttributeTypeReq(
-                new ProtoConceptManager.PutAttributeType.Req()
-                    .setLabel(label)
-            )
-        const res = this.execute(req);
-        return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType())
+    async putAttributeType(label: string): Promise<AttributeType> {
+        const req = new ConceptProto.ConceptManager.Req()
+            .setPutAttributeTypeReq(new ConceptProto.ConceptManager.PutAttributeType.Req().setLabel(label));
+        const res = await this.execute(req);
+        return ConceptProtoReader.attributeType(res.getPutAttributeTypeRes().getAttributeType());
     }
 
-    public getAttributeType(label: string): AttributeType | null {
-        const concept = this.getType(label)
-        if (concept instanceof AttributeTypeImpl) return concept as AttributeType;
-        return null;
+    async getAttributeType(label: string): Promise<AttributeType> {
+        const type = await this.getType(label);
+        if (type instanceof AttributeTypeImpl) return type as AttributeType;
+        else return null;
     }
 
-    public putRule(label: string, when: string, then: string): Rule {
-        const req = new ProtoConceptManager.Req()
-            .setPutRuleReq(
-                new ProtoConceptManager.PutRule.Req()
+    async putRule(label: string, when: string, then: string): Promise<Rule> {
+        const req = new ConceptProto.ConceptManager.Req()
+            .setPutRuleReq(new ConceptProto.ConceptManager.PutRule.Req()
                     .setLabel(label)
                     .setWhen(when)
-                    .setThen(then)
-            )
-        const res = this.execute(req);
-        return RuleImpl.of(res.getPutRuleRes().getRule())
+                    .setThen(then));
+        const res = await this.execute(req);
+        return RuleImpl.of(res.getPutRuleRes().getRule());
     }
 
-    public getThing(iid: string): Thing | null {
-        const req = new ProtoConceptManager.Req()
-            .setGetThingReq(
-                new ProtoConceptManager.GetThing.Req()
-                    .setIid(iid)
-            )
-        const res = this.execute(req);
-        if (res.getGetThingRes().getResCase() === ProtoConceptManager.GetThing.Res.ResCase.THING)
-            return ThingImpl.of(res.getGetThingRes().getThing());
+    async getThing(iid: string): Promise<Thing> {
+        const req = new ConceptProto.ConceptManager.Req()
+            .setGetThingReq(new ConceptProto.ConceptManager.GetThing.Req().setIid(iid));
+        const res = await this.execute(req);
+        if (res.getGetThingRes().getResCase() === ConceptProto.ConceptManager.GetThing.Res.ResCase.THING)
+            return ConceptProtoReader.thing(res.getGetThingRes().getThing());
         else
             return null;
     }
 
-    public getType(label: string): Type | null {
-        const req = new ProtoConceptManager.Req()
-            .setGetTypeReq(
-                new ProtoConceptManager.GetType.Req()
-                    .setLabel(label)
-            )
-        const res = this.execute(req);
-        if (res.getGetTypeRes().getResCase() === ProtoConceptManager.GetType.Res.ResCase.TYPE)
-            return TypeImpl.of(res.getGetTypeRes().getType());
+    async getType(label: string): Promise<Type> {
+        const req = new ConceptProto.ConceptManager.Req()
+            .setGetTypeReq(new ConceptProto.ConceptManager.GetType.Req().setLabel(label));
+        const res = await this.execute(req);
+        if (res.getGetTypeRes().getResCase() === ConceptProto.ConceptManager.GetType.Res.ResCase.TYPE)
+            return ConceptProtoReader.type(res.getGetTypeRes().getType());
         else
             return null;
     }
 
-    public getRule(label: string): Rule | null {
-        const req = new ProtoConceptManager.Req()
-            .setGetRuleReq(
-                new ProtoConceptManager.GetRule.Req()
-                    .setLabel(label)
-            )
-        const res = this.execute(req);
-        if (res.getGetRuleRes().getResCase() === ProtoConceptManager.GetRule.Res.ResCase.RULE) return RuleImpl.of(res.getGetRuleRes().getRule());
+    async getRule(label: string): Promise<Rule> {
+        const req = new ConceptProto.ConceptManager.Req()
+            .setGetRuleReq(new ConceptProto.ConceptManager.GetRule.Req().setLabel(label));
+        const res = await this.execute(req);
+        if (res.getGetRuleRes().getResCase() === ConceptProto.ConceptManager.GetRule.Res.ResCase.RULE) return RuleImpl.of(res.getGetRuleRes().getRule());
         return null;
     }
 
-    private execute(conceptManagerReq: ProtoConceptManager.Req): ProtoConceptManager.Res {
+    private async execute(conceptManagerReq: ConceptProto.ConceptManager.Req): Promise<ConceptProto.ConceptManager.Res> {
         const transactionReq = new TransactionProto.Transaction.Req()
-            .setConceptManagerReq(conceptManagerReq)
-        //return this._rpcTransaction.execute(transactionReq).getConceptManagerRes()
-        throw "not implemented conceptmanager.execute"
+            .setConceptManagerReq(conceptManagerReq);
+        return await this._rpcTransaction.execute(transactionReq, res => res.getConceptManagerRes());
     }
 }

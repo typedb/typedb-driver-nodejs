@@ -1,13 +1,36 @@
-import { Attribute, RemoteAttribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute, RemoteBooleanAttribute, RemoteLongAttribute, RemoteStringAttribute, RemoteDoubleAttribute, RemoteDateTimeAttribute } from "../../../internal";
-import { ThingImpl, RemoteThingImpl } from "../../../internal";
-import { ThingType } from "../../../internal";
-import { QueryIterator } from "../../Concept";
-import { AttributeTypeImpl, BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl, DoubleAttributeTypeImpl, LongAttributeTypeImpl, StringAttributeTypeImpl } from "../../Type/Impl/AttributeTypeImpl";
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import { Attribute, RemoteAttribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute,
+    StringAttribute, RemoteBooleanAttribute, RemoteLongAttribute, RemoteStringAttribute, RemoteDoubleAttribute,
+    RemoteDateTimeAttribute } from "../Attribute";
+import { ThingImpl, RemoteThingImpl } from "./ThingImpl";
+import { ThingType } from "../../Type/ThingType";
+import { AttributeTypeImpl, BooleanAttributeTypeImpl, DateTimeAttributeTypeImpl, DoubleAttributeTypeImpl,
+    LongAttributeTypeImpl, StringAttributeTypeImpl } from "../../Type/Impl/AttributeTypeImpl";
 import { AttributeType } from "../../Type/AttributeType";
 import ValueClass = AttributeType.ValueClass;
 import { Grakn } from "../../../Grakn";
 import Transaction = Grakn.Transaction;
 import { Merge } from "../../../common/utils";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import { Stream } from "../../../rpc/Stream";
 
 export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl implements Attribute<T> {
     protected constructor(iid: string) {
@@ -24,11 +47,11 @@ export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteTh
         super(transaction, iid);
     }
 
-    getOwners(ownerType: ThingType): QueryIterator {
-        return new QueryIterator()
+    getOwners(ownerType: ThingType): Stream<ThingImpl> {
+        throw "Not implemented yet";
     }
 
-    getType(): AttributeTypeImpl {
+    getType(): Promise<AttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
@@ -38,194 +61,213 @@ export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteTh
 }
 
 export class BooleanAttributeImpl extends AttributeImpl<boolean> implements BooleanAttribute {
-    private readonly value: boolean;
+    private readonly _value: boolean;
 
     constructor(iid: string, value: boolean) {
         super(iid);
-        this.value = value;
+        this._value = value;
+    }
+
+    static of(protoThing: ConceptProto.Thing): BooleanAttributeImpl {
+        return new BooleanAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getBoolean());
     }
 
     asRemote(transaction: Transaction): RemoteBooleanAttributeImpl {
-        return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this.value);
+        return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this._value);
     }
 
     getValue(): boolean {
-        return this.value;
+        return this._value;
     }
 }
 
 export class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements Merge<RemoteBooleanAttribute, BooleanAttribute> {
-    private readonly value: boolean;
+    private readonly _value: boolean;
 
     constructor(transaction: Transaction, iid: string, value: boolean){
         super(transaction, iid);
-        this.value = value;
+        this._value = value;
     }
 
     getValue(): boolean {
-        return this.value;
+        return this._value;
     }
 
-    getType(): BooleanAttributeTypeImpl {
+    getType(): Promise<BooleanAttributeTypeImpl> {
         throw "Not implemented yet"
     }
 
     asRemote(transaction: Transaction): RemoteBooleanAttributeImpl {
-        return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this.value);
+        return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this._value);
     }
 }
 
 export class LongAttributeImpl extends AttributeImpl<number> implements LongAttribute {
-    private readonly value: number;
+    private readonly _value: number;
 
     constructor(iid: string, value: number) {
         super(iid);
-        this.value = value;
+        this._value = value;
+    }
+
+    static of(protoThing: ConceptProto.Thing): LongAttributeImpl {
+        return new LongAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getLong());
     }
 
     asRemote(transaction: Transaction): RemoteLongAttributeImpl {
-        return new RemoteLongAttributeImpl(transaction, this.getIID(), this.value);
+        return new RemoteLongAttributeImpl(transaction, this.getIID(), this._value);
     }
 
     getValue(): number {
-        return this.value;
+        return this._value;
     }
 }
 
 export class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteLongAttribute, LongAttribute> {
-    private readonly value: number;
+    private readonly _value: number;
 
     constructor(transaction: Transaction, iid: string, value: number){
         super(transaction, iid);
-        this.value = value;
+        this._value = value;
     }
 
     getValue(): number {
-        return this.value;
+        return this._value;
     }
 
-    getType(): LongAttributeTypeImpl {
+    getType(): Promise<LongAttributeTypeImpl> {
         throw "Of not present"
     }
 
     asRemote(transaction: Transaction): RemoteLongAttributeImpl {
-        return this;
-    }
-}
-
-export class StringAttributeImpl extends AttributeImpl<string> implements Attribute<string> {
-    private readonly value: string;
-
-    constructor(iid: string, value: string) {
-        super(iid);
-        this.value = value;
-    }
-
-    asRemote(transaction: Transaction): RemoteStringAttributeImpl {
-        return new RemoteStringAttributeImpl(transaction, this.getIID(), this.value);
-    }
-
-    getValue(): string {
-        return this.value;
-    }
-}
-
-export class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements Merge<RemoteStringAttribute, StringAttribute> {
-    private readonly value: string;
-
-    constructor(transaction: Transaction, iid: string, value: string){
-        super(transaction, iid);
-        this.value = value;
-    }
-
-    getValue(): string {
-        return this.value;
-    }
-
-    getType(): StringAttributeTypeImpl {
-        throw "Of not present"
-    }
-
-    asRemote(transaction: Transaction): RemoteStringAttributeImpl {
-        return this;
+        return new RemoteLongAttributeImpl(transaction, this.getIID(), this._value);
     }
 }
 
 export class DoubleAttributeImpl extends AttributeImpl<number> implements Attribute<number> {
-    private readonly value: number;
+    private readonly _value: number;
 
     constructor(iid: string, value: number) {
         super(iid);
-        this.value = value;
+        this._value = value;
+    }
+
+    static of(protoThing: ConceptProto.Thing): DoubleAttributeImpl {
+        return new DoubleAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getDouble());
     }
 
     asRemote(transaction: Transaction): RemoteDoubleAttributeImpl {
-        return new RemoteDoubleAttributeImpl(transaction, this.getIID(), this.value);
+        return new RemoteDoubleAttributeImpl(transaction, this.getIID(), this._value);
     }
 
     getValue(): number {
-        return this.value;
+        return this._value;
     }
 }
 
 
 export class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> implements Merge<RemoteDoubleAttribute, DoubleAttribute> {
-    private readonly value: number;
+    private readonly _value: number;
 
     constructor(transaction: Transaction, iid: string, value: number){
         super(transaction, iid);
-        this.value = value;
+        this._value = value;
     }
 
     getValue(): number {
-        return this.value;
+        return this._value;
     }
 
-    getType(): DoubleAttributeTypeImpl {
+    getType(): Promise<DoubleAttributeTypeImpl> {
         throw "Not implemented yet";
     }
 
     asRemote(transaction: Transaction): RemoteDoubleAttributeImpl {
-        return this;
+        return new RemoteDoubleAttributeImpl(transaction, this.getIID(), this._value);
     }
 }
 
+export class StringAttributeImpl extends AttributeImpl<string> implements Attribute<string> {
+    private readonly _value: string;
+
+    constructor(iid: string, value: string) {
+        super(iid);
+        this._value = value;
+    }
+
+    static of(protoThing: ConceptProto.Thing): StringAttributeImpl {
+        return new StringAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getString());
+    }
+
+    asRemote(transaction: Transaction): RemoteStringAttributeImpl {
+        return new RemoteStringAttributeImpl(transaction, this.getIID(), this._value);
+    }
+
+    getValue(): string {
+        return this._value;
+    }
+}
+
+export class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> implements Merge<RemoteStringAttribute, StringAttribute> {
+    private readonly _value: string;
+
+    constructor(transaction: Transaction, iid: string, value: string){
+        super(transaction, iid);
+        this._value = value;
+    }
+
+    getValue(): string {
+        return this._value;
+    }
+
+    getType(): Promise<StringAttributeTypeImpl> {
+        throw "Of not present"
+    }
+
+    asRemote(transaction: Transaction): RemoteStringAttributeImpl {
+        return new RemoteStringAttributeImpl(transaction, this.getIID(), this._value);
+    }
+}
 
 export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTimeAttribute {
-    private readonly value: Date;
+    private readonly _value: Date;
 
     constructor(iid: string, value: Date) {
         super(iid);
-        this.value = value;
+        this._value = value;
+    }
+
+    static of(protoThing: ConceptProto.Thing): DateTimeAttributeImpl {
+        return new DateTimeAttributeImpl(protoThing.getIid_asB64(), new Date(protoThing.getValue().getDateTime()));
     }
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeImpl {
-        return new RemoteDateTimeAttributeImpl(transaction, this.getIID(), this.value);
+        return new RemoteDateTimeAttributeImpl(transaction, this.getIID(), this._value);
     }
 
     getValue(): Date {
-        return this.value;
+        return this._value;
     }
 }
 
 
 class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements Merge<RemoteDateTimeAttribute, DateTimeAttribute> {
-    private readonly value: Date;
+    private readonly _value: Date;
 
     constructor(transaction: Transaction, iid: string, value: Date){
         super(transaction, iid);
-        this.value = value;
+        this._value = value;
     }
 
     getValue(): Date {
-        return this.value;
+        return this._value;
     }
 
-    getType(): DateTimeAttributeTypeImpl {
+    getType(): Promise<DateTimeAttributeTypeImpl> {
         throw "Of not present"
     }
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeImpl {
-        return this;
+        return new RemoteDateTimeAttributeImpl(transaction, this.getIID(), this._value);
     }
 }
