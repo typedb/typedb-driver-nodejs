@@ -292,6 +292,21 @@ async function run() {
         return;
     }
 
+    // TODO: re-enable when putRule syntax is discovered
+    // try {
+    //     tx = await session.transaction(TransactionType.WRITE);
+    //     await tx.concepts().putRule("septuagenarian-rule", "$x isa person", "$x has age 70");
+    //     await tx.commit();
+    //     await tx.close();
+    //     console.log(`put rule - SUCCESS`);
+    // } catch (err) {
+    //     console.error(`put rule - ERROR: ${err.stack || err}`);
+    //     await tx.close();
+    //     await session.close();
+    //     client.close();
+    //     return;
+    // }
+
     try {
         await session.close();
         console.log("close schema session - SUCCESS");
