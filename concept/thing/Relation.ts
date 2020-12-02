@@ -38,7 +38,9 @@ export interface RemoteRelation extends Merge<RemoteThing, Relation> {
     addPlayer(roleType: RoleType, player: Thing): Promise<void>;
     removePlayer(roleType: RoleType, player: Thing): Promise<void>;
 
+    getPlayers(): Stream<Thing>;
     getPlayers(roleTypes: RoleType[]): Stream<Thing>;
+
     getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>>;
 
     asRemote(transaction: Transaction): RemoteRelation;

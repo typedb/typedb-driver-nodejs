@@ -59,9 +59,12 @@ export interface RemoteThing extends Merge<RemoteConcept, Thing> {
     getHas(attributeType: DoubleAttributeType): Stream<DoubleAttribute>;
     getHas(attributeType: StringAttributeType): Stream<StringAttribute>;
     getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttribute>;
+    getHas(): Stream<Attribute<any>>;
     getHas(attributeTypes: AttributeType[]): Stream<Attribute<any>>;
 
     getPlays(): Stream<RoleType>;
+
+    getRelations(): Stream<Relation>;
     getRelations(roleTypes: RoleType[]): Stream<Relation>;
 
     asRemote(transaction: Transaction): RemoteThing;

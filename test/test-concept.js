@@ -53,9 +53,9 @@ async function run() {
         lion = await tx.concepts().putEntityType("lion");
         await tx.commit();
         await tx.close();
-        console.log("put entity type - SUCCESS");
+        console.log("putEntityType - SUCCESS");
     } catch (err) {
-        console.error(`put entity type - ERROR: ${err.stack || err}`);
+        console.error(`putEntityType - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();
@@ -70,9 +70,9 @@ async function run() {
         await lion.asRemote(tx).setPlays(lionCub);
         await tx.commit();
         await tx.close();
-        console.log("commit relation type, relates and plays - SUCCESS");
+        console.log("putRelationType / setRelates / setPlays - SUCCESS");
     } catch (err) {
-        console.error(`commit relation type, relates and plays - ERROR: ${err.stack || err}`);
+        console.error(`putRelationType / setRelates / setPlays - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();
@@ -228,6 +228,7 @@ async function run() {
         await person.asRemote(tx).setAbstract();
         await person.asRemote(tx).setOwns(email, true);
         await person.asRemote(tx).setOwns(age, false);
+        await lion.asRemote(tx).setOwns(age);
         customer = await tx.concepts().putEntityType("customer");
         await customer.asRemote(tx).setSupertype(person);
         await customer.asRemote(tx).setOwns(workEmail, true, email);
@@ -292,20 +293,19 @@ async function run() {
         return;
     }
 
-    // TODO: re-enable when putRule syntax is discovered
-    // try {
-    //     tx = await session.transaction(TransactionType.WRITE);
-    //     await tx.concepts().putRule("septuagenarian-rule", "$x isa person", "$x has age 70");
-    //     await tx.commit();
-    //     await tx.close();
-    //     console.log(`put rule - SUCCESS`);
-    // } catch (err) {
-    //     console.error(`put rule - ERROR: ${err.stack || err}`);
-    //     await tx.close();
-    //     await session.close();
-    //     client.close();
-    //     return;
-    // }
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        await tx.concepts().putRule("septuagenarian-rule", "{$x isa person;}", "$x has age 70");
+        await tx.commit();
+        await tx.close();
+        console.log(`put rule - SUCCESS`);
+    } catch (err) {
+        console.error(`put rule - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
 
     try {
         await session.close();
@@ -325,26 +325,69 @@ async function run() {
         tx = await session.transaction(TransactionType.WRITE);
         for (let i = 0; i < 10; i++) stoneLion.asRemote(tx).create();
         const lions = await lion.asRemote(tx).getInstances().collect();
-        assert(lions.length === 10);
         const firstLion = lions[0];
+        const isInferred = await firstLion.asRemote(tx).isInferred();
         const lionType = await firstLion.asRemote(tx).getType();
+        const age42 = await age.asRemote(tx).put(42);
+        await firstLion.asRemote(tx).setHas(age42);
+        const firstLionAttrs = (await firstLion.asRemote(tx).getHas().collect()).map(x => x.getValue());
+        assert(firstLionAttrs.length === 1);
+        assert(firstLionAttrs[0] === 42);
+        const firstLionAges = (await firstLion.asRemote(tx).getHas(age).collect()).map(x => x.getValue());
+        assert(firstLionAges.length === 1)
+        assert(firstLionAges[0] === 42);
+        const firstLionWorkEmails = (await firstLion.asRemote(tx).getHas(workEmail).collect()).map(x => x.getValue());
+        assert(!firstLionWorkEmails.length);
+        const firstFamily = await lionFamily.asRemote(tx).create();
+        await firstFamily.asRemote(tx).addPlayer(lionCub, firstLion);
+        const firstLionPlaying = (await firstLion.asRemote(tx).getPlays().collect()).map(x => x.getScopedLabel());
+        assert(firstLionPlaying.length === 1);
+        assert(firstLionPlaying[0] === "lion-family:lion-cub");
+        const firstLionRelations = await firstLion.asRemote(tx).getRelations().collect();
+        assert(firstLionRelations.length === 1);
+        const firstLionFatherRelations = await firstLion.asRemote(tx).getRelations([father]).collect();
+        assert(!firstLionFatherRelations.length);
         await tx.commit();
         await tx.close();
-        console.log(`create - SUCCESS - There are ${lions.length} lions.`);
+        assert(lions.length === 10);
+        assert(!isInferred);
+        console.log(`Thing methods - SUCCESS - There are ${lions.length} lions.`);
         assert(lionType.getLabel() === "stone-lion");
         console.log(`getType - SUCCESS - After looking more closely, it turns out that there are ${lions.length} stone lions.`);
     } catch (err) {
-        console.error(`create / getType - ERROR: ${err.stack || err}`);
+        console.error(`Thing methods - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();
         return;
     }
 
-    // try {
-    //     tx = await session.transaction(TransactionType.WRITE);
-    //     const lionInstance =
-    // }
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        const firstLionFamily = (await lionFamily.asRemote(tx).getInstances().collect())[0];
+        const firstLion = (await firstLionFamily.asRemote(tx).getPlayers().collect())[0];
+        const firstLionFamily2 = (await firstLion.asRemote(tx).getRelations().collect())[0];
+        assert(firstLionFamily2);
+        let players = await firstLionFamily.asRemote(tx).getPlayers().collect();
+        assert(players.length === 1);
+        const lionCubPlayers = await firstLionFamily.asRemote(tx).getPlayers([lionCub]).collect();
+        assert(players.length === 1);
+        const playersByRoleType = (await firstLionFamily.asRemote(tx).getPlayersByRoleType()).keys();
+        const firstPlayer = playersByRoleType.next().value;
+        assert(firstPlayer.getScopedLabel() === "lion-family:lion-cub");
+        await firstLionFamily.asRemote(tx).removePlayer(lionCub, firstLion);
+        const lionFamilyCleanedUp = await firstLionFamily.asRemote(tx).isDeleted();
+        assert(lionFamilyCleanedUp);
+        await tx.rollback();
+        await tx.close();
+        console.log(`Relation methods - SUCCESS`);
+    } catch (err) {
+        console.error(`Relation methods - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        return;
+    }
 
     try {
         tx = await session.transaction(TransactionType.WRITE);

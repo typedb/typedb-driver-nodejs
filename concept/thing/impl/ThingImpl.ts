@@ -21,11 +21,6 @@ import {
     Thing,
     RemoteThing,
     Attribute,
-    BooleanAttribute,
-    DateTimeAttribute,
-    DoubleAttribute,
-    LongAttribute,
-    StringAttribute,
     Type,
     AttributeType,
     BooleanAttributeType,
@@ -106,7 +101,8 @@ export abstract class RemoteThingImpl implements RemoteThing {
     }
 
     async isInferred(): Promise<boolean> {
-        return (await this.execute(new ConceptProto.Thing.Req().setThingIsInferredReq(new ConceptProto.Thing.IsInferred.Req()))).getThingIsInferredRes().getInferred();
+        return (await this.execute(new ConceptProto.Thing.Req().setThingIsInferredReq(
+            new ConceptProto.Thing.IsInferred.Req()))).getThingIsInferredRes().getInferred();
     }
 
     isRemote(): boolean {
@@ -120,11 +116,15 @@ export abstract class RemoteThingImpl implements RemoteThing {
     getHas(attributeType: StringAttributeType): Stream<StringAttributeImpl>;
     getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttributeImpl>;
     getHas(attributeTypes: AttributeType[]): Stream<AttributeImpl<any>>;
-    getHas(arg: boolean | Type | AttributeType[]): Stream<AttributeImpl<any>> | Stream<BooleanAttributeImpl> | Stream<LongAttributeImpl>
+    getHas(): Stream<AttributeImpl<any>>;
+    getHas(arg?: boolean | Type | AttributeType[]): Stream<AttributeImpl<any>> | Stream<BooleanAttributeImpl> | Stream<LongAttributeImpl>
         | Stream<DoubleAttributeImpl> | Stream<StringAttributeImpl> | Stream<DateTimeAttributeImpl> {
+        if (typeof arg === "undefined") {
+            const method = new ConceptProto.Thing.Req().setThingGetHasReq(new ConceptProto.Thing.GetHas.Req());
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
+        }
         if (typeof arg === "boolean") {
-            const method = new ConceptProto.Thing.Req()
-                .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setKeysOnly(arg));
+            const method = new ConceptProto.Thing.Req().setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setKeysOnly(arg));
             return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
         }
         if (Array.isArray(arg)) {
@@ -140,7 +140,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
         if (arg instanceof DoubleAttributeTypeImpl) return stream as Stream<DoubleAttributeImpl>;
         if (arg instanceof StringAttributeTypeImpl) return stream as Stream<StringAttributeImpl>;
         if (arg instanceof DateTimeAttributeTypeImpl) return stream as Stream<DateTimeAttributeImpl>;
-        throw "Argument was not valid."
+        throw "Argument was not valid.";
     }
 
     getPlays(): Stream<RoleTypeImpl> {
@@ -148,31 +148,29 @@ export abstract class RemoteThingImpl implements RemoteThing {
         return this.typeStream(method, res => res.getThingGetPlaysRes().getRoleTypeList()) as Stream<RoleTypeImpl>;
     }
 
-    getRelations(roleTypes: RoleType[]): Stream<RelationImpl> {
-        const method = new ConceptProto.Thing.Req().setThingGetRelationsReq(new ConceptProto.Thing.GetRelations.Req());
+    getRelations(): Stream<RelationImpl>;
+    getRelations(roleTypes: RoleType[] = []): Stream<RelationImpl> {
+        const method = new ConceptProto.Thing.Req().setThingGetRelationsReq(
+            new ConceptProto.Thing.GetRelations.Req().setRoleTypesList(ConceptProtoBuilder.types(roleTypes)));
         return this.thingStream(method, res => res.getThingGetRelationsRes().getRelationList()) as Stream<RelationImpl>;
     }
 
     async setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
         await this.execute(new ConceptProto.Thing.Req().setThingSetHasReq(
-            new ConceptProto.Thing.SetHas.Req().setAttribute(ConceptProtoBuilder.thing(attribute))
-        ));
+            new ConceptProto.Thing.SetHas.Req().setAttribute(ConceptProtoBuilder.thing(attribute))));
     }
 
     async unsetHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
         await this.execute(new ConceptProto.Thing.Req().setThingUnsetHasReq(
-            new ConceptProto.Thing.UnsetHas.Req().setAttribute(ConceptProtoBuilder.thing(attribute))
-        ));
+            new ConceptProto.Thing.UnsetHas.Req().setAttribute(ConceptProtoBuilder.thing(attribute))));
     }
 
     async delete(): Promise<void> {
-        await this.execute(new ConceptProto.Thing.Req().setThingDeleteReq(
-            new ConceptProto.Thing.Delete.Req()
-        ));
+        await this.execute(new ConceptProto.Thing.Req().setThingDeleteReq(new ConceptProto.Thing.Delete.Req()));
     }
 
     async isDeleted(): Promise<boolean> {
-        return (await this._rpcTransaction.concepts().getThing(this._iid)).getIID() != null;
+        return !(await this._rpcTransaction.concepts().getThing(this._iid));
     }
 
     protected get transaction(): Transaction {

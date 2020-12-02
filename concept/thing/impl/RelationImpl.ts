@@ -27,7 +27,6 @@ import {
     RoleType,
     Grakn,
     Stream,
-    EntityTypeImpl,
     ConceptProtoReader,
     RPCTransaction,
     RoleTypeImpl, ConceptProtoBuilder,
@@ -71,22 +70,21 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
         const request = new TransactionProto.Transaction.Req().setThingReq(method);
         const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypeWithPlayerList())
         const rolePlayerMap = new Map<RoleTypeImpl, ThingImpl[]>();
-        for await (const rolePlayerPair of stream) {
-            const rolePlayer = rolePlayerPair as ConceptProto.Relation.GetPlayersByRoleType.RoleTypeWithPlayer;
-            const role = ConceptProtoReader.thingType(rolePlayer.getRoleType()) as RoleTypeImpl;
+        for await (const rolePlayer of stream) {
+            const role = ConceptProtoReader.type(rolePlayer.getRoleType()) as RoleTypeImpl;
             const player = ConceptProtoReader.thing(rolePlayer.getPlayer());
             if (!rolePlayerMap.has(role)) {
-                rolePlayerMap.set(role, [])
+                rolePlayerMap.set(role, []);
             }
             rolePlayerMap.get(role).push(player)
         }
         return rolePlayerMap;
     }
 
-    getPlayers(roleTypes: RoleType[]): Stream<ThingImpl> {
+    getPlayers(): Stream<ThingImpl>;
+    getPlayers(roleTypes: RoleType[] = []): Stream<ThingImpl> {
         const method = new ConceptProto.Thing.Req().setRelationGetPlayersReq(
-            new ConceptProto.Relation.GetPlayers.Req().setRoleTypesList(roleTypes.map(roleType => ConceptProtoBuilder.type(roleType)))
-        );
+            new ConceptProto.Relation.GetPlayers.Req().setRoleTypesList(roleTypes.map(roleType => ConceptProtoBuilder.type(roleType))));
         return this.thingStream(method, res => res.getRelationGetPlayersRes().getThingList()) as Stream<ThingImpl>;
     }
 
