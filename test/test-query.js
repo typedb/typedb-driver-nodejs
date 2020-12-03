@@ -171,6 +171,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
+        tx.close();
         console.log("open data transaction - SUCCESS");
     } catch (err) {
         console.error(`open data write transaction - ERROR: ${err.stack || err}`);

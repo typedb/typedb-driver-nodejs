@@ -25,7 +25,7 @@
 
 /* common */
 export * from "./common/BlockingQueue";
-export * from "./common/Exceptions";
+export * from "./common/Errors";
 export * from "./common/ProtoBuilder";
 export * from "./common/utils";
 
