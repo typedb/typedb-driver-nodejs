@@ -18,14 +18,49 @@
  */
 
 import AnswerProto from "graknlabs-grpc-protocol/protobuf/answer_pb";
-import { AnswerGroup, ErrorMessage, GraknClientError } from "../../dependencies_internal";
+import {
+    AnswerGroup,
+    Concept, ConceptProtoReader,
+    ErrorMessage,
+    GraknClientError,
+} from "../../dependencies_internal";
 
 export class ConceptMap {
-    asAnswerGroup(): AnswerGroup<any> {
-        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("ConceptMap", "AnswerGroup"))
+    private readonly _map: Map<string, Concept>;
+    private readonly _queryPattern: string;
+
+    constructor(map: Map<string, Concept>, pattern: string){
+        this._map = map;
+        this._queryPattern = pattern;
     }
 
-    asConceptMap(): ConceptMap {
-        
+    static of(res: AnswerProto.ConceptMap) {
+        const variableMap = new Map<string, Concept>;
+        for (let [resLabel, resConcept] of res.getMapMap().entries()) {
+            let concept;
+            if (resConcept.hasThing()) concept = ConceptProtoReader.thing(resConcept.getThing());
+            else concept = ConceptProtoReader.type(resConcept.getType());
+            variableMap.set(resLabel, concept);
+        }
+        const queryPattern = res.getPattern();
+        return new ConceptMap(variableMap, queryPattern);
+    }
+
+    queryPattern(): string {return this._queryPattern;}
+    map(): Map<string, Concept> {return this._map;}
+    concepts(): IterableIterator<Concept> {return this._map.values();}
+
+    get(variable: string): Concept {
+        const concept = this._map.get(variable);
+        if (concept == null) throw new GraknClientError(ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST.message(variable))
+        return concept;
+    }
+
+    toString(): string {
+        let output = "";
+        for (let entry of this._map.entries()) {
+            output += `[${entry[0]}/${entry[1]}]`
+        }
+        return output;
     }
 }

@@ -3,8 +3,6 @@ import { AnswerGroup, ConceptMap, ErrorMessage, Grakn, GraknClientError, } from 
 import Transaction = Grakn.Transaction;
 
 export interface Answer {
-    asAnswerGroup(): AnswerGroup<any>;
-    asConceptMap(): ConceptMap;
 }
 
 export namespace Answer {
