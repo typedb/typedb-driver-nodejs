@@ -18,6 +18,8 @@
  */
 
 import AnswerProto from "graknlabs-grpc-protocol/protobuf/answer_pb";
+import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+
 import {
     AnswerGroup,
     Concept, ConceptProtoReader,
@@ -36,7 +38,7 @@ export class ConceptMap {
 
     static of(res: AnswerProto.ConceptMap): ConceptMap {
         const variableMap = new Map<string, Concept>();
-        res.getMapMap().forEach((resConcept, resLabel) => {
+        res.getMapMap().forEach((resConcept: ConceptProto.Concept, resLabel: string) => {
             let concept;
             console.log(resConcept.getThing().getIid_asB64());
             if (resConcept.hasThing()) concept = ConceptProtoReader.thing(resConcept.getThing());
