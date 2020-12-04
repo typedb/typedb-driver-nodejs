@@ -17,16 +17,6 @@
  * under the License.
  */
 
-export class GraknClientError extends Error {
-    constructor(error: string | Error | ErrorMessage) {
-        if (typeof error === "string") {
-            super(error)
-        } else {
-            super(Error.toString())
-        }
-    }
-}
-
 export abstract class ErrorMessage {
     private readonly _codePrefix: string;
     private readonly _codeNumber: number;
