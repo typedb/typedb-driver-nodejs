@@ -34,15 +34,16 @@ export class ConceptMap {
         this._queryPattern = pattern;
     }
 
-    static of(res: AnswerProto.ConceptMap) {
-        const variableMap = new Map<string, Concept>;
-        for (let [resLabel, resConcept] of res.getMapMap().entries()) {
+    static of(res: AnswerProto.ConceptMap): ConceptMap {
+        const variableMap = new Map<string, Concept>();
+        res.getMapMap().forEach((resConcept, resLabel) => {
             let concept;
+            console.log(resConcept.getThing().getIid_asB64());
             if (resConcept.hasThing()) concept = ConceptProtoReader.thing(resConcept.getThing());
             else concept = ConceptProtoReader.type(resConcept.getType());
             variableMap.set(resLabel, concept);
-        }
-        const queryPattern = res.getPattern();
+        })
+        const queryPattern = res.getPattern() === "" ? null : res.getPattern();
         return new ConceptMap(variableMap, queryPattern);
     }
 
