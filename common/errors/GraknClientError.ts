@@ -25,6 +25,6 @@ export class GraknClientError extends Error {
         } else {
             super(error.toString())
         }
-        this.name = "GraknClientError";
+        this.name = "GraknClientError"; // Required to correctly report error type in default throw
     }
 }
