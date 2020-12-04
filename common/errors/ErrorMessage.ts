@@ -79,7 +79,7 @@ export namespace ErrorMessage {
         constructor(code: number, message: (args: any[]) => string) {super("CON", code, "Concept Error", message)}
     }
     export namespace Concept {
-        export const INVALID_CONCEPT_CASTING = new Concept(1, (args: any[]) => `Invalid concept conversion from '${args[0]}' to '${args[1]}'.`);
+        export const INVALID_CONCEPT_CASTING = new Concept(1, (args: any[]) => `Invalid concept conversion form '${args[0]}' to '${args[1]}'.`);
         export const MISSING_TRANSACTION = new Concept(2, () => `Transaction cannot be null.`);
         export const MISSING_IID = new Concept(3, () => `IID cannot be null or empty.`);
         export const MISSING_LABEL = new Concept(4, () => `Label cannot be null or empty.`);
