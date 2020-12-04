@@ -18,9 +18,14 @@
  */
 
 import AnswerProto from "graknlabs-grpc-protocol/protobuf/answer_pb";
+import { AnswerGroup, ErrorMessage, GraknClientError } from "../../dependencies_internal";
 
 export class ConceptMap {
-    static of(res: AnswerProto.ConceptMap) {
-        throw "Not implemented yet";
+    asAnswerGroup(): AnswerGroup<any> {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("ConceptMap", "AnswerGroup"))
+    }
+
+    asConceptMap(): ConceptMap {
+        
     }
 }
