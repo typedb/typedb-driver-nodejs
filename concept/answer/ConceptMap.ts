@@ -40,7 +40,6 @@ export class ConceptMap {
         const variableMap = new Map<string, Concept>();
         res.getMapMap().forEach((resConcept: ConceptProto.Concept, resLabel: string) => {
             let concept;
-            console.log(resConcept.getThing().getIid_asB64());
             if (resConcept.hasThing()) concept = ConceptProtoReader.thing(resConcept.getThing());
             else concept = ConceptProtoReader.type(resConcept.getType());
             variableMap.set(resLabel, concept);
