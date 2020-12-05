@@ -54,7 +54,7 @@ export class RPCSession implements Grakn.Session {
             });
         });
         this._sessionId = res.getSessionId_asB64();
-        this._pulse = setTimeout(() => this.pulse(), 3000);
+        this._pulse = setTimeout(() => this.pulse(), 5000);
         return this;
     }
 
@@ -94,7 +94,7 @@ export class RPCSession implements Grakn.Session {
         const pulse = new SessionProto.Session.Pulse.Req().setSessionId(this._sessionId);
         this._grpcClient.session_pulse(pulse, (err, _res) => {
             if (err) return;// Generally means the session has been closed, which is fine
-            else this._pulse = setTimeout(() => this.pulse(), 3000);
+            else this._pulse = setTimeout(() => this.pulse(), 5000);
         });
     }
 }
