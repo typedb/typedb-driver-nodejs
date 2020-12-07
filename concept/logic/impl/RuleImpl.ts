@@ -22,7 +22,7 @@ import {
     Rule,
     Grakn, RPCTransaction,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import LogicProto from "graknlabs-grpc-protocol/protobuf/logic_pb";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import Transaction = Grakn.Transaction;
 
@@ -38,7 +38,7 @@ export class RuleImpl implements Rule {
         this._then = then;
     }
 
-    static of(ruleProto: ConceptProto.Rule): RuleImpl {
+    static of(ruleProto: LogicProto.Rule): RuleImpl {
         return new RuleImpl(ruleProto.getLabel(), ruleProto.getWhen(), ruleProto.getThen());
     }
 
@@ -93,12 +93,12 @@ export class RemoteRuleImpl implements RemoteRule {
     }
 
     async setLabel(label: string): Promise<void> {
-        await this.execute(new ConceptProto.Rule.Req().setRuleSetLabelReq(new ConceptProto.Rule.SetLabel.Req().setLabel(label)));
+        await this.execute(new LogicProto.Rule.Req().setRuleSetLabelReq(new LogicProto.Rule.SetLabel.Req().setLabel(label)));
         this._label = label;
     }
 
     async delete(): Promise<void> {
-        await this.execute(new ConceptProto.Rule.Req().setRuleDeleteReq(new ConceptProto.Rule.Delete.Req()));
+        await this.execute(new LogicProto.Rule.Req().setRuleDeleteReq(new LogicProto.Rule.Delete.Req()));
     }
 
     async isDeleted(): Promise<boolean> {
@@ -113,7 +113,7 @@ export class RemoteRuleImpl implements RemoteRule {
         return true;
     }
 
-    protected execute(method: ConceptProto.Rule.Req): Promise<ConceptProto.Rule.Res> {
+    protected execute(method: LogicProto.Rule.Req): Promise<LogicProto.Rule.Res> {
         const request = new TransactionProto.Transaction.Req().setRuleReq(method);
         return this._rpcTransaction.execute(request, res => res.getRuleRes());
     }
