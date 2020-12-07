@@ -53,6 +53,13 @@ build:
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
         ./dist/grakn-core-all-linux/grakn server &
+        # -- to be moved to image itself --
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+        # -- to be moved to image itself --
+        nvm install v10.15.3
+        nvm use --delete-prefix v10.15.3
         npm run test
       #bazel test //...
     deploy-npm-snapshot:
