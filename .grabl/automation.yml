@@ -58,8 +58,6 @@ build:
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
         # -- to be moved to image itself --
-        mkdir ~/client-nodejs/dist/grakn-core-all-linux/server/data
-        mkdir ~/client-nodejs/dist/grakn-core-all-linux/server/data/grakn
         nvm install v10.15.3
         nvm use --delete-prefix v10.15.3
         npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
