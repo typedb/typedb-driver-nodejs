@@ -39,7 +39,6 @@ async function run() {
         console.error(`database operations - ERROR: ${err.stack || err}`);
         client.close();
         process.exit(1);
-        return;
     }
 
     let session;
@@ -53,7 +52,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -67,7 +65,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -79,7 +76,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -90,7 +86,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -105,7 +100,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -120,7 +114,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -136,7 +129,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     // try {
@@ -158,7 +150,7 @@ async function run() {
     //     await tx.close();
     //     await session.close();
     //     client.close();
-    //     return;
+    //     process.exit(1);
     // }
 
     try {
@@ -168,7 +160,6 @@ async function run() {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
         client.close();
         process.exit(1);
-        return;
     }
     try {
         session = await client.session("grakn", SessionType.DATA);
@@ -177,7 +168,6 @@ async function run() {
         console.error(`open data session - ERROR: ${err.stack || err}`);
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -189,7 +179,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -216,7 +205,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -228,7 +216,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -240,7 +227,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -250,7 +236,6 @@ async function run() {
         console.error(`close data session - ERROR: ${err.stack || err}`);
         client.close();
         process.exit(1);
-        return;
     }
 
     try {

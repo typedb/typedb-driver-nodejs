@@ -42,7 +42,6 @@ async function run() {
         console.error(`database operations - ERROR: ${err.stack || err}`);
         client.close();
         process.exit(1);
-        return;
     }
 
     let session;
@@ -53,7 +52,6 @@ async function run() {
         console.error(`open schema session - ERROR: ${err.stack || err}`);
         client.close();
         process.exit(1);
-        return;
     }
 
     let tx;
@@ -65,7 +63,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -76,7 +73,6 @@ async function run() {
         await session.close();
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
@@ -86,7 +82,6 @@ async function run() {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
         client.close();
         process.exit(1);
-        return;
     }
 
     try {
