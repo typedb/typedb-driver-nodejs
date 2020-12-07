@@ -38,6 +38,7 @@ async function run() {
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
         client.close();
+        assert(false);
         return;
     }
 
@@ -59,6 +60,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -76,6 +78,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -91,6 +94,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -107,6 +111,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -120,6 +125,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -133,6 +139,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -146,6 +153,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -163,6 +171,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -184,6 +193,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -214,6 +224,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -247,6 +258,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -270,6 +282,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -290,6 +303,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -304,6 +318,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -313,6 +328,7 @@ async function run() {
     } catch (err) {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
         client.close();
+        assert(false);
         return;
     }
 
@@ -359,6 +375,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -386,6 +403,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -405,6 +423,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
+        assert(false);
         return;
     }
 
@@ -415,6 +434,7 @@ async function run() {
     } catch (err) {
         console.error(`close session and client - ERROR: ${err.stack || err}`);
         client.close();
+        assert(false);
     }
 }
 
