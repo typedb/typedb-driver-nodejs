@@ -61,6 +61,7 @@ build:
         nvm install v10.15.3
         nvm use --delete-prefix v10.15.3
         npm run test
+        kill -9 $(jps | awk '/GraknServer/ {print $1}')
       #bazel test //...
     deploy-npm-snapshot:
       filter:
