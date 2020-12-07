@@ -59,7 +59,7 @@ export namespace ConceptProtoReader {
             case ConceptProto.Thing.ENCODING.ATTRIBUTE:
                 return attribute(thingProto);
             default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thingProto.getEncoding().toString()));
+                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thingProto.getEncoding()));
         }
     }
 
@@ -76,7 +76,7 @@ export namespace ConceptProtoReader {
             case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
                 return DateTimeAttributeImpl.of(thingProto);
             default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(thingProto.getValueType().toString()));
+                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(thingProto.getValueType()));
         }
     }
 
@@ -101,7 +101,7 @@ export namespace ConceptProtoReader {
                 assert(typeProto.getRoot());
                 return new ThingTypeImpl(typeProto.getLabel(), typeProto.getRoot());
             default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(typeProto.getEncoding().toString()));
+                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(typeProto.getEncoding()));
         }
     }
 
@@ -121,7 +121,7 @@ export namespace ConceptProtoReader {
                 assert(typeProto.getRoot());
                 return new AttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
             default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(typeProto.getValueType().toString()));
+                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(typeProto.getValueType()));
         }
     }
 }

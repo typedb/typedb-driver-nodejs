@@ -140,7 +140,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
         if (arg instanceof DoubleAttributeTypeImpl) return stream as Stream<DoubleAttributeImpl>;
         if (arg instanceof StringAttributeTypeImpl) return stream as Stream<StringAttributeImpl>;
         if (arg instanceof DateTimeAttributeTypeImpl) return stream as Stream<DateTimeAttributeImpl>;
-        throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(arg.toString()))
+        throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(arg))
     }
 
     getPlays(): Stream<RoleTypeImpl> {

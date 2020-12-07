@@ -165,7 +165,7 @@ export namespace AttributeType {
                 case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
                     return ValueType.DATETIME;
                 default:
-                    throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType.toString()));
+                    throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType));
             }
         }
 

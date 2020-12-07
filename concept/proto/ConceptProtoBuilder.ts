@@ -104,7 +104,7 @@ export namespace ConceptProtoBuilder {
         } else if (thing instanceof AttributeImpl) {
             return ConceptProto.Thing.ENCODING.ATTRIBUTE;
         } else {
-            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thing.toString()))
+            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thing))
         }
     }
 
@@ -120,7 +120,7 @@ export namespace ConceptProtoBuilder {
         } else if (type instanceof ThingTypeImpl) {
             return ConceptProto.Type.ENCODING.THING_TYPE;
         } else {
-            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(type.toString()))
+            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(type))
         }
     }
 }

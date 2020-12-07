@@ -62,7 +62,7 @@ build:
         nvm install v10.15.3
         nvm use --delete-prefix v10.15.3
         npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        kill -9 $(jps | awk '/GraknServer/ {print $1}')
+        kill $(jps | awk '/GraknServer/ {print $1}')
         exit $TEST_SUCCESS
       #bazel test //...
     deploy-npm-snapshot:
@@ -104,7 +104,7 @@ build:
         npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
         npm install jest --global
         jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        kill -9 $(jps | awk '/GraknServer/ {print $1}')
+        kill $(jps | awk '/GraknServer/ {print $1}')
         exit $TEST_SUCCESS
       dependencies: [deploy-npm-snapshot]
 release:
