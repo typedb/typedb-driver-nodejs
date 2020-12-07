@@ -11,7 +11,7 @@
     "url": "https://github.com/graknlabs/client-nodejs"
   },
   "scripts": {
-    "clean": "npm install && rimraf dist",
+    "clean": "rimraf dist",
     "build": "npm run clean && npm run lint && tsc",
     "pretest": "npm run build",
     "test": "npm run test-concept && npm run test-connection && npm run test-query",

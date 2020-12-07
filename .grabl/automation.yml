@@ -61,6 +61,7 @@ build:
         # -- to be moved to image itself --
         nvm install v10.15.3
         nvm use --delete-prefix v10.15.3
+        npm install
         npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         kill $(jps | awk '/GraknServer/ {print $1}')
         exit $TEST_SUCCESS
