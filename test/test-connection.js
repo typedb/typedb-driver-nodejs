@@ -41,7 +41,7 @@ async function run() {
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
         client.close();
-        assert(false);
+        process.exit(1);
         return;
     }
 
@@ -52,7 +52,7 @@ async function run() {
     } catch (err) {
         console.error(`open schema session - ERROR: ${err.stack || err}`);
         client.close();
-        assert(false);
+        process.exit(1);
         return;
     }
 
@@ -64,7 +64,7 @@ async function run() {
         console.error(`open schema write tx - ERROR: ${err.stack || err}`);
         await session.close();
         client.close();
-        assert(false);
+        process.exit(1);
         return;
     }
 
@@ -75,7 +75,7 @@ async function run() {
         console.error(`close schema write tx - ERROR: ${err.stack || err}`);
         await session.close();
         client.close();
-        assert(false);
+        process.exit(1);
         return;
     }
 
@@ -85,7 +85,7 @@ async function run() {
     } catch (err) {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
         client.close();
-        assert(false);
+        process.exit(1);
         return;
     }
 
@@ -94,7 +94,7 @@ async function run() {
         console.log("client.close - SUCCESS");
     } catch (err) {
         console.error(`client.close - ERROR: ${err.stack || err}`);
-        assert(false);
+        process.exit(1);
     }
 }
 
