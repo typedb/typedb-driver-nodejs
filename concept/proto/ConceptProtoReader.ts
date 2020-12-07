@@ -44,8 +44,9 @@ import {
     RelationTypeImpl,
     GraknClientError,
     ErrorMessage,
-    AttributeValueType,
+    AttributeType,
 } from "../../dependencies_internal";
+import ValueClass = AttributeType.ValueClass;
 
 export namespace ConceptProtoReader {
     // This method cannot live in ThingImpl itself, because doing so creates a circular class reference
@@ -63,7 +64,7 @@ export namespace ConceptProtoReader {
         }
     }
 
-    export function attribute(thingProto: ConceptProto.Thing): AttributeImpl<AttributeValueType> {
+    export function attribute(thingProto: ConceptProto.Thing): AttributeImpl<ValueClass> {
         switch (thingProto.getValueType()) {
             case ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN:
                 return BooleanAttributeImpl.of(thingProto);

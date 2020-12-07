@@ -42,11 +42,11 @@ import {
     Stream,
     ConceptProtoBuilder,
     ConceptProtoReader,
-    AttributeValueType,
 } from "../../../dependencies_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
 import ValueType = AttributeType.ValueType;
+import ValueClass = AttributeType.ValueClass;
 import isKeyable = AttributeType.ValueType.isKeyable;
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
@@ -100,8 +100,8 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
         return super.getSubtypes() as Stream<AttributeTypeImpl>;
     }
 
-    getInstances(): Stream<AttributeImpl<AttributeValueType>> {
-        return super.getInstances() as Stream<AttributeImpl<AttributeValueType>>;
+    getInstances(): Stream<AttributeImpl<ValueClass>> {
+        return super.getInstances() as Stream<AttributeImpl<ValueClass>>;
     }
 
     getOwners(): Stream<ThingTypeImpl>;
@@ -111,12 +111,12 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
         return this.typeStream(method, res => res.getAttributeTypeGetOwnersRes().getOwnerList()) as Stream<ThingTypeImpl>;
     }
 
-    protected async putInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<AttributeValueType>> {
+    protected async putInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<ValueClass>> {
         const method = new ConceptProto.Type.Req().setAttributeTypePutReq(new ConceptProto.AttributeType.Put.Req().setValue(valueProto));
         return ConceptProtoReader.attribute(await this.execute(method).then(res => res.getAttributeTypePutRes().getAttribute()));
     }
 
-    protected async getInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<AttributeValueType>> {
+    protected async getInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<ValueClass>> {
         const method = new ConceptProto.Type.Req().setAttributeTypeGetReq(new ConceptProto.AttributeType.Get.Req().setValue(valueProto));
         const response = await this.execute(method).then(res => res.getAttributeTypeGetRes());
         return response.getResCase() === ConceptProto.AttributeType.Get.Res.ResCase.ATTRIBUTE ? ConceptProtoReader.attribute(response.getAttribute()) : null;

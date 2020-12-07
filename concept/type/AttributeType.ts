@@ -32,10 +32,10 @@ import {
     Stream,
     GraknClientError,
     ErrorMessage,
-    AttributeValueType,
 } from "../../dependencies_internal";
 import ValueType = AttributeType.ValueType;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ValueClass = AttributeType.ValueClass;
 
 export interface AttributeType extends ThingType {
     getValueType(): ValueType;
@@ -49,7 +49,7 @@ export interface RemoteAttributeType extends Merge<RemoteThingType, AttributeTyp
     getSupertype(): Promise<AttributeType>;
     getSupertypes(): Stream<AttributeType>;
     getSubtypes(): Stream<AttributeType>;
-    getInstances(): Stream<Attribute<AttributeValueType>>;
+    getInstances(): Stream<Attribute<ValueClass>>;
     getOwners(): Stream<ThingType>;
     getOwners(onlyKey: boolean): Stream<ThingType>;
 
