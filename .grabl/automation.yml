@@ -54,13 +54,13 @@ build:
         bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
         ./dist/grakn-core-all-linux/grakn server &
         # -- to be moved to image itself --
-        mkdir -p ~/client-nodejs/dist/grakn-core-all-linux/server/data
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
         # -- to be moved to image itself --
         nvm install v10.15.3
         nvm use --delete-prefix v10.15.3
+        ls -alR
         npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         kill -9 $(jps | awk '/GraknServer/ {print $1}')
         exit $TEST_SUCCESS
