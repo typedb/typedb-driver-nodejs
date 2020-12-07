@@ -41,7 +41,10 @@ import {
     ThingTypeImpl,
     RoleTypeImpl,
     EntityTypeImpl,
-    RelationTypeImpl, GraknClientError, ErrorMessage,
+    RelationTypeImpl,
+    GraknClientError,
+    ErrorMessage,
+    AttributeValueType,
 } from "../../dependencies_internal";
 
 export namespace ConceptProtoReader {
@@ -56,11 +59,11 @@ export namespace ConceptProtoReader {
             case ConceptProto.Thing.ENCODING.ATTRIBUTE:
                 return attribute(thingProto);
             default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thingProto.getEncoding()));
+                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thingProto.getEncoding().toString()));
         }
     }
 
-    export function attribute(thingProto: ConceptProto.Thing): AttributeImpl<any> {
+    export function attribute(thingProto: ConceptProto.Thing): AttributeImpl<AttributeValueType> {
         switch (thingProto.getValueType()) {
             case ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN:
                 return BooleanAttributeImpl.of(thingProto);
@@ -73,7 +76,7 @@ export namespace ConceptProtoReader {
             case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
                 return DateTimeAttributeImpl.of(thingProto);
             default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(thingProto.getValueType()));
+                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(thingProto.getValueType().toString()));
         }
     }
 
@@ -98,7 +101,7 @@ export namespace ConceptProtoReader {
                 assert(typeProto.getRoot());
                 return new ThingTypeImpl(typeProto.getLabel(), typeProto.getRoot());
             default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(typeProto.getEncoding()));
+                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(typeProto.getEncoding().toString()));
         }
     }
 
@@ -118,7 +121,7 @@ export namespace ConceptProtoReader {
                 assert(typeProto.getRoot());
                 return new AttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
             default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(typeProto.getValueType()));
+                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(typeProto.getValueType().toString()));
         }
     }
 }

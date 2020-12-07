@@ -77,3 +77,5 @@ export interface DateTimeAttribute extends Attribute<Date> {
 export interface RemoteDateTimeAttribute extends Merge<RemoteAttribute<Date>, DateTimeAttribute> {
     asRemote(transaction: Transaction): RemoteDateTimeAttribute;
 }
+
+export type AttributeValueType = boolean | number | string | Date;

@@ -48,7 +48,10 @@ import {
     DateTimeAttributeImpl,
     DoubleAttributeImpl,
     LongAttributeImpl,
-    StringAttributeImpl, GraknClientError, ErrorMessage,
+    StringAttributeImpl,
+    GraknClientError,
+    ErrorMessage,
+    AttributeValueType,
 } from "../../../dependencies_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
@@ -106,28 +109,28 @@ export abstract class RemoteThingImpl implements RemoteThing {
         return true;
     }
 
-    getHas(onlyKey: boolean): Stream<AttributeImpl<any>>;
+    getHas(onlyKey: boolean): Stream<AttributeImpl<AttributeValueType>>;
     getHas(attributeType: BooleanAttributeType): Stream<BooleanAttributeImpl>;
     getHas(attributeType: LongAttributeType): Stream<LongAttributeImpl>;
     getHas(attributeType: DoubleAttributeType): Stream<DoubleAttributeImpl>;
     getHas(attributeType: StringAttributeType): Stream<StringAttributeImpl>;
     getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttributeImpl>;
-    getHas(attributeTypes: AttributeType[]): Stream<AttributeImpl<any>>;
-    getHas(): Stream<AttributeImpl<any>>;
-    getHas(arg?: boolean | Type | AttributeType[]): Stream<AttributeImpl<any>> | Stream<BooleanAttributeImpl> | Stream<LongAttributeImpl>
+    getHas(attributeTypes: AttributeType[]): Stream<AttributeImpl<AttributeValueType>>;
+    getHas(): Stream<AttributeImpl<AttributeValueType>>;
+    getHas(arg?: boolean | Type | AttributeType[]): Stream<AttributeImpl<AttributeValueType>> | Stream<BooleanAttributeImpl> | Stream<LongAttributeImpl>
         | Stream<DoubleAttributeImpl> | Stream<StringAttributeImpl> | Stream<DateTimeAttributeImpl> {
         if (typeof arg === "undefined") {
             const method = new ConceptProto.Thing.Req().setThingGetHasReq(new ConceptProto.Thing.GetHas.Req());
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<AttributeValueType>>;
         }
         if (typeof arg === "boolean") {
             const method = new ConceptProto.Thing.Req().setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setKeysOnly(arg));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<AttributeValueType>>;
         }
         if (Array.isArray(arg)) {
             const method = new ConceptProto.Thing.Req()
                 .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList(ConceptProtoBuilder.types(arg)));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<AttributeValueType>>;
         }
         const method = new ConceptProto.Thing.Req()
             .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
@@ -137,7 +140,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
         if (arg instanceof DoubleAttributeTypeImpl) return stream as Stream<DoubleAttributeImpl>;
         if (arg instanceof StringAttributeTypeImpl) return stream as Stream<StringAttributeImpl>;
         if (arg instanceof DateTimeAttributeTypeImpl) return stream as Stream<DateTimeAttributeImpl>;
-        throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(arg))
+        throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(arg.toString()))
     }
 
     getPlays(): Stream<RoleTypeImpl> {

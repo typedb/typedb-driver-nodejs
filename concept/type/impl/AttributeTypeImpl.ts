@@ -42,6 +42,7 @@ import {
     Stream,
     ConceptProtoBuilder,
     ConceptProtoReader,
+    AttributeValueType,
 } from "../../../dependencies_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
@@ -99,8 +100,8 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
         return super.getSubtypes() as Stream<AttributeTypeImpl>;
     }
 
-    getInstances(): Stream<AttributeImpl<any>> {
-        return super.getInstances() as Stream<AttributeImpl<any>>;
+    getInstances(): Stream<AttributeImpl<AttributeValueType>> {
+        return super.getInstances() as Stream<AttributeImpl<AttributeValueType>>;
     }
 
     getOwners(): Stream<ThingTypeImpl>;
@@ -110,12 +111,12 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
         return this.typeStream(method, res => res.getAttributeTypeGetOwnersRes().getOwnerList()) as Stream<ThingTypeImpl>;
     }
 
-    protected async putInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<any>> {
+    protected async putInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<AttributeValueType>> {
         const method = new ConceptProto.Type.Req().setAttributeTypePutReq(new ConceptProto.AttributeType.Put.Req().setValue(valueProto));
         return ConceptProtoReader.attribute(await this.execute(method).then(res => res.getAttributeTypePutRes().getAttribute()));
     }
 
-    protected async getInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<any>> {
+    protected async getInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<AttributeValueType>> {
         const method = new ConceptProto.Type.Req().setAttributeTypeGetReq(new ConceptProto.AttributeType.Get.Req().setValue(valueProto));
         const response = await this.execute(method).then(res => res.getAttributeTypeGetRes());
         return response.getResCase() === ConceptProto.AttributeType.Get.Res.ResCase.ATTRIBUTE ? ConceptProtoReader.attribute(response.getAttribute()) : null;

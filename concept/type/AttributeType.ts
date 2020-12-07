@@ -29,7 +29,10 @@ import {
     RemoteThingType,
     ThingType,
     Merge,
-    Stream, GraknClientError, ErrorMessage,
+    Stream,
+    GraknClientError,
+    ErrorMessage,
+    AttributeValueType,
 } from "../../dependencies_internal";
 import ValueType = AttributeType.ValueType;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
@@ -46,7 +49,7 @@ export interface RemoteAttributeType extends Merge<RemoteThingType, AttributeTyp
     getSupertype(): Promise<AttributeType>;
     getSupertypes(): Stream<AttributeType>;
     getSubtypes(): Stream<AttributeType>;
-    getInstances(): Stream<Attribute<any>>;
+    getInstances(): Stream<Attribute<AttributeValueType>>;
     getOwners(): Stream<ThingType>;
     getOwners(onlyKey: boolean): Stream<ThingType>;
 
@@ -162,15 +165,15 @@ export namespace AttributeType {
                 case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
                     return ValueType.DATETIME;
                 default:
-                    throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType));
+                    throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType.toString()));
             }
         }
 
-        export function isKeyable(valueType: ValueType) {
+        export function isKeyable(valueType: ValueType): boolean {
             return [ValueType.LONG, ValueType.STRING, ValueType.DATETIME].includes(valueType);
         }
 
-        export function isWritable(valueType: ValueType) {
+        export function isWritable(valueType: ValueType): boolean {
             return valueType !== ValueType.OBJECT;
         }
     }

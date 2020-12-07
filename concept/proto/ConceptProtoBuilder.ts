@@ -93,8 +93,6 @@ export namespace ConceptProtoBuilder {
                 return ConceptProto.AttributeType.VALUE_TYPE.STRING;
             case AttributeType.ValueType.DATETIME:
                 return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
-            default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType))
         }
     }
 
@@ -106,7 +104,7 @@ export namespace ConceptProtoBuilder {
         } else if (thing instanceof AttributeImpl) {
             return ConceptProto.Thing.ENCODING.ATTRIBUTE;
         } else {
-            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thing))
+            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thing.toString()))
         }
     }
 
@@ -122,7 +120,7 @@ export namespace ConceptProtoBuilder {
         } else if (type instanceof ThingTypeImpl) {
             return ConceptProto.Type.ENCODING.THING_TYPE;
         } else {
-            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(type))
+            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(type.toString()))
         }
     }
 }

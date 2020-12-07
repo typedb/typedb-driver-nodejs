@@ -38,6 +38,7 @@ import {
     Merge,
     Stream,
     Relation,
+    AttributeValueType,
 } from "../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 
@@ -50,17 +51,17 @@ export interface RemoteThing extends Merge<RemoteConcept, Thing> {
     getType(): Promise<ThingType>;
     isInferred(): Promise<boolean>;
 
-    setHas(attribute: Attribute<any>): Promise<void>;
-    unsetHas(attribute: Attribute<any>): Promise<void>;
+    setHas(attribute: Attribute<AttributeValueType>): Promise<void>;
+    unsetHas(attribute: Attribute<AttributeValueType>): Promise<void>;
 
-    getHas(onlyKey: boolean): Stream<Attribute<any>>;
+    getHas(onlyKey: boolean): Stream<Attribute<AttributeValueType>>;
     getHas(attributeType: BooleanAttributeType): Stream<BooleanAttribute>;
     getHas(attributeType: LongAttributeType): Stream<LongAttribute>;
     getHas(attributeType: DoubleAttributeType): Stream<DoubleAttribute>;
     getHas(attributeType: StringAttributeType): Stream<StringAttribute>;
     getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttribute>;
-    getHas(): Stream<Attribute<any>>;
-    getHas(attributeTypes: AttributeType[]): Stream<Attribute<any>>;
+    getHas(): Stream<Attribute<AttributeValueType>>;
+    getHas(attributeTypes: AttributeType[]): Stream<Attribute<AttributeValueType>>;
 
     getPlays(): Stream<RoleType>;
 
