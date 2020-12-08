@@ -22,8 +22,8 @@ import {
     Rule,
     Grakn, RPCTransaction,
 } from "../../../dependencies_internal";
-import LogicProto from "graknlabs-grpc-protocol/protobuf/logic_pb";
-import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import LogicProto from "graknlabs-protocol/protobuf/logic_pb";
+import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
 import Transaction = Grakn.Transaction;
 
 export class RuleImpl implements Rule {

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import AnswerProto from "graknlabs-grpc-protocol/protobuf/answer_pb";
+import AnswerProto from "graknlabs-protocol/protobuf/answer_pb";
 import { GraknClientError } from "../../dependencies_internal";
 
 

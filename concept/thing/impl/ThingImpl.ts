@@ -50,9 +50,9 @@ import {
     LongAttributeImpl,
     StringAttributeImpl, GraknClientError, ErrorMessage,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
-import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
 
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;
