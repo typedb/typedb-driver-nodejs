@@ -45,7 +45,7 @@ build:
       script: |
         ./test/start_server.sh
         ./test/install_npm.sh
-        ls -alR ~
+        nvm use 10
         ./test/test_endtoend.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/kill_server.sh
         exit $TEST_SUCCESS
