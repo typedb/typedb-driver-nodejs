@@ -26,8 +26,6 @@ import {
     AttributeType,
     EntityTypeImpl,
     Type,
-    Rule,
-    RuleImpl,
     RPCTransaction,
     RelationTypeImpl,
     AttributeTypeImpl,
@@ -100,16 +98,6 @@ export class ConceptManager {
         else return null;
     }
 
-    async putRule(label: string, when: string, then: string): Promise<Rule> {
-        const req = new ConceptProto.ConceptManager.Req()
-            .setPutRuleReq(new ConceptProto.ConceptManager.PutRule.Req()
-                    .setLabel(label)
-                    .setWhen(when)
-                    .setThen(then));
-        const res = await this.execute(req);
-        return RuleImpl.of(res.getPutRuleRes().getRule());
-    }
-
     async getThing(iid: string): Promise<Thing> {
         const req = new ConceptProto.ConceptManager.Req()
             .setGetThingReq(new ConceptProto.ConceptManager.GetThing.Req().setIid(iid));
@@ -128,14 +116,6 @@ export class ConceptManager {
             return ConceptProtoReader.type(res.getGetTypeRes().getType());
         else
             return null;
-    }
-
-    async getRule(label: string): Promise<Rule> {
-        const req = new ConceptProto.ConceptManager.Req()
-            .setGetRuleReq(new ConceptProto.ConceptManager.GetRule.Req().setLabel(label));
-        const res = await this.execute(req);
-        if (res.getGetRuleRes().getResCase() === ConceptProto.ConceptManager.GetRule.Res.ResCase.RULE) return RuleImpl.of(res.getGetRuleRes().getRule());
-        return null;
     }
 
     private async execute(conceptManagerReq: ConceptProto.ConceptManager.Req): Promise<ConceptProto.ConceptManager.Res> {

@@ -73,6 +73,7 @@ export * from "./concept/type/impl/RoleTypeImpl";
 /* concept */
 export * from "./concept/Concept";
 export * from "./concept/ConceptManager";
+export * from "./concept/LogicManager";
 
 /* query */
 export * from "./query/QueryManager";

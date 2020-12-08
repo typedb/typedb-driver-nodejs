@@ -21,8 +21,8 @@ import AnswerProto from "graknlabs-protocol/protobuf/answer_pb";
 import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
 
 import {
-    AnswerGroup,
-    Concept, ConceptProtoReader,
+    Concept,
+    ConceptProtoReader,
     ErrorMessage,
     GraknClientError,
 } from "../../dependencies_internal";

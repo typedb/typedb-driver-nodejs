@@ -64,6 +64,8 @@ export namespace Grakn {
 
         concepts(): ConceptManager;
 
+        logic(): LogicManager;
+
         query(): QueryManager;
 
         commit(): Promise<void>;
