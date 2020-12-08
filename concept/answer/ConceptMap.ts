@@ -60,7 +60,7 @@ export class ConceptMap {
 
     toString(): string {
         let output = "";
-        for (let entry of this._map.entries()) {
+        for (const entry of this._map.entries()) {
             output += `[${entry[0]}/${entry[1]}]`
         }
         return output;
