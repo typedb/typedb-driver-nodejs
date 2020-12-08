@@ -40,15 +40,14 @@ build:
         bazel build //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
-    test-endtoend:
+    test:
       machine: graknlabs-ubuntu-20.04
       script: |
-        ./test/start_server.sh
-        source ./test/install_npm.sh
-        ./test/test_endtoend.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        ./test/kill_server.sh
+        ./test/start-server.sh
+        source ./test/install.sh
+        ./test/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/stop-server.sh
         exit $TEST_SUCCESS
-      #bazel test //...
     deploy-npm-snapshot:
       filter:
         owner: graknlabs
@@ -71,7 +70,7 @@ build:
         branch: master
       machine: graknlabs-ubuntu-20.04
       script: |
-        ./test/start_server.sh
+        ./test/start-server.sh
         source ./test/install_npm.sh
         cd test/deployment/
         echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
