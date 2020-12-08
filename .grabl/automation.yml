@@ -43,7 +43,11 @@ build:
     test-endtoend:
       machine: graknlabs-ubuntu-20.04
       script: |
-        ./test/test_endtoend.sh
+        ./test/start_server.sh
+        ./test/install_npm.sh
+        ./test_endtoend.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/kill_server.sh
+        exit $TEST_SUCCESS
       #bazel test //...
     deploy-npm-snapshot:
       filter:
@@ -59,7 +63,7 @@ build:
         export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
         export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
-      dependencies: [build, test]
+      dependencies: [build, test-endtoend]
 
     test-deployment-npm:
       filter:
