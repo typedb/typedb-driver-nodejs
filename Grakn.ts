@@ -17,8 +17,7 @@
  * under the License.
  */
 
-import {
-    GraknOptions,
+import { GraknOptions,
     ConceptManager,
     QueryManager,
     LogicManager,
