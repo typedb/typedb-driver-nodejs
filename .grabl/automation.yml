@@ -40,22 +40,10 @@ build:
         bazel build //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
-    test:
+    test-endtoend:
       machine: graknlabs-ubuntu-20.04
       script: |
-        bazel run //test:grakn-extractor -- grakn-core-all-linux
-        ./grakn-core-all-linux/grakn server &
-        # -- to be moved to image itself --
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-        # -- to be moved to image itself --
-        nvm install v10.15.3
-        nvm use --delete-prefix v10.15.3
-        npm install
-        npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        kill $(jps | awk '/GraknServer/ {print $1}')
-        exit $TEST_SUCCESS
+        ./test/test_endtoend
       #bazel test //...
     deploy-npm-snapshot:
       filter:

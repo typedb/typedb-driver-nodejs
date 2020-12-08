@@ -36,6 +36,18 @@ load("//:deployment.bzl", github_deployment = "deployment")
 
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 
+filegroup(
+    name = "client_nodejs_raw",
+    srcs = [
+        "*.ts",
+        "common/**/*.ts",
+        "concept/**/*.ts",
+        "query/**/*.ts",
+        "rpc/**/*.ts",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 ts_library(
     name = "_client_nodejs",
     srcs = glob([
