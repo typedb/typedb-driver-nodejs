@@ -17,9 +17,4 @@
 # under the License.
 #
 
-./start_server.sh
-./install_npm.sh
-npm install
-npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-./kill_server.sh
-exit $TEST_SUCCESS
+kill $(jps | awk '/GraknServer/ {print $1}')

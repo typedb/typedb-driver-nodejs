@@ -43,7 +43,6 @@ build:
     test-endtoend:
       machine: graknlabs-ubuntu-20.04
       script: |
-        ls -al
         ./test/test_endtoend.sh
       #bazel test //...
     deploy-npm-snapshot:
