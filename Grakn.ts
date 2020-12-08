@@ -17,9 +17,11 @@
  * under the License.
  */
 
-import { GraknOptions,
+import {
+    GraknOptions,
     ConceptManager,
     QueryManager,
+    LogicManager,
 } from "./dependencies_internal";
 
 export namespace Grakn {

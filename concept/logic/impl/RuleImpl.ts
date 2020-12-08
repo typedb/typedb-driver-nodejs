@@ -20,7 +20,8 @@
 import {
     RemoteRule,
     Rule,
-    Grakn, RPCTransaction,
+    Grakn,
+    RPCTransaction,
 } from "../../../dependencies_internal";
 import LogicProto from "graknlabs-protocol/protobuf/logic_pb";
 import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
@@ -102,7 +103,7 @@ export class RemoteRuleImpl implements RemoteRule {
     }
 
     async isDeleted(): Promise<boolean> {
-        return !(await this.rpcTransaction.concepts().getRule(this._label));
+        return !(await this.rpcTransaction.logic().getRule(this._label));
     }
 
     asRemote(transaction: Transaction): RemoteRule {
