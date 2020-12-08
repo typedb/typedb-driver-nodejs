@@ -44,8 +44,7 @@ build:
       machine: graknlabs-ubuntu-20.04
       script: |
         ./test/start_server.sh
-        ./test/install_npm.sh
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+        source ./test/install_npm.sh
         ./test/test_endtoend.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/kill_server.sh
         exit $TEST_SUCCESS
