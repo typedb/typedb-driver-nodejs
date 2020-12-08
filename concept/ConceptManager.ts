@@ -61,8 +61,6 @@ export class ConceptManager {
         const req = new ConceptProto.ConceptManager.Req()
             .setPutEntityTypeReq(new ConceptProto.ConceptManager.PutEntityType.Req().setLabel(label));
         const res = await this.execute(req);
-        console.log(req);
-        console.log(res.getPutEntityTypeRes());
         return EntityTypeImpl.of(res.getPutEntityTypeRes().getEntityType());
     }
 
