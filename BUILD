@@ -34,41 +34,34 @@ load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_nodejs
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
-load("@npm//@bazel/typescript:index.bzl", "ts_library", "ts_project")
-load("@npm//typescript:index.bzl", "tsc")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
 
 genrule(
     name = "client-nodejs-compiled",
     outs = ["client-nodejs.tar.gz"],
-    cmd = "tar -cf $(@D)/client-nodejs.tar.gz --strip-components=3 $(locations //:client-nodejs-ts-clean);",
+    cmd = "tsc ; \
+    tar -cf $(@D)/client-nodejs.tar.gz dist",
     tools = [
-        "//:client-nodejs-ts-clean",
+        "//:client-nodejs-ts",
     ],
-    visibility = [
-        "//visibility:public"
-    ],
+    visibility = ["//visibility:public"],
 )
 
-ts_project(
-     name = "client-nodejs-ts-clean",
-     srcs = glob([
-         "*.ts",
-         "common/**/*.ts",
-         "concept/**/*.ts",
-         "query/**/*.ts",
-         "rpc/**/*.ts",
-     ]),
-     declaration = True,
-     tsconfig = "tsconfig.json",
-     deps = [
-         "@npm//@grpc/grpc-js",
-         "@npm//graknlabs-protocol",
-         "@npm//@types/node",
-     ],
- )
+filegroup(
+    name = "client-nodejs-ts",
+    srcs = glob([
+        "*.ts",
+        "common/**/*.ts",
+        "concept/**/*.ts",
+        "query/**/*.ts",
+        "rpc/**/*.ts",
+        "tsconfig.json",
+        "node_modules/**"
+    ]),
+)
 
 ts_library(
-    name = "client-nodejs-ts",
+    name = "_client_nodejs",
     srcs = glob([
         "*.ts",
         "common/**/*.ts",
@@ -98,7 +91,7 @@ pkg_npm(
         "@npm//grakn-protocol",
         "@npm//@grpc/grpc-js",
         "@npm//google-protobuf",
-        ":client-nodejs-ts",
+        ":_client_nodejs",
     ],
     visibility = ["//visibility:public"],
     vendor_external = [],
