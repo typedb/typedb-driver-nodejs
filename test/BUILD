@@ -26,7 +26,7 @@ checkstyle_test(
     include = glob([
         "*",
         "deployment/*",
-        "endtoend/*",
+        "integration/*",
     ]),
     exclude = glob([
         "**/package.json",
