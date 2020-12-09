@@ -39,7 +39,7 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 genrule(
     name = "client-nodejs-compiled",
     outs = ["client-nodejs.tar.gz"],
-    cmd = "tsc ; \
+    cmd = "npx tsc ; \
     tar -cf $(@D)/client-nodejs.tar.gz dist",
     tools = [
         "//:client-nodejs-ts",
