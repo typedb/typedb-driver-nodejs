@@ -92,8 +92,8 @@ export class RPCSession implements Grakn.Session {
     pulse(): void {
         if (!this._isOpen) return;
         const pulse = new SessionProto.Session.Pulse.Req().setSessionId(this._sessionId);
-        this._grpcClient.session_pulse(pulse, (err) => {
-            if (err) return;// Generally means the session has been closed, which is fine
+        this._grpcClient.session_pulse(pulse, (err, res) => {
+            if (!res.getAlive()) this._isOpen = false;
             else this._pulse = setTimeout(() => this.pulse(), 5000);
         });
     }
