@@ -26,7 +26,6 @@ checkstyle_test(
     include = glob([
         "*",
         "deployment/*",
-        "behaviour/*",
         "endtoend/*",
     ]),
     exclude = glob([

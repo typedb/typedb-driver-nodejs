@@ -15,9 +15,9 @@
     "build": "npm run clean && npm run lint && tsc",
     "pretest": "npm run build",
     "test": "npm run test-concept && npm run test-connection && npm run test-query",
-    "test-concept": "node test/endtoend/test-concept.js",
-    "test-connection": "node test/endtoend/test-connection.js",
-    "test-query": "node test/endtoend/test-query.js",
+    "test-concept": "node test/integration/test-concept.js",
+    "test-connection": "node test/integration/test-connection.js",
+    "test-query": "node test/integration/test-query.js",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
