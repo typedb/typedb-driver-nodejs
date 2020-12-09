@@ -17,18 +17,19 @@
 # under the License.
 #
 
-def node_cucumber_test(name, features, node_modules, package_json, core_artifact, deps, steps):
+def node_cucumber_test(name, features, node_modules, package_json, core_artifact, client, steps):
     native.sh_test (
         name = name,
         data = [
             node_modules,
             package_json,
             core_artifact,
-        ] + features + deps + steps,
+            client,
+        ] + features + steps,
         srcs = [
             "//test/behaviour:cucumber_test.sh",
         ],
         args = [
-            "$(rootpath " + core_artifact + ")"
+            "$(rootpath " + core_artifact + ")",
         ],
     )

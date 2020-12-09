@@ -18,19 +18,18 @@
 #
 
 set -e
-FILE=$1
+CORE_DISTRO=$1
 if test -f grakn_core_distribution; then
   echo Existing distribution detected. Cleaning.
   rm -rf grakn_core_distribution
 fi
 mkdir grakn_core_distribution
-echo Attempting to unarchive Grakn Core distribution from $FILE
-if [[ ${FILE: -7} == ".tar.gz" ]]; then
-  tar -xf $FILE -C ./grakn_core_distribution
+echo Attempting to unarchive Grakn Core distribution from $CORE_DISTRO
+if [[ ${CORE_DISTRO: -7} == ".tar.gz" ]]; then
+  tar -xf $CORE_DISTRO -C ./grakn_core_distribution
 else
-  if [[ ${FILE: -4} == ".zip" ]]; then
-    unzip -q $FILE -d ./grakn_core_distribution
-    DIRECTORY=${FILE%.zip}
+  if [[ ${CORE_DISTRO: -4} == ".zip" ]]; then
+    unzip -q $CORE_DISTRO -d ./grakn_core_distribution
   else
     echo Supplied artifact file was not in a recognised format. Only .tar.gz and .zip artifacts are acceptable.
     exit 1
@@ -43,7 +42,8 @@ mkdir ./grakn_core_distribution/"$DIRECTORY"/grakn_core_test
 ./grakn_core_distribution/"$DIRECTORY"/grakn server --data grakn_core_test &
 sleep 10
 echo Unarchiving client.
-tar -xf client-nodejs.tar.gz
+mkdir dist
+tar -xf client-nodejs.tar.gz -C dist
 echo Client unarchived. Proceeding with tests.
 node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
