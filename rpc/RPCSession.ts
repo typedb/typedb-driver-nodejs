@@ -93,7 +93,7 @@ export class RPCSession implements Grakn.Session {
         if (!this._isOpen) return;
         const pulse = new SessionProto.Session.Pulse.Req().setSessionId(this._sessionId);
         this._grpcClient.session_pulse(pulse, (err, res) => {
-            if (!res.getAlive()) this._isOpen = false;
+            if (err || !res.getAlive()) this._isOpen = false;
             else this._pulse = setTimeout(() => this.pulse(), 5000);
         });
     }
