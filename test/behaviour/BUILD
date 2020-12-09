@@ -17,6 +17,8 @@
 # under the License.
 #
 
+exports_files(["cucumber_test.sh"])
+
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 checkstyle_test(
     name = "checkstyle",
