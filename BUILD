@@ -43,8 +43,11 @@ genrule(
     tar -cf $(@D)/client-nodejs.tar.gz dist",
     tools = [
         "//:client-nodejs-ts",
+        "@npm//typescript",
     ],
-    visibility = ["//visibility:public"],
+    visibility = [
+        "//visibility:public"
+    ],
 )
 
 filegroup(
