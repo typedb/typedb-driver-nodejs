@@ -36,6 +36,30 @@ load("//:deployment.bzl", github_deployment = "deployment")
 
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 
+genrule(
+    name = "client-nodejs-compiled",
+    outs = ["client-nodejs.tar.gz"],
+    cmd = "tsc ; \
+    tar -cf $(@D)/client-nodejs.tar.gz dist",
+    tools = [
+        "//:client-nodejs-ts",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "client-nodejs-ts",
+    srcs = glob([
+        "*.ts",
+        "common/**/*.ts",
+        "concept/**/*.ts",
+        "query/**/*.ts",
+        "rpc/**/*.ts",
+        "tsconfig.json",
+        "node_modules/**"
+    ]),
+)
+
 ts_library(
     name = "_client_nodejs",
     srcs = glob([

@@ -17,6 +17,7 @@
 # under the License.
 #
 
+set -e
 FILE=$1
 if test -f grakn_core_distribution; then
   echo Existing distribution detected. Cleaning.
@@ -26,7 +27,6 @@ mkdir grakn_core_distribution
 echo Attempting to unarchive Grakn Core distribution from $FILE
 if [[ ${FILE: -7} == ".tar.gz" ]]; then
   tar -xf $FILE -C ./grakn_core_distribution
-  ls -al ./grakn_core_distribution
 else
   if [[ ${FILE: -4} == ".zip" ]]; then
     unzip -q $FILE -d ./grakn_core_distribution
@@ -42,9 +42,10 @@ echo Starting Grakn Core Server
 mkdir ./grakn_core_distribution/"$DIRECTORY"/grakn_core_test
 ./grakn_core_distribution/"$DIRECTORY"/grakn server --data grakn_core_test &
 sleep 10
-echo Grakn Core Server started. Proceeding to tests.
-node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require-module ts-node/register --require-module @babel/register --require './test/babel-typescript-register.js' --require './**/*.ts' --require './**/*.js'
-RESULT=$?
+echo Unarchiving client.
+tar -xf client-nodejs.tar.gz
+echo Client unarchived. Proceeding with tests.
+node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
 kill $(jps | awk '/GraknServer/ {print $1}')

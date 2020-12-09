@@ -1,3 +1,4 @@
+"use strict";
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,15 +17,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import { Given, When, Then } from "@cucumber/cucumber";
-import { GraknClient } from "../../../dist/rpc/GraknClient";
-
-export const THREAD_POOL_SIZE = 32;
-
-export let client: GraknClient;
-
-Given("connection has been opened", () => {
-    if (client) return;
-    client = new GraknClient();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.client = exports.THREAD_POOL_SIZE = void 0;
+const cucumber_1 = require("@cucumber/cucumber");
+const GraknClient_1 = require("../../../dist/rpc/GraknClient");
+exports.THREAD_POOL_SIZE = 32;
+cucumber_1.Given("connection has been opened", () => {
+    if (exports.client)
+        return;
+    exports.client = new GraknClient_1.GraknClient();
 });
