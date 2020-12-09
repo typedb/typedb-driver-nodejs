@@ -20,6 +20,8 @@
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//test/behaviour:rules.bzl", "node_cucumber_test")
 
+exports_files(["DatabaseSteps.ts"])
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
@@ -31,7 +33,7 @@ node_cucumber_test(
     features = ["@graknlabs_behaviour//connection:database.feature"],
     node_modules = "//:node_modules",
     package_json = "//:package.json",
-    core_artifact = "@graknlabs_grakn_core_artifact_mac//file",
+    core_artifact = "//test:native-grakn-artifact",
     deps = ["//:client-nodejs"],
     steps = ["//test/behaviour/connection:ConnectionSteps.ts", "//test/behaviour/connection/database:DatabaseSteps.ts"],
 )

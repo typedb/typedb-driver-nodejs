@@ -19,13 +19,12 @@ def node_cucumber_test(name, features, node_modules, package_json, core_artifact
     native.sh_test (
         name = name,
         data = [
-            "//test:GraknCoreRunner.js",
             node_modules,
             package_json,
             core_artifact,
         ] + features + deps + steps,
         srcs = [
-            "//test:cucumber_test.sh",
+            "//test/behaviour:cucumber_test.sh",
         ],
         args = [
             "$(location + " + core_artifact + ")"
