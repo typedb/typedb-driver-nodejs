@@ -18,6 +18,8 @@
 #
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "node_cucumber_test")
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
