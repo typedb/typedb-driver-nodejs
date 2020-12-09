@@ -22,24 +22,28 @@ if test -f grakn_core_distribution; then
   echo Existing distribution detected. Cleaning.
   rm -rf grakn_core_distribution
 fi
+mkdir grakn_core_distribution
 echo Attempting to unarchive Grakn Core distribution from $FILE
-if [[ $file == *.tar.gz ]]; then
+if [[ ${FILE: -7} == ".tar.gz" ]]; then
   tar -xf $FILE -C ./grakn_core_distribution
+  ls -al ./grakn_core_distribution
 else
-  if [[ $file == *.zip ]]; then
+  if [[ ${FILE: -4} == ".zip" ]]; then
     unzip -q $FILE -d ./grakn_core_distribution
+    DIRECTORY=${FILE%.zip}
   else
     echo Supplied artifact file was not in a recognised format. Only .tar.gz and .zip artifacts are acceptable.
     exit 1
   fi
 fi
+DIRECTORY=$(ls ./grakn_core_distribution)
 echo Successfully unarchived Grakn Core distribution.
 echo Starting Grakn Core Server
-mkdir ./grakn_core_distribution/grakn_core_test
-./grakn_core_distribution/grakn server --data grakn_core_test &
+mkdir ./grakn_core_distribution/"$DIRECTORY"/grakn_core_test
+./grakn_core_distribution/"$DIRECTORY"/grakn server --data grakn_core_test &
 sleep 10
 echo Grakn Core Server started. Proceeding to tests.
-node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require-module ts-node/register --require-module @babel/register --require './test/babel-typescript-register.js' --require './**/*.ts'
+node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require-module ts-node/register --require-module @babel/register --require './test/babel-typescript-register.js' --require './**/*.ts' --require './**/*.js'
 RESULT=$?
 echo Tests concluded with exit value $RESULT
 echo Stopping server.

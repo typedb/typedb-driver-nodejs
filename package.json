@@ -26,6 +26,8 @@
     "grakn-protocol": "https://repo.grakn.ai/repository/npm-snapshot/grakn-protocol/-/grakn-protocol-0.0.0-29a5eab3ee66363124f4f59f30e36b1c6443945b.tgz"
   },
   "devDependencies": {
+    "@babel/core": "7.12.9",
+    "@babel/register": "7.12.1",
     "@bazel/typescript": "2.3.1",
     "@cucumber/cucumber": "7.0.0-rc.0",
     "@types/google-protobuf": "3.7.4",

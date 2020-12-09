@@ -29,6 +29,6 @@ def node_cucumber_test(name, features, node_modules, package_json, core_artifact
             "//test/behaviour:cucumber_test.sh",
         ],
         args = [
-            "$(execpath " + core_artifact + ")"
+            "$(rootpath " + core_artifact + ")"
         ],
     )
