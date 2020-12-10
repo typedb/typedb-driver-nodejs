@@ -49,5 +49,6 @@ echo Tests concluded with exit value $RESULT
 echo Stopping server.
 pwd
 ls -al
+ls -alR dist
 kill $(jps | awk '/GraknServer/ {print $1}')
 exit $RESULT
