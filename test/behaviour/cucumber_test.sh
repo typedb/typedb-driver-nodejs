@@ -47,8 +47,8 @@ echo Client unarchived. Proceeding with tests.
 node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
+pwd
+pwd
+pwd
 kill $(jps | awk '/GraknServer/ {print $1}')
-pwd
-pwd
-pwd
 exit $RESULT
