@@ -22,9 +22,8 @@ import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
 
 import {
     Concept,
-    ConceptProtoReader,
     ErrorMessage,
-    GraknClientError,
+    GraknClientError, ThingImpl, TypeImpl,
 } from "../../dependencies_internal";
 
 export class ConceptMap {
@@ -40,8 +39,8 @@ export class ConceptMap {
         const variableMap = new Map<string, Concept>();
         res.getMapMap().forEach((resConcept: ConceptProto.Concept, resLabel: string) => {
             let concept;
-            if (resConcept.hasThing()) concept = ConceptProtoReader.thing(resConcept.getThing());
-            else concept = ConceptProtoReader.type(resConcept.getType());
+            if (resConcept.hasThing()) concept = ThingImpl.of(resConcept.getThing());
+            else concept = TypeImpl.of(resConcept.getType());
             variableMap.set(resLabel, concept);
         })
         const queryPattern = res.getPattern() === "" ? null : res.getPattern();

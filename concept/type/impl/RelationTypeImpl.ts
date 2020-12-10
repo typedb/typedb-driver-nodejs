@@ -25,8 +25,7 @@ import {
     Grakn,
     Stream,
     RelationImpl,
-    RoleTypeImpl,
-    ConceptProtoReader,
+    RoleTypeImpl, TypeImpl,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto, { Type as TypeProto } from "graknlabs-protocol/protobuf/concept_pb";
@@ -67,7 +66,7 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
                 new ConceptProto.RelationType.GetRelatesForRoleLabel.Req().setLabel(roleLabel));
             return this.execute(method).then(res => {
                 const getRelatesRes = res.getRelationTypeGetRelatesForRoleLabelRes();
-                if (getRelatesRes.hasRoleType()) return ConceptProtoReader.type(getRelatesRes.getRoleType()) as RoleTypeImpl;
+                if (getRelatesRes.hasRoleType()) return TypeImpl.of(getRelatesRes.getRoleType()) as RoleTypeImpl;
                 else return null;
             });
         }
