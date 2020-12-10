@@ -17,19 +17,12 @@
  * under the License.
  */
 
-import { Given, When, Then } from "@cucumber/cucumber";
-import { GraknClient } from "../../../dist/rpc/GraknClient";
-import { Grakn } from "../../../dist/Grakn";
-import Session = Grakn.Session;
-import Transaction = Grakn.Transaction;
+import { When } from "@cucumber/cucumber";
+import { client, sessions } from "../ConnectionSteps";
+import DataTable from "@cucumber/cucumber/lib/models/data_table";
+import { Grakn } from "../../../../dist/Grakn";
+import SessionType = Grakn.SessionType;
 
-export const THREAD_POOL_SIZE = 32;
-
-export let client: GraknClient;
-export let sessions: Session[] = [];
-export let transactions: Transaction[] = [];
-
-Given("connection has been opened", () => {
-    if (client) return;
-    client = new GraknClient();
+When("connection open session for database:", async (names: DataTable) => {
+    for (const name of names.raw()) {sessions.push(await client.session(name[0], SessionType.SCHEMA))}
 });

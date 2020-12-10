@@ -18,10 +18,12 @@
  * under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.client = exports.THREAD_POOL_SIZE = void 0;
+exports.transactions = exports.sessions = exports.client = exports.THREAD_POOL_SIZE = void 0;
 const cucumber_1 = require("@cucumber/cucumber");
 const GraknClient_1 = require("../../../dist/rpc/GraknClient");
 exports.THREAD_POOL_SIZE = 32;
+exports.sessions = [];
+exports.transactions = [];
 cucumber_1.Given("connection has been opened", () => {
     if (exports.client)
         return;

@@ -20,30 +20,31 @@
 import { When, Then, Given } from "@cucumber/cucumber";
 import { client, THREAD_POOL_SIZE } from "../ConnectionSteps";
 import * as assert from "assert";
+import DataTable from "@cucumber/cucumber/lib/models/data_table";
 
-When("connection create database(s):", async (names: string[]) => {
-    await names.forEach(async (name: string) => await client.databases().create(name));
+When("connection create database(s):", async (names: DataTable) => {
+    for (const name of names.rows()) {await client.databases().create(name[0])}
 });
 
-When("connection create databases in parallel:", async (names: string[]) => {
-    assert.ok(THREAD_POOL_SIZE >= names.length);
+When("connection create databases in parallel:", async (names: DataTable) => {
+    assert.ok(THREAD_POOL_SIZE >= names.raw().length);
     const creations: Promise<void>[] = [];
-    names.forEach(name => {
-        creations.push(client.databases().create(name));
-    });
+    for (const name of names.raw()) {
+        creations.push(client.databases().create(name[0]));
+    }
     await Promise.all(creations);
 });
 
-When("connection delete database(s):", async (names: string[]) => {
-    await names.forEach(async (name) => {
-        await client.databases().delete(name);
-    })
+When("connection delete database(s):", async (names: DataTable) => {
+    for (const name of names.raw()) {
+        await client.databases().delete(name[0]);
+    }
 });
 
-Then("connection delete database(s); throws exception", async (names: string[]) => {
-    for (const name of names) {
+Then("connection delete database(s); throws exception", async (names: DataTable) => {
+    for (const name of names.raw()) {
         try {
-            await client.databases().delete(name);
+            await client.databases().delete(name[0]);
             assert.fail();
         } catch (e) {
             // successfully failed
@@ -51,33 +52,33 @@ Then("connection delete database(s); throws exception", async (names: string[]) 
     }
 });
 
-When("connection delete databases in parallel:", async (names: string[]) => {
-    assert.ok(THREAD_POOL_SIZE >= names.length);
+When("connection delete databases in parallel:", async (names: DataTable) => {
+    assert.ok(THREAD_POOL_SIZE >= names.raw().length);
     const deletions: Promise<void>[] = [];
-    names.forEach(name => {
-        deletions.push(client.databases().delete(name));
-    });
+    for (const name of names.raw()) {
+        deletions.push(client.databases().delete(name[0]));
+    }
     await Promise.all(deletions);
 });
 
 When("connection delete all databases", async () => {
     const databases = await client.databases().all();
-    await databases.forEach(async (name) => {
+    for (const name of databases) {
         await client.databases().delete(name);
-    })
+    }
 });
 
-Then("connection has database(s):", async (names: string[]) => {
+Then("connection has database(s):", async (names: DataTable) => {
     const databases = await client.databases().all();
-    names.forEach(name => {
-        assert.ok(databases.includes(name));
+    names.raw().forEach(name => {
+        assert.ok(databases.includes(name[0]));
     });
 });
 
-Then("connection does not have database(s):", async (names: string[]) => {
+Then("connection does not have database(s):", async (names: DataTable) => {
     const databases = await client.databases().all();
-    names.forEach(name => {
-        assert.ok(!databases.includes(name));
+    names.raw().forEach(name => {
+        assert.ok(!databases.includes(name[0]));
     });
 });
 

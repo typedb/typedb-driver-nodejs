@@ -35,13 +35,13 @@ build:
         bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
   correctness:
     build:
-      image: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04-node
       command: |
         bazel build //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
     test:
-      image: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04-node
       command: |
         ./test/start-server.sh
         ./test/integration/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
@@ -67,7 +67,7 @@ build:
       filter:
         owner: graknlabs
         branch: master
-      image: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04-node
       command: |
         ./test/start-server.sh
         cd test/deployment/

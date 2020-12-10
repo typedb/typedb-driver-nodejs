@@ -39,8 +39,8 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 genrule(
     name = "client-nodejs-compiled",
     outs = ["client-nodejs.tar.gz"],
-    cmd = "tsc ; \
-    tar -cf $(@D)/client-nodejs.tar.gz dist",
+    cmd = "npm install -g typescript; tsc; tar -cf $(@D)/client-nodejs.tar.gz dist;",
+    #cmd = "tsc; tar -cf $(@D)/client-nodejs.tar.gz dist;",
     tools = [
         "//:client-nodejs-ts",
     ],
