@@ -40,13 +40,17 @@ build:
         bazel build //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
-    test:
+    test-integration:
       image: graknlabs-ubuntu-20.04-node
       command: |
         ./test/start-server.sh
         ./test/integration/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/stop-server.sh
         exit $TEST_SUCCESS
+    test-behaviour:
+      image: graknlabs-ubuntu-20.04-node
+      command: |
+        bazel test //test/behaviour/...
     deploy-npm-snapshot:
       filter:
         owner: graknlabs
@@ -61,7 +65,7 @@ build:
         export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
         export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
-      dependencies: [build, test]
+      dependencies: [build, test-integration, test-behaviour]
 
     test-deployment-npm:
       filter:
