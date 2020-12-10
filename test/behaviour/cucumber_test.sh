@@ -48,4 +48,7 @@ node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
 kill $(jps | awk '/GraknServer/ {print $1}')
+pwd
+pwd
+pwd
 exit $RESULT
