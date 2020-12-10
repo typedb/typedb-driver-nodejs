@@ -42,8 +42,7 @@ mkdir ./grakn_core_distribution/"$DIRECTORY"/grakn_core_test
 ./grakn_core_distribution/"$DIRECTORY"/grakn server --data grakn_core_test &
 sleep 10
 echo Unarchiving client.
-mkdir dist
-tar -xf client-nodejs.tar.gz -C dist
+tar -xf client-nodejs.tar.gz
 echo Client unarchived. Proceeding with tests.
 node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT

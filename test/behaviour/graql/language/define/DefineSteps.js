@@ -29,8 +29,6 @@ cucumber_1.Then('for each transaction, define query; throws exception containing
         }
     }
     catch (error) {
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        console.log(error.toString());
         assert(error.toString().includes(exceptionString));
     }
 });

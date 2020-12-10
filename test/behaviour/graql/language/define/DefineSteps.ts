@@ -28,8 +28,6 @@ Then('for each transaction, define query; throws exception containing {string}',
             assert.fail();
         }
     } catch (error){
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        console.log(error.toString());
         assert(error.toString().includes(exceptionString))
     }
 });
