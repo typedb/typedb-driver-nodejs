@@ -20,26 +20,10 @@
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//test/behaviour:rules.bzl", "node_cucumber_test")
 
-exports_files(["DatabaseSteps.js"])
+exports_files(["DefineSteps.js"])
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache",
-)
-
-node_cucumber_test(
-    name = "test",
-    features = ["@graknlabs_behaviour//connection:database.feature"],
-    node_modules = "//:node_modules",
-    package_json = "//:package.json",
-    core_artifact = "//test:native-grakn-artifact",
-    client = "//:client-nodejs-compiled",
-    steps = [
-        "//test/behaviour/connection:ConnectionSteps.js",
-        "//test/behaviour/connection/database:DatabaseSteps.js",
-        "//test/behaviour/connection/session:SessionSteps.js",
-        "//test/behaviour/connection/transaction:TransactionSteps.js",
-        "//test/behaviour/graql/language/define:DefineSteps.js",
-    ],
 )

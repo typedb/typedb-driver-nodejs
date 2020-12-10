@@ -17,34 +17,19 @@
  * under the License.
  */
 
-import { Given, After } from "@cucumber/cucumber";
-import { GraknClient } from "../../../dist/rpc/GraknClient";
-import { Grakn } from "../../../dist/Grakn";
-import Session = Grakn.Session;
-import Transaction = Grakn.Transaction;
+import { Then } from "@cucumber/cucumber";
+import { transactions } from "../../../connection/ConnectionSteps";
+import assert = require("assert");
 
-export const THREAD_POOL_SIZE = 32;
-
-export let client: GraknClient;
-export let sessions: Session[] = [];
-export let transactions: Transaction[] = [];
-
-Given("connection has been opened", () => {
-    if (client) return;
-    client = new GraknClient();
-});
-
-After(async () => {
-    for (const transaction of transactions) {
-        try {
-            await transaction.close()
-        } catch {}
+Then('for each transaction, define query; throws exception containing {string}', async function (exceptionString: string, queryString: string) {
+    try {
+        for (const transaction of transactions) {
+            await transaction.query().define(queryString);
+            assert.fail();
+        }
+    } catch (error){
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        console.log(error.toString());
+        assert(error.toString().includes(exceptionString))
     }
-    for (const session of sessions) {
-        try {
-            await session.close()
-        } catch {}
-    }
-    transactions = [];
-    sessions = [];
 });

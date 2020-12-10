@@ -41,7 +41,7 @@ const cucumber_1 = require("@cucumber/cucumber");
 const ConnectionSteps_1 = require("../ConnectionSteps");
 const assert = __importStar(require("assert"));
 cucumber_1.When("connection create database(s):", async (names) => {
-    for (const name of names.rows()) {
+    for (const name of names.raw()) {
         await ConnectionSteps_1.client.databases().create(name[0]);
     }
 });

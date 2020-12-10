@@ -29,3 +29,19 @@ cucumber_1.Given("connection has been opened", () => {
         return;
     exports.client = new GraknClient_1.GraknClient();
 });
+cucumber_1.After(async () => {
+    for (const transaction of exports.transactions) {
+        try {
+            await transaction.close();
+        }
+        catch { }
+    }
+    for (const session of exports.sessions) {
+        try {
+            await session.close();
+        }
+        catch { }
+    }
+    exports.transactions = [];
+    exports.sessions = [];
+});

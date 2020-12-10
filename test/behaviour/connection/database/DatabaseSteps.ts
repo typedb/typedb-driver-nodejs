@@ -23,7 +23,7 @@ import * as assert from "assert";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 
 When("connection create database(s):", async (names: DataTable) => {
-    for (const name of names.rows()) {await client.databases().create(name[0])}
+    for (const name of names.raw()) {await client.databases().create(name[0])}
 });
 
 When("connection create databases in parallel:", async (names: DataTable) => {
