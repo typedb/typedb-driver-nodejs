@@ -25,6 +25,7 @@ exports_files(["DatabaseSteps.js"])
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
+    exclude = glob(["*.d.ts"]),
     license_type = "apache",
 )
 
