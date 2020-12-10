@@ -38,12 +38,16 @@ After(async () => {
     for (const transaction of transactions) {
         try {
             await transaction.close()
-        } catch {}
+        } catch {
+            //We're okay with this.
+        }
     }
     for (const session of sessions) {
         try {
             await session.close()
-        } catch {}
+        } catch {
+            //We're also okay with this.
+        }
     }
     transactions = [];
     sessions = [];
