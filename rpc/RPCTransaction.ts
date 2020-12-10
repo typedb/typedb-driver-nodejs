@@ -151,7 +151,9 @@ export class RPCTransaction implements Grakn.Transaction {
         });
 
         this._stream.on("error", (err) => {
-            console.error(err);
+            this._transactionWasClosed = true;
+            this._streamIsOpen = false;
+            this._collectors.clearWithError(new ErrorResponse(err));
         });
 
         this._stream.on("end", () => {
