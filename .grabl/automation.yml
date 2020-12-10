@@ -50,6 +50,7 @@ build:
     test-behaviour:
       image: graknlabs-ubuntu-20.04-node
       command: |
+        npm install -g typescript
         bazel test //test/behaviour/...
     deploy-npm-snapshot:
       filter:
