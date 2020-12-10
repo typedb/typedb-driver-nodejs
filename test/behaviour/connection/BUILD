@@ -25,6 +25,6 @@ load("//test/behaviour:rules.bzl", "node_cucumber_test")
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = glob(["*.d.ts"]),
+    exclude = glob(["*.d.ts", "*.js",]),
     license_type = "apache",
 )
