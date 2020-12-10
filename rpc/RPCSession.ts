@@ -23,9 +23,9 @@ import {
     GraknOptions,
     RPCTransaction, GraknClientError, ErrorMessage,
 } from "../dependencies_internal";
-import GraknProto from "graknlabs-protocol/protobuf/grakn_grpc_pb";
+import GraknProto from "grakn-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
-import SessionProto from "graknlabs-protocol/protobuf/session_pb";
+import SessionProto from "grakn-protocol/protobuf/session_pb";
 
 export class RPCSession implements Grakn.Session {
     private readonly _grpcClient: GraknGrpc;

@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import AnswerProto from "graknlabs-protocol/protobuf/answer_pb";
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import AnswerProto from "grakn-protocol/protobuf/answer_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 
 import {
     Concept,

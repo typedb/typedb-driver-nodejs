@@ -27,7 +27,7 @@ import {
     Stream,
     TypeImpl,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
 
 export class RoleTypeImpl extends ThingTypeImpl implements RoleType {

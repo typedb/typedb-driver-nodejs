@@ -46,7 +46,7 @@ import {
 } from "../../../dependencies_internal";
 import ValueClass = AttributeType.ValueClass;
 import Transaction = Grakn.Transaction;
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 
 export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl implements Attribute<T> {
     protected constructor(iid: string) {
@@ -300,15 +300,15 @@ class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements M
 export namespace AttributeImpl {
     export function of(thingProto: ConceptProto.Thing): AttributeImpl<ValueClass> {
         switch (thingProto.getValueType()) {
-            case ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN:
+            case ConceptProto.AttributeType.ValueType.BOOLEAN:
                 return BooleanAttributeImpl.of(thingProto);
-            case ConceptProto.AttributeType.VALUE_TYPE.LONG:
+            case ConceptProto.AttributeType.ValueType.LONG:
                 return LongAttributeImpl.of(thingProto);
-            case ConceptProto.AttributeType.VALUE_TYPE.DOUBLE:
+            case ConceptProto.AttributeType.ValueType.DOUBLE:
                 return DoubleAttributeImpl.of(thingProto);
-            case ConceptProto.AttributeType.VALUE_TYPE.STRING:
+            case ConceptProto.AttributeType.ValueType.STRING:
                 return StringAttributeImpl.of(thingProto);
-            case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
+            case ConceptProto.AttributeType.ValueType.DATETIME:
                 return DateTimeAttributeImpl.of(thingProto);
             default:
                 throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(thingProto.getValueType()));

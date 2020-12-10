@@ -30,8 +30,8 @@ import {
     AttributeTypeImpl,
     Thing, ThingImpl, TypeImpl,
 } from "../dependencies_internal";
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 
 export class ConceptManager {
     private readonly _rpcTransaction: RPCTransaction;

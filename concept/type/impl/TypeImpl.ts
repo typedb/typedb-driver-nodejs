@@ -28,8 +28,8 @@ import {
     GraknClientError,
     ErrorMessage, RoleTypeImpl, ThingTypeImpl,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import Transaction = Grakn.Transaction;
 
 export abstract class TypeImpl implements Type {
@@ -159,7 +159,7 @@ export abstract class RemoteTypeImpl implements RemoteType {
 export namespace TypeImpl {
     export function of(typeProto: ConceptProto.Type): TypeImpl {
         switch (typeProto.getEncoding()) {
-            case ConceptProto.Type.ENCODING.ROLE_TYPE:
+            case ConceptProto.Type.Encoding.ROLE_TYPE:
                 return RoleTypeImpl.of(typeProto);
             default:
                 return ThingTypeImpl.of(typeProto);

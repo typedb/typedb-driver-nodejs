@@ -51,9 +51,9 @@ import {
     GraknClientError,
     ErrorMessage, EntityImpl,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import ValueClass = AttributeType.ValueClass;
 
 export abstract class ThingImpl implements Thing {
@@ -201,11 +201,11 @@ export abstract class RemoteThingImpl implements RemoteThing {
 export namespace ThingImpl {
     export function of(thingProto: ConceptProto.Thing): ThingImpl {
         switch (thingProto.getEncoding()) {
-            case ConceptProto.Thing.ENCODING.ENTITY:
+            case ConceptProto.Thing.Encoding.ENTITY:
                 return EntityImpl.of(thingProto);
-            case ConceptProto.Thing.ENCODING.RELATION:
+            case ConceptProto.Thing.Encoding.RELATION:
                 return RelationImpl.of(thingProto);
-            case ConceptProto.Thing.ENCODING.ATTRIBUTE:
+            case ConceptProto.Thing.Encoding.ATTRIBUTE:
                 return AttributeImpl.of(thingProto);
             default:
                 throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thingProto.getEncoding()));

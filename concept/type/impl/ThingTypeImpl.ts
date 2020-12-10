@@ -32,7 +32,7 @@ import {
     ConceptProtoBuilder, EntityTypeImpl, RelationTypeImpl, GraknClientError, ErrorMessage,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import assert from "assert";
 
 
@@ -138,13 +138,13 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
 export namespace ThingTypeImpl {
     export function of(typeProto: ConceptProto.Type): ThingTypeImpl {
         switch (typeProto.getEncoding()) {
-            case ConceptProto.Type.ENCODING.ENTITY_TYPE:
+            case ConceptProto.Type.Encoding.ENTITY_TYPE:
                 return EntityTypeImpl.of(typeProto);
-            case ConceptProto.Type.ENCODING.RELATION_TYPE:
+            case ConceptProto.Type.Encoding.RELATION_TYPE:
                 return RelationTypeImpl.of(typeProto);
-            case ConceptProto.Type.ENCODING.ATTRIBUTE_TYPE:
+            case ConceptProto.Type.Encoding.ATTRIBUTE_TYPE:
                 return AttributeTypeImpl.of(typeProto);
-            case ConceptProto.Type.ENCODING.THING_TYPE:
+            case ConceptProto.Type.Encoding.THING_TYPE:
                 assert(typeProto.getRoot());
                 return new ThingTypeImpl(typeProto.getLabel(), typeProto.getRoot());
             default:

@@ -23,7 +23,7 @@ import {
     Grakn, ThingImpl, TypeImpl,
 } from "../../dependencies_internal"
 import Transaction = Grakn.Transaction;
-import AnswerProto from "graknlabs-protocol/protobuf/answer_pb";
+import AnswerProto from "grakn-protocol/protobuf/answer_pb";
 
 
 

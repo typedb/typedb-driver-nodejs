@@ -43,7 +43,7 @@ import {
     ConceptProtoBuilder,
     GraknClientError, ErrorMessage,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
 import ValueType = AttributeType.ValueType;
 import ValueClass = AttributeType.ValueClass;
@@ -441,17 +441,17 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
 export namespace AttributeTypeImpl {
     export function of(typeProto: ConceptProto.Type): AttributeTypeImpl {
         switch (typeProto.getValueType()) {
-            case ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN:
+            case ConceptProto.AttributeType.ValueType.BOOLEAN:
                 return new BooleanAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.LONG:
+            case ConceptProto.AttributeType.ValueType.LONG:
                 return new LongAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.DOUBLE:
+            case ConceptProto.AttributeType.ValueType.DOUBLE:
                 return new DoubleAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.STRING:
+            case ConceptProto.AttributeType.ValueType.STRING:
                 return new StringAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
+            case ConceptProto.AttributeType.ValueType.DATETIME:
                 return new DateTimeAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
-            case ConceptProto.AttributeType.VALUE_TYPE.OBJECT:
+            case ConceptProto.AttributeType.ValueType.OBJECT:
                 assert(typeProto.getRoot());
                 return new AttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
             default:

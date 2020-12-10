@@ -27,8 +27,8 @@ import {
     BlockingQueue,
     Stream, GraknClientError, ErrorMessage, LogicManager,
 } from "../dependencies_internal";
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
-import GraknProto from "graknlabs-protocol/protobuf/grakn_grpc_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
+import GraknProto from "grakn-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import { ClientDuplexStream } from "@grpc/grpc-js";
 
