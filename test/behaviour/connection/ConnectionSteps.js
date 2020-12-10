@@ -34,13 +34,21 @@ cucumber_1.After(async () => {
         try {
             await transaction.close();
         }
-        catch { }
+        catch {
+            //We're okay with this.
+        }
     }
     for (const session of exports.sessions) {
         try {
             await session.close();
         }
-        catch { }
+        catch {
+            //We're also okay with this.
+        }
+    }
+    const databases = await exports.client.databases().all();
+    for (const name of databases) {
+        await exports.client.databases().delete(name);
     }
     exports.transactions = [];
     exports.sessions = [];

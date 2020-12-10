@@ -49,6 +49,10 @@ After(async () => {
             //We're also okay with this.
         }
     }
+    const databases = await client.databases().all();
+    for (const name of databases) {
+        await client.databases().delete(name);
+    }
     transactions = [];
     sessions = [];
 });

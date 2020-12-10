@@ -97,5 +97,6 @@ cucumber_1.Then("connection does not have database(s):", async (names) => {
 });
 cucumber_1.Given("connection does not have any database", async () => {
     const databases = await ConnectionSteps_1.client.databases().all();
+    console.log(databases);
     assert.ok(databases.length === 0);
 });
