@@ -17,12 +17,13 @@
  * under the License.
  */
 
-import { Given, After } from "@cucumber/cucumber";
+import { Given, After, setDefaultTimeout } from "@cucumber/cucumber";
 import { GraknClient } from "../../../dist/rpc/GraknClient";
 import { Grakn } from "../../../dist/Grakn";
 import Session = Grakn.Session;
 import Transaction = Grakn.Transaction;
 
+setDefaultTimeout(20 * 1000);
 export const THREAD_POOL_SIZE = 32;
 
 export let client: GraknClient;

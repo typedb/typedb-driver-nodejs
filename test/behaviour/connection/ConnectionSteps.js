@@ -21,6 +21,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.transactions = exports.sessions = exports.client = exports.THREAD_POOL_SIZE = void 0;
 const cucumber_1 = require("@cucumber/cucumber");
 const GraknClient_1 = require("../../../dist/rpc/GraknClient");
+cucumber_1.setDefaultTimeout(20 * 1000);
 exports.THREAD_POOL_SIZE = 32;
 exports.sessions = [];
 exports.transactions = [];
