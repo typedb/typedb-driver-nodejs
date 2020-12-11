@@ -44,7 +44,7 @@ sleep 10
 echo Unarchiving client.
 tar -xf client-nodejs.tar.gz
 echo Client unarchived. Proceeding with tests.
-node --es-module-specifier-resolution=node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' && export RESULT=0 || export RESULT=1
+node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
 pwd
