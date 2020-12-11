@@ -37,7 +37,9 @@ cucumber_1.Then('for each session, open transaction of type; throws exception', 
     }
     try {
         for (const session of ConnectionSteps_1.sessions) {
-            ConnectionSteps_1.transactions.push(await session.transaction(transactionType));
+            if (!ConnectionSteps_1.transactions.has(session))
+                ConnectionSteps_1.transactions.set(session, []);
+            ConnectionSteps_1.transactions.get(session).push(await session.transaction(transactionType));
             assert.fail();
         }
     }
@@ -58,6 +60,8 @@ cucumber_1.Then('for each session, open transaction of type:', async function (t
             throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server.";
     }
     for (const session of ConnectionSteps_1.sessions) {
-        ConnectionSteps_1.transactions.push(await session.transaction(transactionType));
+        if (!ConnectionSteps_1.transactions.has(session))
+            ConnectionSteps_1.transactions.set(session, []);
+        ConnectionSteps_1.transactions.get(session).push(await session.transaction(transactionType));
     }
 });

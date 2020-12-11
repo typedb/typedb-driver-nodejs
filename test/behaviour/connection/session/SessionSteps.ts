@@ -17,12 +17,43 @@
  * under the License.
  */
 
-import { When } from "@cucumber/cucumber";
+import { When, Then } from "@cucumber/cucumber";
 import { client, sessions } from "../ConnectionSteps";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { Grakn } from "../../../../dist/Grakn";
 import SessionType = Grakn.SessionType;
+import assert = require("assert");
+import Session = Grakn.Session;
 
-When("connection open session for database:", async (names: DataTable) => {
-    for (const name of names.raw()) {sessions.push(await client.session(name[0], SessionType.SCHEMA))}
+When("connection open session(s) for database(s):", async (names: DataTable) => {
+    for (const name of names.raw()) {sessions.push(await client.session(name[0], SessionType.DATA))}
+});
+
+When("connection open sessions in parallel for databases:", async (names: DataTable) => {
+    const openings: Promise<Session>[] = []
+    for (const name of names.raw()) {openings.push(client.session(name[0], SessionType.DATA))}
+    sessions.concat(await Promise.all(openings));
+});
+
+When("session(s) have/has database:", (names: DataTable) => {
+    for (const session of sessions) {
+        assert.ok(session.database() === names.raw()[0][0]);
+    }
+});
+
+When("sessions( in parallel) have databases:", (names: DataTable) => {
+    for (let i = 0; i < sessions.length; i++) {
+        assert.ok(sessions[i].database() === names.raw()[i][0]);
+    }
+});
+
+Then("session(s)( in parallel) is/are null: {bool}", function (isNull: boolean) {
+    return (sessions.length === 0) === isNull;
+
+});
+
+Then('session(s)( in parallel) is/are open: {bool}', function (isOpen: boolean) {
+    for (const session of sessions) {
+        assert.ok(session.isOpen() === isOpen);
+    }
 });

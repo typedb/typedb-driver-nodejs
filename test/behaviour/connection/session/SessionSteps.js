@@ -22,8 +22,34 @@ const cucumber_1 = require("@cucumber/cucumber");
 const ConnectionSteps_1 = require("../ConnectionSteps");
 const Grakn_1 = require("../../../../dist/Grakn");
 var SessionType = Grakn_1.Grakn.SessionType;
-cucumber_1.When("connection open session for database:", async (names) => {
+const assert = require("assert");
+cucumber_1.When("connection open session(s) for database(s):", async (names) => {
     for (const name of names.raw()) {
-        ConnectionSteps_1.sessions.push(await ConnectionSteps_1.client.session(name[0], SessionType.SCHEMA));
+        ConnectionSteps_1.sessions.push(await ConnectionSteps_1.client.session(name[0], SessionType.DATA));
+    }
+});
+cucumber_1.When("connection open sessions in parallel for databases:", async (names) => {
+    const openings = [];
+    for (const name of names.raw()) {
+        openings.push(ConnectionSteps_1.client.session(name[0], SessionType.DATA));
+    }
+    ConnectionSteps_1.sessions.concat(await Promise.all(openings));
+});
+cucumber_1.When("session(s) have/has database:", (names) => {
+    for (const session of ConnectionSteps_1.sessions) {
+        assert.ok(session.database() === names.raw()[0][0]);
+    }
+});
+cucumber_1.When("sessions( in parallel) have databases:", (names) => {
+    for (let i = 0; i < ConnectionSteps_1.sessions.length; i++) {
+        assert.ok(ConnectionSteps_1.sessions[i].database() === names.raw()[i][0]);
+    }
+});
+cucumber_1.Then("session(s)( in parallel) is/are null: {bool}", function (isNull) {
+    return (ConnectionSteps_1.sessions.length === 0) === isNull;
+});
+cucumber_1.Then('session(s)( in parallel) is/are open: {bool}', function (isOpen) {
+    for (const session of ConnectionSteps_1.sessions) {
+        assert.ok(session.isOpen() === isOpen);
     }
 });

@@ -24,26 +24,29 @@ const GraknClient_1 = require("../../../dist/rpc/GraknClient");
 cucumber_1.setDefaultTimeout(20 * 1000);
 exports.THREAD_POOL_SIZE = 32;
 exports.sessions = [];
-exports.transactions = [];
+exports.transactions = new Map();
 cucumber_1.Given("connection has been opened", () => {
     if (exports.client)
         return;
     exports.client = new GraknClient_1.GraknClient();
 });
 cucumber_1.After(async () => {
-    for (const transaction of exports.transactions) {
-        try {
-            await transaction.close();
-        }
-        catch {
-            //We're okay with this.
-        }
-    }
     for (const session of exports.sessions) {
         try {
-            await session.close();
+            if (exports.transactions.has(session)) {
+                for (let transaction of exports.transactions.get(session)) {
+                    try {
+                        await transaction.close();
+                    }
+                    catch {
+                        //We're okay with this.
+                    }
+                }
+            }
+            if (session.isOpen())
+                await session.close();
         }
-        catch {
+        catch (err) {
             //We're also okay with this.
         }
     }
@@ -51,6 +54,6 @@ cucumber_1.After(async () => {
     for (const name of databases) {
         await exports.client.databases().delete(name);
     }
-    exports.transactions = [];
     exports.sessions = [];
+    exports.transactions.clear();
 });

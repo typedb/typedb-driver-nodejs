@@ -23,9 +23,11 @@ import assert = require("assert");
 
 Then('for each transaction, define query; throws exception containing {string}', async function (exceptionString: string, queryString: string) {
     try {
-        for (const transaction of transactions) {
-            await transaction.query().define(queryString);
-            assert.fail();
+        for (const transactionList of transactions.values()) {
+            for (const transaction of transactionList) {
+                await transaction.query().define(queryString);
+                assert.fail();
+            }
         }
     } catch (error){
         assert(error.toString().includes(exceptionString))

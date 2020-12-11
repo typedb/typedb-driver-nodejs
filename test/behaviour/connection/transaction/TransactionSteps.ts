@@ -38,7 +38,8 @@ Then('for each session, open transaction of type; throws exception', async funct
     }
     try {
         for (const session of sessions) {
-            transactions.push(await session.transaction(transactionType));
+            if (!transactions.has(session)) transactions.set(session, [])
+            transactions.get(session).push(await session.transaction(transactionType));
             assert.fail();
         }
     } catch {
@@ -59,6 +60,7 @@ Then('for each session, open transaction of type:', async function (transactionT
             throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server."
     }
     for (const session of sessions) {
-        transactions.push(await session.transaction(transactionType));
+        if (!transactions.has(session)) transactions.set(session, [])
+        transactions.get(session).push(await session.transaction(transactionType));
     }
 });

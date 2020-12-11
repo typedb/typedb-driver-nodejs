@@ -28,7 +28,7 @@ export const THREAD_POOL_SIZE = 32;
 
 export let client: GraknClient;
 export let sessions: Session[] = [];
-export let transactions: Transaction[] = [];
+export let transactions: Map<Session, Transaction[]> = new Map<Session, Transaction[]>();
 
 Given("connection has been opened", () => {
     if (client) return;
@@ -36,17 +36,19 @@ Given("connection has been opened", () => {
 });
 
 After(async () => {
-    for (const transaction of transactions) {
-        try {
-            await transaction.close()
-        } catch {
-            //We're okay with this.
-        }
-    }
     for (const session of sessions) {
         try {
-            await session.close()
-        } catch {
+            if (transactions.has(session)){
+                for (let transaction of transactions.get(session)) {
+                    try {
+                        await transaction.close();
+                    } catch {
+                        //We're okay with this.
+                    }
+                }
+            }
+            if (session.isOpen()) await session.close()
+        } catch (err){
             //We're also okay with this.
         }
     }
@@ -54,6 +56,6 @@ After(async () => {
     for (const name of databases) {
         await client.databases().delete(name);
     }
-    transactions = [];
     sessions = [];
+    transactions.clear();
 });

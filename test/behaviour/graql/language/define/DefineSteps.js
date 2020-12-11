@@ -23,9 +23,11 @@ const ConnectionSteps_1 = require("../../../connection/ConnectionSteps");
 const assert = require("assert");
 cucumber_1.Then('for each transaction, define query; throws exception containing {string}', async function (exceptionString, queryString) {
     try {
-        for (const transaction of ConnectionSteps_1.transactions) {
-            await transaction.query().define(queryString);
-            assert.fail();
+        for (const transactionList of ConnectionSteps_1.transactions.values()) {
+            for (const transaction of transactionList) {
+                await transaction.query().define(queryString);
+                assert.fail();
+            }
         }
     }
     catch (error) {

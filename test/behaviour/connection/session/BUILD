@@ -29,16 +29,19 @@ checkstyle_test(
     license_type = "apache",
 )
 
-#node_cucumber_test(
-#    name = "test",
-#    features = ["@graknlabs_behaviour//connection:session.feature"],
-#    node_modules = "//:node_modules",
-#    package_json = "//:package.json",
-#    core_artifact = "//test:native-grakn-artifact",
-#    client = "//:client-nodejs-compiled",
-#    steps = [
-#        "//test/behaviour/connection:ConnectionSteps.js",
-#        "//test/behaviour/connection/database:DatabaseSteps.js",
-#        "//test/behaviour/connection/session:SessionSteps.js",
-#    ],
-#)
+node_cucumber_test(
+    name = "test",
+    features = ["@graknlabs_behaviour//connection:session.feature"],
+    node_modules = "//:node_modules",
+    package_json = "//:package.json",
+    core_artifact = "//test:native-grakn-artifact",
+    client = "//:client-nodejs-compiled",
+    steps = [
+        "//test/behaviour/config:Parameters.js",
+        "//test/behaviour/connection:ConnectionSteps.js",
+        "//test/behaviour/connection/database:DatabaseSteps.js",
+        "//test/behaviour/connection/session:SessionSteps.js",
+        "//test/behaviour/connection/transaction:TransactionSteps.js",
+        "//test/behaviour/graql/language/define:DefineSteps.js",
+    ],
+)
