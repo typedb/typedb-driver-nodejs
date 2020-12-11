@@ -176,14 +176,13 @@ async function run() {
                 lionNames.push(lionName.getValue());
             }
         }
-        console.log(lionNames);
-        await tx.commit();
-        await tx.close();
-        tx = await session.transaction(TransactionType.WRITE);
-        const matchresult = await tx.query().match("match $x isa lion, has name $y, has rank $z;");
-        for await (const match of matchresult) {
-            console.log(match);
-        }
+        // await tx.commit();
+        // await tx.close();
+        // tx = await session.transaction(TransactionType.WRITE);
+        // const matchresult = await tx.query().match("match $x isa lion, has name $y, has rank $z;");
+        // for await (const match of matchresult) {
+        //     console.log(match);
+        // }
         assert(JSON.stringify(lionNames.sort()) === JSON.stringify(["Amélie", "Asuka", "Chandra", "Sergey", "Steve"]))
         console.log("insert entity query - SUCCESS");
     } catch (err) {
