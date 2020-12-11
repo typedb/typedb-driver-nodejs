@@ -43,12 +43,13 @@ mkdir ./grakn_core_distribution/"$DIRECTORY"/grakn_core_test
 sleep 10
 echo Unarchiving client.
 tar -xf client-nodejs.tar.gz
-echo Client unarchived. Proceeding with tests.
+echo Client unarchived.
+echo Materialising tests.
+cp -LR ./test ./materialised-test
+rm -rf ./test
+echo Tests materialised. Proceeding with tests.
 node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
-pwd
-ls -al
-ls -alR test
 kill $(jps | awk '/GraknServer/ {print $1}')
 exit $RESULT

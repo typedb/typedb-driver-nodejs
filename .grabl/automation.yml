@@ -52,7 +52,6 @@ build:
       command: |
         npm install typescript
         bazel test //test/behaviour/... --sandbox_debug || true
-        sleep 18000
     deploy-npm-snapshot:
       filter:
         owner: graknlabs
