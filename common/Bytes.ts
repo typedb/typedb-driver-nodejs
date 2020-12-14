@@ -30,8 +30,8 @@ export class Bytes {
     static hexStringToBytes(hexString: string): Uint8Array {
         hexString = hexString.replace(Bytes.PREFIX, "");
 
-        let len = hexString.length;
-        let bytes = new Uint8Array(len / 2);
+        const len = hexString.length;
+        const bytes = new Uint8Array(len / 2);
         for (let i = 0; i < bytes.length; i++) {
             bytes[i] = (Bytes.HEX_MAP.get(hexString.charAt(i*2)) << 4) + Bytes.HEX_MAP.get(hexString.charAt((i*2)+1))
         }
@@ -39,10 +39,10 @@ export class Bytes {
     }
 
     static bytesToHexString(bytes: Uint8Array): string {
-        let hexChars = new Uint8Array(bytes.length * 2);
+        const hexChars = new Uint8Array(bytes.length * 2);
 
         for (let j = 0; j < bytes.length; j++) {
-            let v = bytes[j] & 0xFF;
+            const v = bytes[j] & 0xFF;
             hexChars[j * 2] = Bytes.HEX_ARRAY[v >>> 4];
             hexChars[j * 2 + 1] = Bytes.HEX_ARRAY[v & 0x0F];
         }
