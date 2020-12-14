@@ -40,6 +40,7 @@ export class RelationImpl extends ThingImpl implements Relation {
     }
 
     static of(protoThing: ConceptProto.Thing): RelationImpl {
+        // TODO
         return new RelationImpl(protoThing.getIid_asB64());
     }
 

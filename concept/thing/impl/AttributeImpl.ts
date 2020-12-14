@@ -89,6 +89,7 @@ export class BooleanAttributeImpl extends AttributeImpl<boolean> implements Bool
     }
 
     static of(protoThing: ConceptProto.Thing): BooleanAttributeImpl {
+        // TODO
         return new BooleanAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getBoolean());
     }
 
@@ -132,6 +133,7 @@ export class LongAttributeImpl extends AttributeImpl<number> implements LongAttr
     }
 
     static of(protoThing: ConceptProto.Thing): LongAttributeImpl {
+        // TODO
         return new LongAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getLong());
     }
 
@@ -175,6 +177,7 @@ export class DoubleAttributeImpl extends AttributeImpl<number> implements Double
     }
 
     static of(protoThing: ConceptProto.Thing): DoubleAttributeImpl {
+        // TODO
         return new DoubleAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getDouble());
     }
 
@@ -219,6 +222,7 @@ export class StringAttributeImpl extends AttributeImpl<string> implements String
     }
 
     static of(protoThing: ConceptProto.Thing): StringAttributeImpl {
+        // TODO
         return new StringAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getString());
     }
 
@@ -262,6 +266,7 @@ export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTi
     }
 
     static of(protoThing: ConceptProto.Thing): DateTimeAttributeImpl {
+        // TODO
         return new DateTimeAttributeImpl(protoThing.getIid_asB64(), new Date(protoThing.getValue().getDateTime()));
     }
 
