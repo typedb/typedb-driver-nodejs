@@ -193,6 +193,7 @@ async function run() {
         let nameType = await tx.concepts().getAttributeType("name");
         let lionNames = [];
         for await (let lion of lionType.asRemote(tx).getInstances()) {
+            console.log("----- LION IID: " + lion.getIID());
             for await (let lionName of lion.asRemote(tx).getHas(nameType)) {
                 lionNames.push(lionName.getValue());
             }
