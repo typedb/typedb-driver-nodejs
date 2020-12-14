@@ -63,7 +63,6 @@ export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteTh
         super(transaction, iid);
     }
 
-    getOwners(): Stream<ThingImpl>;
     getOwners(ownerType?: ThingType): Stream<ThingImpl> {
         const getOwnersReq = new ConceptProto.Attribute.GetOwners.Req();
         if (ownerType) getOwnersReq.setThingType(ConceptProtoBuilder.type(ownerType));
