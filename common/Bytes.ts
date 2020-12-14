@@ -19,13 +19,6 @@
 
 export class Bytes {
     private static PREFIX = "0x";
-    private static HEX_ARRAY: number[] = [ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100, 101, 102 ]
-    private static HEX_MAP: Map<string, number> = new Map([
-        ["0", 0], ["1", 1], ["2", 2], ["3", 3],
-        ["4", 4], ["5", 5], ["6", 6], ["7", 7],
-        ["8", 8], ["9", 9], ["a", 1], ["b", 1],
-        ["c", 1], ["d", 1], ["e", 1], ["f", 1]
-    ]);
 
     static hexStringToBytes(hexString: string): Uint8Array {
         if (hexString.length % 2 != 0) throw new Error("hexString length not divisible by 2: " + hexString.length)
