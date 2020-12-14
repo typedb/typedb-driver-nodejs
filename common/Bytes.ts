@@ -28,25 +28,14 @@ export class Bytes {
     ]);
 
     static hexStringToBytes(hexString: string): Uint8Array {
+        if (hexString.length % 2 != 0) throw new Error("hexString length not divisible by 2: " + hexString.length)
+        if (!hexString.startsWith(Bytes.PREFIX)) throw new Error("hexString does not start with '" + Bytes.PREFIX + "': " + hexString + "'")
         hexString = hexString.replace(Bytes.PREFIX, "");
 
-        const len = hexString.length;
-        const bytes = new Uint8Array(len / 2);
-        for (let i = 0; i < bytes.length; i++) {
-            bytes[i] = (Bytes.HEX_MAP.get(hexString.charAt(i*2)) << 4) + Bytes.HEX_MAP.get(hexString.charAt((i*2)+1))
-        }
-        return bytes;
+        return Uint8Array.from(Buffer.from(hexString, 'hex'))
     }
 
     static bytesToHexString(bytes: Uint8Array): string {
-        const hexChars = new Uint8Array(bytes.length * 2);
-
-        for (let j = 0; j < bytes.length; j++) {
-            const v = bytes[j] & 0xFF;
-            hexChars[j * 2] = Bytes.HEX_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = Bytes.HEX_ARRAY[v & 0x0F];
-        }
-
-        return Bytes.PREFIX + String.fromCharCode.apply(null, Array.from(hexChars))
+        return Bytes.PREFIX + Buffer.from(bytes).toString('hex')
     }
 }
