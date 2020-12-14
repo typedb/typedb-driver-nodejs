@@ -65,7 +65,7 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
     async getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>> {
         const method = new ConceptProto.Thing.Req()
             .setRelationGetPlayersByRoleTypeReq(new ConceptProto.Relation.GetPlayersByRoleType.Req())
-            .setIid(this.getIID());
+            .setIid(Bytes.hexStringToBytes(this.getIID()));
         const request = new TransactionProto.Transaction.Req().setThingReq(method);
         const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList());
         const rolePlayerMap = new Map<RoleTypeImpl, ThingImpl[]>();
