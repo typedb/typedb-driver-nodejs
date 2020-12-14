@@ -42,7 +42,7 @@ import {
     AttributeType,
     Grakn,
     Merge,
-    Stream, ConceptProtoBuilder, GraknClientError, ErrorMessage, ThingTypeImpl,
+    Stream, ConceptProtoBuilder, GraknClientError, ErrorMessage, ThingTypeImpl, Bytes,
 } from "../../../dependencies_internal";
 import ValueClass = AttributeType.ValueClass;
 import Transaction = Grakn.Transaction;
@@ -90,7 +90,7 @@ export class BooleanAttributeImpl extends AttributeImpl<boolean> implements Bool
 
     static of(protoThing: ConceptProto.Thing): BooleanAttributeImpl {
         // TODO
-        return new BooleanAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getBoolean());
+        return new BooleanAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), protoThing.getValue().getBoolean());
     }
 
     asRemote(transaction: Transaction): RemoteBooleanAttributeImpl {
@@ -134,7 +134,7 @@ export class LongAttributeImpl extends AttributeImpl<number> implements LongAttr
 
     static of(protoThing: ConceptProto.Thing): LongAttributeImpl {
         // TODO
-        return new LongAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getLong());
+        return new LongAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), protoThing.getValue().getLong());
     }
 
     asRemote(transaction: Transaction): RemoteLongAttributeImpl {
@@ -178,7 +178,7 @@ export class DoubleAttributeImpl extends AttributeImpl<number> implements Double
 
     static of(protoThing: ConceptProto.Thing): DoubleAttributeImpl {
         // TODO
-        return new DoubleAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getDouble());
+        return new DoubleAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), protoThing.getValue().getDouble());
     }
 
     asRemote(transaction: Transaction): RemoteDoubleAttributeImpl {
@@ -223,7 +223,7 @@ export class StringAttributeImpl extends AttributeImpl<string> implements String
 
     static of(protoThing: ConceptProto.Thing): StringAttributeImpl {
         // TODO
-        return new StringAttributeImpl(protoThing.getIid_asB64(), protoThing.getValue().getString());
+        return new StringAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), protoThing.getValue().getString());
     }
 
     asRemote(transaction: Transaction): RemoteStringAttributeImpl {
@@ -267,7 +267,7 @@ export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTi
 
     static of(protoThing: ConceptProto.Thing): DateTimeAttributeImpl {
         // TODO
-        return new DateTimeAttributeImpl(protoThing.getIid_asB64(), new Date(protoThing.getValue().getDateTime()));
+        return new DateTimeAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), new Date(protoThing.getValue().getDateTime()));
     }
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeImpl {

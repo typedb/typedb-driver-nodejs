@@ -28,7 +28,7 @@ import {
     Grakn,
     Stream,
     RPCTransaction,
-    RoleTypeImpl, ConceptProtoBuilder, ThingTypeImpl, TypeImpl,
+    RoleTypeImpl, ConceptProtoBuilder, ThingTypeImpl, TypeImpl, Bytes,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
@@ -40,8 +40,7 @@ export class RelationImpl extends ThingImpl implements Relation {
     }
 
     static of(protoThing: ConceptProto.Thing): RelationImpl {
-        // TODO
-        return new RelationImpl(protoThing.getIid_asB64());
+        return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()));
     }
 
     asRemote(transaction: Transaction): RemoteRelationImpl {
