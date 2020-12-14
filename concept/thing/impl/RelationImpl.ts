@@ -80,7 +80,7 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
                     break;
                 }
             }
-            if (!addedToExistingEntry) rolePlayerMap.set(role, []);
+            if (!addedToExistingEntry) rolePlayerMap.set(role, [player]);
         }
         return rolePlayerMap;
     }
