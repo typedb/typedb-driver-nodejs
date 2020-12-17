@@ -47,21 +47,35 @@ cucumber_1.Then('for each session, open transaction of type; throws exception', 
         //Failed successfully
     }
 });
-cucumber_1.Then('for each session, open transaction of type:', async function (transactionTypeTable) {
-    let transactionType;
-    switch (transactionTypeTable.raw()[0][0]) {
-        case "write":
-            transactionType = TransactionType.WRITE;
-            break;
-        case "read":
-            transactionType = TransactionType.READ;
-            break;
-        default:
-            throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server.";
-    }
+cucumber_1.Then('for each session, open transaction(s) of type:', async function (transactionTypeTable) {
     for (const session of ConnectionSteps_1.sessions) {
         if (!ConnectionSteps_1.transactions.has(session))
             ConnectionSteps_1.transactions.set(session, []);
-        ConnectionSteps_1.transactions.get(session).push(await session.transaction(transactionType));
+        for (const transactionTypeRow of transactionTypeTable.raw()) {
+            let transactionType;
+            switch (transactionTypeRow[0]) {
+                case "write":
+                    transactionType = TransactionType.WRITE;
+                    break;
+                case "read":
+                    transactionType = TransactionType.READ;
+                    break;
+                default:
+                    throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server.";
+            }
+            ConnectionSteps_1.transactions.get(session).push(await session.transaction(transactionType));
+        }
+    }
+});
+cucumber_1.Then('for each session, transactions are null: {bool}', async function (isNull) {
+    for (const session of ConnectionSteps_1.sessions)
+        assert.ok(ConnectionSteps_1.transactions.has(session) !== isNull);
+});
+cucumber_1.Then('for each session, transactions are open: {bool}', async function (isOpen) {
+    for (const session of ConnectionSteps_1.sessions) {
+        assert.ok(ConnectionSteps_1.transactions.has(session));
+        for (const transaction of ConnectionSteps_1.transactions.get(session)) {
+            assert.ok(transaction.isOpen() === isOpen);
+        }
     }
 });

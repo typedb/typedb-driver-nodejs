@@ -37,6 +37,7 @@ node_cucumber_test(
     core_artifact = "//test:native-grakn-artifact",
     client = "//:client-nodejs-compiled",
     steps = [
+        "//test/behaviour/config:Parameters.js",
         "//test/behaviour/connection:ConnectionSteps.js",
         "//test/behaviour/connection/database:DatabaseSteps.js",
         "//test/behaviour/connection/session:SessionSteps.js",

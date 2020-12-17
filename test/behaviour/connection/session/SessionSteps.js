@@ -23,15 +23,27 @@ const ConnectionSteps_1 = require("../ConnectionSteps");
 const Grakn_1 = require("../../../../dist/Grakn");
 var SessionType = Grakn_1.Grakn.SessionType;
 const assert = require("assert");
-cucumber_1.When("connection open session(s) for database(s):", async (names) => {
+cucumber_1.When("connection open (data )session(s) for database(s):", async (names) => {
     for (const name of names.raw()) {
         ConnectionSteps_1.sessions.push(await ConnectionSteps_1.client.session(name[0], SessionType.DATA));
     }
 });
-cucumber_1.When("connection open sessions in parallel for databases:", async (names) => {
+cucumber_1.When("connection open schema session(s) for database(s):", async (names) => {
+    for (const name of names.raw()) {
+        ConnectionSteps_1.sessions.push(await ConnectionSteps_1.client.session(name[0], SessionType.SCHEMA));
+    }
+});
+cucumber_1.When("connection open (data )sessions in parallel for databases:", async (names) => {
     const openings = [];
     for (const name of names.raw()) {
         openings.push(ConnectionSteps_1.client.session(name[0], SessionType.DATA));
+    }
+    ConnectionSteps_1.sessions.concat(await Promise.all(openings));
+});
+cucumber_1.When("connection open schema sessions in parallel for databases:", async (names) => {
+    const openings = [];
+    for (const name of names.raw()) {
+        openings.push(ConnectionSteps_1.client.session(name[0], SessionType.SCHEMA));
     }
     ConnectionSteps_1.sessions.concat(await Promise.all(openings));
 });

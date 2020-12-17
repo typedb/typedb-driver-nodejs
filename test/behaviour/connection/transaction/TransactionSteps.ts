@@ -47,20 +47,36 @@ Then('for each session, open transaction of type; throws exception', async funct
     }
 });
 
-Then('for each session, open transaction of type:', async function (transactionTypeTable: DataTable) {
-    let transactionType: TransactionType;
-    switch (transactionTypeTable.raw()[0][0])  {
-        case "write":
-            transactionType = TransactionType.WRITE;
-            break;
-        case "read":
-            transactionType = TransactionType.READ;
-            break;
-        default:
-            throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server."
-    }
+Then('for each session, open transaction(s) of type:', async function (transactionTypeTable: DataTable) {
     for (const session of sessions) {
         if (!transactions.has(session)) transactions.set(session, [])
-        transactions.get(session).push(await session.transaction(transactionType));
+        for (const transactionTypeRow of transactionTypeTable.raw()) {
+            let transactionType: TransactionType;
+            switch (transactionTypeRow[0])  {
+                case "write":
+                    transactionType = TransactionType.WRITE;
+                    break;
+                case "read":
+                    transactionType = TransactionType.READ;
+                    break;
+                default:
+                    throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server."
+            }
+            transactions.get(session).push(await session.transaction(transactionType));
+        }
     }
+});
+
+Then('for each session, transactions are null: {bool}', async function (isNull: boolean) {
+    for (const session of sessions) assert.ok(transactions.has(session) !== isNull)
+});
+
+Then('for each session, transactions are open: {bool}', async function (isOpen: boolean) {
+    for (const session of sessions) {
+        assert.ok(transactions.has(session));
+        for (const transaction of transactions.get(session)) {
+            assert.ok(transaction.isOpen() === isOpen);
+        }
+    }
+
 });
