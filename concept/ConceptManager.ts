@@ -112,7 +112,7 @@ export class ConceptManager {
             .setGetTypeReq(new ConceptProto.ConceptManager.GetType.Req().setLabel(label));
         const res = await this.execute(req);
         if (res.getGetTypeRes().getResCase() === ConceptProto.ConceptManager.GetType.Res.ResCase.TYPE)
-            return ThingTypeImpl.of(res.getGetTypeRes().getType());
+            return ThingTypeImpl.of(res.getGetTypeRes().getThingType());
         else
             return null;
     }
