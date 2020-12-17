@@ -109,10 +109,10 @@ export class ConceptManager {
 
     private async getThingType(label: string): Promise<ThingType> {
         const req = new ConceptProto.ConceptManager.Req()
-            .setGetTypeReq(new ConceptProto.ConceptManager.GetType.Req().setLabel(label));
+            .setGetThingTypeReq(new ConceptProto.ConceptManager.GetThingType.Req().setLabel(label));
         const res = await this.execute(req);
-        if (res.getGetTypeRes().getResCase() === ConceptProto.ConceptManager.GetType.Res.ResCase.TYPE)
-            return ThingTypeImpl.of(res.getGetTypeRes().getThingType());
+        if (res.getGetThingTypeRes().getResCase() === ConceptProto.ConceptManager.GetThingType.Res.ResCase.THING_TYPE)
+            return ThingTypeImpl.of(res.getGetThingTypeRes().getThingType());
         else
             return null;
     }
