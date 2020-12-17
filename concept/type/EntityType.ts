@@ -35,7 +35,6 @@ export interface RemoteEntityType extends Merge<RemoteThingType, EntityType> {
     create(): Promise<Entity>;
 
     setSupertype(superEntityType: EntityType): Promise<void>;
-    getSupertype(): Promise<EntityType>;
     getSubtypes(): Stream<EntityType>;
     getInstances(): Stream<Entity>;
 

@@ -89,10 +89,6 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
         return super.setSupertype(attributeType);
     }
 
-    getSupertype(): Promise<AttributeTypeImpl> {
-        return super.getSupertype() as Promise<AttributeTypeImpl>;
-    }
-
     getSubtypes(): Stream<AttributeTypeImpl> {
         return super.getSubtypes() as Stream<AttributeTypeImpl>;
     }
@@ -156,10 +152,6 @@ export class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl impl
         return new RemoteBooleanAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertype(): Promise<BooleanAttributeTypeImpl> {
-        return super.getSupertype() as Promise<BooleanAttributeTypeImpl>;
-    }
-
     getSubtypes(): Stream<BooleanAttributeTypeImpl> {
         return super.getSubtypes() as Stream<BooleanAttributeTypeImpl>;
     }
@@ -212,10 +204,6 @@ export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl impleme
 
     asRemote(transaction: Transaction): RemoteLongAttributeTypeImpl {
         return new RemoteLongAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
-    }
-
-    getSupertype(): Promise<LongAttributeTypeImpl> {
-        return super.getSupertype() as Promise<LongAttributeTypeImpl>;
     }
 
     getSubtypes(): Stream<LongAttributeTypeImpl> {
@@ -272,10 +260,6 @@ export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         return new RemoteDoubleAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertype(): Promise<DoubleAttributeTypeImpl> {
-        return super.getSupertype() as Promise<DoubleAttributeTypeImpl>;
-    }
-
     getSubtypes(): Stream<DoubleAttributeTypeImpl> {
         return super.getSubtypes() as Stream<DoubleAttributeTypeImpl>;
     }
@@ -330,10 +314,6 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         return new RemoteStringAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    getSupertype(): Promise<StringAttributeTypeImpl> {
-        return super.getSupertype() as Promise<StringAttributeTypeImpl>;
-    }
-
     getSubtypes(): Stream<StringAttributeTypeImpl> {
         return super.getSubtypes() as Stream<StringAttributeTypeImpl>;
     }
@@ -386,10 +366,6 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeTypeImpl {
         return new RemoteDateTimeAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
-    }
-
-    getSupertype(): Promise<DateTimeAttributeTypeImpl> {
-        return super.getSupertype() as Promise<DateTimeAttributeTypeImpl>;
     }
 
     getSubtypes(): Stream<DateTimeAttributeTypeImpl> {
