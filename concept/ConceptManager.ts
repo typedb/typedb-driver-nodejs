@@ -24,11 +24,13 @@ import {
     RelationType,
     AttributeType,
     EntityTypeImpl,
-    Type,
     RPCTransaction,
     RelationTypeImpl,
     AttributeTypeImpl,
-    Thing, ThingImpl, TypeImpl, Bytes, ThingTypeImpl,
+    Thing,
+    ThingImpl,
+    Bytes,
+    ThingTypeImpl,
 } from "../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
