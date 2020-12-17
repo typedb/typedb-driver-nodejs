@@ -109,7 +109,7 @@ export class ConceptManager {
             return null;
     }
 
-    private async getThingType(label: string): Promise<ThingType> {
+    async getThingType(label: string): Promise<ThingType> {
         const req = new ConceptProto.ConceptManager.Req()
             .setGetThingTypeReq(new ConceptProto.ConceptManager.GetThingType.Req().setLabel(label));
         const res = await this.execute(req);

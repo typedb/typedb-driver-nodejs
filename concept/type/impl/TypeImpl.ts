@@ -127,7 +127,7 @@ export abstract class RemoteTypeImpl implements RemoteType {
     }
 
     async isDeleted(): Promise<boolean> {
-        return !(await this._rpcTransaction.concepts().getType(this._label));
+        return !(await this._rpcTransaction.concepts().getThingType(this._label));
     }
 
     protected get transaction(): Transaction {
