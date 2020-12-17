@@ -95,10 +95,6 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
         return super.getSupertype() as Promise<RelationTypeImpl>;
     }
 
-    getSupertypes(): Stream<RelationTypeImpl> {
-        return super.getSupertypes() as Stream<RelationTypeImpl>;
-    }
-
     getSubtypes(): Stream<RelationTypeImpl> {
         return super.getSubtypes() as Stream<RelationTypeImpl>;
     }

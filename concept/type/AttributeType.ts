@@ -47,7 +47,6 @@ export interface AttributeType extends ThingType {
 export interface RemoteAttributeType extends Merge<RemoteThingType, AttributeType> {
     setSupertype(type: AttributeType): Promise<void>;
     getSupertype(): Promise<AttributeType>;
-    getSupertypes(): Stream<AttributeType>;
     getSubtypes(): Stream<AttributeType>;
     getInstances(): Stream<Attribute<ValueClass>>;
     getOwners(): Stream<ThingType>;
@@ -65,7 +64,6 @@ export interface RemoteBooleanAttributeType extends Merge<RemoteAttributeType, B
 
     setSupertype(type: BooleanAttributeType): Promise<void>;
     getSupertype(): Promise<BooleanAttributeType>;
-    getSupertypes(): Stream<BooleanAttributeType>;
     getSubtypes(): Stream<BooleanAttributeType>;
     getInstances(): Stream<BooleanAttribute>;
 
@@ -82,7 +80,6 @@ export interface RemoteLongAttributeType extends Merge<RemoteAttributeType, Long
 
     setSupertype(type: LongAttributeType): Promise<void>;
     getSupertype(): Promise<LongAttributeType>;
-    getSupertypes(): Stream<LongAttributeType>;
     getSubtypes(): Stream<LongAttributeType>;
     getInstances(): Stream<LongAttribute>;
 
@@ -99,7 +96,6 @@ export interface RemoteDoubleAttributeType extends Merge<RemoteAttributeType, Do
 
     setSupertype(type: DoubleAttributeType): Promise<void>;
     getSupertype(): Promise<DoubleAttributeType>;
-    getSupertypes(): Stream<DoubleAttributeType>;
     getSubtypes(): Stream<DoubleAttributeType>;
     getInstances(): Stream<DoubleAttribute>;
 
@@ -116,7 +112,6 @@ export interface RemoteStringAttributeType extends Merge<RemoteAttributeType, St
 
     setSupertype(type: StringAttributeType): Promise<void>;
     getSupertype(): Promise<StringAttributeType>;
-    getSupertypes(): Stream<StringAttributeType>;
     getSubtypes(): Stream<StringAttributeType>;
     getInstances(): Stream<StringAttribute>;
 
@@ -133,7 +128,6 @@ export interface RemoteDateTimeAttributeType extends Merge<RemoteAttributeType, 
 
     setSupertype(type: DateTimeAttributeType): Promise<void>;
     getSupertype(): Promise<DateTimeAttributeType>;
-    getSupertypes(): Stream<DateTimeAttributeType>;
     getSubtypes(): Stream<DateTimeAttributeType>;
     getInstances(): Stream<DateTimeAttribute>;
 

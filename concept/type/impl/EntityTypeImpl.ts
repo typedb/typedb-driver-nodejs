@@ -57,10 +57,6 @@ export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteE
         return super.getSupertype() as Promise<EntityTypeImpl>;
     }
 
-    getSupertypes(): Stream<EntityTypeImpl> {
-        return super.getSupertypes() as Stream<EntityTypeImpl>;
-    }
-
     getSubtypes(): Stream<EntityTypeImpl> {
         return super.getSubtypes() as Stream<EntityTypeImpl>;
     }
