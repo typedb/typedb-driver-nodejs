@@ -40,6 +40,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cucumber_1 = require("@cucumber/cucumber");
 const ConnectionSteps_1 = require("../ConnectionSteps");
 const assert = __importStar(require("assert"));
+cucumber_1.When("connection create database: {word}", async (name) => {
+    await ConnectionSteps_1.client.databases().create(name);
+});
 cucumber_1.When("connection create database(s):", async (names) => {
     for (const name of names.raw()) {
         await ConnectionSteps_1.client.databases().create(name[0]);
@@ -52,6 +55,9 @@ cucumber_1.When("connection create databases in parallel:", async (names) => {
         creations.push(ConnectionSteps_1.client.databases().create(name[0]));
     }
     await Promise.all(creations);
+});
+cucumber_1.When("connection delete database: {word}", async (name) => {
+    await ConnectionSteps_1.client.databases().delete(name);
 });
 cucumber_1.When("connection delete database(s):", async (names) => {
     for (const name of names.raw()) {
@@ -83,11 +89,19 @@ cucumber_1.When("connection delete all databases", async () => {
         await ConnectionSteps_1.client.databases().delete(name);
     }
 });
+cucumber_1.Then("connection has database: {word}", async (name) => {
+    const databases = await ConnectionSteps_1.client.databases().all();
+    assert.ok(databases.includes(name));
+});
 cucumber_1.Then("connection has database(s):", async (names) => {
     const databases = await ConnectionSteps_1.client.databases().all();
     names.raw().forEach(name => {
         assert.ok(databases.includes(name[0]));
     });
+});
+cucumber_1.Then("connection does not have database: {word}", async (name) => {
+    const databases = await ConnectionSteps_1.client.databases().all();
+    assert.ok(!databases.includes(name));
 });
 cucumber_1.Then("connection does not have database(s):", async (names) => {
     const databases = await ConnectionSteps_1.client.databases().all();

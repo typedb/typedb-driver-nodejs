@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Given, After, setDefaultTimeout } from "@cucumber/cucumber";
+import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
 import { GraknClient } from "../../../dist/rpc/GraknClient";
 import { Grakn } from "../../../dist/Grakn";
 import Session = Grakn.Session;
@@ -34,6 +34,14 @@ Given("connection has been opened", () => {
     if (client) return;
     client = new GraknClient();
 });
+
+Before(async () => {
+    const databases = await client.databases().all();
+    for (const name of databases) {
+        await client.databases().delete(name);
+    }
+});
+
 
 After(async () => {
     for (const session of sessions) {
