@@ -43,7 +43,7 @@ export class ConceptManager {
     }
 
     async getRootThingType(): Promise<ThingType> {
-        return await this.getThingType("thing") as ThingType;
+        return await this.getThingType("thing");
     }
 
     async getRootEntityType(): Promise<EntityType> {
