@@ -41,11 +41,19 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     asRemote(transaction: Transaction): RemoteEntityType {
         return new RemoteEntityTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
+
+    isEntityType(): boolean {
+        return true;
+    }
 }
 
 export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteEntityType {
     constructor(transaction: Transaction, label: string, isRoot: boolean) {
         super(transaction, label, isRoot);
+    }
+
+    isEntityType(): boolean {
+        return true;
     }
 
     create(): Promise<EntityImpl> {

@@ -69,12 +69,60 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     asRemote(transaction: Transaction): RemoteAttributeTypeImpl {
         return new RemoteAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
+
+    isAttributeType(): boolean {
+        return true;
+    }
+
+    isBoolean(): boolean {
+        return false;
+    }
+
+    isString(): boolean {
+        return false;
+    }
+
+    isDouble(): boolean {
+        return false;
+    }
+
+    isLong(): boolean {
+        return false;
+    }
+
+    isDateTime(): boolean {
+        return false;
+    }
 }
 
 export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements RemoteAttributeType {
 
     constructor(transaction: Transaction, label: string, isRoot: boolean) {
         super(transaction, label, isRoot);
+    }
+
+    isAttributeType(): boolean {
+        return true;
+    }
+
+    isBoolean(): boolean {
+        return false;
+    }
+
+    isString(): boolean {
+        return false;
+    }
+
+    isDouble(): boolean {
+        return false;
+    }
+
+    isLong(): boolean {
+        return false;
+    }
+
+    isDateTime(): boolean {
+        return false;
     }
 
     getValueType(): ValueType {
@@ -125,6 +173,10 @@ export class BooleanAttributeTypeImpl extends AttributeTypeImpl implements Boole
         super(label, isRoot);
     }
 
+    isBoolean(): boolean {
+        return true;
+    }
+
     static of(typeProto: ConceptProto.Type): BooleanAttributeTypeImpl {
         return new BooleanAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
@@ -142,6 +194,10 @@ export class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl impl
 
     constructor(transaction: Transaction, label: string, isRoot: boolean) {
         super(transaction, label, isRoot);
+    }
+
+    isBoolean(): boolean {
+        return true;
     }
 
     getValueType(): ValueType {
@@ -187,6 +243,10 @@ export class LongAttributeTypeImpl extends AttributeTypeImpl implements LongAttr
         return ValueType.LONG;
     }
 
+    isLong(): boolean {
+        return true;
+    }
+
     asRemote(transaction: Transaction): RemoteLongAttributeTypeImpl {
         return new RemoteLongAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
@@ -200,6 +260,10 @@ export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl impleme
 
     getValueType(): ValueType {
         return ValueType.LONG;
+    }
+
+    isLong(): boolean {
+        return true;
     }
 
     asRemote(transaction: Transaction): RemoteLongAttributeTypeImpl {
@@ -241,6 +305,10 @@ export class DoubleAttributeTypeImpl extends AttributeTypeImpl implements Double
         return ValueType.DOUBLE;
     }
 
+    isDouble(): boolean {
+        return true;
+    }
+
     asRemote(transaction: Transaction): RemoteDoubleAttributeTypeImpl {
         return new RemoteDoubleAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
@@ -258,6 +326,10 @@ export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl imple
 
     asRemote(transaction: Transaction): RemoteDoubleAttributeTypeImpl {
         return new RemoteDoubleAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
+    }
+
+    isDouble(): boolean {
+        return true;
     }
 
     getSubtypes(): Stream<DoubleAttributeTypeImpl> {
@@ -295,6 +367,10 @@ export class StringAttributeTypeImpl extends AttributeTypeImpl implements String
         return ValueType.STRING;
     }
 
+    isString(): boolean {
+        return true;
+    }
+
     asRemote(transaction: Transaction): RemoteStringAttributeTypeImpl {
         return new RemoteStringAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
@@ -312,6 +388,10 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
 
     asRemote(transaction: Transaction): RemoteStringAttributeTypeImpl {
         return new RemoteStringAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
+    }
+
+    isString(): boolean {
+        return true;
     }
 
     getSubtypes(): Stream<StringAttributeTypeImpl> {
@@ -349,6 +429,10 @@ export class DateTimeAttributeTypeImpl extends AttributeTypeImpl implements Date
         return ValueType.DATETIME;
     }
 
+    isDateTime(): boolean {
+        return true;
+    }
+
     asRemote(transaction: Transaction): RemoteDateTimeAttributeTypeImpl {
         return new RemoteDateTimeAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
@@ -362,6 +446,10 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
 
     getValueType(): ValueType {
         return ValueType.DATETIME;
+    }
+
+    isDateTime(): boolean {
+        return true;
     }
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeTypeImpl {
