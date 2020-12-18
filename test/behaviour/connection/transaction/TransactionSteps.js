@@ -32,21 +32,11 @@ cucumber_1.Then('(for each )session(,) open(s) transaction(s) of type: {transact
     }
 });
 cucumber_1.Then('(for each )session(,) open(s) transaction(s) of type:', async function (transactionTypeTable) {
+    const typeArray = dataTableToTransactionTypes(transactionTypeTable);
     for (const session of ConnectionSteps_1.sessions) {
         if (!ConnectionSteps_1.transactions.has(session))
             ConnectionSteps_1.transactions.set(session, []);
-        for (const transactionTypeRow of transactionTypeTable.raw()) {
-            let transactionType;
-            switch (transactionTypeRow[0]) {
-                case "write":
-                    transactionType = TransactionType.WRITE;
-                    break;
-                case "read":
-                    transactionType = TransactionType.READ;
-                    break;
-                default:
-                    throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server.";
-            }
+        for (const transactionType of typeArray) {
             ConnectionSteps_1.transactions.get(session).push(await session.transaction(transactionType));
         }
     }
@@ -57,28 +47,20 @@ cucumber_1.Then('(for each )session(,) open transaction(s) of type; throws excep
     }
 });
 cucumber_1.Then('(for each )session(,) open transaction(s) of type; throws exception', async function (transactionTypeTable) {
-    let transactionType;
-    switch (transactionTypeTable.raw()[0][0]) {
-        case "write":
-            transactionType = TransactionType.WRITE;
-            break;
-        case "read":
-            transactionType = TransactionType.READ;
-            break;
-        default:
-            throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server.";
-    }
+    const typeArray = dataTableToTransactionTypes(transactionTypeTable);
     for (const session of ConnectionSteps_1.sessions) {
         if (!ConnectionSteps_1.transactions.has(session))
             ConnectionSteps_1.transactions.set(session, []);
-        await Util_1.assertThrows(async () => await session.transaction(transactionType));
+        for (const transactionType of typeArray) {
+            await Util_1.assertThrows(async () => await session.transaction(transactionType));
+        }
     }
 });
-cucumber_1.Then('(for each )session(,) transaction(s) is/are null: {bool}', async function (isNull) {
+cucumber_1.Then('(for each )session(,) transaction(s)( in parallel) is/are null: {bool}', function (isNull) {
     for (const session of ConnectionSteps_1.sessions)
         assert.ok(ConnectionSteps_1.transactions.has(session) !== isNull);
 });
-cucumber_1.Then('(for each )session(,) transaction(s) is/are open: {bool}', async function (isOpen) {
+cucumber_1.Then('(for each )session(,) transaction(s)( in parallel) is/are open: {bool}', function (isOpen) {
     for (const session of ConnectionSteps_1.sessions) {
         assert.ok(ConnectionSteps_1.transactions.has(session));
         for (const transaction of ConnectionSteps_1.transactions.get(session)) {
@@ -116,14 +98,40 @@ cucumber_1.Then('(for each )session(,) transaction(s) close(s)', async function 
         }
     }
 });
-cucumber_1.Then('(for each )session(,) transaction has/have type: {transaction_type}', async function (type) {
+cucumber_1.Then('(for each )session(,) transaction(s)( in parallel) has/have type: {transaction_type}', function (type) {
     for (const session of ConnectionSteps_1.sessions) {
         for (const transaction of ConnectionSteps_1.transactions.get(session)) {
             assert(transaction.type() === type);
         }
     }
 });
-cucumber_1.Then('(for each )session(,) transaction has/have type(s):', async function (transactionTypeTable) {
+cucumber_1.Then('(for each )session(,) transaction(s)( in parallel) has/have type(s):', function (transactionTypeTable) {
+    const typeArray = dataTableToTransactionTypes(transactionTypeTable);
+    for (const session of ConnectionSteps_1.sessions) {
+        const transactionArray = ConnectionSteps_1.transactions.get(session);
+        for (let i = 0; i < transactionArray.length; i++) {
+            assert(transactionArray[i].type() === typeArray[i]);
+        }
+    }
+});
+cucumber_1.Then('(for each )session(,) open transaction(s) in parallel of type:', async function (transactionTypeTable) {
+    const typeArray = dataTableToTransactionTypes(transactionTypeTable);
+    const openings = [];
+    const sessionList = [];
+    for (const type of typeArray) {
+        for (const session of ConnectionSteps_1.sessions) {
+            openings.push(session.transaction(type));
+            sessionList.push(session);
+        }
+    }
+    const newTransactions = await Promise.all(openings);
+    for (let i = 0; i < newTransactions.length; i++) {
+        if (!ConnectionSteps_1.transactions.has(sessionList[i]))
+            ConnectionSteps_1.transactions.set(sessionList[i], []);
+        ConnectionSteps_1.transactions.get(sessionList[i]).push(newTransactions[i]);
+    }
+});
+function dataTableToTransactionTypes(transactionTypeTable) {
     const typeArray = [];
     for (const transactionTypeRow of transactionTypeTable.raw()) {
         let transactionType;
@@ -138,10 +146,5 @@ cucumber_1.Then('(for each )session(,) transaction has/have type(s):', async fun
                 throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server.";
         }
     }
-    for (const session of ConnectionSteps_1.sessions) {
-        const transactionArray = ConnectionSteps_1.transactions.get(session);
-        for (let i = 0; i < transactionArray.length; i++) {
-            assert(transactionArray[i].type() === typeArray[i]);
-        }
-    }
-});
+    return typeArray;
+}

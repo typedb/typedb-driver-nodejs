@@ -18,12 +18,14 @@
  */
 
 import { Then } from "@cucumber/cucumber";
-import { sessions, transactions } from "../ConnectionSteps";
+import { client, sessions, transactions } from "../ConnectionSteps";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { Grakn } from "../../../../dist/Grakn";
 import TransactionType = Grakn.TransactionType;
 import assert = require("assert");
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
+import Transaction = Grakn.Transaction;
+import Session = Grakn.Session;
 
 Then('(for each )session(,) open(s) transaction(s) of type: {transaction_type}', async function (transactionType: TransactionType) {
     for (const session of sessions) {
@@ -33,20 +35,10 @@ Then('(for each )session(,) open(s) transaction(s) of type: {transaction_type}',
 });
 
 Then('(for each )session(,) open(s) transaction(s) of type:', async function (transactionTypeTable: DataTable) {
+    const typeArray = dataTableToTransactionTypes(transactionTypeTable);
     for (const session of sessions) {
         if (!transactions.has(session)) transactions.set(session, [])
-        for (const transactionTypeRow of transactionTypeTable.raw()) {
-            let transactionType: TransactionType;
-            switch (transactionTypeRow[0])  {
-                case "write":
-                    transactionType = TransactionType.WRITE;
-                    break;
-                case "read":
-                    transactionType = TransactionType.READ;
-                    break;
-                default:
-                    throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server."
-            }
+        for (const transactionType of typeArray) {
             transactions.get(session).push(await session.transaction(transactionType));
         }
     }
@@ -59,28 +51,20 @@ Then('(for each )session(,) open transaction(s) of type; throws exception: {tran
 });
 
 Then('(for each )session(,) open transaction(s) of type; throws exception', async function (transactionTypeTable: DataTable) {
-    let transactionType: TransactionType;
-    switch (transactionTypeTable.raw()[0][0])  {
-        case "write":
-            transactionType = TransactionType.WRITE;
-            break;
-        case "read":
-            transactionType = TransactionType.READ;
-            break;
-        default:
-            throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server."
-    }
+    const typeArray = dataTableToTransactionTypes(transactionTypeTable);
     for (const session of sessions) {
         if (!transactions.has(session)) transactions.set(session, [])
-        await assertThrows(async () => await session.transaction(transactionType));
+        for (const transactionType of typeArray) {
+            await assertThrows(async () => await session.transaction(transactionType));
+        }
     }
 });
 
-Then('(for each )session(,) transaction(s) is/are null: {bool}', async function (isNull: boolean) {
+Then('(for each )session(,) transaction(s)( in parallel) is/are null: {bool}', function (isNull: boolean) {
     for (const session of sessions) assert.ok(transactions.has(session) !== isNull)
 });
 
-Then('(for each )session(,) transaction(s) is/are open: {bool}', async function (isOpen: boolean) {
+Then('(for each )session(,) transaction(s)( in parallel) is/are open: {bool}', function (isOpen: boolean) {
     for (const session of sessions) {
         assert.ok(transactions.has(session));
         for (const transaction of transactions.get(session)) {
@@ -125,7 +109,7 @@ Then('(for each )session(,) transaction(s) close(s)', async function () {
     }
 });
 
-Then('(for each )session(,) transaction has/have type: {transaction_type}', async function (type: TransactionType) {
+Then('(for each )session(,) transaction(s)( in parallel) has/have type: {transaction_type}', function (type: TransactionType) {
     for (const session of sessions) {
         for (const transaction of transactions.get(session)) {
             assert(transaction.type() === type);
@@ -133,7 +117,34 @@ Then('(for each )session(,) transaction has/have type: {transaction_type}', asyn
     }
 });
 
-Then('(for each )session(,) transaction has/have type(s):', async function (transactionTypeTable: DataTable) {
+Then('(for each )session(,) transaction(s)( in parallel) has/have type(s):', function (transactionTypeTable: DataTable) {
+    const typeArray = dataTableToTransactionTypes(transactionTypeTable);
+    for (const session of sessions) {
+        const transactionArray = transactions.get(session)
+        for (let i = 0; i < transactionArray.length; i++) {
+            assert(transactionArray[i].type() === typeArray[i]);
+        }
+    }
+});
+
+Then('(for each )session(,) open transaction(s) in parallel of type:', async function (transactionTypeTable: DataTable) {
+    const typeArray = dataTableToTransactionTypes(transactionTypeTable);
+    const openings: Promise<Transaction>[] = []
+    const sessionList: Session[] = []
+    for (const type of typeArray) {
+        for (const session of sessions) {
+            openings.push(session.transaction(type));
+            sessionList.push(session);
+        }
+    }
+    const newTransactions = await Promise.all(openings);
+    for (let i = 0; i < newTransactions.length; i++) {
+        if (!transactions.has(sessionList[i])) transactions.set(sessionList[i], [])
+        transactions.get(sessionList[i]).push(newTransactions[i]);
+    }
+});
+
+function dataTableToTransactionTypes(transactionTypeTable: DataTable): TransactionType[] {
     const typeArray: TransactionType[] = [];
     for (const transactionTypeRow of transactionTypeTable.raw()) {
         let transactionType: TransactionType;
@@ -148,10 +159,5 @@ Then('(for each )session(,) transaction has/have type(s):', async function (tran
                 throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server."
         }
     }
-    for (const session of sessions) {
-        const transactionArray = transactions.get(session)
-        for (let i = 0; i < transactionArray.length; i++) {
-            assert(transactionArray[i].type() === typeArray[i]);
-        }
-    }
-});
+    return typeArray;
+}
