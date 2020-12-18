@@ -20,17 +20,46 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const cucumber_1 = require("@cucumber/cucumber");
 const ConnectionSteps_1 = require("../../../connection/ConnectionSteps");
-const assert = require("assert");
-cucumber_1.Then('for each transaction, define query; throws exception containing {string}', async function (exceptionString, queryString) {
-    try {
-        for (const transactionList of ConnectionSteps_1.transactions.values()) {
-            for (const transaction of transactionList) {
-                await transaction.query().define(queryString);
-                assert.fail();
-            }
+const Util_1 = require("../../../util/Util");
+cucumber_1.Then('graql define', async function (queryString) {
+    for (const transactionList of ConnectionSteps_1.transactions.values()) {
+        for (const transaction of transactionList) {
+            await transaction.query().define(queryString);
         }
     }
-    catch (error) {
-        assert(error.toString().includes(exceptionString));
+});
+cucumber_1.Then('graql define; throws exception containing {string}', async function (exceptionString, queryString) {
+    for (const transactionList of ConnectionSteps_1.transactions.values()) {
+        for (const transaction of transactionList) {
+            await Util_1.assertThrowsWithMessage(async () => await transaction.query().define(queryString), exceptionString);
+        }
+    }
+});
+cucumber_1.Then('graql define; throws exception', async function (queryString) {
+    for (const transactionList of ConnectionSteps_1.transactions.values()) {
+        for (const transaction of transactionList) {
+            await Util_1.assertThrows(async () => await transaction.query().define(queryString));
+        }
+    }
+});
+cucumber_1.Then('graql insert', async function (queryString) {
+    for (const transactionList of ConnectionSteps_1.transactions.values()) {
+        for (const transaction of transactionList) {
+            await transaction.query().insert(queryString);
+        }
+    }
+});
+cucumber_1.Then('graql insert; throws exception containing {string}', async function (exceptionString, queryString) {
+    for (const transactionList of ConnectionSteps_1.transactions.values()) {
+        for (const transaction of transactionList) {
+            await Util_1.assertThrowsWithMessage(async () => await transaction.query().insert(queryString), exceptionString);
+        }
+    }
+});
+cucumber_1.Then('graql insert; throws exception', async function (queryString) {
+    for (const transactionList of ConnectionSteps_1.transactions.values()) {
+        for (const transaction of transactionList) {
+            await Util_1.assertThrows(async () => await transaction.query().insert(queryString));
+        }
     }
 });
