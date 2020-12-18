@@ -42,7 +42,7 @@ cucumber_1.After(async () => {
     for (const session of exports.sessions) {
         try {
             if (exports.transactions.has(session)) {
-                for (let transaction of exports.transactions.get(session)) {
+                for (const transaction of exports.transactions.get(session)) {
                     try {
                         await transaction.close();
                     }
@@ -63,5 +63,5 @@ cucumber_1.After(async () => {
         await exports.client.databases().delete(name);
     }
     exports.sessions = [];
-    exports.transactions.clear();
+    exports.transactions = new Map();
 });

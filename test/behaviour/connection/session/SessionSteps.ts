@@ -18,7 +18,7 @@
  */
 
 import { When, Then } from "@cucumber/cucumber";
-import { client, sessions, transactions } from "../ConnectionSteps";
+import { client, sessions } from "../ConnectionSteps";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { Grakn } from "../../../../dist/Grakn";
 import SessionType = Grakn.SessionType;

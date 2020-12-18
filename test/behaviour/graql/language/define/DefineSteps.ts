@@ -19,7 +19,6 @@
 
 import { Then } from "@cucumber/cucumber";
 import { transactions } from "../../../connection/ConnectionSteps";
-import assert = require("assert");
 import { assertThrows, assertThrowsWithMessage } from "../../../util/Util";
 
 Then('graql define', async function (queryString: string) {

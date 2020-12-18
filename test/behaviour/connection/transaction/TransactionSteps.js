@@ -87,7 +87,7 @@ cucumber_1.Then('(for each )session(,) transaction(s) commit(s)', async function
 cucumber_1.Then('(for each )session(,) transaction(s) commit(s); throws exception', async function () {
     for (const session of ConnectionSteps_1.sessions) {
         for (const transaction of ConnectionSteps_1.transactions.get(session)) {
-            await Util_1.assertThrows(async () => await ConnectionSteps_1.transactions.get(ConnectionSteps_1.sessions[0])[0].commit());
+            await Util_1.assertThrows(async () => await transaction.commit());
         }
     }
 });
@@ -134,7 +134,6 @@ cucumber_1.Then('(for each )session(,) open transaction(s) in parallel of type:'
 function dataTableToTransactionTypes(transactionTypeTable) {
     const typeArray = [];
     for (const transactionTypeRow of transactionTypeTable.raw()) {
-        let transactionType;
         switch (transactionTypeRow[0]) {
             case "write":
                 typeArray.push(TransactionType.WRITE);

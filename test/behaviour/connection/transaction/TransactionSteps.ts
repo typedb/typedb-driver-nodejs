@@ -18,7 +18,7 @@
  */
 
 import { Then } from "@cucumber/cucumber";
-import { client, sessions, transactions } from "../ConnectionSteps";
+import { sessions, transactions } from "../ConnectionSteps";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { Grakn } from "../../../../dist/Grakn";
 import TransactionType = Grakn.TransactionType;
@@ -96,7 +96,7 @@ Then('(for each )session(,) transaction(s) commit(s)', async function () {
 Then('(for each )session(,) transaction(s) commit(s); throws exception', async function () {
     for (const session of sessions) {
         for (const transaction of transactions.get(session)) {
-            await assertThrows(async () => await transactions.get(sessions[0])[0].commit());
+            await assertThrows(async () => await transaction.commit());
         }
     }
 });
@@ -147,7 +147,6 @@ Then('(for each )session(,) open transaction(s) in parallel of type:', async fun
 function dataTableToTransactionTypes(transactionTypeTable: DataTable): TransactionType[] {
     const typeArray: TransactionType[] = [];
     for (const transactionTypeRow of transactionTypeTable.raw()) {
-        let transactionType: TransactionType;
         switch (transactionTypeRow[0])  {
             case "write":
                 typeArray.push(TransactionType.WRITE);

@@ -49,7 +49,7 @@ After(async () => {
     for (const session of sessions) {
         try {
             if (transactions.has(session)){
-                for (let transaction of transactions.get(session)) {
+                for (const transaction of transactions.get(session)) {
                     try {
                         await transaction.close();
                     } catch {
@@ -67,5 +67,5 @@ After(async () => {
         await client.databases().delete(name);
     }
     sessions = [];
-    transactions.clear();
+    transactions = new Map<Session, Transaction[]>();
 });
