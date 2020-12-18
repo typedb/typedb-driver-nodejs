@@ -27,6 +27,7 @@ checkstyle_test(
         "*",
         "deployment/*",
         "integration/*",
+        "common/*"
     ]),
     exclude = glob([
         "**/package.json",
