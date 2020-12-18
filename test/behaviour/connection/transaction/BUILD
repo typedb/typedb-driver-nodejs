@@ -43,5 +43,6 @@ node_cucumber_test(
         "//test/behaviour/connection/session:SessionSteps.js",
         "//test/behaviour/connection/transaction:TransactionSteps.js",
         "//test/behaviour/graql/language/define:DefineSteps.js",
+        "//test/behaviour/util/Util.js",
     ],
 )

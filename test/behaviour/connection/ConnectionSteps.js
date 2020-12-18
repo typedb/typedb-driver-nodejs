@@ -30,6 +30,14 @@ cucumber_1.Given("connection has been opened", () => {
         return;
     exports.client = new GraknClient_1.GraknClient();
 });
+cucumber_1.Before(async () => {
+    if (exports.client) {
+        const databases = await exports.client.databases().all();
+        for (const name of databases) {
+            await exports.client.databases().delete(name);
+        }
+    }
+});
 cucumber_1.After(async () => {
     for (const session of exports.sessions) {
         try {

@@ -21,6 +21,7 @@ import { When, Then, Given } from "@cucumber/cucumber";
 import { client, THREAD_POOL_SIZE } from "../ConnectionSteps";
 import * as assert from "assert";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
+import { assertThrows } from "../../util/Util";
 
 When("connection create database: {word}", async (name: string) => {
     await client.databases().create(name)
@@ -49,14 +50,14 @@ When("connection delete database(s):", async (names: DataTable) => {
     }
 });
 
+Then("connection delete database; throws exception: {word}", async (name: string) => {
+    await assertThrows(async () => await client.databases().delete(name));
+});
+
+
 Then("connection delete database(s); throws exception", async (names: DataTable) => {
     for (const name of names.raw()) {
-        try {
-            await client.databases().delete(name[0]);
-            assert.fail();
-        } catch (e) {
-            // successfully failed
-        }
+        await assertThrows(async () => await client.databases().delete(name[0]));
     }
 });
 

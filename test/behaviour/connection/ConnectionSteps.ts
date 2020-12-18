@@ -36,9 +36,11 @@ Given("connection has been opened", () => {
 });
 
 Before(async () => {
-    const databases = await client.databases().all();
-    for (const name of databases) {
-        await client.databases().delete(name);
+    if (client) {
+        const databases = await client.databases().all();
+        for (const name of databases) {
+            await client.databases().delete(name);
+        }
     }
 });
 

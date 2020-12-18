@@ -40,6 +40,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cucumber_1 = require("@cucumber/cucumber");
 const ConnectionSteps_1 = require("../ConnectionSteps");
 const assert = __importStar(require("assert"));
+const Util_1 = require("../../util/Util");
 cucumber_1.When("connection create database: {word}", async (name) => {
     await ConnectionSteps_1.client.databases().create(name);
 });
@@ -64,15 +65,12 @@ cucumber_1.When("connection delete database(s):", async (names) => {
         await ConnectionSteps_1.client.databases().delete(name[0]);
     }
 });
+cucumber_1.Then("connection delete database; throws exception: {word}", async (name) => {
+    await Util_1.assertThrows(async () => await ConnectionSteps_1.client.databases().delete(name));
+});
 cucumber_1.Then("connection delete database(s); throws exception", async (names) => {
     for (const name of names.raw()) {
-        try {
-            await ConnectionSteps_1.client.databases().delete(name[0]);
-            assert.fail();
-        }
-        catch (e) {
-            // successfully failed
-        }
+        await Util_1.assertThrows(async () => await ConnectionSteps_1.client.databases().delete(name[0]));
     }
 });
 cucumber_1.When("connection delete databases in parallel:", async (names) => {
