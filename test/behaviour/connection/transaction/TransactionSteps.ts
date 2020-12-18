@@ -25,14 +25,14 @@ import TransactionType = Grakn.TransactionType;
 import assert = require("assert");
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
 
-Then('for each session, open transaction(s) of type: {transactionType}', async function (transactionType: TransactionType) {
+Then('(for each )session(,) open(s) transaction(s) of type: {transaction_type}', async function (transactionType: TransactionType) {
     for (const session of sessions) {
         if (!transactions.has(session)) transactions.set(session, [])
         transactions.get(session).push(await session.transaction(transactionType));
     }
 });
 
-Then('for each session, open transaction(s) of type:', async function (transactionTypeTable: DataTable) {
+Then('(for each )session(,) open(s) transaction(s) of type:', async function (transactionTypeTable: DataTable) {
     for (const session of sessions) {
         if (!transactions.has(session)) transactions.set(session, [])
         for (const transactionTypeRow of transactionTypeTable.raw()) {
@@ -52,13 +52,13 @@ Then('for each session, open transaction(s) of type:', async function (transacti
     }
 });
 
-Then('for each session, open transaction(s) of type; throws exception: {transactionType}', async function (transactionType: TransactionType) {
+Then('(for each )session(,) open transaction(s) of type; throws exception: {transaction_type}', async function (transactionType: TransactionType) {
     for (const session of sessions) {
         await assertThrows(async () => await session.transaction(transactionType));
     }
 });
 
-Then('for each session, open transaction of type; throws exception', async function (transactionTypeTable: DataTable) {
+Then('(for each )session(,) open transaction(s) of type; throws exception', async function (transactionTypeTable: DataTable) {
     let transactionType: TransactionType;
     switch (transactionTypeTable.raw()[0][0])  {
         case "write":

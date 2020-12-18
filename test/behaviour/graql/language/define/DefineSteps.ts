@@ -45,6 +45,15 @@ Then('graql define; throws exception', async function (queryString: string) {
         }
     }
 });
+
+Then('for each transaction, define query; throws exception containing {string}', async function (exceptionString: string, queryString: string) {
+    for (const transactionList of transactions.values()) {
+        for (const transaction of transactionList) {
+            await assertThrowsWithMessage(async () => await transaction.query().define(queryString), exceptionString);
+        }
+    }
+});
+
 Then('graql insert', async function (queryString: string) {
     for (const transactionList of transactions.values()) {
         for (const transaction of transactionList) {

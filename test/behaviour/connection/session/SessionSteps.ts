@@ -25,23 +25,23 @@ import SessionType = Grakn.SessionType;
 import assert = require("assert");
 import Session = Grakn.Session;
 
-When("connection open schema session for database: {word}", async (name: string) => {
+When("connection open(s) schema session for database: {word}", async (name: string) => {
     sessions.push(await client.session(name, SessionType.SCHEMA))
 });
 
-When("connection open (data )session for database: {word}", async (name: string) => {
+When("connection open(s) (data )session for database: {word}", async (name: string) => {
     sessions.push(await client.session(name, SessionType.DATA))
 });
 
-When("connection open schema session(s) for database(s):", async (names: DataTable) => {
+When("connection open(s) schema session(s) for database(s):", async (names: DataTable) => {
     for (const name of names.raw()) {sessions.push(await client.session(name[0], SessionType.SCHEMA))}
 });
 
-When("connection open (data )session(s) for database(s):", async (names: DataTable) => {
+When("connection open(s) (data )session(s) for database(s):", async (names: DataTable) => {
     for (const name of names.raw()) {sessions.push(await client.session(name[0], SessionType.DATA))}
 });
 
-When("connection open (data )sessions in parallel for databases:", async (names: DataTable) => {
+When("connection open(s) (data )sessions in parallel for databases:", async (names: DataTable) => {
     const openings: Promise<Session>[] = []
     for (const name of names.raw()) {openings.push(client.session(name[0], SessionType.DATA))}
     sessions.concat(await Promise.all(openings));

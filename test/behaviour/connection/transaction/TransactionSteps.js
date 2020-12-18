@@ -24,14 +24,14 @@ const Grakn_1 = require("../../../../dist/Grakn");
 var TransactionType = Grakn_1.Grakn.TransactionType;
 const assert = require("assert");
 const Util_1 = require("../../util/Util");
-cucumber_1.Then('for each session, open transaction(s) of type: {transactionType}', async function (transactionType) {
+cucumber_1.Then('(for each )session(,) open(s) transaction(s) of type: {transaction_type}', async function (transactionType) {
     for (const session of ConnectionSteps_1.sessions) {
         if (!ConnectionSteps_1.transactions.has(session))
             ConnectionSteps_1.transactions.set(session, []);
         ConnectionSteps_1.transactions.get(session).push(await session.transaction(transactionType));
     }
 });
-cucumber_1.Then('for each session, open transaction(s) of type:', async function (transactionTypeTable) {
+cucumber_1.Then('(for each )session(,) open(s) transaction(s) of type:', async function (transactionTypeTable) {
     for (const session of ConnectionSteps_1.sessions) {
         if (!ConnectionSteps_1.transactions.has(session))
             ConnectionSteps_1.transactions.set(session, []);
@@ -51,12 +51,12 @@ cucumber_1.Then('for each session, open transaction(s) of type:', async function
         }
     }
 });
-cucumber_1.Then('for each session, open transaction(s) of type; throws exception: {transactionType}', async function (transactionType) {
+cucumber_1.Then('(for each )session(,) open transaction(s) of type; throws exception: {transaction_type}', async function (transactionType) {
     for (const session of ConnectionSteps_1.sessions) {
         await Util_1.assertThrows(async () => await session.transaction(transactionType));
     }
 });
-cucumber_1.Then('for each session, open transaction of type; throws exception', async function (transactionTypeTable) {
+cucumber_1.Then('(for each )session(,) open transaction(s) of type; throws exception', async function (transactionTypeTable) {
     let transactionType;
     switch (transactionTypeTable.raw()[0][0]) {
         case "write":

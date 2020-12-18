@@ -51,7 +51,7 @@ build:
       image: graknlabs-ubuntu-20.04-node
       command: |
         npm install typescript
-        bazel test //test/behaviour/... --sandbox_debug
+        bazel test //test/behaviour/... --jobs=1
     deploy-npm-snapshot:
       filter:
         owner: graknlabs
