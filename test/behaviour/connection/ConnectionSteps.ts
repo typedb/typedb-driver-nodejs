@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
+import { Given, After, AfterAll, Before, setDefaultTimeout } from "@cucumber/cucumber";
 import { GraknClient } from "../../../dist/rpc/GraknClient";
 import { Grakn } from "../../../dist/Grakn";
 import Session = Grakn.Session;
@@ -27,45 +27,40 @@ setDefaultTimeout(20 * 1000);
 export const THREAD_POOL_SIZE = 32;
 
 export let client: GraknClient;
-export let sessions: Session[] = [];
-export let transactions: Map<Session, Transaction[]> = new Map<Session, Transaction[]>();
+export const sessions: Session[] = [];
+export const transactions: Map<Session, Transaction[]> = new Map<Session, Transaction[]>();
 
 Given("connection has been opened", () => {
     if (client) return;
     client = new GraknClient();
 });
 
-Before(async () => {
+Before(clearAll)
+After(clearAll)
+
+async function clearAll() {
     if (client) {
+        for (const session of sessions) {
+            try {
+                if (transactions.has(session)){
+                    for (const transaction of transactions.get(session)) {
+                        try {
+                            await transaction.close();
+                        } catch {
+                            //We're okay with this.
+                        }
+                    }
+                }
+                if (session.isOpen()) await session.close()
+            } catch (err){
+                //We're also okay with this.
+            }
+        }
         const databases = await client.databases().all();
         for (const name of databases) {
             await client.databases().delete(name);
         }
     }
-});
-
-
-After(async () => {
-    for (const session of sessions) {
-        try {
-            if (transactions.has(session)){
-                for (const transaction of transactions.get(session)) {
-                    try {
-                        await transaction.close();
-                    } catch {
-                        //We're okay with this.
-                    }
-                }
-            }
-            if (session.isOpen()) await session.close()
-        } catch (err){
-            //We're also okay with this.
-        }
-    }
-    const databases = await client.databases().all();
-    for (const name of databases) {
-        await client.databases().delete(name);
-    }
-    sessions = [];
-    transactions = new Map<Session, Transaction[]>();
-});
+    sessions.length = 0;
+    transactions.clear();
+}

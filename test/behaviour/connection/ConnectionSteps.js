@@ -30,38 +30,34 @@ cucumber_1.Given("connection has been opened", () => {
         return;
     exports.client = new GraknClient_1.GraknClient();
 });
-cucumber_1.Before(async () => {
+cucumber_1.Before(clearAll);
+cucumber_1.After(clearAll);
+async function clearAll() {
     if (exports.client) {
+        for (const session of exports.sessions) {
+            try {
+                if (exports.transactions.has(session)) {
+                    for (const transaction of exports.transactions.get(session)) {
+                        try {
+                            await transaction.close();
+                        }
+                        catch {
+                            //We're okay with this.
+                        }
+                    }
+                }
+                if (session.isOpen())
+                    await session.close();
+            }
+            catch (err) {
+                //We're also okay with this.
+            }
+        }
         const databases = await exports.client.databases().all();
         for (const name of databases) {
             await exports.client.databases().delete(name);
         }
     }
-});
-cucumber_1.After(async () => {
-    for (const session of exports.sessions) {
-        try {
-            if (exports.transactions.has(session)) {
-                for (const transaction of exports.transactions.get(session)) {
-                    try {
-                        await transaction.close();
-                    }
-                    catch {
-                        //We're okay with this.
-                    }
-                }
-            }
-            if (session.isOpen())
-                await session.close();
-        }
-        catch (err) {
-            //We're also okay with this.
-        }
-    }
-    const databases = await exports.client.databases().all();
-    for (const name of databases) {
-        await exports.client.databases().delete(name);
-    }
-    exports.sessions = [];
-    exports.transactions = new Map();
-});
+    exports.sessions.length = 0;
+    exports.transactions.clear();
+}
