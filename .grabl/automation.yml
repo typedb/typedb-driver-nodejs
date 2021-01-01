@@ -44,7 +44,7 @@ build:
       image: graknlabs-ubuntu-20.04
       script: |
         ./test/start-server.sh
-        source ./test/install.sh
+        # source ./test/install.sh
         ./test/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/stop-server.sh
         exit $TEST_SUCCESS
