@@ -41,16 +41,16 @@ After(clearAll)
 async function clearAll() {
     if (client) {
         for (const session of sessions) {
-            try {
-                if (transactions.has(session)){
-                    for (const transaction of transactions.get(session)) {
-                        try {
-                            await transaction.close();
-                        } catch {
-                            //We're okay with this.
-                        }
+            if (transactions.has(session)){
+                for (const transaction of transactions.get(session)) {
+                    try {
+                        await transaction.close();
+                    } catch {
+                        //We're okay with this.
                     }
                 }
+            }
+            try {
                 if (session.isOpen()) await session.close()
             } catch (err){
                 //We're also okay with this.

@@ -35,17 +35,17 @@ cucumber_1.After(clearAll);
 async function clearAll() {
     if (exports.client) {
         for (const session of exports.sessions) {
-            try {
-                if (exports.transactions.has(session)) {
-                    for (const transaction of exports.transactions.get(session)) {
-                        try {
-                            await transaction.close();
-                        }
-                        catch {
-                            //We're okay with this.
-                        }
+            if (exports.transactions.has(session)) {
+                for (const transaction of exports.transactions.get(session)) {
+                    try {
+                        await transaction.close();
+                    }
+                    catch {
+                        //We're okay with this.
                     }
                 }
+            }
+            try {
                 if (session.isOpen())
                     await session.close();
             }
