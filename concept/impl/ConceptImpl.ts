@@ -46,6 +46,10 @@ export abstract class ConceptImpl implements Concept {
         return false;
     }
 
+    isRoleType(): boolean {
+        return false;
+    }
+
     isThing(): boolean {
         return false;
     }
@@ -74,6 +78,10 @@ export abstract class RemoteConceptImpl implements RemoteConcept {
     }
 
     isType(): boolean {
+        return false;
+    }
+
+    isRoleType(): boolean {
         return false;
     }
 

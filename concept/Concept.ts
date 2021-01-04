@@ -27,6 +27,7 @@ export interface Concept {
     isRemote(): boolean;
 
     isType(): boolean;
+    isRoleType(): boolean;
     isThingType(): boolean;
     isEntityType(): boolean;
     isAttributeType(): boolean;
@@ -43,6 +44,7 @@ export interface RemoteConcept extends Concept {
     isDeleted(): Promise<boolean>;
 
     isType(): boolean;
+    isRoleType(): boolean;
     isThingType(): boolean;
     isEntityType(): boolean;
     isAttributeType(): boolean;
