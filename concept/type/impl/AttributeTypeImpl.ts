@@ -101,7 +101,7 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
         super(transaction, label, isRoot);
     }
 
-    isAttribute(): boolean {
+    isAttributeType(): boolean {
         return true;
     }
 
