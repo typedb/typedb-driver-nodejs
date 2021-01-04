@@ -70,6 +70,9 @@ export * from "./concept/type/impl/EntityTypeImpl";
 export * from "./concept/type/impl/RelationTypeImpl";
 export * from "./concept/type/impl/RoleTypeImpl";
 
+/* concept.impl */
+export * from "./concept/impl/ConceptImpl";
+
 /* concept */
 export * from "./concept/Concept";
 export * from "./concept/ConceptManager";
