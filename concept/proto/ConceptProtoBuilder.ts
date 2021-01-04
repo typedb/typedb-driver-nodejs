@@ -25,13 +25,7 @@ import {
     Thing,
     AttributeType,
     RoleTypeImpl,
-    EntityImpl,
-    RelationImpl,
-    AttributeImpl,
-    EntityTypeImpl,
-    RelationTypeImpl,
-    AttributeTypeImpl,
-    ThingTypeImpl, GraknClientError, ErrorMessage, Bytes,
+    GraknClientError, ErrorMessage, Bytes,
 } from "../../dependencies_internal";
 
 export namespace ConceptProtoBuilder {

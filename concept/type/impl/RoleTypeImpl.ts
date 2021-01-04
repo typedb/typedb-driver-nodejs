@@ -60,7 +60,7 @@ export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
 
     isRoleType(): boolean {
         return true;
-    };
+    }
 }
 
 export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRoleType {
@@ -127,5 +127,5 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
 
     isRoleType(): boolean {
         return true;
-    };
+    }
 }
