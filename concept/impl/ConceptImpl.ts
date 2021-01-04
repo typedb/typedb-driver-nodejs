@@ -1,5 +1,4 @@
-import { Concept, RemoteConcept } from "../Concept";
-import { Grakn } from "../../Grakn";
+import { Concept, RemoteConcept, Grakn } from "../../dependencies_internal";
 
 export abstract class ConceptImpl implements Concept {
     abstract asRemote(transaction: Grakn.Transaction): RemoteConcept
