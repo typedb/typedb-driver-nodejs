@@ -68,6 +68,10 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
         return this._root;
     }
 
+    isType(): boolean {
+        return true;
+    }
+
     isRemote(): boolean {
         return false;
     }
@@ -99,6 +103,10 @@ export abstract class RemoteTypeImpl extends RemoteConceptImpl implements Remote
 
     isRoot(): boolean {
         return this._isRoot;
+    }
+
+    isType(): boolean {
+        return true;
     }
 
     isRemote(): boolean {
