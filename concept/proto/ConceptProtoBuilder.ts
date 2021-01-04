@@ -48,7 +48,7 @@ export namespace ConceptProtoBuilder {
             .setEncoding(typeEncoding(type));
 
         if (type.isRoleType()) {
-            typeProto.setScope(type.getScope());
+            typeProto.setScope((type as RoleTypeImpl).getScope());
         }
 
         return typeProto;
