@@ -74,23 +74,23 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         return true;
     }
 
-    isBooleanType(): boolean {
+    isBoolean(): boolean {
         return false;
     }
 
-    isStringType(): boolean {
+    isString(): boolean {
         return false;
     }
 
-    isDoubleType(): boolean {
+    isDouble(): boolean {
         return false;
     }
 
-    isLongType(): boolean {
+    isLong(): boolean {
         return false;
     }
 
-    isDateTimeType(): boolean {
+    isDateTime(): boolean {
         return false;
     }
 }
@@ -101,27 +101,27 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
         super(transaction, label, isRoot);
     }
 
-    isAttributeType(): boolean {
+    isAttribute(): boolean {
         return true;
     }
 
-    isBooleanType(): boolean {
+    isBoolean(): boolean {
         return false;
     }
 
-    isStringType(): boolean {
+    isString(): boolean {
         return false;
     }
 
-    isDoubleType(): boolean {
+    isDouble(): boolean {
         return false;
     }
 
-    isLongType(): boolean {
+    isLong(): boolean {
         return false;
     }
 
-    isDateTimeType(): boolean {
+    isDateTime(): boolean {
         return false;
     }
 
@@ -173,7 +173,7 @@ export class BooleanAttributeTypeImpl extends AttributeTypeImpl implements Boole
         super(label, isRoot);
     }
 
-    isBooleanType(): boolean {
+    isBoolean(): boolean {
         return true;
     }
 
@@ -196,7 +196,7 @@ export class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl impl
         super(transaction, label, isRoot);
     }
 
-    isBooleanType(): boolean {
+    isBoolean(): boolean {
         return true;
     }
 
@@ -243,7 +243,7 @@ export class LongAttributeTypeImpl extends AttributeTypeImpl implements LongAttr
         return ValueType.LONG;
     }
 
-    isLongType(): boolean {
+    isLong(): boolean {
         return true;
     }
 
@@ -262,7 +262,7 @@ export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl impleme
         return ValueType.LONG;
     }
 
-    isLongType(): boolean {
+    isLong(): boolean {
         return true;
     }
 
@@ -305,7 +305,7 @@ export class DoubleAttributeTypeImpl extends AttributeTypeImpl implements Double
         return ValueType.DOUBLE;
     }
 
-    isDoubleType(): boolean {
+    isDouble(): boolean {
         return true;
     }
 
@@ -328,7 +328,7 @@ export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         return new RemoteDoubleAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    isDoubleType(): boolean {
+    isDouble(): boolean {
         return true;
     }
 
@@ -367,7 +367,7 @@ export class StringAttributeTypeImpl extends AttributeTypeImpl implements String
         return ValueType.STRING;
     }
 
-    isStringType(): boolean {
+    isString(): boolean {
         return true;
     }
 
@@ -390,7 +390,7 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
         return new RemoteStringAttributeTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
 
-    isStringType(): boolean {
+    isString(): boolean {
         return true;
     }
 
@@ -429,7 +429,7 @@ export class DateTimeAttributeTypeImpl extends AttributeTypeImpl implements Date
         return ValueType.DATETIME;
     }
 
-    isDateTimeType(): boolean {
+    isDateTime(): boolean {
         return true;
     }
 
@@ -448,7 +448,7 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
         return ValueType.DATETIME;
     }
 
-    isDateTimeType(): boolean {
+    isDateTime(): boolean {
         return true;
     }
 

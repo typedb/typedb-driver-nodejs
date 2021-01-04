@@ -41,11 +41,11 @@ export interface AttributeType extends ThingType {
     getValueType(): ValueType;
     isKeyable(): boolean;
 
-    isBooleanType(): boolean;
-    isLongType(): boolean;
-    isDoubleType(): boolean;
-    isStringType(): boolean;
-    isDateTimeType(): boolean;
+    isBoolean(): boolean;
+    isLong(): boolean;
+    isDouble(): boolean;
+    isString(): boolean;
+    isDateTime(): boolean;
 
     asRemote(transaction: Transaction): RemoteAttributeType;
 }
