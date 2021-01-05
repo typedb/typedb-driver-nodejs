@@ -47,7 +47,6 @@ export class ConceptMap {
         return new ConceptMap(variableMap, queryPattern);
     }
 
-    queryPattern(): string {return this._queryPattern;}
     map(): Map<string, Concept> {return this._map;}
     concepts(): IterableIterator<Concept> {return this._map.values();}
 
