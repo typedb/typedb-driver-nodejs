@@ -13,7 +13,7 @@ export class ConceptMapGroup {
         this._conceptMaps = conceptMaps;
     }
 
-    public static of (res: AnswerProto.ConceptMapGroup): ConceptMapGroup {
+    public static of(res: AnswerProto.ConceptMapGroup): ConceptMapGroup {
         let concept: Concept;
         if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
         else concept = TypeImpl.of(res.getOwner().getType());
