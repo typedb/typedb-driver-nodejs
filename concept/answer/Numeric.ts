@@ -18,8 +18,10 @@
  */
 
 import * as answer_pb from "grakn-protocol/protobuf/answer_pb";
-import {GraknClientError} from "../../common/errors/GraknClientError";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {
+    ErrorMessage,
+    GraknClientError,
+} from "../../dependencies_internal";
 
 export class Numeric {
     private readonly _numberValue?: number;

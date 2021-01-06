@@ -17,11 +17,13 @@
  * under the License.
  */
 
-import {Numeric} from "./Numeric";
-import {Concept} from "../Concept";
 import AnswerProto from "grakn-protocol/protobuf/answer_pb";
-import {ThingImpl} from "../thing/impl/ThingImpl";
-import {TypeImpl} from "../type/impl/TypeImpl";
+import {
+    Concept,
+    Numeric,
+    ThingImpl,
+    TypeImpl
+} from "../../dependencies_internal";
 
 export class NumericGroup {
     private readonly _owner: Concept;

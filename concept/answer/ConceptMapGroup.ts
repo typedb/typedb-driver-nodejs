@@ -17,11 +17,13 @@
  * under the License.
  */
 
-import {ConceptMap} from "./ConceptMap";
-import {Concept} from "../Concept";
 import AnswerProto from "grakn-protocol/protobuf/answer_pb";
-import {ThingImpl} from "../thing/impl/ThingImpl";
-import {TypeImpl} from "../type/impl/TypeImpl";
+import {
+    Concept,
+    ConceptMap,
+    ThingImpl,
+    TypeImpl
+} from "../../dependencies_internal";
 
 export class ConceptMapGroup {
     private readonly _owner: Concept;
