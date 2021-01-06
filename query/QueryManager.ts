@@ -68,22 +68,22 @@ export class QueryManager {
         return this.iterateQuery(insertQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getInsertRes().getAnswersList().map(ConceptMap.of));
     }
 
-    public async delete(query: string, options?: GraknOptions): Promise<void> {
+    public delete(query: string, options?: GraknOptions): Promise<void> {
         const deleteQuery = new Query.Req().setDeleteReq(
             new Query.Delete.Req().setQuery(query));
-        await this.runQuery(deleteQuery, options ? options : new GraknOptions(), res => res);
+        return this.runQuery(deleteQuery, options ? options : new GraknOptions(), _ => {});
     }
 
-    public async define(query: string, options?: GraknOptions): Promise<void> {
+    public define(query: string, options?: GraknOptions): Promise<void> {
         const defineQuery = new Query.Req().setDefineReq(
                     new Query.Define.Req().setQuery(query));
-        await this.runQuery(defineQuery, options ? options : new GraknOptions(), res => res)
+        return this.runQuery(defineQuery, options ? options : new GraknOptions(), _ => {});
     }
 
-    public async undefine(query: string, options?: GraknOptions): Promise<void> {
+    public undefine(query: string, options?: GraknOptions): Promise<void> {
         const undefineQuery = new Query.Req().setUndefineReq(
             new Query.Undefine.Req().setQuery(query));
-        await this.runQuery(undefineQuery, options ? options : new GraknOptions(), res => res)
+        return this.runQuery(undefineQuery, options ? options : new GraknOptions(), _ => {});
     }
 
     private iterateQuery<T>(request: Query.Req, options: GraknOptions, responseReader: (res: Transaction.Res) => T[]): Stream<T> {
