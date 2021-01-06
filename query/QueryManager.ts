@@ -71,19 +71,19 @@ export class QueryManager {
     public delete(query: string, options?: GraknOptions): Promise<void> {
         const deleteQuery = new Query.Req().setDeleteReq(
             new Query.Delete.Req().setQuery(query));
-        return this.runQuery(deleteQuery, options ? options : new GraknOptions(), _ => {});
+        return this.runQuery(deleteQuery, options ? options : new GraknOptions(), _ => undefined);
     }
 
     public define(query: string, options?: GraknOptions): Promise<void> {
         const defineQuery = new Query.Req().setDefineReq(
                     new Query.Define.Req().setQuery(query));
-        return this.runQuery(defineQuery, options ? options : new GraknOptions(), _ => {});
+        return this.runQuery(defineQuery, options ? options : new GraknOptions(), _ => undefined);
     }
 
     public undefine(query: string, options?: GraknOptions): Promise<void> {
         const undefineQuery = new Query.Req().setUndefineReq(
             new Query.Undefine.Req().setQuery(query));
-        return this.runQuery(undefineQuery, options ? options : new GraknOptions(), _ => {});
+        return this.runQuery(undefineQuery, options ? options : new GraknOptions(), _ => undefined);
     }
 
     private iterateQuery<T>(request: Query.Req, options: GraknOptions, responseReader: (res: Transaction.Res) => T[]): Stream<T> {
