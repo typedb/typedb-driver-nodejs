@@ -68,37 +68,33 @@ export class QueryManager {
         return this.iterateQuery(insertQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getInsertRes().getAnswersList().map(ConceptMap.of));
     }
 
-    public delete(query: string, options?: GraknOptions): Promise<void> {
+    public async delete(query: string, options?: GraknOptions): Promise<void> {
         const deleteQuery = new Query.Req().setDeleteReq(
             new Query.Delete.Req().setQuery(query));
-        return this.runQueryVoid(deleteQuery, options ? options : new GraknOptions());
+        await this.runQuery(deleteQuery, options ? options : new GraknOptions(), res => res);
     }
 
-    private async runQueryVoid(request: Query.Req, options: GraknOptions): Promise<void> {
-        return this.runQuery(request, options, _ => {});
-    }
-
-    private async runQuery<T>(request: Query.Req, options: GraknOptions, mapper: (res: Transaction.Res) => T): Promise<T> {
-        const transactionRequest = new Transaction.Req()
-            .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
-        return mapper(await this._rpcTransaction.execute(transactionRequest));
-    }
-
-    public define(query: string, options?: GraknOptions): Promise<void> {
+    public async define(query: string, options?: GraknOptions): Promise<void> {
         const defineQuery = new Query.Req().setDefineReq(
                     new Query.Define.Req().setQuery(query));
-        return this.runQueryVoid(defineQuery, options ? options : new GraknOptions())
+        await this.runQuery(defineQuery, options ? options : new GraknOptions(), res => res)
     }
 
-    public undefine(query: string, options?: GraknOptions): Promise<void> {
+    public async undefine(query: string, options?: GraknOptions): Promise<void> {
         const undefineQuery = new Query.Req().setUndefineReq(
             new Query.Undefine.Req().setQuery(query));
-        return this.runQueryVoid(undefineQuery, options ? options : new GraknOptions())
+        await this.runQuery(undefineQuery, options ? options : new GraknOptions(), res => res)
     }
 
     private iterateQuery<T>(request: Query.Req, options: GraknOptions, responseReader: (res: Transaction.Res) => T[]): Stream<T> {
         const transactionRequest = new Transaction.Req()
             .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
         return this._rpcTransaction.stream(transactionRequest, responseReader);
+    }
+
+    private async runQuery<T>(request: Query.Req, options: GraknOptions, mapper: (res: Transaction.Res) => T): Promise<T> {
+        const transactionRequest = new Transaction.Req()
+            .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
+        return mapper(await this._rpcTransaction.execute(transactionRequest));
     }
 }
