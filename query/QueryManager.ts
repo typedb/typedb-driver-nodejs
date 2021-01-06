@@ -41,25 +41,29 @@ export class QueryManager {
     public match(query: string, options?: GraknOptions): Stream<ConceptMap> {
         const matchQuery = new Query.Req().setMatchReq(
             new Query.Match.Req().setQuery(query));
-        return this.iterateQuery(matchQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getMatchRes().getAnswersList().map(ConceptMap.of));
+        return this.iterateQuery(matchQuery, options ? options : new GraknOptions(),
+            (res: Transaction.Res) => res.getQueryRes().getMatchRes().getAnswersList().map(ConceptMap.of));
     }
 
     public matchAggregate(query: string, options?: GraknOptions): Promise<Numeric> {
         const matchAggregateQuery = new Query.Req().setMatchReq(
             new Query.Match.Req().setQuery(query));
-        return this.runQuery(matchAggregateQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => Numeric.of(res.getQueryRes().getMatchAggregateRes().getAnswer()));
+        return this.runQuery(matchAggregateQuery, options ? options : new GraknOptions(),
+            (res: Transaction.Res) => Numeric.of(res.getQueryRes().getMatchAggregateRes().getAnswer()));
     }
 
     public matchGroup(query: string, options?: GraknOptions): Stream<ConceptMapGroup> {
         const matchGroupQuery = new Query.Req().setMatchReq(
             new Query.Match.Req().setQuery(query));
-        return this.iterateQuery(matchGroupQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getMatchGroupRes().getAnswersList().map(ConceptMapGroup.of));
+        return this.iterateQuery(matchGroupQuery, options ? options : new GraknOptions(),
+            (res: Transaction.Res) => res.getQueryRes().getMatchGroupRes().getAnswersList().map(ConceptMapGroup.of));
     }
 
     public matchGroupAggregate(query: string, options?: GraknOptions): Stream<NumericGroup> {
         const matchGroupAggregateQuery = new Query.Req().setMatchReq(
             new Query.Match.Req().setQuery(query));
-        return this.iterateQuery(matchGroupAggregateQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getMatchGroupAggregateRes().getAnswersList().map(NumericGroup.of));
+        return this.iterateQuery(matchGroupAggregateQuery, options ? options : new GraknOptions(),
+            (res: Transaction.Res) => res.getQueryRes().getMatchGroupAggregateRes().getAnswersList().map(NumericGroup.of));
     }
 
     public insert(query: string, options?: GraknOptions): Stream<ConceptMap> {
@@ -71,19 +75,19 @@ export class QueryManager {
     public delete(query: string, options?: GraknOptions): Promise<void> {
         const deleteQuery = new Query.Req().setDeleteReq(
             new Query.Delete.Req().setQuery(query));
-        return this.runQuery(deleteQuery, options ? options : new GraknOptions(), _ => undefined);
+        return this.runQuery(deleteQuery, options ? options : new GraknOptions(), _ => null);
     }
 
     public define(query: string, options?: GraknOptions): Promise<void> {
         const defineQuery = new Query.Req().setDefineReq(
                     new Query.Define.Req().setQuery(query));
-        return this.runQuery(defineQuery, options ? options : new GraknOptions(), _ => undefined);
+        return this.runQuery(defineQuery, options ? options : new GraknOptions(), _ => null);
     }
 
     public undefine(query: string, options?: GraknOptions): Promise<void> {
         const undefineQuery = new Query.Req().setUndefineReq(
             new Query.Undefine.Req().setQuery(query));
-        return this.runQuery(undefineQuery, options ? options : new GraknOptions(), _ => undefined);
+        return this.runQuery(undefineQuery, options ? options : new GraknOptions(), _ => null);
     }
 
     private iterateQuery<T>(request: Query.Req, options: GraknOptions, responseReader: (res: Transaction.Res) => T[]): Stream<T> {
