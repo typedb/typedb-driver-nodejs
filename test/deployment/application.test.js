@@ -57,7 +57,7 @@ describe("Basic GraknClient Tests", () => {
     test("match", async () => {
         let session = await client.session("thisisadatabase", SessionType.DATA);
         let tx = await session.transaction(TransactionType.WRITE);
-        await tx.query("match $x sub thing; get;");
+        await tx.query("match $x isa thing; get;");
         await tx.close();
         await session.close();
     });
