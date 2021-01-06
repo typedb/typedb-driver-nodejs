@@ -47,7 +47,7 @@ export class QueryManager {
     public matchAggregate(query: string, options?: GraknOptions): Promise<Numeric> {
         const matchAggregateQuery = new Query.Req().setMatchReq(
             new Query.Match.Req().setQuery(query));
-        return this.runQueryT(matchAggregateQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => Numeric.of(res.getQueryRes().getMatchAggregateRes().getAnswer()));
+        return this.runQuery(matchAggregateQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => Numeric.of(res.getQueryRes().getMatchAggregateRes().getAnswer()));
     }
 
     public matchGroup(query: string, options?: GraknOptions): Stream<ConceptMapGroup> {
@@ -71,29 +71,29 @@ export class QueryManager {
     public delete(query: string, options?: GraknOptions): Promise<void> {
         const deleteQuery = new Query.Req().setDeleteReq(
             new Query.Delete.Req().setQuery(query));
-        return this.runQuery(deleteQuery, options ? options : new GraknOptions())
+        return this.runQueryVoid(deleteQuery, options ? options : new GraknOptions());
+    }
+
+    private async runQueryVoid(request: Query.Req, options: GraknOptions): Promise<void> {
+        return this.runQuery(request, options, _ => {});
+    }
+
+    private async runQuery<T>(request: Query.Req, options: GraknOptions, mapper: (res: Transaction.Res) => T): Promise<T> {
+        const transactionRequest = new Transaction.Req()
+            .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
+        return mapper(await this._rpcTransaction.execute(transactionRequest));
     }
 
     public define(query: string, options?: GraknOptions): Promise<void> {
         const defineQuery = new Query.Req().setDefineReq(
                     new Query.Define.Req().setQuery(query));
-        return this.runQuery(defineQuery, options ? options : new GraknOptions())
+        return this.runQueryVoid(defineQuery, options ? options : new GraknOptions())
     }
 
     public undefine(query: string, options?: GraknOptions): Promise<void> {
         const undefineQuery = new Query.Req().setUndefineReq(
             new Query.Undefine.Req().setQuery(query));
-        return this.runQuery(undefineQuery, options ? options : new GraknOptions())
-    }
-
-    private async runQueryT<T>(request: Query.Req, options: GraknOptions, mapper: (res: Transaction.Res) => T): Promise<T> {
-        return mapper(null);
-    }
-
-    private async runQuery(request: Query.Req, options: GraknOptions): Promise<void> {
-        const transactionRequest = new Transaction.Req()
-            .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
-        await this._rpcTransaction.execute(transactionRequest);
+        return this.runQueryVoid(undefineQuery, options ? options : new GraknOptions())
     }
 
     private iterateQuery<T>(request: Query.Req, options: GraknOptions, responseReader: (res: Transaction.Res) => T[]): Stream<T> {
