@@ -6,11 +6,11 @@ import {TypeImpl} from "../type/impl/TypeImpl";
 
 export class NumericGroup {
     private readonly _owner: Concept;
-    private readonly _answers: Numeric;
+    private readonly _numeric: Numeric;
 
-    constructor(owner: Concept, answers: Numeric) {
+    constructor(owner: Concept, numeric: Numeric) {
         this._owner = owner;
-        this._answers = answers;
+        this._numeric = numeric;
     }
 
     public static of (res: AnswerProto.NumericGroup): NumericGroup {
@@ -24,7 +24,7 @@ export class NumericGroup {
         return this._owner;
     }
 
-    answers(): Numeric {
-        return this._answers;
+    numeric(): Numeric {
+        return this._numeric;
     }
 }

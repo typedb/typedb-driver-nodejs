@@ -6,11 +6,11 @@ import {TypeImpl} from "../type/impl/TypeImpl";
 
 export class ConceptMapGroup {
     private readonly _owner: Concept;
-    private readonly _answers: ConceptMap[];
+    private readonly _conceptMaps: ConceptMap[];
 
-    constructor(owner: Concept, answers: ConceptMap[]) {
+    constructor(owner: Concept, conceptMaps: ConceptMap[]) {
         this._owner = owner;
-        this._answers = answers;
+        this._conceptMaps = conceptMaps;
     }
 
     public static of (res: AnswerProto.ConceptMapGroup): ConceptMapGroup {
@@ -24,7 +24,7 @@ export class ConceptMapGroup {
         return this._owner;
     }
 
-    answers(): ConceptMap[] {
-        return this._answers;
+    conceptMaps(): ConceptMap[] {
+        return this._conceptMaps;
     }
 }

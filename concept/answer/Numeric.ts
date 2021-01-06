@@ -2,10 +2,10 @@ import * as answer_pb from "grakn-protocol/protobuf/answer_pb";
 import {GraknClientError} from "../../common/errors/GraknClientError";
 
 export class Numeric {
-    private readonly value?: number;
+    private readonly _numberValue?: number;
 
-    private constructor(value?: number) {
-        this.value = value;
+    private constructor(numberValue?: number) {
+        this._numberValue = numberValue;
     }
 
     public static of(answer: answer_pb.Numeric): Numeric {
@@ -22,7 +22,7 @@ export class Numeric {
     }
 
     public isNumber(): boolean {
-        return this.value != null;
+        return this._numberValue != null;
     }
 
     public isNaN(): boolean {
@@ -30,7 +30,7 @@ export class Numeric {
     }
 
     public asNumber(): number {
-        if (this.isNumber()) return this.value;
+        if (this.isNumber()) return this._numberValue;
         else throw new GraknClientError("TODO");
     }
 
