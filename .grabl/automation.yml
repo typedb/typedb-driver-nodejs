@@ -44,10 +44,9 @@ build:
       image: graknlabs-ubuntu-20.04
       command: |
         ./test/start-server.sh
-        #./test/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        #./test/stop-server.sh
-        #exit $TEST_SUCCESS
-        sleep 36000
+        ./test/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/stop-server.sh
+        exit $TEST_SUCCESS
     deploy-npm-snapshot:
       filter:
         owner: graknlabs
