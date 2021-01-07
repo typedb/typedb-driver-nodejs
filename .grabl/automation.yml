@@ -35,20 +35,20 @@ build:
         bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
   correctness:
     build:
-      image: graknlabs-ubuntu-20.04-node
+      image: graknlabs-ubuntu-20.04
       command: |
         bazel build //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
     test-integration:
-      image: graknlabs-ubuntu-20.04-node
+      image: graknlabs-ubuntu-20.04
       command: |
         ./test/common/start-server.sh
         ./test/integration/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-server.sh
         exit $TEST_SUCCESS
     test-behaviour:
-      image: graknlabs-ubuntu-20.04-node
+      image: graknlabs-ubuntu-20.04
       command: |
         npm install typescript
         bazel test //test/behaviour/... --jobs=1
@@ -72,7 +72,7 @@ build:
       filter:
         owner: graknlabs
         branch: master
-      image: graknlabs-ubuntu-20.04-node
+      image: graknlabs-ubuntu-20.04
       command: |
         ./test/common/start-server.sh
         cd test/deployment/
