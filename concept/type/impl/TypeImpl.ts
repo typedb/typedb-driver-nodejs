@@ -81,22 +81,6 @@ export abstract class RemoteTypeImpl extends RemoteConceptImpl implements Remote
         this._isRoot = isRoot;
     }
 
-    isThingType(): boolean {
-        return false;
-    }
-
-    isEntityType(): boolean {
-        return false;
-    }
-
-    isAttributeType(): boolean {
-        return false;
-    }
-
-    isRelationType(): boolean {
-        return false;
-    }
-
     getLabel(): string {
         return this._label;
     }
