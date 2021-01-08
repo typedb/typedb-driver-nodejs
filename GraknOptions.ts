@@ -26,15 +26,15 @@ export class GraknOptions {
     private _infer: boolean;
     private _explain: boolean;
     private _batchSize: number;
-    private _session_idle_timeout_millis: number;
-    private _schema_lock_acquire_timeout_millis: number;
+    private _sessionIdleTimeoutMillis: number;
+    private _schemaLockAcquireTimeoutMillis: number;
 
     constructor() {
         this._infer = null;
         this._explain = null;
         this._batchSize = null;
-        this._session_idle_timeout_millis = null;
-        this._schema_lock_acquire_timeout_millis = null;
+        this._sessionIdleTimeoutMillis = null;
+        this._schemaLockAcquireTimeoutMillis = null;
     }
 
     infer(): boolean {
@@ -68,20 +68,20 @@ export class GraknOptions {
     }
 
     sessionIdleTimeoutMillis(): number {
-        return this._session_idle_timeout_millis;
+        return this._sessionIdleTimeoutMillis;
     }
 
     setSessionIdleTimeoutMillis(sessionIdleTimeoutMillis: number): GraknOptions {
-        this._session_idle_timeout_millis = sessionIdleTimeoutMillis;
+        this._sessionIdleTimeoutMillis = sessionIdleTimeoutMillis;
         return this;
     }
 
     schemaLockAcquireTimeoutMillis(): number {
-        return this._schema_lock_acquire_timeout_millis;
+        return this._schemaLockAcquireTimeoutMillis;
     }
 
     setSchemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis: number): GraknOptions {
-        this._schema_lock_acquire_timeout_millis = schemaLockAcquireTimeoutMillis;
+        this._schemaLockAcquireTimeoutMillis = schemaLockAcquireTimeoutMillis;
         return this;
     }
 }

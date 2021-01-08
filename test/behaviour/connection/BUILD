@@ -17,13 +17,12 @@
 # under the License.
 #
 
-exports_files(["ConnectionSteps.js"])
+exports_files(["ConnectionSteps.ts"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = glob(["*.d.ts", "*.js",]),
     license_type = "apache",
 )

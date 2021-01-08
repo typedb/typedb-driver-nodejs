@@ -59,7 +59,9 @@ When("connection close all sessions", async () => {
 });
 
 Then("session(s)( in parallel) is/are null: {bool}", function (isNull: boolean) {
-    return (sessions.length === 0) === isNull;
+    for (const session of sessions) {
+        assert.ok(!session === isNull);
+    }
 
 });
 

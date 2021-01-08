@@ -54,6 +54,7 @@ build:
       command: |
         npm install typescript
         bazel test //test/behaviour/... --jobs=1
+      # TODO: Remove --jobs=1 from above line once parallelism is functional.
     deploy-npm-snapshot:
       filter:
         owner: graknlabs

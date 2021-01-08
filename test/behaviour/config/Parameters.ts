@@ -46,12 +46,6 @@ defineParameterType({
     transformer: s => s,
 });
 
-// defineParameterType({
-//     name: "type_label",
-//     regexp: /[a-zA-Z0-9-_]+/,
-//     transformer: s => s,
-// });
-
 defineParameterType({
     name: "scoped_label",
     regexp: /[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+/,

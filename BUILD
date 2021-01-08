@@ -61,6 +61,21 @@ filegroup(
     ]),
 )
 
+filegroup(
+    name = "behavioural-steps",
+    srcs = [
+        "//test/behaviour/config:Parameters.ts",
+        "//test/behaviour/connection:ConnectionSteps.ts",
+        "//test/behaviour/connection/database:DatabaseSteps.ts",
+        "//test/behaviour/connection/session:SessionSteps.ts",
+        "//test/behaviour/connection/transaction:TransactionSteps.ts",
+        "//test/behaviour/graql/language/define:DefineSteps.ts",
+        "//test/behaviour/util:Util.ts",
+        "//:tsconfig-test.json"
+    ] + glob(["node_modules/**"]),
+    visibility = ["//test/behaviour:__pkg__"],
+)
+
 ts_library(
     name = "_client_nodejs",
     srcs = glob([

@@ -25,7 +25,8 @@ def node_cucumber_test(name, features, node_modules, package_json, core_artifact
             package_json,
             core_artifact,
             client,
-        ] + features + steps,
+            steps,
+        ] + features,
         srcs = [
             "//test/behaviour:cucumber_test.sh",
         ],

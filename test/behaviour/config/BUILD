@@ -20,11 +20,10 @@
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//test/behaviour:rules.bzl", "node_cucumber_test")
 
-exports_files(["Parameters.js"])
+exports_files(["Parameters.ts"])
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = glob(["*.d.ts", "*.js",]),
     license_type = "apache",
 )
