@@ -36,30 +36,35 @@ Given("connection has been opened", () => {
 });
 
 async function clearAll() {
-    if (client) {
-        for (const session of sessions) {
-            if (transactions.has(session)){
-                for (const transaction of transactions.get(session)) {
-                    try {
-                        await transaction.close();
-                    } catch (err) {
-                        //We're okay with this.
-                    }
+    if (!client) {
+        client = new GraknClient();
+    }
+    else {
+        for (const transactionArray of transactions.values()) {
+            for (const transaction of transactionArray) {
+                try {
+                    await transaction.close();
+                } catch (err) {
+                    //We're okay with this.
                 }
             }
+        }
+        for (const session of sessions) {
             try {
-                if (session.isOpen()) await session.close()
+                await session.close()
             } catch (err) {
                 //We're also okay with this.
             }
         }
-        const databases = await client.databases().all();
-        for (const name of databases) {
-            await client.databases().delete(name);
-        }
     }
+    const databases = await client.databases().all();
+    for (const name of databases) {
+        await client.databases().delete(name);
+    }
+    client.close();
     sessions.length = 0;
     transactions.clear();
+    client = null;
 }
 
 Before(clearAll);
