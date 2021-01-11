@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
+import { Given, After, Before, setDefaultTimeout, AfterAll } from "@cucumber/cucumber";
 import { GraknClient } from "../../../dist/rpc/GraknClient";
 import { Grakn } from "../../../dist/Grakn";
 import Session = Grakn.Session;
@@ -35,9 +35,6 @@ Given("connection has been opened", () => {
     client = new GraknClient();
 });
 
-Before(clearAll)
-After(clearAll)
-
 async function clearAll() {
     if (client) {
         for (const session of sessions) {
@@ -45,14 +42,14 @@ async function clearAll() {
                 for (const transaction of transactions.get(session)) {
                     try {
                         await transaction.close();
-                    } catch {
+                    } catch (err) {
                         //We're okay with this.
                     }
                 }
             }
             try {
                 if (session.isOpen()) await session.close()
-            } catch (err){
+            } catch (err) {
                 //We're also okay with this.
             }
         }
@@ -64,3 +61,6 @@ async function clearAll() {
     sessions.length = 0;
     transactions.clear();
 }
+
+Before(clearAll);
+After(clearAll);
