@@ -117,8 +117,6 @@ export class RPCTransaction implements Grakn.Transaction {
         if (this._streamIsOpen) {
             this._streamIsOpen = false;
             this._stream.end();
-            //this._stream.cancel();
-            // TODO: close stream, somehow?
         }
         if (!this._transactionWasClosed) {
             this._transactionWasClosed = true;
