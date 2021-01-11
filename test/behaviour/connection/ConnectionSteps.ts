@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Given, After, Before, setDefaultTimeout, AfterAll } from "@cucumber/cucumber";
+import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
 import { GraknClient } from "../../../dist/rpc/GraknClient";
 import { Grakn } from "../../../dist/Grakn";
 import Session = Grakn.Session;
