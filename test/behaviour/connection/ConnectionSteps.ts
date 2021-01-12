@@ -45,7 +45,7 @@ async function clearAll() {
             try {
                 await session.close()
             } catch (err) {
-                //We're also okay with this.
+                //We're okay with this.
             }
         }
     }
