@@ -41,15 +41,6 @@ async function clearAll() {
         for (const name of databases) {
             await client.databases().delete(name);
         }
-        for (const transactionArray of transactions.values()) {
-            for (const transaction of transactionArray) {
-                try {
-                    await transaction.close();
-                } catch (err) {
-                    //We're okay with this.
-                }
-            }
-        }
         for (const session of sessions) {
             try {
                 await session.close()
