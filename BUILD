@@ -64,6 +64,7 @@ filegroup(
 filegroup(
     name = "behavioural-steps",
     srcs = [
+        "//test/behaviour/concept/thing:ThingSteps.ts",
         "//test/behaviour/config:Parameters.ts",
         "//test/behaviour/connection:ConnectionSteps.ts",
         "//test/behaviour/connection/database:DatabaseSteps.ts",
