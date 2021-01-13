@@ -21,6 +21,11 @@ import { When } from "@cucumber/cucumber";
 import Thing from "../../../../dist/concept/thing/Thing";
 import assert = require("assert");
 import { tx } from "../../connection/ConnectionSteps";
+import { getThingType } from "../type/thingtype/ThingTypeSteps";
+import { assertEqual, assertThrows } from "../../util/Util";
+import { Attribute } from "../../../../dist/concept/thing/Attribute";
+import { AttributeType } from "../../../../dist/concept/type/AttributeType";
+import ValueClass = AttributeType.ValueClass;
 
 export const things: Map<string, Thing> = new Map<string, Thing>();
 export const getThing = (name: string) => things.get(name);
@@ -38,5 +43,63 @@ When("entity/attribute/relation {var} is deleted: {bool}", async (thingName: str
 });
 
 When("{root_label} {var} has type: {type_label}", async (rootLabel: string, thingName: string, label: string) => {
-    assert.ok((await getThing(thingName).asRemote(tx()).getType()).getLabel() === label);
-}); //TODO go via conceptmanager getROOTLABELtype per java
+    const desiredType = await getThingType(rootLabel, label);
+    assertEqual(await getThing(thingName).asRemote(tx()).getType(), desiredType);
+});
+
+When("delete entity:/attribute:/relation: {var}", async (thingName: string) => {
+    await getThing(thingName).asRemote(tx()).delete();
+});
+
+When("entity/attribute/relation {var} set has: {var}", async (thingName: string, attributeName: string) => {
+    await getThing(thingName).asRemote(tx()).setHas(getThing(attributeName) as Attribute<ValueClass>);
+});
+
+When("entity/attribute/relation {var} set has: {var}; throws exception", async (thingName: string, attributeName: string) => {
+    await assertThrows(async () => getThing(thingName).asRemote(tx()).setHas(getThing(attributeName) as Attribute<ValueClass>));
+});
+
+When("entity/attribute/relation {var} unset has: {var}", async (thingName: string, attributeName: string) => {
+    await getThing(thingName).asRemote(tx()).unsetHas(getThing(attributeName) as Attribute<ValueClass>);
+});
+
+When("entity/attribute/relation {var} get keys contain: {var}", async (thingName: string, attributeName: string) => {
+    for (const keyAttribute in getThing(thingName).asRemote(tx()).getHas(true)) {
+        if ((keyAttribute as Thing).equals(getThing(attributeName))) return;
+    }
+    assert.fail()
+});
+
+When("entity/attribute/relation {var} get keys do not contain: {var}", async (thingName: string, attributeName: string) => {
+    for (const keyAttribute in getThing(thingName).asRemote(tx()).getHas(true)) {
+        if ((keyAttribute as Thing).equals(getThing(attributeName))) assert.fail();
+    }
+});
+
+When("entity/attribute/relation {var} get attributes contain: {var}", async (thingName: string, attributeName: string) => {
+    for (const attribute in getThing(thingName).asRemote(tx()).getHas()) {
+        if ((attribute as Thing).equals(getThing(attributeName))) return;
+    }
+    assert.fail()
+});
+
+When("entity/attribute/relation {var} get attributes do not contain: {var}", async (thingName: string, attributeName: string) => {
+    for (const attribute in getThing(thingName).asRemote(tx()).getHas()) {
+        if ((attribute as Thing).equals(getThing(attributeName))) assert.fail();
+    }
+});
+
+When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) contain: {var}", async (thingName: string, typeLabel: string, attributeName: string) => {
+    const type = await tx().concepts().getAttributeType(typeLabel)
+    for (const attribute in getThing(thingName).asRemote(tx()).getHas(type)) {
+        if ((attribute as Thing).equals(getThing(attributeName))) return;
+    }
+    assert.fail()
+});
+
+When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) do not contain: {var}", async (thingName: string, typeLabel: string, attributeName: string) => {
+    const type = await tx().concepts().getAttributeType(typeLabel)
+    for (const attribute in getThing(thingName).asRemote(tx()).getHas(type)) {
+        if ((attribute as Thing).equals(getThing(attributeName))) assert.fail();
+    }
+});
