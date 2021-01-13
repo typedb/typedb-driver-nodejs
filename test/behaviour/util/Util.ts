@@ -18,7 +18,7 @@
  */
 
 import assert = require("assert");
-import { Concept } from "../../../concept/Concept";
+import { Concept } from "../../../dist/concept/Concept";
 
 export async function assertThrows(testfunc: () => Promise<any>): Promise<void> {
     try {
