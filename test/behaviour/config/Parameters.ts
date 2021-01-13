@@ -49,7 +49,10 @@ defineParameterType({
 defineParameterType({
     name: "scoped_label",
     regexp: /[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+/,
-    transformer: s => s,
+    transformer: s => {
+        const split = s.split(",");
+        return new ScopedLabel(split[0], split[1]);
+    },
 });
 
 defineParameterType({
@@ -84,5 +87,27 @@ defineParameterType({
     regexp: /read|write/,
     transformer: s => s === "read" ? TransactionType.READ : TransactionType.WRITE
 });
+
+export class ScopedLabel {
+    private readonly _scope: string;
+    private readonly _role: string;
+
+    constructor(scope: string, role: string) {
+        this._scope = scope;
+        this._role = role;
+    }
+
+    scope(): string {
+        return this._scope;
+    }
+
+    role(): string {
+        return this._role;
+    }
+
+    scopedLabel(): string {
+        return this._scope + ":" + this._role;
+    }
+}
 
 //TODO: scoped labelS (plural form), transaction typeS, possibly investigate if root label and scoped label are gonna mess with me
