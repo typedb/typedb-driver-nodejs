@@ -70,7 +70,7 @@ When("entity/attribute/relation {var} get keys contain: {var}", async (thingName
     for await (const keyAttribute of getThing(thingName).asRemote(tx()).getHas(true)) {
         if (keyAttribute.equals(getThing(attributeName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get keys do not contain: {var}", async (thingName: string, attributeName: string) => {
@@ -83,7 +83,7 @@ When("entity/attribute/relation {var} get attributes contain: {var}", async (thi
     for await (const attribute of getThing(thingName).asRemote(tx()).getHas()) {
         if (attribute.equals(getThing(attributeName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get attributes do not contain: {var}", async (thingName: string, attributeName: string) => {
@@ -97,7 +97,7 @@ When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) contain
     for await (const attribute of getThing(thingName).asRemote(tx()).getHas([type])) {
         if (attribute.equals(getThing(attributeName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?boolean ?) contain: {var}", async (thingName: string, typeLabel: string, attributeName: string) => {
@@ -105,7 +105,7 @@ When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?
     for await (const attribute of getThing(thingName).asRemote(tx()).getHas(type)) {
         if (attribute.equals(getThing(attributeName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?long ?) contain: {var}", async (thingName: string, typeLabel: string, attributeName: string) => {
@@ -113,7 +113,7 @@ When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?
     for await (const attribute of getThing(thingName).asRemote(tx()).getHas(type)) {
         if (attribute.equals(getThing(attributeName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?double ?) contain: {var}", async (thingName: string, typeLabel: string, attributeName: string) => {
@@ -121,7 +121,7 @@ When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?
     for await (const attribute of getThing(thingName).asRemote(tx()).getHas(type)) {
         if (attribute.equals(getThing(attributeName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?string ?) contain: {var}", async (thingName: string, typeLabel: string, attributeName: string) => {
@@ -129,7 +129,7 @@ When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?
     for await (const attribute of getThing(thingName).asRemote(tx()).getHas(type)) {
         if (attribute.equals(getThing(attributeName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?datetime ?) contain: {var}", async (thingName: string, typeLabel: string, attributeName: string) => {
@@ -137,7 +137,7 @@ When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?
     for await (const attribute of getThing(thingName).asRemote(tx()).getHas(type)) {
         if (attribute.equals(getThing(attributeName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) do not contain: {var}", async (thingName: string, typeLabel: string, attributeName: string) => {
@@ -186,14 +186,14 @@ When("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) contai
     for await (const relation of getThing(thingName).asRemote(tx()).getRelations([await (await tx().concepts().getRelationType(scopedLabel.scope())).asRemote(tx()).getRelates(scopedLabel.role())])) {
         if (relation.equals(getThing(relationName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get relations contain: {var}", async (thingName: string, relationName: string) => {
     for await (const relation of getThing(thingName).asRemote(tx()).getRelations()) {
         if (relation.equals(getThing(relationName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) do not contain: {var}", async (thingName: string, scopedLabel: ScopedLabel, relationName: string) => {
@@ -217,7 +217,7 @@ When("root\\( ?thing ?) get instances contain: {var}", async (variableName: stri
     for await (const instance of (await tx().concepts().getRootThingType()).asRemote(tx()).getInstances()) {
         if (instance.equals(getThing(variableName))) return;
     }
-    assert.fail()
+    assert.fail();
 });
 
 When("root\\( ?thing ?) get instances is empty", async () => {

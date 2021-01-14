@@ -83,6 +83,12 @@ defineParameterType({
 });
 
 defineParameterType({
+    name: "type_label",
+    regexp: /[a-zA-Z0-9]+/,
+    transformer: s => s
+});
+
+defineParameterType({
     name: "transaction_type",
     regexp: /read|write/,
     transformer: s => s === "read" ? TransactionType.READ : TransactionType.WRITE
