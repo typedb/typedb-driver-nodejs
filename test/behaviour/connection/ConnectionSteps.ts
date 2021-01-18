@@ -38,16 +38,12 @@ Given("connection has been opened", () => {
 
 async function clearAll() {
     if (client) {
+        for (const session of sessions) {
+            await session.close()
+        }
         const databases = await client.databases().all();
         for (const name of databases) {
             await client.databases().delete(name);
-        }
-        for (const session of sessions) {
-            try {
-                await session.close()
-            } catch (err) {
-                //We're okay with this.
-            }
         }
     }
     sessions.length = 0;
