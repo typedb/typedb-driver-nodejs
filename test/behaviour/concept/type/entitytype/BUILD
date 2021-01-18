@@ -17,7 +17,7 @@
 # under the License.
 #
 
-exports_files(["ThingTypeSteps.ts"])
+exports_files(["EntityTypeSteps.ts"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//test/behaviour:rules.bzl", "node_cucumber_test")
@@ -30,7 +30,7 @@ checkstyle_test(
 
 node_cucumber_test(
     name = "test",
-    features = ["@graknlabs_behaviour//concept/type:thingtype.feature"],
+    features = ["@graknlabs_behaviour//concept/type:entitytype.feature"],
     node_modules = "//:node_modules",
     package_json = "//:package.json",
     core_artifact = "//test:native-grakn-artifact",

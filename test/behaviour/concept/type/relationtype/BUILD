@@ -17,7 +17,7 @@
 # under the License.
 #
 
-exports_files(["ThingTypeSteps.ts"])
+exports_files(["RelationTypeSteps.ts"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//test/behaviour:rules.bzl", "node_cucumber_test")

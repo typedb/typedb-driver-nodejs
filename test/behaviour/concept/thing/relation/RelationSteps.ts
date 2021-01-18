@@ -172,7 +172,10 @@ When("relation {var} get players contain:", async (relationName: string, players
         const roleType = await (await relation.asRemote(tx()).getType()).asRemote(tx()).getRelates(playerPair[0]);
         let found = false;
         for (const playerPlaying of playersByRoleType.get(roleType)) {
-            if (playerPlaying.equals(getThing(playerPair[1]))) found = true;
+            if (playerPlaying.equals(getThing(playerPair[1]))) {
+                found = true;
+                break;
+            }
         }
         assert.ok(found);
     }

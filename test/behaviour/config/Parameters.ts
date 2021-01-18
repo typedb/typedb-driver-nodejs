@@ -21,6 +21,7 @@ import { defineParameterType } from "@cucumber/cucumber";
 import { AttributeType } from "../../../dist/concept/type/AttributeType";
 import { Grakn } from "../../../dist/Grakn";
 import TransactionType = Grakn.TransactionType;
+import { tx } from "../connection/ConnectionSteps";
 
 defineParameterType({
     name: "bool",
@@ -43,7 +44,18 @@ defineParameterType({
 defineParameterType({
     name: "root_label",
     regexp: /entity|attribute|relation/,
-    transformer: s => s,
+    transformer: s => {
+        switch (s) {
+            case "entity":
+                return RootLabel.ENTITY;
+            case "attribute":
+                return RootLabel.ATTRIBUTE;
+            case "relation":
+                return RootLabel.RELATION;
+            default:
+                throw `Root label "${s}" was unrecognised.`
+        }
+    }
 });
 
 defineParameterType({
@@ -93,6 +105,12 @@ defineParameterType({
     regexp: /read|write/,
     transformer: s => s === "read" ? TransactionType.READ : TransactionType.WRITE
 });
+
+export enum RootLabel {
+    ATTRIBUTE,
+    ENTITY,
+    RELATION,
+}
 
 export class ScopedLabel {
     private readonly _scope: string;
