@@ -69,7 +69,6 @@ filegroup(
         "//test/behaviour/concept/thing/entity:EntitySteps.ts",
         "//test/behaviour/concept/thing/relation:RelationSteps.ts",
         "//test/behaviour/concept/type/attributetype:AttributeTypeSteps.ts",
-        #"//test/behaviour/concept/type/entitytype:EntityTypeSteps.ts", NO SPECIFIC ENTITYTYPE STEPS REQUIRED
         "//test/behaviour/concept/type/relationtype:RelationTypeSteps.ts",
         "//test/behaviour/concept/type/thingtype:ThingTypeSteps.ts",
         "//test/behaviour/config:Parameters.ts",
