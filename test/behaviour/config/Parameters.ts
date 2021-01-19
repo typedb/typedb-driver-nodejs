@@ -21,7 +21,7 @@ import { defineParameterType } from "@cucumber/cucumber";
 import { AttributeType } from "../../../dist/concept/type/AttributeType";
 import { Grakn } from "../../../dist/Grakn";
 import TransactionType = Grakn.TransactionType;
-import { tx } from "../connection/ConnectionSteps";
+import DataTable from "@cucumber/cucumber/lib/models/data_table";
 
 defineParameterType({
     name: "bool",
@@ -58,13 +58,37 @@ defineParameterType({
     }
 });
 
+export class ScopedLabel {
+    private readonly _scope: string;
+    private readonly _role: string;
+
+    constructor(scope: string, role: string) {
+        this._scope = scope;
+        this._role = role;
+    }
+
+    scope(): string {
+        return this._scope;
+    }
+
+    role(): string {
+        return this._role;
+    }
+
+    scopedLabel(): string {
+        return this._scope + ":" + this._role;
+    }
+
+    static parse(value: string): ScopedLabel {
+        const split = value.split(":");
+        return new ScopedLabel(split[0], split[1]);
+    }
+}
+
 defineParameterType({
     name: "scoped_label",
     regexp: /[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+/,
-    transformer: s => {
-        const split = s.split(",");
-        return new ScopedLabel(split[0], split[1]);
-    },
+    transformer: ScopedLabel.parse,
 });
 
 defineParameterType({
@@ -112,26 +136,8 @@ export enum RootLabel {
     RELATION,
 }
 
-export class ScopedLabel {
-    private readonly _scope: string;
-    private readonly _role: string;
-
-    constructor(scope: string, role: string) {
-        this._scope = scope;
-        this._role = role;
-    }
-
-    scope(): string {
-        return this._scope;
-    }
-
-    role(): string {
-        return this._role;
-    }
-
-    scopedLabel(): string {
-        return this._scope + ":" + this._role;
-    }
-}
-
 //TODO: scoped labelS (plural form), transaction typeS, possibly investigate if root label and scoped label are gonna mess with me
+
+export function parseList(dataTable: DataTable): string[] {
+    return dataTable.raw().map(row => row[0]);
+}
