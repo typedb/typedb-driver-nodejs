@@ -96,7 +96,7 @@ defineParameterType({
 
 defineParameterType({
     name: "type_label",
-    regexp: /[a-zA-Z0-9]+/,
+    regexp: /[a-zA-Z0-9-_]+/,
     transformer: s => s
 });
 
