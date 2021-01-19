@@ -83,4 +83,8 @@ export class Stream<T> implements AsyncIterable<T> {
     map<TResult>(callbackFn: (value: T) => TResult): Stream<TResult> {
         return new Stream(this._requestId, this._writableStream, this._responseCollector, res => this._transformResponse(res).map(callbackFn));
     }
+
+    filter(callbackFn: (value: T) => unknown): Stream<T> {
+        return new Stream(this._requestId, this._writableStream, this._responseCollector, res => this._transformResponse(res).filter(callbackFn));
+    }
 }
