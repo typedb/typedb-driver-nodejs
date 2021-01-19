@@ -29,10 +29,9 @@ import ValueClass = AttributeType.ValueClass;
 import { RootLabel, ScopedLabel } from "../../config/Parameters";
 
 export const things: Map<string, Thing> = new Map<string, Thing>();
-export const getThing = (name: string) => things.get(name);
-export const putThing = (name: string, thing: Thing) => things.set(name, thing);
-export const removeThing = (name: string) => things.delete(name);
-export const clearThings = () => things.clear();
+export const getThing: (name: string) => Thing = (name: string) => things.get(name);
+export const putThing: (name: string, thing: Thing) => void = (name: string, thing: Thing) => things.set(name, thing);
+export const clearThings: () => void = () => things.clear();
 
 After(clearThings);
 

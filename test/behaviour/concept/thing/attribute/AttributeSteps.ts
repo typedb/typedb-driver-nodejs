@@ -18,7 +18,7 @@
  */
 
 import { When } from "@cucumber/cucumber";
-import { getThing, putThing, things } from "../ThingSteps";
+import { getThing, putThing} from "../ThingSteps";
 import { tx } from "../../../connection/ConnectionSteps";
 import assert = require("assert");
 import {
