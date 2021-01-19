@@ -28,8 +28,8 @@ export const THREAD_POOL_SIZE = 32;
 
 export let client: GraknClient;
 export const sessions: Session[] = [];
-export const transactions: Map<Session, Transaction[]> = new Map<Session, Transaction[]>();
-export const tx = () => transactions.get(sessions[0])[0];
+export const sessionsToTransactions: Map<Session, Transaction[]> = new Map<Session, Transaction[]>();
+export const tx: () => Transaction = () => sessionsToTransactions.get(sessions[0])[0];
 
 Given("connection has been opened", () => {
     if (client) return;
@@ -47,7 +47,7 @@ async function clearAll() {
         }
     }
     sessions.length = 0;
-    transactions.clear();
+    sessionsToTransactions.clear();
 }
 
 Before(clearAll);
