@@ -12,7 +12,7 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && npm run lint && tsc",
+    "build": "npm run clean && tsc",
     "pretest": "npm run build",
     "test": "npm run test-concept && npm run test-connection && npm run test-query",
     "test-concept": "node test/integration/test-concept.js",
