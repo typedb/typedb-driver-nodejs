@@ -76,9 +76,9 @@ filegroup(
         "//test/behaviour/connection/database:DatabaseSteps.ts",
         "//test/behaviour/connection/session:SessionSteps.ts",
         "//test/behaviour/connection/transaction:TransactionSteps.ts",
-        "//test/behaviour/graql/language/define:DefineSteps.ts",
+        "//test/behaviour/graql:GraqlSteps.ts",
         "//test/behaviour/util:Util.ts",
-        "//:tsconfig-test.json"
+        "//test:tsconfig.json"
     ] + glob(["node_modules/**"]),
     visibility = ["//test/behaviour:__pkg__"],
 )
