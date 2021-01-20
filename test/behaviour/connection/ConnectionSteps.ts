@@ -17,11 +17,12 @@
  * under the License.
  */
 
-import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
+import { Given, After, Before, setDefaultTimeout, BeforeAll } from "@cucumber/cucumber";
 import { GraknClient } from "../../../dist/rpc/GraknClient";
 import { Grakn } from "../../../dist/Grakn";
 import Session = Grakn.Session;
 import Transaction = Grakn.Transaction;
+import assert = require("assert");
 
 setDefaultTimeout(20 * 1000);
 export const THREAD_POOL_SIZE = 32;
@@ -35,23 +36,30 @@ export function tx(): Transaction {
 }
 
 Given("connection has been opened", () => {
-    if (client) return;
+    assert(client);
+});
+
+BeforeAll(() => {
     client = new GraknClient();
 });
 
-async function clearAll() {
-    if (client) {
-        for (const session of sessions) {
-            await session.close()
-        }
-        const databases = await client.databases().all();
-        for (const name of databases) {
-            await client.databases().delete(name);
-        }
+Before(async () => {
+    for (const session of sessions) {
+        await session.close()
+    }
+    const databases = await client.databases().all();
+    for (const name of databases) {
+        await client.databases().delete(name);
     }
     sessions.length = 0;
     sessionsToTransactions.clear();
-}
+});
 
-Before(clearAll);
-After(clearAll);
+After(async () => {
+    for (const session of sessions) {
+        await session.close()
+    }
+    for (const name of await client.databases().all()) {
+        await client.databases().delete(name);
+    }
+});
