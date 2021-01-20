@@ -109,29 +109,35 @@ When("{root_label}\\({type_label}) is abstract: {bool}", async (rootLabel: RootL
 
 When("{root_label}\\({type_label}) set supertype: {type_label}", async (rootLabel: RootLabel, typeLabel: string, superLabel: string) => {
     switch (rootLabel) {
-        case RootLabel.ENTITY:
+        case RootLabel.ENTITY: {
             const entitySuperType = await tx().concepts().getEntityType(superLabel);
             return await (await tx().concepts().getEntityType(typeLabel)).asRemote(tx()).setSupertype(entitySuperType);
-        case RootLabel.ATTRIBUTE:
+        }
+        case RootLabel.ATTRIBUTE: {
             const attributeSuperType = await tx().concepts().getAttributeType(superLabel);
             return await (await tx().concepts().getAttributeType(typeLabel)).asRemote(tx()).setSupertype(attributeSuperType);
-        case RootLabel.RELATION:
+        }
+        case RootLabel.RELATION: {
             const relationSuperType = await tx().concepts().getRelationType(superLabel);
             return await (await tx().concepts().getRelationType(typeLabel)).asRemote(tx()).setSupertype(relationSuperType);
+        }
     }
 });
 
 When("{root_label}\\({type_label}) set supertype: {type_label}; throws exception", async (rootLabel: RootLabel, typeLabel: string, superLabel: string) => {
     switch (rootLabel) {
-        case RootLabel.ENTITY:
+        case RootLabel.ENTITY: {
             const entitySuperType = await tx().concepts().getEntityType(superLabel);
             return await assertThrows(async () => await (await tx().concepts().getEntityType(typeLabel)).asRemote(tx()).setSupertype(entitySuperType));
-        case RootLabel.ATTRIBUTE:
+        }
+        case RootLabel.ATTRIBUTE: {
             const attributeSuperType = await tx().concepts().getAttributeType(superLabel);
             return await assertThrows(async () => await (await tx().concepts().getAttributeType(typeLabel)).asRemote(tx()).setSupertype(attributeSuperType));
-        case RootLabel.RELATION:
+        }
+        case RootLabel.RELATION: {
             const relationSuperType = await tx().concepts().getRelationType(superLabel);
             return await assertThrows(async () => await (await tx().concepts().getRelationType(typeLabel)).asRemote(tx()).setSupertype(relationSuperType));
+        }
     }
 });
 
