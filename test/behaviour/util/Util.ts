@@ -18,7 +18,6 @@
  */
 
 import assert = require("assert");
-import { Concept } from "../../../dist/concept/Concept";
 
 export async function assertThrows(testfunc: () => Promise<unknown>): Promise<void> {
     try {
@@ -38,8 +37,4 @@ export async function assertThrowsWithMessage(testfunc: () => Promise<unknown>, 
         return
     }
     assert.fail();
-}
-
-export function assertEqual(firstConcept: Concept, secondConcept: Concept): void {
-    assert.ok(firstConcept.equals(secondConcept));
 }

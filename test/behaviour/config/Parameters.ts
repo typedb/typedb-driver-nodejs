@@ -38,7 +38,7 @@ defineParameterType({
 defineParameterType({
     name: "datetime",
     regexp: /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/,
-    transformer: s => Date.parse(s),
+    transformer: s => new Date(s)
 });
 
 defineParameterType({
@@ -75,7 +75,7 @@ export class ScopedLabel {
         return this._role;
     }
 
-    scopedLabel(): string {
+    toString(): string {
         return this._scope + ":" + this._role;
     }
 
@@ -118,6 +118,10 @@ defineParameterType({
     transformer: s => s
 });
 
+export function parseVar(value: string): string {
+    return value.slice(1);
+}
+
 defineParameterType({
     name: "type_label",
     regexp: /[a-zA-Z0-9-_]+/,
@@ -136,8 +140,8 @@ export enum RootLabel {
     RELATION,
 }
 
-//TODO: scoped labelS (plural form), transaction typeS, possibly investigate if root label and scoped label are gonna mess with me
-
-export function parseList(dataTable: DataTable): string[] {
-    return dataTable.raw().map(row => row[0]);
+export function parseList(dataTable: DataTable): string[]
+export function parseList<T>(dataTable: DataTable, parseFn: (value: string) => T): T[]
+export function parseList<T>(dataTable: DataTable, parseFn: (value: string) => string | T = val => val): (string | T)[]{
+    return dataTable.raw().map(row => parseFn(row[0]));
 }

@@ -38,44 +38,28 @@ export function getThingType(rootLabel: RootLabel, typeLabel: string): Promise<T
     }
 }
 
-When("thing type root get supertypes contain:", async (supertypes: DataTable) => {
-    const actualSupertypes = await (await tx().concepts().getRootThingType()).asRemote(tx()).getSupertypes().collect();
-    for (const type of supertypes.raw()) {
-        let found = false;
-        for (const actualType of actualSupertypes) {
-            if (actualType.getLabel() === type[0]) {found = true; break;}
-        }
-        assert.ok(found);
-    }
+When("thing type root get supertypes contain:", async (supertypesTable: DataTable) => {
+    const supertypes = parseList(supertypesTable);
+    const actuals = await (await tx().concepts().getRootThingType()).asRemote(tx()).getSupertypes().map(tt => tt.getLabel()).collect();
+    supertypes.every(st => assert(actuals.includes(st)));
 });
 
-When("thing type root get supertypes do not contain:", async (supertypes: DataTable) => {
-    const actualSupertypes = (await tx().concepts().getRootThingType()).asRemote(tx()).getSupertypes();
-    for (const type of supertypes.raw()) {
-        for await (const actualType of actualSupertypes) {
-            if (actualType.getLabel() === type[0]) assert.fail();
-        }
-    }
+When("thing type root get supertypes do not contain:", async (supertypesTable: DataTable) => {
+    const supertypes = parseList(supertypesTable);
+    const actuals = await (await tx().concepts().getRootThingType()).asRemote(tx()).getSupertypes().map(tt => tt.getLabel()).collect();
+    supertypes.every(st => assert(!actuals.includes(st)));
 });
 
-When("thing type root get subtypes contain:", async (supertypes: DataTable) => {
-    const actualSupertypes = await (await tx().concepts().getRootThingType()).asRemote(tx()).getSubtypes().collect();
-    for (const type of supertypes.raw()) {
-        let found = false;
-        for (const actualType of actualSupertypes) {
-            if (actualType.getLabel() === type[0]) {found = true; break;}
-        }
-        assert.ok(found);
-    }
+When("thing type root get subtypes contain:", async (subtypesTable: DataTable) => {
+    const subtypes = parseList(subtypesTable);
+    const actuals = await (await tx().concepts().getRootThingType()).asRemote(tx()).getSubtypes().map(tt => tt.getLabel()).collect();
+    subtypes.every(st => assert(actuals.includes(st)));
 });
 
-When("thing type root get subtypes do not contain:", async (supertypes: DataTable) => {
-    const actualSupertypes = await (await tx().concepts().getRootThingType()).asRemote(tx()).getSubtypes().collect();
-    for (const type of supertypes.raw()) {
-        for (const actualType of actualSupertypes) {
-            if (actualType.getLabel() === type[0]) assert.fail();
-        }
-    }
+When("thing type root get subtypes do not contain:", async (subtypesTable: DataTable) => {
+    const subtypes = parseList(subtypesTable);
+    const actuals = await (await tx().concepts().getRootThingType()).asRemote(tx()).getSubtypes().map(tt => tt.getLabel()).collect();
+    subtypes.every(st => assert(!actuals.includes(st)));
 });
 
 When("put {root_label} type: {type_label}", async (rootLabel: RootLabel, typeLabel: string) => {
@@ -300,15 +284,13 @@ When("{root_label}\\({type_label}) unset plays role: {scoped_label}; throws exce
 });
 
 Then("{root_label}\\({type_label}) get playing roles contain:", async (rootLabel: RootLabel, typeLabel: string, roleLabelsTable: DataTable) => {
-    const roleLabels = parseList(roleLabelsTable).map(ScopedLabel.parse);
-    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getPlays().map(
-        r => new ScopedLabel(r.getScope(), r.getLabel())).collect();
+    const roleLabels = parseList(roleLabelsTable);
+    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getPlays().map(r => r.getScopedLabel()).collect();
     roleLabels.every(rl => assert(actuals.includes(rl)));
 });
 
 Then("{root_label}\\({type_label}) get playing roles do not contain:", async (rootLabel: RootLabel, typeLabel: string, roleLabelsTable: DataTable) => {
-    const roleLabels = parseList(roleLabelsTable).map(ScopedLabel.parse);
-    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getPlays().map(
-        r => new ScopedLabel(r.getScope(), r.getLabel())).collect();
+    const roleLabels = parseList(roleLabelsTable);
+    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getPlays().map(r => r.getScopedLabel()).collect();
     roleLabels.every(rl => assert(!actuals.includes(rl)));
 });
