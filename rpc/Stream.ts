@@ -80,11 +80,25 @@ export class Stream<T> implements AsyncIterable<T> {
         return answers;
     }
 
-    map<TResult>(callbackFn: (value: T) => TResult): Stream<TResult> {
-        return new Stream(this._requestId, this._writableStream, this._responseCollector, res => this._transformResponse(res).map(callbackFn));
+    async every(callbackFn: (value: T) => unknown): Promise<boolean> {
+        for await (const item of this) {
+            if (!callbackFn(item)) return false;
+        }
+        return true;
     }
 
     filter(callbackFn: (value: T) => unknown): Stream<T> {
         return new Stream(this._requestId, this._writableStream, this._responseCollector, res => this._transformResponse(res).filter(callbackFn));
+    }
+
+    map<TResult>(callbackFn: (value: T) => TResult): Stream<TResult> {
+        return new Stream(this._requestId, this._writableStream, this._responseCollector, res => this._transformResponse(res).map(callbackFn));
+    }
+
+    async some(callbackFn: (value: T) => unknown): Promise<boolean> {
+        for await (const item of this) {
+            if (callbackFn(item)) return true;
+        }
+        return false;
     }
 }
