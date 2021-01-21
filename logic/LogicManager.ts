@@ -21,9 +21,10 @@ import LogicProto from "grakn-protocol/protobuf/logic_pb";
 import {
     RPCTransaction,
     Rule,
-    RuleImpl,
+    RuleImpl, Stream, TypeImpl,
 } from "../dependencies_internal"
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 
 export class LogicManager {
     private readonly _rpcTransaction: RPCTransaction;
@@ -50,9 +51,19 @@ export class LogicManager {
         return null;
     }
 
+    getRules(): Stream<RuleImpl> {
+        const method = new LogicProto.LogicManager.Req().setGetRulesReq(new LogicProto.LogicManager.GetRules.Req());
+        return this.ruleStream(method, res => res.getGetRulesRes().getRulesList());
+    }
+
     private async execute(logicManagerReq: LogicProto.LogicManager.Req): Promise<LogicProto.LogicManager.Res> {
         const transactionReq = new TransactionProto.Transaction.Req()
             .setLogicManagerReq(logicManagerReq);
         return await this._rpcTransaction.execute(transactionReq, res => res.getLogicManagerRes());
+    }
+
+    private ruleStream(method: LogicProto.LogicManager.Req, ruleListGetter: (res: LogicProto.LogicManager.Res) => LogicProto.Rule[]): Stream<RuleImpl> {
+        const request = new TransactionProto.Transaction.Req().setLogicManagerReq(method);
+        return this._rpcTransaction.stream(request, res => ruleListGetter(res.getLogicManagerRes()).map(RuleImpl.of));
     }
 }
