@@ -18,22 +18,23 @@
  */
 
 import { Then, When } from "@cucumber/cucumber";
-import { sessionsToTransactions, tx } from "../connection/ConnectionSteps";
+import { tx } from "../connection/ConnectionSteps";
 import { assertThrows, assertThrowsWithMessage, splitString } from "../util/Util";
 import { ConceptMap } from "../../../dist/concept/answer/ConceptMap";
 import { Numeric } from "../../../dist/concept/answer/Numeric";
 import { ConceptMapGroup } from "../../../dist/concept/answer/ConceptMapGroup";
 import { NumericGroup } from "../../../dist/concept/answer/NumericGroup";
-import assert = require("assert");
 import { Concept } from "../../../dist/concept/Concept";
 import { RoleType } from "../../../dist/concept/type/RoleType";
 import { Type } from "../../../dist/concept/type/Type";
 import { AttributeType } from "../../../dist/concept/type/AttributeType";
-import ValueClass = AttributeType.ValueClass;
 import { Attribute } from "../../../dist/concept/thing/Attribute";
 import { parseBool } from "../config/Parameters";
-import { Thing } from "../../../dist/concept/thing/Thing";
+import { RemoteThing, Thing } from "../../../dist/concept/thing/Thing";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
+import { fail } from "assert";
+import assert = require("assert");
+import ValueClass = AttributeType.ValueClass;
 
 let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -174,7 +175,9 @@ abstract class AttributeMatcher implements ConceptMatcher {
 
     check(attribute: Attribute<ValueClass>) {
         if (attribute.isBoolean()) return attribute.getValue() === parseBool(this.value);
-        else if (attribute.isLong()) return attribute.getValue() === parseInt(this.value);
+        else if (attribute.isLong()) {
+            return attribute.getValue() === parseInt(this.value);
+        }
         else if (attribute.isDouble()) return attribute.getValue() === parseFloat(this.value);
         else if (attribute.isString()) return attribute.getValue() === this.value;
         else if (attribute.isDateTime()) return (attribute.getValue() as Date).getTime() === new Date(this.value).getTime();
@@ -224,7 +227,9 @@ function parseConceptIdentifier(value: string): ConceptMatcher {
     }
 }
 
-async function answerConceptsMatch(answerIdentifier: { [key: string]: string }, answer: ConceptMap): Promise<boolean> {
+type AnswerIdentifier = { [key: string]: string };
+
+async function answerConceptsMatch(answerIdentifier: AnswerIdentifier, answer: ConceptMap): Promise<boolean> {
     for (const [var0, conceptIdentifier] of Object.entries(answerIdentifier)) {
         const matcher = parseConceptIdentifier(conceptIdentifier);
         if (!(await matcher.matches(answer.get(var0)))) return false;
@@ -233,11 +238,11 @@ async function answerConceptsMatch(answerIdentifier: { [key: string]: string }, 
 }
 
 Then("uniquely identify answer concepts", async (answerIdentifiersTable: DataTable) => {
-    const answerIdentifiers: { [key: string]: string }[] = answerIdentifiersTable.hashes();
+    const answerIdentifiers: AnswerIdentifier[] = answerIdentifiersTable.hashes();
     assert.strictEqual(answers.length, answerIdentifiers.length,
         `The number of answers [${answers.length}] should match the number of answer identifiers [${answerIdentifiers.length}`);
 
-    const resultSet: [{ [key: string]: string }, ConceptMap[]][] = answerIdentifiers.map(ai => [ai, []]);
+    const resultSet: [AnswerIdentifier, ConceptMap[]][] = answerIdentifiers.map(ai => [ai, []]);
     for (const answer of answers) {
         for (const [answerIdentifier, matchedAnswers] of resultSet) {
             if (await answerConceptsMatch(answerIdentifier, answer)) {
@@ -248,5 +253,151 @@ Then("uniquely identify answer concepts", async (answerIdentifiersTable: DataTab
 
     for (const [answerIdentifier, answers] of resultSet) {
         assert.strictEqual(answers.length, 1, `Each answer identifier should match precisely 1 answer, but [${answers.length}] matched the identifier [${JSON.stringify(answerIdentifier)}].`);
+    }
+});
+
+Then("order of answer concepts is", async (answerIdentifiersTable: DataTable) => {
+    const answerIdentifiers: AnswerIdentifier[] = answerIdentifiersTable.hashes();
+    assert.strictEqual(answers.length, answerIdentifiers.length,
+        `The number of answers [${answers.length}] should match the number of answer identifiers [${answerIdentifiers.length}`);
+    for (let i = 0; i < answers.length; i++) {
+        const [answer, answerIdentifier] = [answers[i], answerIdentifiers[i]];
+        assert(answerConceptsMatch(answerIdentifier, answer),
+            `The answer at index [${i}] does not match the identifier [${JSON.stringify(answerIdentifier)}].`);
+    }
+});
+
+function getNumericValue(numeric: Numeric) {
+    if (numeric.isNumber()) return numeric.asNumber();
+    else if (numeric.isNaN()) return NaN;
+    else throw new Error(`Unexpected Numeric value: ${numeric}`);
+}
+
+function assertNumericValue(numeric: Numeric, expectedAnswer: number, reason?: string) {
+    if (numeric.isNumber()) {
+        assert(Math.abs(expectedAnswer - numeric.asNumber()) < 0.001, reason);
+    } else {
+        fail();
+    }
+}
+
+Then("aggregate value is: {float}", async (expectedAnswer: number) => {
+    assert(numericAnswer != null, "The last query executed was not an aggregate query.");
+    assertNumericValue(numericAnswer, expectedAnswer);
+});
+
+Then("aggregate answer is not a number", async () => {
+    assert(numericAnswer.isNaN());
+});
+
+class AnswerIdentifierGroup {
+    public static GROUP_COLUMN_NAME = "owner";
+
+    private readonly _ownerIdentifier: string;
+    private readonly _answerIdentifiers: AnswerIdentifier[];
+
+    constructor(rawAnswerIdentifiers: AnswerIdentifier[]) {
+        this._ownerIdentifier = rawAnswerIdentifiers[0][AnswerIdentifierGroup.GROUP_COLUMN_NAME];
+        this._answerIdentifiers = rawAnswerIdentifiers.map(rawAnswerIdentifier => {
+             const answerIdentifier = Object.assign({}, rawAnswerIdentifier);
+             delete answerIdentifier[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
+             return answerIdentifier;
+        });
+    }
+
+    get ownerIdentifier(): string {
+        return this._ownerIdentifier;
+    }
+
+    get answerIdentifiers(): AnswerIdentifier[] {
+        return this._answerIdentifiers;
+    }
+}
+
+Then("answer groups are", async (answerIdentifiersTable: DataTable) => {
+    const rawAnswerIdentifiers: AnswerIdentifier[] = answerIdentifiersTable.hashes();
+    const groupedAnswerIdentifiers: { [key: string]: AnswerIdentifier[] } = {};
+    for (const rawAnswerIdentifier of rawAnswerIdentifiers) {
+        const owner = rawAnswerIdentifier[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
+        if (groupedAnswerIdentifiers[owner]) groupedAnswerIdentifiers[owner].push(rawAnswerIdentifier);
+        else groupedAnswerIdentifiers[owner] = [rawAnswerIdentifier];
+    }
+    const answerIdentifierGroups = Object.values(groupedAnswerIdentifiers).map(rais => new AnswerIdentifierGroup(rais));
+
+    assert.strictEqual(answerGroups.length, answerIdentifierGroups.length,
+        `Expected [${answerIdentifierGroups.length}] answer groups, but found [${answerGroups.length}].`);
+
+    for (const answerIdentifierGroup of answerIdentifierGroups) {
+        const identifier = parseConceptIdentifier(answerIdentifierGroup.ownerIdentifier);
+        const answerGroup = answerGroups.find(async (group) => await identifier.matches(group.owner()));
+        assert(answerGroup, `The group identifier [${JSON.stringify(answerIdentifierGroup.ownerIdentifier)}] does not match any of the answer group owners.`);
+
+        const resultSet: [AnswerIdentifier, ConceptMap[]][] = answerIdentifierGroup.answerIdentifiers.map(ai => [ai, []]);
+        for (const answer0 of answerGroup.conceptMaps()) {
+            for (const [answerIdentifier, matchedAnswers] of resultSet) {
+                console.log(`ownerIdentifier=${JSON.stringify(answerIdentifierGroup.ownerIdentifier)},answerIdentifier=${JSON.stringify(answerIdentifier)}, answer.x.ref=${(await (answer0.get("x").asRemote(tx()) as RemoteThing).getHas(true).next()).getValue()}, answer.y.ref=${(await (answer0.get("y").asRemote(tx()) as RemoteThing).getHas(true).next()).getValue()}`);
+                if (await answerConceptsMatch(answerIdentifier, answer0)) {
+                    matchedAnswers.push(answer0);
+                }
+            }
+        }
+
+        for (const [answerIdentifier, answers] of resultSet) {
+            assert.strictEqual(answers.length, 1, `Each answer identifier should match precisely 1 answer, but [${answers.length}] matched the identifier [${JSON.stringify(answerIdentifier)}].`);
+        }
+    }
+});
+
+Then("group aggregate values are", async (answerIdentifiersTable: DataTable) => {
+    const rawAnswerIdentifiers: AnswerIdentifier[] = answerIdentifiersTable.hashes();
+    const expectations: { [key: string]: number } = {};
+    for (const rawAnswerIdentifier of rawAnswerIdentifiers) {
+        const owner = rawAnswerIdentifier[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
+        expectations[owner] = parseFloat(rawAnswerIdentifier.value);
+    }
+    assert.strictEqual(numericAnswerGroups.length, Object.keys(expectations).length,
+        `Expected [${Object.keys(expectations).length}], but found [${numericAnswerGroups.length}].`);
+
+    for (const [ownerIdentifier, expectedAnswer] of Object.entries(expectations)) {
+        const identifier = parseConceptIdentifier(ownerIdentifier);
+        const numericGroup = numericAnswerGroups.find(group => identifier.matches(group.owner()));
+        assert(numericGroup, `The group identifier [${JSON.stringify(ownerIdentifier)}] does not match any of the answer group owners.`);
+
+        const actualAnswer = getNumericValue(numericGroup.numeric());
+        assertNumericValue(numericGroup.numeric(), expectedAnswer,
+            `Expected answer [${expectedAnswer}] for group [${JSON.stringify(ownerIdentifier)}], but got [${actualAnswer}]`);
+    }
+});
+
+function variableFromTemplatePlaceholder(placeholder: string): string {
+    if (placeholder.endsWith(".iid")) return placeholder.replace(".iid", "").replace("answer.", "");
+    else throw new Error("Cannot replace template not based on IID.");
+}
+
+function applyQueryTemplate(template: string, answer: ConceptMap): string {
+    let query = "";
+    const pattern = /<(.+?)>/g;
+    let i = 0;
+    let match: RegExpExecArray;
+    while (match = pattern.exec(template)) {
+        const requiredVariable = variableFromTemplatePlaceholder(match[1]);
+        query += template.substring(i, match.index);
+        if (answer.map().has(requiredVariable)) {
+            const concept = answer.get(requiredVariable);
+            if (!concept.isThing()) throw new TypeError("Cannot apply IID templating to Types");
+            query += (concept as Thing).getIID();
+        } else {
+            throw new Error(`No IID available for template placeholder: [${match[0]}]`);
+        }
+        i = match.index + match[0].length;
+    }
+    query += template.substring(i);
+    return query;
+}
+
+Then("each answer satisfies", async (template: string) => {
+    for (const answer of answers) {
+        const query = applyQueryTemplate(template, answer);
+        assert.strictEqual((await tx().query().match(query).collect()).length, 1);
     }
 });
