@@ -21,10 +21,9 @@ import LogicProto from "grakn-protocol/protobuf/logic_pb";
 import {
     RPCTransaction,
     Rule,
-    RuleImpl, Stream, TypeImpl,
+    RuleImpl, Stream,
 } from "../dependencies_internal"
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
-import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 
 export class LogicManager {
     private readonly _rpcTransaction: RPCTransaction;
