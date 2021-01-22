@@ -36,7 +36,8 @@ checkstyle_test(
         "common/*"
     ]),
     exclude = glob([
-        "**/package.json",
+        "tsconfig.json",
+        "deployment/package.json",
     ]),
     license_type = "apache",
 )
