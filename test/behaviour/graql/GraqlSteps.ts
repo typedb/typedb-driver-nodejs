@@ -30,7 +30,7 @@ import { Type } from "../../../dist/concept/type/Type";
 import { AttributeType } from "../../../dist/concept/type/AttributeType";
 import { Attribute } from "../../../dist/concept/thing/Attribute";
 import { parseBool } from "../config/Parameters";
-import { RemoteThing, Thing } from "../../../dist/concept/thing/Thing";
+import { Thing } from "../../../dist/concept/thing/Thing";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { fail } from "assert";
 import assert = require("assert");
@@ -329,13 +329,18 @@ Then("answer groups are", async (answerIdentifiersTable: DataTable) => {
 
     for (const answerIdentifierGroup of answerIdentifierGroups) {
         const identifier = parseConceptIdentifier(answerIdentifierGroup.ownerIdentifier);
-        const answerGroup = answerGroups.find(async (group) => await identifier.matches(group.owner()));
+        let answerGroup: ConceptMapGroup;
+        for (const group of answerGroups) {
+            if (await identifier.matches(group.owner())) {
+                answerGroup = group;
+                break;
+            }
+        }
         assert(answerGroup, `The group identifier [${JSON.stringify(answerIdentifierGroup.ownerIdentifier)}] does not match any of the answer group owners.`);
 
         const resultSet: [AnswerIdentifier, ConceptMap[]][] = answerIdentifierGroup.answerIdentifiers.map(ai => [ai, []]);
         for (const answer0 of answerGroup.conceptMaps()) {
             for (const [answerIdentifier, matchedAnswers] of resultSet) {
-                console.log(`ownerIdentifier=${JSON.stringify(answerIdentifierGroup.ownerIdentifier)},answerIdentifier=${JSON.stringify(answerIdentifier)}, answer.x.ref=${(await (answer0.get("x").asRemote(tx()) as RemoteThing).getHas(true).next()).getValue()}, answer.y.ref=${(await (answer0.get("y").asRemote(tx()) as RemoteThing).getHas(true).next()).getValue()}`);
                 if (await answerConceptsMatch(answerIdentifier, answer0)) {
                     matchedAnswers.push(answer0);
                 }
@@ -360,7 +365,13 @@ Then("group aggregate values are", async (answerIdentifiersTable: DataTable) => 
 
     for (const [ownerIdentifier, expectedAnswer] of Object.entries(expectations)) {
         const identifier = parseConceptIdentifier(ownerIdentifier);
-        const numericGroup = numericAnswerGroups.find(group => identifier.matches(group.owner()));
+        let numericGroup;
+        for (const group of numericAnswerGroups) {
+            if (await identifier.matches(group.owner())) {
+                numericGroup = group;
+                break;
+            }
+        }
         assert(numericGroup, `The group identifier [${JSON.stringify(ownerIdentifier)}] does not match any of the answer group owners.`);
 
         const actualAnswer = getNumericValue(numericGroup.numeric());
