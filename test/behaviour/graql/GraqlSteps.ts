@@ -390,7 +390,7 @@ function applyQueryTemplate(template: string, answer: ConceptMap): string {
     const pattern = /<(.+?)>/g;
     let i = 0;
     let match: RegExpExecArray;
-    while (match = pattern.exec(template)) {
+    while ((match = pattern.exec(template))) {
         const requiredVariable = variableFromTemplatePlaceholder(match[1]);
         query += template.substring(i, match.index);
         if (answer.map().has(requiredVariable)) {
