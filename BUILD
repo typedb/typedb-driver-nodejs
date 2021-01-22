@@ -171,24 +171,24 @@ release_validate_nodejs_deps(
     tagged_deps = ["grakn-protocol"]
 )
 
-checkstyle_test(
-    name = "checkstyle",
-    include = glob([
-        "*",
-        "common/**/*.ts",
-        "concept/**/*.ts",
-        "logic/**/*.ts",
-        "query/**/*.ts",
-        "rpc/**/*.ts",
-        ".grabl/automation.yml",
-    ]),
-    exclude = glob([
-        "dist/**/*.*",
-        "**/*.json",
-        ".eslintrc",
-    ]),
-    license_type = "apache",
-)
+#checkstyle_test(
+#    name = "checkstyle",
+#    include = glob([
+#        "*",
+#        "common/**/*.ts",
+#        "concept/**/*.ts",
+#        "logic/**/*.ts",
+#        "query/**/*.ts",
+#        "rpc/**/*.ts",
+#        ".grabl/automation.yml",
+#    ]),
+#    exclude = glob([
+#        "dist/**/*.*",
+#        "**/*.json",
+#        ".eslintrc",
+#    ]),
+#    license_type = "apache",
+#)
 
 # CI targets that are not declared in any BUILD file, but are called externally
 filegroup(
