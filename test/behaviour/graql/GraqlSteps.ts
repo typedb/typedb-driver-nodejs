@@ -100,9 +100,26 @@ Then("graql delete; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().delete(query));
 });
 
+When("graql update", (query: string) => {
+    tx().query().update(query);
+});
+
+Then("graql update; throws exception containing {string}", async (exceptionString: string, query: string) => {
+    await assertThrowsWithMessage(async () => await tx().query().update(query).next(), exceptionString);
+});
+
+Then("graql update; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query().update(query).next());
+});
+
 When("get answers of graql insert", async (query: string) => {
     clearAnswers();
     answers = await tx().query().insert(query).collect();
+});
+
+When("get answers of graql update", async (query: string) => {
+    clearAnswers();
+    answers = await tx().query().update(query).collect();
 });
 
 When("get answers of graql match", async (query: string) => {
