@@ -150,6 +150,13 @@ When("relation {var} add player for role\\({type_label}): {var}", async (relatio
     await relation.asRemote(tx()).addPlayer(roleType, player);
 });
 
+When("relation {var} add player for role\\({type_label}): {var}; throws exception", async (relationName:string, typeLabel: string, playerName: string) => {
+    const relation = get(relationName) as Relation;
+    const roleType = await (await relation.asRemote(tx()).getType()).asRemote(tx()).getRelates(typeLabel);
+    const player = get(playerName);
+    await assertThrows(async () => relation.asRemote(tx()).addPlayer(roleType, player));
+});
+
 When("relation {var} remove player for role\\({type_label}): {var}", async (relationName:string, typeLabel: string, playerName: string) => {
     const relation = get(relationName) as Relation;
     const roleType = await (await relation.asRemote(tx()).getType()).asRemote(tx()).getRelates(typeLabel);
