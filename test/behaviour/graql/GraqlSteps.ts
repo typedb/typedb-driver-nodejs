@@ -35,6 +35,7 @@ import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { fail } from "assert";
 import assert = require("assert");
 import ValueClass = AttributeType.ValueClass;
+import { get } from "../concept/thing/ThingSteps";
 
 let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -148,6 +149,19 @@ When("get answers of graql match group aggregate", async (query: string) => {
 
 Then("answer size is: {number}", async (expectedAnswers: number) => {
     assert.strictEqual(answers.length, expectedAnswers, `Expected [${expectedAnswers}], but got [${answers.length}]`);
+});
+
+Then("rules contain: {type_label}", async (ruleLabel: string) => {
+    for await (const rule of (await tx().logic().getRules())) {
+        if (rule.getLabel() === ruleLabel) return;
+    }
+    assert.fail();
+});
+
+Then("rules do not contain: {type_label}", async (ruleLabel: string) => {
+    for await (const rule of (await tx().logic().getRules())) {
+        if (rule.getLabel() === ruleLabel) assert.fail();
+    }
 });
 
 interface ConceptMatcher {
