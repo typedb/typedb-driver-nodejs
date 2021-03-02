@@ -23,9 +23,9 @@ import {
     Entity,
     RemoteEntity,
     EntityTypeImpl,
-    Grakn, ThingTypeImpl, Bytes,
+    GraknClient, ThingTypeImpl, Bytes,
 } from "../../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 
 export class EntityImpl extends ThingImpl implements Entity {

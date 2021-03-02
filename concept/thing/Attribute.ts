@@ -21,11 +21,11 @@ import {
     Thing,
     RemoteThing,
     AttributeType,
-    Grakn,
+    GraknClient,
     Merge, Stream, ThingType,
 } from "../../dependencies_internal";
 import ValueClass = AttributeType.ValueClass;
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 
 export interface Attribute<T extends ValueClass> extends Thing {
     getValue(): T;

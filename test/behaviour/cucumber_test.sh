@@ -40,7 +40,7 @@ echo Successfully unarchived Grakn Core distribution.
 echo Starting Grakn Core Server
 mkdir ./grakn_core_distribution/"$DIRECTORY"/grakn_core_test
 ./grakn_core_distribution/"$DIRECTORY"/grakn server --data grakn_core_test &
-sleep 10
+sleep 5
 echo Unarchiving client.
 tar -xf client-nodejs.tar.gz
 echo Client unarchived.

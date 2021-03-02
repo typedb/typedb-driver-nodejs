@@ -22,11 +22,11 @@ import {
     RemoteThingType ,
     Relation,
     RoleType,
-    Grakn,
+    GraknClient,
     Merge,
     Stream,
 } from "../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 
 export interface RelationType extends ThingType {
     asRemote(transaction: Transaction): RemoteRelationType;

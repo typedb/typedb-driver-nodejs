@@ -22,13 +22,13 @@ import {
     RemoteThingTypeImpl,
     RoleType,
     RemoteRoleType,
-    Grakn,
+    GraknClient,
     RelationTypeImpl,
     Stream,
     TypeImpl,
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 
 export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
     private readonly _scope: string;

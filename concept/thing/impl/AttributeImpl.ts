@@ -40,12 +40,12 @@ import {
     LongAttributeTypeImpl,
     StringAttributeTypeImpl,
     AttributeType,
-    Grakn,
+    GraknClient,
     Merge,
     Stream, ConceptProtoBuilder, GraknClientError, ErrorMessage, ThingTypeImpl, Bytes,
 } from "../../../dependencies_internal";
 import ValueClass = AttributeType.ValueClass;
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 
 export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl implements Attribute<T> {

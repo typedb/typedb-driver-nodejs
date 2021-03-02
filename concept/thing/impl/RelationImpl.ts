@@ -25,12 +25,12 @@ import {
     Thing,
     RelationTypeImpl,
     RoleType,
-    Grakn,
+    GraknClient,
     Stream,
-    RPCTransaction,
+    TransactionRPC,
     RoleTypeImpl, ConceptProtoBuilder, ThingTypeImpl, TypeImpl, Bytes,
 } from "../../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 
@@ -71,7 +71,7 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
             .setRelationGetPlayersByRoleTypeReq(new ConceptProto.Relation.GetPlayersByRoleType.Req())
             .setIid(Bytes.hexStringToBytes(this.getIID()));
         const request = new TransactionProto.Transaction.Req().setThingReq(method);
-        const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList());
+        const stream = (this.transaction as TransactionRPC).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList());
         const rolePlayerMap = new Map<RoleTypeImpl, ThingImpl[]>();
         for await (const rolePlayer of stream) {
             const role = TypeImpl.of(rolePlayer.getRoleType()) as RoleTypeImpl;

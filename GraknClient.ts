@@ -17,19 +17,23 @@
  * under the License.
  */
 
-import { GraknOptions,
-    ConceptManager,
-    QueryManager,
-    LogicManager,
-} from "./dependencies_internal";
+import { GraknOptions, ConceptManager, QueryManager, LogicManager, ClientRPC } from "./dependencies_internal";
 
-export namespace Grakn {
-    export interface Client {
-        session(databaseName: string, type: SessionType, options?: GraknOptions): Promise<Session>;
+export interface GraknClient {
+    session(databaseName: string, type: GraknClient.SessionType, options?: GraknOptions): Promise<GraknClient.Session>;
 
-        databases(): DatabaseManager;
+    databases(): GraknClient.DatabaseManager;
 
-        close(): void;
+    isOpen(): boolean;
+
+    close(): void;
+}
+export namespace GraknClient {
+
+    export const DEFAULT_ADDRESS = "localhost:1729";
+
+    export function core(address: string = DEFAULT_ADDRESS): GraknClient {
+        return new ClientRPC(address);
     }
 
     export interface DatabaseManager {

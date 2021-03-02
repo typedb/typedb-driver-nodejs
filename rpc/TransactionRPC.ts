@@ -17,23 +17,15 @@
  * under the License.
  */
 
-import {
-    Grakn,
-    ConceptManager,
-    ProtoBuilder,
-    GraknOptions,
-    QueryManager,
-    uuidv4,
-    BlockingQueue,
-    Stream, GraknClientError, ErrorMessage, LogicManager,
-} from "../dependencies_internal";
+import { GraknClient, ConceptManager, OptionsProtoBuilder, GraknOptions, QueryManager, uuidv4, BlockingQueue,
+    Stream, GraknClientError, ErrorMessage, LogicManager } from "../dependencies_internal";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import GraknProto from "grakn-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import { ClientDuplexStream } from "@grpc/grpc-js";
 
-export class RPCTransaction implements Grakn.Transaction {
-    private readonly _type: Grakn.TransactionType;
+export class TransactionRPC implements GraknClient.Transaction {
+    private readonly _type: GraknClient.TransactionType;
     private readonly _conceptManager: ConceptManager;
     private readonly _logicManager: LogicManager;
     private readonly _queryManager: QueryManager;
@@ -46,7 +38,7 @@ export class RPCTransaction implements Grakn.Transaction {
     private _transactionWasClosed: boolean;
     private _networkLatencyMillis: number;
 
-    constructor(grpcClient: GraknGrpc, type: Grakn.TransactionType) {
+    constructor(grpcClient: GraknGrpc, type: GraknClient.TransactionType) {
         this._type = type;
         this._conceptManager = new ConceptManager(this);
         this._logicManager = new LogicManager(this);
@@ -58,7 +50,7 @@ export class RPCTransaction implements Grakn.Transaction {
         this._grpcClient = grpcClient;
     }
 
-    async open(sessionId: string, options?: GraknOptions): Promise<RPCTransaction> {
+    async open(sessionId: string, options?: GraknOptions): Promise<TransactionRPC> {
         this.openTransactionStream();
         this._streamIsOpen = true;
 
@@ -66,8 +58,8 @@ export class RPCTransaction implements Grakn.Transaction {
             .setOpenReq(
                 new TransactionProto.Transaction.Open.Req()
                     .setSessionId(sessionId)
-                    .setType(this._type === Grakn.TransactionType.READ ? TransactionProto.Transaction.Type.READ : TransactionProto.Transaction.Type.WRITE)
-                    .setOptions(ProtoBuilder.options(options))
+                    .setType(this._type === GraknClient.TransactionType.READ ? TransactionProto.Transaction.Type.READ : TransactionProto.Transaction.Type.WRITE)
+                    .setOptions(OptionsProtoBuilder.options(options))
             );
         const startTime = new Date().getTime();
         const res = await this.execute(openRequest, res => res.getOpenRes());
@@ -77,7 +69,7 @@ export class RPCTransaction implements Grakn.Transaction {
         return this;
     }
 
-    public type(): Grakn.TransactionType {
+    public type(): GraknClient.TransactionType {
         return this._type;
     }
 
@@ -169,8 +161,8 @@ export class RPCTransaction implements Grakn.Transaction {
 
 class ResponseCollectors {
     private readonly _map: { [requestId: string]: ResponseCollector };
-    private readonly _transaction: RPCTransaction;
-    constructor(transaction: RPCTransaction) {
+    private readonly _transaction: TransactionRPC;
+    constructor(transaction: TransactionRPC) {
         this._map = {};
         this._transaction = transaction;
     }

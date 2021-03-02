@@ -18,9 +18,9 @@
  */
 
 import {
-    Grakn,
+    GraknClient,
 } from "../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 
 export interface Concept {
     asRemote(transaction: Transaction): RemoteConcept;

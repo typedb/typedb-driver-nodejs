@@ -17,11 +17,11 @@
  * under the License.
  */
 
-import { GraknOptions } from "./dependencies_internal";
+import { GraknOptions } from "../../dependencies_internal";
 import options_pb from "grakn-protocol/protobuf/options_pb";
 import Options = options_pb.Options;
 
-export namespace ProtoBuilder {
+export namespace OptionsProtoBuilder {
     export function options(options?: GraknOptions): Options {
         const optionsProto = new Options();
         if (options) {

@@ -20,12 +20,12 @@
 import { GraknClient as GraknGrpc } from "grakn-protocol/protobuf/grakn_grpc_pb"
 import {
     ErrorMessage,
-    Grakn, GraknClientError
+    GraknClient, GraknClientError
 } from "../dependencies_internal";
 import database_pb from "grakn-protocol/protobuf/database_pb";
 const { Database } = database_pb;
 
-export class RPCDatabaseManager implements Grakn.DatabaseManager {
+export class RPCDatabaseManager implements GraknClient.DatabaseManager {
     private _grpcClient: GraknGrpc;
 
     constructor(client: GraknGrpc) {

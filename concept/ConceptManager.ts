@@ -24,7 +24,7 @@ import {
     RelationType,
     AttributeType,
     EntityTypeImpl,
-    RPCTransaction,
+    TransactionRPC,
     RelationTypeImpl,
     AttributeTypeImpl,
     Thing,
@@ -36,10 +36,10 @@ import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 
 export class ConceptManager {
-    private readonly _rpcTransaction: RPCTransaction;
+    private readonly _transactionRPC: TransactionRPC;
 
-    constructor (rpcTransaction: RPCTransaction) {
-        this._rpcTransaction = rpcTransaction;
+    constructor (transactionRPC: TransactionRPC) {
+        this._transactionRPC = transactionRPC;
     }
 
     async getRootThingType(): Promise<ThingType> {
@@ -122,6 +122,6 @@ export class ConceptManager {
     private async execute(conceptManagerReq: ConceptProto.ConceptManager.Req): Promise<ConceptProto.ConceptManager.Res> {
         const transactionReq = new TransactionProto.Transaction.Req()
             .setConceptManagerReq(conceptManagerReq);
-        return await this._rpcTransaction.execute(transactionReq, res => res.getConceptManagerRes());
+        return await this._transactionRPC.execute(transactionReq, res => res.getConceptManagerRes());
     }
 }

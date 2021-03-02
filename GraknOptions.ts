@@ -72,7 +72,7 @@ export class GraknOptions {
 
     setBatchSize(batchSize: number): GraknOptions {
         if (batchSize < 1) {
-            throw new GraknClientError(ErrorMessage.Client.NONPOSITIVE_BATCH_SIZE.message(batchSize))
+            throw new GraknClientError(ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED.message(batchSize))
         }
         this._batchSize = batchSize;
         return this;

@@ -17,25 +17,17 @@
  * under the License.
  */
 
-import {
-    RPCTransaction,
-    GraknOptions,
-    ProtoBuilder,
-    Stream,
-    ConceptMap,
-    Numeric,
-    ConceptMapGroup,
-    NumericGroup
-} from "../dependencies_internal";
+import { TransactionRPC, GraknOptions, OptionsProtoBuilder, Stream, ConceptMap, Numeric, ConceptMapGroup,
+    NumericGroup } from "../dependencies_internal";
 import QueryProto from "grakn-protocol/protobuf/query_pb";
 import Query = QueryProto.Query;
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import Transaction = TransactionProto.Transaction;
 
 export class QueryManager {
-    private readonly _rpcTransaction: RPCTransaction;
-    constructor (transaction: RPCTransaction) {
-        this._rpcTransaction = transaction;
+    private readonly _transactionRPC: TransactionRPC;
+    constructor (transaction: TransactionRPC) {
+        this._transactionRPC = transaction;
     }
 
     public match(query: string, options?: GraknOptions): Stream<ConceptMap> {
@@ -98,13 +90,13 @@ export class QueryManager {
 
     private iterateQuery<T>(request: Query.Req, options: GraknOptions, responseReader: (res: Transaction.Res) => T[]): Stream<T> {
         const transactionRequest = new Transaction.Req()
-            .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
-        return this._rpcTransaction.stream(transactionRequest, responseReader);
+            .setQueryReq(request.setOptions(OptionsProtoBuilder.options(options)));
+        return this._transactionRPC.stream(transactionRequest, responseReader);
     }
 
     private async runQuery<T>(request: Query.Req, options: GraknOptions, mapper: (res: Transaction.Res) => T): Promise<T> {
         const transactionRequest = new Transaction.Req()
-            .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
-        return this._rpcTransaction.execute(transactionRequest, mapper);
+            .setQueryReq(request.setOptions(OptionsProtoBuilder.options(options)));
+        return this._transactionRPC.execute(transactionRequest, mapper);
     }
 }

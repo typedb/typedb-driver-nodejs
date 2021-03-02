@@ -18,7 +18,7 @@
  */
 
 import {
-    Grakn,
+    GraknClient,
     GraknOptions,
     RPCDatabaseManager,
     RPCSession,
@@ -28,25 +28,32 @@ import {GraknClient as GraknGrpc} from "grakn-protocol/protobuf/grakn_grpc_pb";
 
 export const DEFAULT_URI = "localhost:1729";
 
-export class GraknClient implements Grakn.Client {
-    private readonly _databases: Grakn.DatabaseManager;
+export class ClientRPC implements GraknClient {
+    private readonly _databases: GraknClient.DatabaseManager;
     private readonly _graknGrpc: GraknGrpc;
+    private _isOpen: boolean;
 
     constructor(address = DEFAULT_URI) {
         this._graknGrpc = new GraknGrpc(address, ChannelCredentials.createInsecure());
         this._databases = new RPCDatabaseManager(this._graknGrpc);
+        this._isOpen = true;
     }
 
-    async session(database: string, type: Grakn.SessionType, options?: GraknOptions): Promise<Grakn.Session> {
+    async session(database: string, type: GraknClient.SessionType, options?: GraknOptions): Promise<GraknClient.Session> {
         const session = new RPCSession(this._graknGrpc, database, type);
         return session.open(options);
     }
 
-    databases(): Grakn.DatabaseManager {
+    databases(): GraknClient.DatabaseManager {
         return this._databases;
     }
 
+    isOpen(): boolean {
+        return this._isOpen;
+    }
+
     close(): void {
+        this._isOpen = false;
         closeClient(this._graknGrpc);
     }
 }

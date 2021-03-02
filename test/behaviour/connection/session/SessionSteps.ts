@@ -20,10 +20,10 @@
 import { When, Then } from "@cucumber/cucumber";
 import { client, sessions } from "../ConnectionSteps";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { Grakn } from "../../../../dist/Grakn";
-import SessionType = Grakn.SessionType;
+import { GraknClient } from "../../../../dist/GraknClient";
+import SessionType = GraknClient.SessionType;
 import assert = require("assert");
-import Session = Grakn.Session;
+import Session = GraknClient.Session;
 
 When("connection open(s) schema session for database: {word}", async (name: string) => {
     sessions.push(await client.session(name, SessionType.SCHEMA))

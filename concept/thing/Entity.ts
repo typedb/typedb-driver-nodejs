@@ -21,10 +21,10 @@ import {
     Thing,
     RemoteThing,
     EntityType,
-    Grakn,
+    GraknClient,
     Merge,
 } from "../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 
 export interface Entity extends Thing {
     asRemote(transaction: Transaction): RemoteEntity;

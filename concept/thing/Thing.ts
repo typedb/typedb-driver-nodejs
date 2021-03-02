@@ -34,12 +34,12 @@ import {
     LongAttributeType,
     StringAttributeType,
     RoleType,
-    Grakn,
+    GraknClient,
     Merge,
     Stream,
     Relation,
 } from "../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import ValueClass = AttributeType.ValueClass;
 
 export interface Thing extends Concept {
