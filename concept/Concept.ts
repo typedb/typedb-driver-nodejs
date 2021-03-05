@@ -17,9 +17,7 @@
  * under the License.
  */
 
-import {
-    GraknClient,
-} from "../dependencies_internal";
+import { GraknClient } from "../dependencies_internal";
 import Transaction = GraknClient.Transaction;
 
 export interface Concept {

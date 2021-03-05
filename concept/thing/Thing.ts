@@ -44,11 +44,11 @@ import ValueClass = AttributeType.ValueClass;
 
 export interface Thing extends Concept {
     getIID(): string;
+    getType(): ThingType;
     asRemote(transaction: Transaction): RemoteThing;
 }
 
 export interface RemoteThing extends Merge<RemoteConcept, Thing> {
-    getType(): Promise<ThingType>;
     isInferred(): Promise<boolean>;
 
     setHas(attribute: Attribute<ValueClass>): Promise<void>;

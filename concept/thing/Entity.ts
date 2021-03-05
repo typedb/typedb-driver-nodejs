@@ -27,10 +27,10 @@ import {
 import Transaction = GraknClient.Transaction;
 
 export interface Entity extends Thing {
+    getType(): EntityType;
     asRemote(transaction: Transaction): RemoteEntity;
 }
 
 export interface RemoteEntity extends Merge<RemoteThing, Entity> {
-    getType(): Promise<EntityType>;
     asRemote(transaction: Transaction): RemoteEntity;
 }

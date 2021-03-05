@@ -29,12 +29,11 @@ import {
 import Transaction = GraknClient.Transaction;
 
 export interface Relation extends Thing {
+    getType(): RelationType;
     asRemote(transaction: Transaction): RemoteRelation;
 }
 
 export interface RemoteRelation extends Merge<RemoteThing, Relation> {
-    getType(): Promise<RelationType>;
-
     addPlayer(roleType: RoleType, player: Thing): Promise<void>;
     removePlayer(roleType: RoleType, player: Thing): Promise<void>;
 
