@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { GraknClient, GraknOptions, DatabaseManagerRPC, SessionRPC } from "../dependencies_internal";
+import { GraknClient, GraknOptions, DatabaseManagerRPC, SessionRPC, SessionType } from "../dependencies_internal";
 import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
 import {GraknClient as GraknGrpc} from "grakn-protocol/protobuf/grakn_grpc_pb";
 
@@ -37,7 +37,7 @@ export class ClientRPC implements GraknClient {
         this._isOpen = true;
     }
 
-    async session(database: string, type: GraknClient.SessionType, options?: GraknOptions): Promise<GraknClient.Session> {
+    async session(database: string, type: SessionType, options?: GraknOptions): Promise<GraknClient.Session> {
         const session = new SessionRPC(this, database, type);
         this._sessions[session.id()] = session;
         return session.open(options);

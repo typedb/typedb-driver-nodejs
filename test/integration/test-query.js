@@ -17,18 +17,18 @@
  * under the License.
  */
 
-const { GraknClient } = require("../../dist/GraknClient");
-const { SessionType, TransactionType } = GraknClient;
-const { GraknOptions } = require("../../dist/GraknOptions")
+const { GraknClient, SessionType, TransactionType } = require("../../dist/GraknClient");
+const { GraknOptions } = require("../../dist/GraknOptions");
 const assert = require("assert");
 
 async function run() {
     const client = GraknClient.core();
     try {
-        const names = await client.databases().all();
-        console.log(`get databases - SUCCESS - the databases are [${names}]`);
-        if (names.includes("grakn")) {
-            await client.databases().delete("grakn");
+        const dbs = await client.databases().all();
+        console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
+        const grakn = dbs.find(x => x.name() === "grakn");
+        if (grakn) {
+            await grakn.delete();
             console.log(`delete database - SUCCESS - 'grakn' has been deleted`);
         }
         await client.databases().create("grakn");
@@ -138,7 +138,9 @@ async function run() {
         process.exit(1);
     }
     try {
-        session = await client.session("grakn", SessionType.DATA, GraknOptions.core().setSessionIdleTimeoutMillis(3600000));
+        session = await client.session("grakn", SessionType.DATA, GraknOptions.core({
+            sessionIdleTimeoutMillis: 3600000,
+        }));
         console.log("open data session - SUCCESS");
     } catch (err) {
         console.error(`open data session - ERROR: ${err.stack || err}`);

@@ -17,19 +17,19 @@
  * under the License.
  */
 
-const { GraknClient } = require("../../dist/GraknClient");
+const { GraknClient, SessionType, TransactionType } = require("../../dist/GraknClient");
 const { AttributeType } = require("../../dist/concept/type/AttributeType");
-const { SessionType, TransactionType } = GraknClient;
 const assert = require("assert");
 
 async function run() {
     const client = GraknClient.core();
 
     try {
-        const names = await client.databases().all();
-        console.log(`get databases - SUCCESS - the databases are [${names}]`);
-        if (names.includes("grakn")) {
-            await client.databases().delete("grakn");
+        const dbs = await client.databases().all();
+        console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
+        const grakn = dbs.find(x => x.name() === "grakn");
+        if (grakn) {
+            await grakn.delete();
             console.log(`delete database - SUCCESS - 'grakn' has been deleted`);
         }
         await client.databases().create("grakn");

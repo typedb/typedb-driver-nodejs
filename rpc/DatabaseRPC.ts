@@ -45,4 +45,8 @@ export class DatabaseRPC implements GraknClient.Database {
             });
         });
     }
+
+    toString(): string {
+        return this._name;
+    }
 }

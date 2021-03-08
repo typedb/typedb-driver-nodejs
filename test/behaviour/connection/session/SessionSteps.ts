@@ -20,8 +20,7 @@
 import { When, Then } from "@cucumber/cucumber";
 import { client, sessions } from "../ConnectionSteps";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { GraknClient } from "../../../../dist/GraknClient";
-import SessionType = GraknClient.SessionType;
+import { GraknClient, SessionType } from "../../../../dist/GraknClient";
 import assert = require("assert");
 import Session = GraknClient.Session;
 

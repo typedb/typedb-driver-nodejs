@@ -17,15 +17,17 @@
  * under the License.
  */
 
-import { GraknClient, ConceptManager, OptionsProtoBuilder, GraknOptions, QueryManager, uuidv4, BlockingQueue,
-    Stream, GraknClientError, ErrorMessage, LogicManager } from "../dependencies_internal";
+import {
+    GraknClient, ConceptManager, OptionsProtoBuilder, GraknOptions, QueryManager, uuidv4, BlockingQueue,
+    Stream, GraknClientError, ErrorMessage, LogicManager, TransactionType
+} from "../dependencies_internal";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import GraknProto from "grakn-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import { ClientDuplexStream } from "@grpc/grpc-js";
 
 export class TransactionRPC implements GraknClient.Transaction {
-    private readonly _type: GraknClient.TransactionType;
+    private readonly _type: TransactionType;
     private readonly _conceptManager: ConceptManager;
     private readonly _logicManager: LogicManager;
     private readonly _queryManager: QueryManager;
@@ -36,7 +38,7 @@ export class TransactionRPC implements GraknClient.Transaction {
     private _isOpen: boolean;
     private _networkLatencyMillis: number;
 
-    constructor(grpcClient: GraknGrpc, type: GraknClient.TransactionType) {
+    constructor(grpcClient: GraknGrpc, type: TransactionType) {
         this._type = type;
         this._conceptManager = new ConceptManager(this);
         this._logicManager = new LogicManager(this);
@@ -53,7 +55,7 @@ export class TransactionRPC implements GraknClient.Transaction {
             .setOpenReq(
                 new TransactionProto.Transaction.Open.Req()
                     .setSessionId(sessionId)
-                    .setType(this._type === GraknClient.TransactionType.READ ? TransactionProto.Transaction.Type.READ : TransactionProto.Transaction.Type.WRITE)
+                    .setType(this._type === TransactionType.READ ? TransactionProto.Transaction.Type.READ : TransactionProto.Transaction.Type.WRITE)
                     .setOptions(OptionsProtoBuilder.options(options))
             );
         const startTime = new Date().getTime();
@@ -63,7 +65,7 @@ export class TransactionRPC implements GraknClient.Transaction {
         return this;
     }
 
-    public type(): GraknClient.TransactionType {
+    public type(): TransactionType {
         return this._type;
     }
 

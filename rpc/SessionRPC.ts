@@ -19,12 +19,11 @@
 
 import {
     GraknClient, OptionsProtoBuilder, GraknOptions, TransactionRPC, GraknClientError,
-    ErrorMessage, ClientRPC, DatabaseRPC } from "../dependencies_internal";
+    ErrorMessage, ClientRPC, DatabaseRPC, SessionType, TransactionType
+} from "../dependencies_internal";
 import GraknProto from "grakn-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import SessionProto from "grakn-protocol/protobuf/session_pb";
-import SessionType = GraknClient.SessionType;
-import TransactionType = GraknClient.TransactionType;
 
 export class SessionRPC implements GraknClient.Session {
     private readonly _client: ClientRPC;

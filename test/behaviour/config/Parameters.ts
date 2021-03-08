@@ -20,8 +20,7 @@
 import { defineParameterType } from "@cucumber/cucumber";
 import { AttributeType } from "../../../dist/concept/type/AttributeType";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { GraknClient } from "../../../dist/GraknClient";
-import TransactionType = GraknClient.TransactionType;
+import { TransactionType } from "../../../dist/GraknClient";
 
 export function parseBool(value: string): boolean {
     return value === "true";

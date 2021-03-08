@@ -20,7 +20,7 @@
 import { GraknOptions, ConceptManager, QueryManager, LogicManager, ClientRPC } from "./dependencies_internal";
 
 export interface GraknClient {
-    session(databaseName: string, type: GraknClient.SessionType, options?: GraknOptions): Promise<GraknClient.Session>;
+    session(databaseName: string, type: SessionType, options?: GraknOptions): Promise<GraknClient.Session>;
     databases(): GraknClient.DatabaseManager;
     isOpen(): boolean;
     close(): void;
@@ -82,11 +82,6 @@ export namespace GraknClient {
         database(): Database;
     }
 
-    export enum SessionType {
-        DATA,
-        SCHEMA,
-    }
-
     export interface Transaction {
         type(): TransactionType;
         isOpen(): boolean;
@@ -97,9 +92,14 @@ export namespace GraknClient {
         rollback(): Promise<void>;
         close(): Promise<void>;
     }
+}
 
-    export enum TransactionType {
-        READ,
-        WRITE,
-    }
+export enum SessionType {
+    DATA,
+    SCHEMA,
+}
+
+export enum TransactionType {
+    READ,
+    WRITE,
 }
