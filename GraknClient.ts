@@ -21,13 +21,16 @@ import { GraknOptions, ConceptManager, QueryManager, LogicManager, ClientRPC } f
 
 export interface GraknClient {
     session(databaseName: string, type: GraknClient.SessionType, options?: GraknOptions): Promise<GraknClient.Session>;
-
     databases(): GraknClient.DatabaseManager;
-
     isOpen(): boolean;
-
     close(): void;
+    isCluster(): boolean;
 }
+
+export interface GraknClientCluster extends GraknClient {
+    databases(): GraknClient.DatabaseManagerCluster;
+}
+
 export namespace GraknClient {
 
     export const DEFAULT_ADDRESS = "localhost:1729";
@@ -36,26 +39,47 @@ export namespace GraknClient {
         return new ClientRPC(address);
     }
 
+    // export function cluster(addresses: string[]): GraknClientCluster {
+    //     return new ClientClusterRPC(addresses);
+    // }
+
     export interface DatabaseManager {
         contains(name: string): Promise<boolean>;
-
         create(name: string): Promise<void>;
+        get(name: string): Promise<Database>;
+        all(): Promise<Database[]>;
+    }
 
-        delete(name: string): Promise<void>;
+    export interface DatabaseManagerCluster extends DatabaseManager {
+        get(name: string): Promise<DatabaseCluster>;
+        all(): Promise<DatabaseCluster[]>;
+    }
 
-        all(): Promise<string[]>;
+    export interface Database {
+        name(): string;
+        delete(): Promise<void>;
+    }
+
+    export interface DatabaseCluster extends Database {
+        replicas(): DatabaseReplica[];
+        primaryReplica(): DatabaseReplica;
+        preferredSecondaryReplica(): DatabaseReplica;
+    }
+
+    export interface DatabaseReplica {
+        database(): DatabaseCluster;
+        term(): number;
+        isPrimary(): boolean;
+        isPreferredSecondary(): boolean;
+        // address(): ServerAddress;
     }
 
     export interface Session {
         transaction(type: TransactionType, options?: GraknOptions): Promise<Transaction>;
-
         type(): SessionType;
-
         isOpen(): boolean;
-
         close(): Promise<void>;
-
-        database(): string;
+        database(): Database;
     }
 
     export enum SessionType {
@@ -65,19 +89,12 @@ export namespace GraknClient {
 
     export interface Transaction {
         type(): TransactionType;
-
         isOpen(): boolean;
-
         concepts(): ConceptManager;
-
         logic(): LogicManager;
-
         query(): QueryManager;
-
         commit(): Promise<void>;
-
         rollback(): Promise<void>;
-
         close(): Promise<void>;
     }
 

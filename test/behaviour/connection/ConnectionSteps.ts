@@ -47,8 +47,8 @@ Before(async () => {
         await session.close()
     }
     const databases = await client.databases().all();
-    for (const name of databases) {
-        await client.databases().delete(name);
+    for (const db of databases) {
+        await db.delete();
     }
     sessions.length = 0;
     sessionsToTransactions.clear();
@@ -58,7 +58,7 @@ After(async () => {
     for (const session of sessions) {
         await session.close()
     }
-    for (const name of await client.databases().all()) {
-        await client.databases().delete(name);
+    for (const db of await client.databases().all()) {
+        await db.delete();
     }
 });

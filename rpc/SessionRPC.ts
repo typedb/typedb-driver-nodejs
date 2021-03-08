@@ -17,29 +17,34 @@
  * under the License.
  */
 
-import { GraknClient, OptionsProtoBuilder, GraknOptions, TransactionRPC, GraknClientError,
-    ErrorMessage } from "../dependencies_internal";
+import {
+    GraknClient, OptionsProtoBuilder, GraknOptions, TransactionRPC, GraknClientError,
+    ErrorMessage, ClientRPC, DatabaseRPC } from "../dependencies_internal";
 import GraknProto from "grakn-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import SessionProto from "grakn-protocol/protobuf/session_pb";
+import SessionType = GraknClient.SessionType;
+import TransactionType = GraknClient.TransactionType;
 
-export class RPCSession implements GraknClient.Session {
+export class SessionRPC implements GraknClient.Session {
+    private readonly _client: ClientRPC;
     private readonly _grpcClient: GraknGrpc;
-    private readonly _database: string;
-    private readonly _type: GraknClient.SessionType;
-    private _sessionId: string;
+    private readonly _database: DatabaseRPC;
+    private readonly _type: SessionType;
+    private _id: string;
     private _isOpen: boolean;
     private _pulse: NodeJS.Timeout;
 
-    constructor(grpcClient: GraknGrpc, database: string, type: GraknClient.SessionType) {
-        this._database = database;
+    constructor(client: ClientRPC, database: string, type: SessionType) {
+        this._database = new DatabaseRPC(client.grpcClient(), database);
         this._type = type;
-        this._grpcClient = grpcClient;
+        this._client = client;
+        this._grpcClient = client.grpcClient();
     }
 
-    async open(options: GraknOptions = new GraknOptions()): Promise<GraknClient.Session> {
+    async open(options: GraknOptions = GraknOptions.core()): Promise<SessionRPC> {
         const openReq = new SessionProto.Session.Open.Req()
-            .setDatabase(this._database)
+            .setDatabase(this._database.name())
             .setType(sessionType(this._type))
             .setOptions(OptionsProtoBuilder.options(options));
         this._isOpen = true;
@@ -49,17 +54,17 @@ export class RPCSession implements GraknClient.Session {
                 else resolve(res);
             });
         });
-        this._sessionId = res.getSessionId_asB64();
+        this._id = res.getSessionId_asB64();
         this._pulse = setTimeout(() => this.pulse(), 5000);
         return this;
     }
 
-    transaction(type: GraknClient.TransactionType, options: GraknOptions = new GraknOptions()): Promise<GraknClient.Transaction> {
+    transaction(type: TransactionType, options: GraknOptions = GraknOptions.core()): Promise<TransactionRPC> {
         const transaction = new TransactionRPC(this._grpcClient, type);
-        return transaction.open(this._sessionId, options);
+        return transaction.open(this._id, options);
     }
 
-    type(): GraknClient.SessionType {
+    type(): SessionType {
         return this._type;
     }
 
@@ -71,7 +76,7 @@ export class RPCSession implements GraknClient.Session {
         if (this._isOpen) {
             this._isOpen = false;
             clearTimeout(this._pulse);
-            const req = new SessionProto.Session.Close.Req().setSessionId(this._sessionId);
+            const req = new SessionProto.Session.Close.Req().setSessionId(this._id);
             await new Promise<void>((resolve, reject) => {
                 this._grpcClient.session_close(req, (err) => {
                     if (err) reject(err);
@@ -81,13 +86,17 @@ export class RPCSession implements GraknClient.Session {
         }
     }
 
-    database(): string {
+    database(): DatabaseRPC {
         return this._database;
+    }
+
+    id(): string {
+        return this._id;
     }
 
     private pulse(): void {
         if (!this._isOpen) return;
-        const pulse = new SessionProto.Session.Pulse.Req().setSessionId(this._sessionId);
+        const pulse = new SessionProto.Session.Pulse.Req().setSessionId(this._id);
         this._grpcClient.session_pulse(pulse, (err, res) => {
             if (err || !res.getAlive()) this._isOpen = false;
             else this._pulse = setTimeout(() => this.pulse(), 5000);
@@ -95,13 +104,13 @@ export class RPCSession implements GraknClient.Session {
     }
 }
 
-function sessionType(type: GraknClient.SessionType): SessionProto.Session.Type {
+function sessionType(type: SessionType): SessionProto.Session.Type {
     switch (type) {
-        case GraknClient.SessionType.DATA:
+        case SessionType.DATA:
             return SessionProto.Session.Type.DATA;
-        case GraknClient.SessionType.SCHEMA:
+        case SessionType.SCHEMA:
             return SessionProto.Session.Type.SCHEMA;
         default:
-            throw new GraknClientError(ErrorMessage.Client.UNRECOGNISED_SESSION_TYPE.message())
+            throw new GraknClientError(ErrorMessage.Client.UNRECOGNISED_SESSION_TYPE);
     }
 }

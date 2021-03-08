@@ -33,9 +33,7 @@ export class TransactionRPC implements GraknClient.Transaction {
     private readonly _grpcClient: GraknGrpc;
 
     private _stream: ClientDuplexStream<TransactionProto.Transaction.Req, TransactionProto.Transaction.Res>;
-    private _streamIsOpen: boolean;
-    private _transactionWasOpened: boolean;
-    private _transactionWasClosed: boolean;
+    private _isOpen: boolean;
     private _networkLatencyMillis: number;
 
     constructor(grpcClient: GraknGrpc, type: GraknClient.TransactionType) {
@@ -44,16 +42,13 @@ export class TransactionRPC implements GraknClient.Transaction {
         this._logicManager = new LogicManager(this);
         this._queryManager = new QueryManager(this);
         this._collectors = new ResponseCollectors(this);
-        this._transactionWasClosed = false;
-        this._transactionWasOpened = false;
-        this._streamIsOpen = false;
+        this._isOpen = false;
         this._grpcClient = grpcClient;
     }
 
     async open(sessionId: string, options?: GraknOptions): Promise<TransactionRPC> {
         this.openTransactionStream();
-        this._streamIsOpen = true;
-
+        this._isOpen = true;
         const openRequest = new TransactionProto.Transaction.Req()
             .setOpenReq(
                 new TransactionProto.Transaction.Open.Req()
@@ -65,7 +60,6 @@ export class TransactionRPC implements GraknClient.Transaction {
         const res = await this.execute(openRequest, res => res.getOpenRes());
         const endTime = new Date().getTime();
         this._networkLatencyMillis = endTime - startTime - res.getProcessingTimeMillis();
-        this._transactionWasOpened = true;
         return this;
     }
 
@@ -74,7 +68,7 @@ export class TransactionRPC implements GraknClient.Transaction {
     }
 
     public isOpen(): boolean {
-        return this._transactionWasOpened && !this._transactionWasClosed;
+        return this._isOpen;
     }
 
     public concepts(): ConceptManager {
@@ -106,13 +100,10 @@ export class TransactionRPC implements GraknClient.Transaction {
     }
 
     async close(): Promise<void> {
-        if (this._streamIsOpen) {
-            this._streamIsOpen = false;
+        if (this._isOpen) {
+            this._isOpen = false;
+            this._collectors.clearWithError(new ErrorResponse(new GraknClientError(ErrorMessage.Client.TRANSACTION_CLOSED)));
             this._stream.end();
-        }
-        if (!this._transactionWasClosed) {
-            this._transactionWasClosed = true;
-            this._collectors.clearWithError(new ErrorResponse(new GraknClientError(ErrorMessage.Client.TRANSACTION_CLOSED.message())))
         }
     }
 
@@ -121,7 +112,6 @@ export class TransactionRPC implements GraknClient.Transaction {
         const requestId = uuidv4();
         request.setId(requestId);
         this._collectors.put(requestId, responseCollector);
-        // TODO: we can optionally inject the callback here - perhaps that would be cleaner than using ResponseCollectors?
         this._stream.write(request);
         return responseCollector.take().then(transformResponse);
     }
@@ -152,7 +142,6 @@ export class TransactionRPC implements GraknClient.Transaction {
         });
 
         this._stream.on("end", () => {
-            this._streamIsOpen = false;
             this.close();
         });
         // TODO: look into _stream.on(status) + any other events
@@ -172,7 +161,7 @@ class ResponseCollectors {
     }
 
     put(uuid: string, collector: ResponseCollector) {
-        if (this._transaction["_transactionWasClosed"]) throw new GraknClientError(ErrorMessage.Client.TRANSACTION_CLOSED.message());
+        if (!this._transaction.isOpen()) throw new GraknClientError(ErrorMessage.Client.TRANSACTION_CLOSED);
         this._map[uuid] = collector;
     }
 

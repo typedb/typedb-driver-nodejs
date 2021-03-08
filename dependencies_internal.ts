@@ -82,16 +82,17 @@ export * from "./concept/ConceptManager";
 /* query */
 export * from "./query/QueryManager";
 
-/* rpc */
-export * from "./rpc/ClientRPC";
-export * from "./rpc/RPCDatabaseManager";
-export * from "./rpc/RPCSession";
-export * from "./rpc/TransactionRPC";
-export * from "./rpc/Stream";
-
 /* ROOT */
 export * from "./GraknClient";
 export * from "./GraknOptions";
+
+/* rpc */
+export * from "./rpc/ClientRPC";
+export * from "./rpc/DatabaseManagerRPC";
+export * from "./rpc/DatabaseRPC";
+export * from "./rpc/SessionRPC";
+export * from "./rpc/TransactionRPC";
+export * from "./rpc/Stream";
 
 /* common.proto */
 export * from "./common/proto/OptionsProtoBuilder";

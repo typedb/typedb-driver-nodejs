@@ -73,13 +73,12 @@ Then('session(s)( in parallel) is/are open: {bool}', function (isOpen: boolean) 
 
 When("session has database: {word}", (name: string) => {
     for (const session of sessions) {
-        assert.ok(session.database() === name);
+        assert.ok(session.database().name() === name);
     }
 });
 
-
 When("sessions( in parallel) have/has databases:", (names: DataTable) => {
     for (let i = 0; i < sessions.length; i++) {
-        assert.ok(sessions[i].database() === names.raw()[i][0]);
+        assert.ok(sessions[i].database().name() === names.raw()[i][0]);
     }
 });

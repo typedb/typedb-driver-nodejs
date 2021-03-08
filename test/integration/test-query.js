@@ -138,7 +138,7 @@ async function run() {
         process.exit(1);
     }
     try {
-        session = await client.session("grakn", SessionType.DATA, new GraknOptions().setSessionIdleTimeoutMillis(3600000));
+        session = await client.session("grakn", SessionType.DATA, GraknOptions.core().setSessionIdleTimeoutMillis(3600000));
         console.log("open data session - SUCCESS");
     } catch (err) {
         console.error(`open data session - ERROR: ${err.stack || err}`);

@@ -17,34 +17,33 @@
  * under the License.
  */
 
-import {
-    GraknClient,
-    GraknOptions,
-    RPCDatabaseManager,
-    RPCSession,
-} from "../dependencies_internal";
+import { GraknClient, GraknOptions, DatabaseManagerRPC, SessionRPC } from "../dependencies_internal";
 import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
 import {GraknClient as GraknGrpc} from "grakn-protocol/protobuf/grakn_grpc_pb";
 
 export const DEFAULT_URI = "localhost:1729";
 
 export class ClientRPC implements GraknClient {
-    private readonly _databases: GraknClient.DatabaseManager;
+
     private readonly _graknGrpc: GraknGrpc;
+    private readonly _databases: DatabaseManagerRPC;
+    private readonly _sessions: {[id: string]: SessionRPC};
     private _isOpen: boolean;
 
     constructor(address = DEFAULT_URI) {
         this._graknGrpc = new GraknGrpc(address, ChannelCredentials.createInsecure());
-        this._databases = new RPCDatabaseManager(this._graknGrpc);
+        this._databases = new DatabaseManagerRPC(this._graknGrpc);
+        this._sessions = {}
         this._isOpen = true;
     }
 
     async session(database: string, type: GraknClient.SessionType, options?: GraknOptions): Promise<GraknClient.Session> {
-        const session = new RPCSession(this._graknGrpc, database, type);
+        const session = new SessionRPC(this, database, type);
+        this._sessions[session.id()] = session;
         return session.open(options);
     }
 
-    databases(): GraknClient.DatabaseManager {
+    databases(): DatabaseManagerRPC {
         return this._databases;
     }
 
@@ -55,5 +54,17 @@ export class ClientRPC implements GraknClient {
     close(): void {
         this._isOpen = false;
         closeClient(this._graknGrpc);
+    }
+
+    isCluster(): boolean {
+        return false;
+    }
+
+    removeSession(session: SessionRPC): void {
+        delete this._sessions[session.id()];
+    }
+
+    grpcClient(): GraknGrpc {
+        return this._graknGrpc;
     }
 }
