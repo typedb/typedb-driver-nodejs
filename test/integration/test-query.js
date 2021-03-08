@@ -17,16 +17,13 @@
  * under the License.
  */
 
-const { GraknClient } = require("../../dist/rpc/GraknClient");
-const { Grakn } = require("../../dist/Grakn");
-const { AttributeType } = require("../../dist/concept/type/AttributeType");
-const { ConceptMap } = require("../../dist/concept/answer/ConceptMap");
-const { SessionType, TransactionType } = Grakn;
+const { GraknClient } = require("../../dist/GraknClient");
+const { SessionType, TransactionType } = GraknClient;
 const { GraknOptions } = require("../../dist/GraknOptions")
 const assert = require("assert");
 
 async function run() {
-    const client = new GraknClient();
+    const client = GraknClient.core();
     try {
         const names = await client.databases().all();
         console.log(`get databases - SUCCESS - the databases are [${names}]`);

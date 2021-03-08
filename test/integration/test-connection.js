@@ -17,12 +17,11 @@
  * under the License.
  */
 
-const { GraknClient } = require("../../dist/rpc/GraknClient");
-const { Grakn } = require("../../dist/Grakn");
-const { SessionType, TransactionType } = Grakn;
+const { GraknClient } = require("../../dist/GraknClient");
+const { SessionType, TransactionType } = GraknClient;
 
 async function run() {
-    const client = new GraknClient();
+    const client = GraknClient.core();
 
     try {
         const names = await client.databases().all();
