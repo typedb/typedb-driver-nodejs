@@ -406,7 +406,7 @@ export class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> imple
         return new RemoteDateTimeAttributeImpl(transaction, this.getIID(), this._type, this._value);
     }
 
-    isString(): boolean {
+    isDateTime(): boolean {
         return true;
     }
 }

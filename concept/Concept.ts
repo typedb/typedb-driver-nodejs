@@ -42,16 +42,4 @@ export interface Concept {
 export interface RemoteConcept extends Concept {
     delete(): Promise<void>;
     isDeleted(): Promise<boolean>;
-
-    isType(): boolean;
-    isRoleType(): boolean;
-    isThingType(): boolean;
-    isEntityType(): boolean;
-    isAttributeType(): boolean;
-    isRelationType(): boolean;
-
-    isThing(): boolean;
-    isEntity(): boolean;
-    isAttribute(): boolean;
-    isRelation(): boolean;
 }

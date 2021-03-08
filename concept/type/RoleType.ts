@@ -17,24 +17,19 @@
  * under the License.
  */
 
-import {
-    RelationType,
-    RemoteThingType,
-    ThingType,
-    GraknClient,
-    Merge,
-    Stream,
-} from "../../dependencies_internal";
+import { RelationType, ThingType, GraknClient, Stream, Type, RemoteType } from "../../dependencies_internal";
 import Transaction = GraknClient.Transaction;
 
-export interface RoleType extends ThingType {
+export interface RoleType extends Type {
     getScope(): string;
     getScopedLabel(): string;
 
     asRemote(transaction: Transaction): RemoteRoleType;
 }
 
-export interface RemoteRoleType extends Merge<RemoteThingType, RoleType> {
+export interface RemoteRoleType extends RemoteType {
+    getScope(): string;
+    getScopedLabel(): string;
     asRemote(transaction: Transaction): RemoteRoleType;
 
     getSupertype(): Promise<RoleType>;

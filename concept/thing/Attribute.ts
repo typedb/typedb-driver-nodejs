@@ -37,7 +37,6 @@ import Transaction = GraknClient.Transaction;
 export interface Attribute<T extends ValueClass> extends Thing {
     getType(): AttributeType;
     getValue(): T;
-
     asRemote(transaction: Transaction): RemoteAttribute<T>;
 
     isBoolean(): boolean;
@@ -47,11 +46,19 @@ export interface Attribute<T extends ValueClass> extends Thing {
     isDateTime(): boolean;
 }
 
-export interface RemoteAttribute<T extends ValueClass> extends Merge<RemoteThing, Attribute<T>> {
+export interface RemoteAttribute<T extends ValueClass> extends RemoteThing {
+    getType(): AttributeType;
+    getValue(): T;
+    asRemote(transaction: Transaction): RemoteAttribute<T>;
+
+    isBoolean(): boolean;
+    isLong(): boolean;
+    isDouble(): boolean;
+    isString(): boolean;
+    isDateTime(): boolean;
+
     getOwners(): Stream<Thing>;
     getOwners(ownerType: ThingType): Stream<Thing>;
-
-    asRemote(transaction: Transaction): RemoteAttribute<T>;
 }
 
 export interface BooleanAttribute extends Attribute<boolean> {

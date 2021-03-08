@@ -17,28 +17,9 @@
  * under the License.
  */
 
-import {
-    Attribute,
-    BooleanAttribute,
-    DateTimeAttribute,
-    DoubleAttribute,
-    LongAttribute,
-    StringAttribute,
-    Concept,
-    RemoteConcept,
-    ThingType,
-    AttributeType,
-    BooleanAttributeType,
-    DateTimeAttributeType,
-    DoubleAttributeType,
-    LongAttributeType,
-    StringAttributeType,
-    RoleType,
-    GraknClient,
-    Merge,
-    Stream,
-    Relation,
-} from "../../dependencies_internal";
+import { Attribute, BooleanAttribute, DateTimeAttribute, DoubleAttribute, LongAttribute, StringAttribute, Concept,
+    RemoteConcept, ThingType, AttributeType, BooleanAttributeType, DateTimeAttributeType, DoubleAttributeType,
+    LongAttributeType, StringAttributeType, RoleType, GraknClient, Stream, Relation } from "../../dependencies_internal";
 import Transaction = GraknClient.Transaction;
 import ValueClass = AttributeType.ValueClass;
 
@@ -48,7 +29,11 @@ export interface Thing extends Concept {
     asRemote(transaction: Transaction): RemoteThing;
 }
 
-export interface RemoteThing extends Merge<RemoteConcept, Thing> {
+export interface RemoteThing extends RemoteConcept {
+    getIID(): string;
+    getType(): ThingType;
+    asRemote(transaction: Transaction): RemoteThing;
+
     isInferred(): Promise<boolean>;
 
     setHas(attribute: Attribute<ValueClass>): Promise<void>;
@@ -67,6 +52,4 @@ export interface RemoteThing extends Merge<RemoteConcept, Thing> {
 
     getRelations(): Stream<Relation>;
     getRelations(roleTypes: RoleType[]): Stream<Relation>;
-
-    asRemote(transaction: Transaction): RemoteThing;
 }
