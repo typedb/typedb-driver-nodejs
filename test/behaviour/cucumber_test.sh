@@ -19,7 +19,7 @@
 
 set -e
 GRAKN_DISTRO=$1
-if test -f grakn_distribution; then
+if test -d grakn_distribution; then
   echo Existing distribution detected. Cleaning.
   rm -rf grakn_distribution
 fi
@@ -44,13 +44,21 @@ DIRECTORY=$(ls ./grakn_distribution)
 echo Successfully unarchived Grakn $PRODUCT distribution.
 echo Starting Grakn $PRODUCT Server
 mkdir ./grakn_distribution/"$DIRECTORY"/grakn_test
-./grakn_distribution/"$DIRECTORY"/grakn server --data grakn_test &
+if [[ $PRODUCT == "Core" ]]; then
+  ./grakn_distribution/"$DIRECTORY"/grakn server --data grakn_test &
+else
+  ./grakn_distribution/"$DIRECTORY"/grakn server --address "127.0.0.1:1729:1730" &
+fi
 echo Unarchiving client.
 tar -xf client-nodejs.tar.gz
 echo Client unarchived.
-echo Unarchiving step files.
-tar -xf test/behaviour/behavioural-steps.tar.gz -C test
-echo Steps unarchived.
+echo Unarchiving Grakn $PRODUCT behaviour step implementations.
+if [[ $PRODUCT == "Core" ]]; then
+  tar -xf test/behaviour/behaviour-steps-core.tar.gz -C test
+else
+  tar -xf test/behaviour/behaviour-steps-cluster.tar.gz -C test
+fi
+echo Grakn $PRODUCT behaviour step implementations unarchived.
 POLL_INTERVAL_SECS=0.5
 MAX_RETRIES=60
 RETRY_NUM=0

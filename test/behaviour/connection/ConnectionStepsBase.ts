@@ -17,13 +17,12 @@
  * under the License.
  */
 
-import { Given, After, Before, setDefaultTimeout, BeforeAll } from "@cucumber/cucumber";
+import { Given, After, Before } from "@cucumber/cucumber";
 import { GraknClient } from "../../../dist/GraknClient";
 import Session = GraknClient.Session;
 import Transaction = GraknClient.Transaction;
 import assert = require("assert");
 
-setDefaultTimeout(20 * 1000);
 export const THREAD_POOL_SIZE = 32;
 
 export let client: GraknClient;
@@ -34,12 +33,12 @@ export function tx(): Transaction {
     return sessionsToTransactions.get(sessions[0])[0];
 }
 
+export function setClient(value: GraknClient) {
+    client = value;
+}
+
 Given("connection has been opened", () => {
     assert(client);
-});
-
-BeforeAll(() => {
-    client = GraknClient.core();
 });
 
 Before(async () => {
