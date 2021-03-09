@@ -37,7 +37,7 @@ export class ClientRPC implements GraknClient {
         this._isOpen = true;
     }
 
-    async session(database: string, type: SessionType, options?: GraknOptions): Promise<GraknClient.Session> {
+    async session(database: string, type: SessionType, options?: GraknOptions): Promise<SessionRPC> {
         const session = new SessionRPC(this, database, type);
         this._sessions[session.id()] = session;
         return session.open(options);
