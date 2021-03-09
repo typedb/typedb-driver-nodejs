@@ -93,12 +93,12 @@ export class SessionClusterRPC implements GraknClient.Session {
         return this._coreClient;
     }
 
-    get coreSession(): SessionRPC {
-        return this._coreSession;
-    }
-
     set coreClient(client: ClientRPC) {
         this._coreClient = client;
+    }
+
+    get coreSession(): SessionRPC {
+        return this._coreSession;
     }
 
     set coreSession(session: SessionRPC) {

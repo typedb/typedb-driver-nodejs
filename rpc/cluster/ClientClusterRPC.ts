@@ -33,8 +33,6 @@ export class ClientClusterRPC implements GraknClientCluster {
     private _clusterDatabases: {[db: string]: DatabaseClusterRPC};
     private _isOpen: boolean;
 
-    constructor() {}
-
     async open(addresses: string[]): Promise<this> {
         const serverAddresses = await this.fetchClusterServers(addresses);
         this._coreClients = new Map(serverAddresses.map(addr => [addr, new ClientRPC(addr.external())]));

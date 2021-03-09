@@ -51,7 +51,7 @@ export abstract class FailsafeTask<TResult> {
         }
         let replica = this._client.clusterDatabases()[this._database].primaryReplica();
         let retries = 0;
-        while (true) {
+        while (true) { // eslint-disable-line no-constant-condition
             try {
                 return retries == 0 ? await this.run(replica) : await this.rerun(replica);
             } catch (e) {
