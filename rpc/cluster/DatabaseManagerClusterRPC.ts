@@ -54,7 +54,7 @@ export class DatabaseManagerClusterRPC implements GraknClient.DatabaseManagerClu
 
     async get(name: string): Promise<DatabaseClusterRPC> {
         let errors = "";
-        for (const address of Object.keys(this._databaseManagers.keys)) {
+        for (const address of Object.keys(this._databaseManagers)) {
             try {
                 const res: DatabaseProto.Database.Get.Res = await new Promise((resolve, reject) => {
                     this._client.graknClusterRPC(address).database_get(new DatabaseProto.Database.Get.Req().setName(name), (err, res) => {
