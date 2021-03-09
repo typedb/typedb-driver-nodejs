@@ -39,7 +39,7 @@ export class SessionClusterRPC implements GraknClient.Session {
 
     constructor(clusterClient: ClientClusterRPC, serverAddress: ServerAddress) {
         this._clusterClient = clusterClient;
-        this._coreClient = clusterClient.coreClient(serverAddress);
+        this._coreClient = clusterClient.coreClient(serverAddress.toString());
     }
 
     async open(serverAddress: ServerAddress, database: string, type: SessionType, options: GraknClusterOptions): Promise<SessionClusterRPC> {
@@ -124,7 +124,7 @@ class TransactionFailsafeTask extends FailsafeTask<TransactionRPC> {
 
     async rerun(replica: DatabaseReplicaRPC): Promise<TransactionRPC> {
         if (this._clusterSession.coreSession) await this._clusterSession.coreSession.close();
-        this._clusterSession.coreClient = this._clusterSession.clusterClient.coreClient(replica.address());
+        this._clusterSession.coreClient = this._clusterSession.clusterClient.coreClient(replica.address().toString());
         this._clusterSession.coreSession = await this._clusterSession.coreClient.session(this.database, this._clusterSession.type(), this._clusterSession.options());
         return await this._clusterSession.coreSession.transaction(this._type, this._options);
     }

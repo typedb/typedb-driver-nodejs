@@ -22,15 +22,15 @@ import DatabaseProto from "grakn-protocol/protobuf/cluster/database_pb";
 
 export class DatabaseClusterRPC implements GraknClient.DatabaseCluster {
     private readonly _name: string;
-    private readonly _databases: Map<ServerAddress, DatabaseRPC>;
+    private readonly _databases: {[address: string]: DatabaseRPC};
     private readonly _databaseManagerCluster: DatabaseManagerClusterRPC;
     private readonly _replicas: DatabaseReplicaRPC[];
 
     private constructor(databaseManagerCluster: DatabaseManagerClusterRPC, database: string) {
-        this._databases = new Map();
-        for (const address of databaseManagerCluster.databaseManagers().keys()) {
-            const databaseManager = databaseManagerCluster.databaseManagers().get(address);
-            this._databases.set(address, new DatabaseRPC(databaseManager.grpcClient(), database));
+        this._databases = {};
+        for (const address of Object.keys(databaseManagerCluster.databaseManagers())) {
+            const databaseManager = databaseManagerCluster.databaseManagers()[address];
+            this._databases[address] = new DatabaseRPC(databaseManager.grpcClient(), database);
         }
         this._name = database;
         this._databaseManagerCluster = databaseManagerCluster;
@@ -60,9 +60,9 @@ export class DatabaseClusterRPC implements GraknClient.DatabaseCluster {
     }
 
     async delete(): Promise<void> {
-        for (const address of this._databases.keys()) {
-            if (await this._databaseManagerCluster.databaseManagers().get(address).contains(this._name)) {
-                await this._databases.get(address).delete();
+        for (const address of Object.keys(this._databases)) {
+            if (await this._databaseManagerCluster.databaseManagers()[address].contains(this._name)) {
+                await this._databases[address].delete();
             }
         }
     }

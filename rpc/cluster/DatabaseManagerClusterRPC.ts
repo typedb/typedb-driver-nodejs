@@ -18,25 +18,25 @@
  */
 
 import {
-    GraknClient, ClientClusterRPC, DatabaseManagerRPC, ServerAddress, GraknClientError, ErrorMessage, DatabaseClusterRPC
+    GraknClient, ClientClusterRPC, DatabaseManagerRPC, GraknClientError, ErrorMessage, DatabaseClusterRPC
 } from "../../dependencies_internal";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import DatabaseProto from "grakn-protocol/protobuf/cluster/database_pb";
 
 export class DatabaseManagerClusterRPC implements GraknClient.DatabaseManagerCluster {
-    private readonly _databaseManagers: Map<ServerAddress, DatabaseManagerRPC>;
+    private readonly _databaseManagers: {[serverAddress: string]: DatabaseManagerRPC};
     private readonly _client: ClientClusterRPC;
 
-    constructor(client: ClientClusterRPC, databaseManagers: Map<ServerAddress, DatabaseManagerRPC>) {
+    constructor(client: ClientClusterRPC, databaseManagers: {[serverAddress: string]: DatabaseManagerRPC}) {
         this._client = client;
         this._databaseManagers = databaseManagers;
     }
 
     async contains(name: string): Promise<boolean> {
         let errors = "";
-        for (const address of this._databaseManagers.keys()) {
+        for (const address of Object.keys(this._databaseManagers)) {
             try {
-                return await this._databaseManagers.get(address).contains(name);
+                return await this._databaseManagers[address].contains(name);
             } catch (e) {
                 errors += `- ${address}: ${e}\n`;
             }
@@ -45,7 +45,7 @@ export class DatabaseManagerClusterRPC implements GraknClient.DatabaseManagerClu
     }
 
     async create(name: string): Promise<void> {
-        for (const databaseManager of this._databaseManagers.values()) {
+        for (const databaseManager of Object.values(this._databaseManagers)) {
             if (!(await databaseManager.contains(name))) {
                 await databaseManager.create(name);
             }
@@ -54,12 +54,12 @@ export class DatabaseManagerClusterRPC implements GraknClient.DatabaseManagerClu
 
     async get(name: string): Promise<DatabaseClusterRPC> {
         let errors = "";
-        for (const address of this._databaseManagers.keys()) {
+        for (const address of Object.keys(this._databaseManagers.keys)) {
             try {
                 const res: DatabaseProto.Database.Get.Res = await new Promise((resolve, reject) => {
-                    this._client.graknClusterRPC(address).database_get(new DatabaseProto.Database.Get.Req().setName(name), (err) => {
+                    this._client.graknClusterRPC(address).database_get(new DatabaseProto.Database.Get.Req().setName(name), (err, res) => {
                         if (err) reject(new GraknClientError(err));
-                        else resolve();
+                        else resolve(res);
                     });
                 });
                 return DatabaseClusterRPC.of(res.getDatabase(), this);
@@ -72,12 +72,12 @@ export class DatabaseManagerClusterRPC implements GraknClient.DatabaseManagerClu
 
     async all(): Promise<DatabaseClusterRPC[]> {
         let errors = "";
-        for (const address of this._databaseManagers.keys()) {
+        for (const address of Object.keys(this._databaseManagers)) {
             try {
                 const res: DatabaseProto.Database.All.Res = await new Promise((resolve, reject) => {
-                    this._client.graknClusterRPC(address).database_all(new DatabaseProto.Database.All.Req(), (err) => {
+                    this._client.graknClusterRPC(address).database_all(new DatabaseProto.Database.All.Req(), (err, res) => {
                         if (err) reject(new GraknClientError(err));
-                        else resolve();
+                        else resolve(res);
                     });
                 });
                 return res.getDatabasesList().map(db => DatabaseClusterRPC.of(db, this));
@@ -88,7 +88,7 @@ export class DatabaseManagerClusterRPC implements GraknClient.DatabaseManagerClu
         throw new GraknClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
     }
 
-    databaseManagers(): Map<ServerAddress, DatabaseManagerRPC> {
+    databaseManagers(): {[address: string]: DatabaseManagerRPC} {
         return this._databaseManagers;
     }
 }

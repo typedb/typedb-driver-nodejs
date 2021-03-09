@@ -114,9 +114,9 @@ export abstract class FailsafeTask<TResult> {
             try {
                 console.info(`Fetching replica info from ${serverAddress}`);
                 const res: DatabaseProto.Database.Get.Res = await new Promise((resolve, reject) => {
-                    this._client.graknClusterRPC(serverAddress).database_get(new DatabaseProto.Database.Get.Req().setName(this._database), (err) => {
+                    this._client.graknClusterRPC(serverAddress).database_get(new DatabaseProto.Database.Get.Req().setName(this._database), (err, res) => {
                         if (err) reject(new GraknClientError(err));
-                        else resolve();
+                        else resolve(res);
                     });
                 });
                 const databaseClusterRPC = DatabaseClusterRPC.of(res.getDatabase(), this._client.databases());
@@ -134,7 +134,7 @@ export abstract class FailsafeTask<TResult> {
     }
 
     private clusterNotAvailableError(): GraknClientError {
-        const addresses = this._client.clusterMembers().map(addr => addr.toString()).join(",");
+        const addresses = this._client.clusterMembers().join(",");
         return new GraknClientError(CLUSTER_UNABLE_TO_CONNECT.message(addresses));
     }
 }
