@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Given, After, Before } from "@cucumber/cucumber";
+import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
 import { GraknClient } from "../../../dist/GraknClient";
 import Session = GraknClient.Session;
 import Transaction = GraknClient.Transaction;
@@ -28,6 +28,8 @@ export const THREAD_POOL_SIZE = 32;
 export let client: GraknClient;
 export const sessions: Session[] = [];
 export const sessionsToTransactions: Map<Session, Transaction[]> = new Map<Session, Transaction[]>();
+
+setDefaultTimeout(20000); // Some steps may take longer than the default limit of 5s, eg create parallel dbs
 
 export function tx(): Transaction {
     return sessionsToTransactions.get(sessions[0])[0];
