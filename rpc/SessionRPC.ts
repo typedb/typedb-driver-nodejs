@@ -82,10 +82,9 @@ export class SessionRPC implements GraknClient.Session {
             this._isOpen = false;
             clearTimeout(this._pulse);
             const req = new SessionProto.Session.Close.Req().setSessionId(this._id);
-            await new Promise<void>((resolve, reject) => {
-                this._grpcClient.session_close(req, (err) => {
-                    if (err) reject(new GraknClientError(err));
-                    else resolve();
+            await new Promise<void>(resolve => {
+                this._grpcClient.session_close(req, () => {
+                    resolve();
                 });
             });
         }
