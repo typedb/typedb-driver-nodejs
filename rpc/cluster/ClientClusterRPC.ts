@@ -90,8 +90,10 @@ export class ClientClusterRPC implements GraknClientCluster {
     }
 
     close(): void {
-        Object.values(this._coreClients).forEach(client => client.close());
-        this._isOpen = false;
+        if (this._isOpen) {
+            this._isOpen = false;
+            Object.values(this._coreClients).forEach(client => client.close());
+        }
     }
 
     isCluster(): boolean {
