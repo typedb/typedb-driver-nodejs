@@ -62,3 +62,8 @@ artifact_extractor(
     name = "grakn-extractor",
     artifact = ":native-grakn-core-artifact",
 )
+
+artifact_extractor(
+    name = "grakn-cluster-extractor",
+    artifact = ":native-grakn-cluster-artifact",
+)
