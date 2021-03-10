@@ -46,9 +46,9 @@ export class DatabaseClusterRPC implements GraknClient.DatabaseCluster {
     }
 
     primaryReplica(): DatabaseReplicaRPC {
-        return this._replicas.filter(rep => rep.isPrimary()).reduce((current, next) => {
-            return next.term() > current.term() ? next : current;
-        });
+        const primaryReplicas = this._replicas.filter(rep => rep.isPrimary());
+        if (primaryReplicas.length) return primaryReplicas.reduce((current, next) => next.term() > current.term() ? next : current);
+        else return null;
     }
 
     preferredSecondaryReplica(): DatabaseReplicaRPC {
