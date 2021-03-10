@@ -51,7 +51,6 @@ build:
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        npm install
         ./test/common/start-core-server.sh
         npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-core-server.sh
@@ -62,7 +61,6 @@ build:
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        npm install
         ./test/common/start-cluster-servers.sh
         npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
