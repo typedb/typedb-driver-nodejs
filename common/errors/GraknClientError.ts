@@ -38,7 +38,7 @@ export class GraknClientError extends Error {
         if (error instanceof ErrorMessage) {
             this._errorMessage = error;
         } else if (error instanceof Error && "code" in error) {
-            if ([Status.UNAVAILABLE, Status.UNKNOWN].includes(error.code) || error.message.includes("Received RST_STREAM")) {
+            if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
                 this._errorMessage = UNABLE_TO_CONNECT;
             } else if (isReplicaNotPrimaryError(error)) {
                 this._errorMessage = CLUSTER_REPLICA_NOT_PRIMARY;
