@@ -57,6 +57,7 @@ build:
         ./test/common/stop-core-server.sh
         exit $TEST_SUCCESS
     test-cluster-failover:
+      machine: 4-core-8-gb
       image: graknlabs-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
