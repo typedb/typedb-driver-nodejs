@@ -104,8 +104,6 @@ ts_project(
     ]),
     tsconfig = "tsconfig.json",
     declaration = True,
-    validate = False,
-    args = ["--nobazel_node_patches"],
     deps = [
         "@npm//@grpc/grpc-js",
         "@npm//grakn-protocol",
