@@ -109,6 +109,7 @@ ts_project(
         "@npm//@grpc/grpc-js",
         "@npm//grakn-protocol",
         "@npm//@types/node",
+        "@npm//typescript",
     ],
 )
 
