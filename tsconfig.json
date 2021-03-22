@@ -69,7 +69,7 @@
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
-    "common",
+    "common_old",
     "concept",
     "logic",
     "query",

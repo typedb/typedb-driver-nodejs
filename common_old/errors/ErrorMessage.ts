@@ -69,6 +69,7 @@ export namespace ErrorMessage {
         constructor(code: number, message: (args?: Stringable[]) => string) {super("CLI", code, "Client Error", message)}
     }
     export namespace Client {
+        export const SESSION_ID_EXISTS = new Client(0, (args: Stringable[]) => `The newly opened session id '${args[0]}' already exists`);
         export const TRANSACTION_CLOSED = new Client(1, () => `The transaction has been closed and no further operation is allowed.`);
         export const UNABLE_TO_CONNECT = new Client(2, () => `Unable to connect to Grakn server.`);
         export const NEGATIVE_VALUE_NOT_ALLOWED = new Client(3, (args: Stringable[]) => `Value cannot be less than 1, was: '${args[0]}'.`);

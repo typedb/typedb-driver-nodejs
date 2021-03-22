@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import { GraknClientError } from "../../common/errors/GraknClientError";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { GraknClientError } from "../../common_old/errors/GraknClientError";
+import { ErrorMessage } from "../../common_old/errors/ErrorMessage";
 import ILLEGAL_ARGUMENT = ErrorMessage.Internal.ILLEGAL_ARGUMENT;
 
 export class ServerAddress {

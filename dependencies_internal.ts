@@ -25,11 +25,11 @@
  */
 
 /* common */
-export * from "./common/errors/ErrorMessage";
-export * from "./common/errors/GraknClientError";
-export * from "./common/BlockingQueue";
-export * from "./common/Bytes";
-export * from "./common/utils";
+export * from "./common_old/errors/ErrorMessage";
+export * from "./common_old/errors/GraknClientError";
+export * from "./common_old/BlockingQueue";
+export * from "./common_old/Bytes";
+export * from "./common_old/utils";
 
 /* concept.answer */
 export * from "./concept/answer/ConceptMap";
@@ -103,7 +103,7 @@ export * from "./rpc/cluster/DatabaseClusterRPC";
 export * from "./rpc/cluster/SessionClusterRPC";
 
 /* common.proto */
-export * from "./common/proto/OptionsProtoBuilder";
+export * from "./common_old/proto/OptionsProtoBuilder";
 
 /* concept.proto */
 export * from "./concept/proto/ConceptProtoBuilder";
