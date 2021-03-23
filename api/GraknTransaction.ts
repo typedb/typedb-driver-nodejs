@@ -48,11 +48,10 @@ export namespace GraknTransaction {
 
     export interface Extended extends GraknTransaction {
 
-        rpcExecute(request: Transaction.Req) : Transaction.Res;
-
-        rpcQuery(request: Transaction.Req) : QueryFuture<Transaction.Res> ;
+        rpcExecute(request: Transaction.Req) : Promise<Transaction.Res>;
 
         rpcStream(request: Transaction.Req) : Stream<Transaction.ResPart> ;
+
     }
 
     export interface Type {

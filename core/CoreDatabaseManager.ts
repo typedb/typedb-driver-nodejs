@@ -40,7 +40,7 @@ export class CoreDatabaseManager implements DatabaseManager {
 
     create(name: string): Promise<void> {
         if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME);
-        const req = Core.DatabaseManager.create(name);
+        const req = Core.DatabaseManager.createReq(name);
         return new Promise((resolve, reject) => {
             this._rpcClient.databases_create(req, (err) => {
                 if (err) reject(new GraknClientError(err));

@@ -30,17 +30,21 @@ import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
 import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
 import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
+import {sessionsToTransactions} from "../test/behaviour/connection/ConnectionStepsBase";
+import {RequestTransmitter} from "../stream/RequestTransmitter";
 
 export class CoreClient implements GraknClient {
 
     private readonly _rpcClient: GraknCoreClient;
     private readonly _databases : DatabaseManager;
+    private readonly _requestTransmitter: RequestTransmitter;
     private readonly _sessions: {[id: string]: CoreSession};
     private _isOpen : boolean;
 
     constructor(address : string, parallelisation? : number) {
         this._rpcClient = new GraknCoreClient(address, ChannelCredentials.createInsecure());
         this._databases = new CoreDatabaseManager(this._rpcClient);
+        this._requestTransmitter = new RequestTransmitter();
         this._sessions = {};
         this._isOpen = true;
     }
@@ -61,6 +65,7 @@ export class CoreClient implements GraknClient {
         if (this._isOpen) {
             this._isOpen = false;
             Object.values(this._sessions).forEach(s => s.close());
+            // TODO close transmitter
             closeClient(this._rpcClient);
         }
     }
@@ -79,6 +84,14 @@ export class CoreClient implements GraknClient {
 
     rpc() : GraknCoreClient {
         return this._rpcClient;
+    }
+
+    transmitter(): RequestTransmitter {
+        return this._requestTransmitter;
+    }
+
+    closedSession(session : CoreSession) : void {
+        delete this._sessions[session.id()];
     }
 
 }

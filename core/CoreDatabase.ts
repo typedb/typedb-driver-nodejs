@@ -35,7 +35,7 @@ export class CoreDatabase implements Database {
 
     delete(): Promise<void> {
         if (!this._name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
-        const req = Core.Database._delete(this._name);
+        const req = Core.Database.deleteReq(this._name);
         return new Promise((resolve, reject) => {
             this._rpcClient.database_delete(req, (err) => {
                 if (err) reject(err);

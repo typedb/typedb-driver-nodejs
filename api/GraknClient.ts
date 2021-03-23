@@ -37,8 +37,6 @@ export interface GraknClient {
 
     close() : void;
 
-    rpc() : GraknCoreClient;
-
 }
 
 export namespace GraknClient {
