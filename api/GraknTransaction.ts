@@ -20,6 +20,7 @@
 
 import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {GraknOptions} from "./GraknOptions";
+import {Stream} from "../common/util/Stream";
 
 export interface GraknTransaction {
 
@@ -29,11 +30,11 @@ export interface GraknTransaction {
 
     options() : GraknOptions;
 
-    concepts() : ConceptManager;
-
-    logic() : LogicManager;
-
-    query() : QueryManager;
+    // concepts() : ConceptManager;
+    //
+    // logic() : LogicManager;
+    //
+    // query() : QueryManager;
 
     commit() : void ;
 

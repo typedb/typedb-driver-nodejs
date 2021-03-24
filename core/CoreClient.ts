@@ -28,10 +28,9 @@ import {GraknClientError} from "../common_old/errors/GraknClientError";
 import {ErrorMessage} from "../common_old/errors/ErrorMessage";
 import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
 import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
+import {RequestTransmitter} from "../stream/RequestTransmitter";
 import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
-import {sessionsToTransactions} from "../test/behaviour/connection/ConnectionStepsBase";
-import {RequestTransmitter} from "../stream/RequestTransmitter";
 
 export class CoreClient implements GraknClient {
 
@@ -54,6 +53,7 @@ export class CoreClient implements GraknClient {
     }
 
     async session(database: string, type: GraknSession.Type, options?: GraknOptions): Promise<GraknSession> {
+        if (!options) options = new GraknOptions();
         const session = new CoreSession(database, type, options, this);
         await session.open();
         if (this._sessions[session.id()]) throw new GraknClientError(SESSION_ID_EXISTS.message(session.id()));
@@ -65,7 +65,7 @@ export class CoreClient implements GraknClient {
         if (this._isOpen) {
             this._isOpen = false;
             Object.values(this._sessions).forEach(s => s.close());
-            // TODO close transmitter
+            this._requestTransmitter.close();
             closeClient(this._rpcClient);
         }
     }

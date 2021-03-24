@@ -58,7 +58,7 @@ export class CoreSession implements GraknSession {
         const openReq = Core.Session.openReq(this._databaseName, this._type.proto(), this._options.proto())
         this._database = await this._client.databases().get(this._databaseName);
         const start = (new Date()).getMilliseconds();
-        let end;
+        let end = 0;
         const res = await new Promise<Session.Open.Res>((resolve, reject) => {
             end = (new Date()).getMilliseconds();
             this._client.rpc().session_open(openReq, (err, res) => {
@@ -89,6 +89,7 @@ export class CoreSession implements GraknSession {
 
     async transaction(type: GraknTransaction.Type, options?: GraknOptions): Promise<GraknTransaction> {
         if (!this.isOpen()) throw new GraknClientError(SESSION_CLOSED);
+        if (!options) options = new GraknOptions();
         let transaction = new CoreTransaction(this, this._sessionId, type, options);
         await transaction.open();
         this._transactions.add(transaction);

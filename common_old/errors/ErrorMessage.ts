@@ -17,7 +17,9 @@
  * under the License.
  */
 
-import { Stringable } from "../../dependencies_internal";
+// import { Stringable } from "../../dependencies_internal";
+
+import {Stringable} from "../utils";
 
 export abstract class ErrorMessage {
     private readonly _codePrefix: string;
@@ -76,13 +78,14 @@ export namespace ErrorMessage {
         export const NEGATIVE_VALUE_NOT_ALLOWED = new Client(5, (args: Stringable[]) => `Value cannot be less than 1, was: '${args[0]}'.`);
         export const MISSING_DB_NAME = new Client(6, () => `Database name cannot be null.`);
         export const DB_DOES_NOT_EXIST = new Client(7, (args: Stringable[]) => `The database '${args[0]}' does not exist.`);
-        export const MISSING_RESPONSE = new Client(8, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
-        export const UNKNOWN_REQUEST_ID = new Client(9, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);
-        export const CLUSTER_NO_PRIMARY_REPLICA_YET = new Client(10, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
-        export const CLUSTER_UNABLE_TO_CONNECT = new Client(11, (args: Stringable[]) => `Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: '${args[0]}'.`);
-        export const CLUSTER_REPLICA_NOT_PRIMARY = new Client(12, () => `The replica is not the primary replica.`);
-        export const CLUSTER_ALL_NODES_FAILED = new Client(13, (args: Stringable[]) => `Attempted connecting to all cluster members, but the following errors occurred: \n'${args[0]}'`);
-        export const UNRECOGNISED_SESSION_TYPE = new Client(14, (args: Stringable[]) => `Session type '${args[0]}' was not recognised.`);
+        export const UNKNOWN_STREAM_STATE = new Client(8, (args: Stringable[]) => `RPC transaction stream response '${args[0]}' is unknown.`);
+        export const MISSING_RESPONSE = new Client(9, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
+        export const UNKNOWN_REQUEST_ID = new Client(10, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);
+        export const CLUSTER_NO_PRIMARY_REPLICA_YET = new Client(11, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
+        export const CLUSTER_UNABLE_TO_CONNECT = new Client(12, (args: Stringable[]) => `Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: '${args[0]}'.`);
+        export const CLUSTER_REPLICA_NOT_PRIMARY = new Client(13, () => `The replica is not the primary replica.`);
+        export const CLUSTER_ALL_NODES_FAILED = new Client(14, (args: Stringable[]) => `Attempted connecting to all cluster members, but the following errors occurred: \n'${args[0]}'`);
+        export const UNRECOGNISED_SESSION_TYPE = new Client(15, (args: Stringable[]) => `Session type '${args[0]}' was not recognised.`);
     }
 
     export class Concept extends ErrorMessage {

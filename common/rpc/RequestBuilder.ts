@@ -65,6 +65,10 @@ export namespace Core {
 
     export namespace Transaction {
 
+        export function clientReq(reqs :TransactionProto.Req[]) {
+            return new TransactionProto.Client().setReqsList(reqs);
+        }
+
         export function openReq(sessionId: string, type: TransactionProto.Type, options: Options, latencyMillis: number) {
             return new TransactionProto.Req().setOpenReq(
                 new TransactionProto.Open.Req().setSessionId(sessionId).setType(type).setOptions(options).setNetworkLatencyMillis(latencyMillis)
@@ -77,6 +81,10 @@ export namespace Core {
 
         export function rollbackReq() {
             return new TransactionProto.Req().setRollbackReq(new TransactionProto.Rollback.Req());
+        }
+
+        export function streamReq(requestId: string) {
+            return new TransactionProto.Req().setReqId(requestId).setStreamReq(new TransactionProto.Stream.Req());
         }
 
     }

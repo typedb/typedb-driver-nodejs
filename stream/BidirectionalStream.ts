@@ -19,14 +19,18 @@
 
 import {BatchDispatcher, RequestTransmitter} from "./RequestTransmitter";
 import {Transaction} from "grakn-protocol/common/transaction_pb";
-import {Stream} from "../rpc/Stream";
+import {Stream} from "../common/util/Stream";
 import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
 import {uuidv4} from "../common_old/utils";
 import {ResponseCollector} from "./ResponseCollector";
 import {ClientDuplexStream} from "@grpc/grpc-js";
 import {ErrorMessage} from "../common_old/errors/ErrorMessage";
 import {GraknClientError} from "../common_old/errors/GraknClientError";
+import {ResponsePartIterator} from "./ResponsePartIterator";
 import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
+import ResponseQueue = ResponseCollector.ResponseQueue;
+import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
+import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 
 
 export class BidirectionalStream {
@@ -54,8 +58,12 @@ export class BidirectionalStream {
         return (await responseQueue.take() as Transaction.Res); // TODO can we do this without cast?
     }
 
-    async stream(req: Transaction.Req): Promise<Stream<Transaction.Res>> {
-
+    async stream(request: Transaction.Req): Promise<Stream<Transaction.ResPart>> {
+        const requestId = uuidv4();
+        request.setReqId(requestId);
+        const responseQueue = this._responseCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
+        const responseIterator = new ResponsePartIterator(requestId, responseQueue, this._dispatcher);
+        return Stream.stream(responseIterator);
     }
 
     isOpen(): boolean {
@@ -70,12 +78,36 @@ export class BidirectionalStream {
 
     }
 
+    private collectRes(res: Transaction.Res): void {
+        const requestId = res.getReqId();
+        const queue = this._responseCollector.get(requestId);
+        if (!queue) throw new GraknClientError(UNKNOWN_REQUEST_ID.message(requestId));
+        queue.put(res);
+    }
+
+    private collectResPart(res: Transaction.ResPart): void {
+        const requestId = res.getReqId();
+        const queue = this._responseCollector.get(requestId);
+        if (!queue) throw new GraknClientError(UNKNOWN_REQUEST_ID.message(requestId));
+        queue.put(res);
+    }
+
     registerObserver(transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>): void {
-        transactionStream.on("data", (res:Transaction.Res) => {
-            const requestId = res.getReqId();
-            const queue = this._responseCollector.get(requestId);
-            if (!queue) throw new GraknClientError(UNKNOWN_REQUEST_ID.message(requestId));
-            queue.put(res);
+        transactionStream.on("data", (res: Transaction.Server) => {
+            if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
+
+            switch (res.getServerCase()) {
+                case Transaction.Server.ServerCase.RES:
+                    this.collectRes(res.getRes());
+                    return;
+                case Transaction.Server.ServerCase.RES_PART:
+                    this.collectResPart(res.getResPart());
+                    return;
+                case Transaction.Server.ServerCase.SERVER_NOT_SET:
+                default:
+                    throw new GraknClientError(MISSING_RESPONSE.message(res));
+            }
+
         });
 
         transactionStream.on("error", (err) => {

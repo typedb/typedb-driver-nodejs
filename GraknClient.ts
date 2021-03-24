@@ -17,93 +17,99 @@
  * under the License.
  */
 
-import {
-    GraknOptions, ConceptManager, QueryManager, LogicManager, ClientRPC, ServerAddress, ClientClusterRPC
-} from "./dependencies_internal";
+// import {
+//     GraknOptions, ConceptManager, QueryManager, LogicManager, ClientRPC, ServerAddress, ClientClusterRPC
+// } from "./dependencies_internal";
+// import {CoreClient} from "./core/CoreClient";
 
-export interface GraknClient {
-    session(databaseName: string, type: SessionType, options?: GraknOptions): Promise<GraknClient.Session>;
-    databases(): GraknClient.DatabaseManager;
-    isOpen(): boolean;
-    close(): void;
-    isCluster(): boolean;
-}
+// export interface GraknClient {
+//     session(databaseName: string, type: SessionType, options?: GraknOptions): Promise<GraknClient.Session>;
+//     databases(): GraknClient.DatabaseManager;
+//     isOpen(): boolean;
+//     close(): void;
+//     isCluster(): boolean;
+// }
 
-export interface GraknClientCluster extends GraknClient {
-    databases(): GraknClient.DatabaseManagerCluster;
-}
+// export interface GraknClientCluster extends GraknClient {
+//     databases(): GraknClient.DatabaseManagerCluster;
+// }
+
+import {GraknClient as GC} from "./api/GraknClient";
+import {CoreClient} from "./core/CoreClient";
 
 export namespace GraknClient {
 
     export const DEFAULT_ADDRESS = "localhost:1729";
 
-    export function core(address: string = DEFAULT_ADDRESS): GraknClient {
-        return new ClientRPC(address);
+    export function core(address: string = DEFAULT_ADDRESS): GC {
+        return new CoreClient(address);
     }
 
-    export function cluster(addresses: string[]): Promise<GraknClientCluster> {
-        return new ClientClusterRPC().open(addresses);
-    }
-
-    export interface DatabaseManager {
-        contains(name: string): Promise<boolean>;
-        create(name: string): Promise<void>;
-        get(name: string): Promise<Database>;
-        all(): Promise<Database[]>;
-    }
-
-    export interface DatabaseManagerCluster extends DatabaseManager {
-        get(name: string): Promise<DatabaseCluster>;
-        all(): Promise<DatabaseCluster[]>;
-    }
-
-    export interface Database {
-        name(): string;
-        delete(): Promise<void>;
-    }
-
-    export interface DatabaseCluster extends Database {
-        replicas(): DatabaseReplica[];
-        primaryReplica(): DatabaseReplica;
-        preferredSecondaryReplica(): DatabaseReplica;
-    }
-
-    export interface DatabaseReplica {
-        database(): DatabaseCluster;
-        term(): number;
-        isPrimary(): boolean;
-        isPreferredSecondary(): boolean;
-        address(): ServerAddress;
-    }
-
-    export interface Session {
-        transaction(type: TransactionType, options?: GraknOptions): Promise<Transaction>;
-        type(): SessionType;
-        options(): GraknOptions;
-        isOpen(): boolean;
-        close(): Promise<void>;
-        database(): Database;
-    }
-
-    export interface Transaction {
-        type(): TransactionType;
-        options(): GraknOptions;
-        isOpen(): boolean;
-        concepts(): ConceptManager;
-        logic(): LogicManager;
-        query(): QueryManager;
-        commit(): Promise<void>;
-        rollback(): Promise<void>;
-        close(): Promise<void>;
-    }
-}
-
-export enum SessionType {
-    DATA,
-    SCHEMA,
-}
-
-export enum TransactionType {
-    READ,
-    WRITE,
+//
+//     export function cluster(addresses: string[]): Promise<GraknClientCluster> {
+//         return new ClientClusterRPC().open(addresses);
+//     }
+//
+//     export interface DatabaseManager {
+//         contains(name: string): Promise<boolean>;
+//         create(name: string): Promise<void>;
+//         get(name: string): Promise<Database>;
+//         all(): Promise<Database[]>;
+//     }
+//
+//     export interface DatabaseManagerCluster extends DatabaseManager {
+//         get(name: string): Promise<DatabaseCluster>;
+//         all(): Promise<DatabaseCluster[]>;
+//     }
+//
+//     export interface Database {
+//         name(): string;
+//         delete(): Promise<void>;
+//     }
+//
+//     export interface DatabaseCluster extends Database {
+//         replicas(): DatabaseReplica[];
+//         primaryReplica(): DatabaseReplica;
+//         preferredSecondaryReplica(): DatabaseReplica;
+//     }
+//
+//     export interface DatabaseReplica {
+//         database(): DatabaseCluster;
+//         term(): number;
+//         isPrimary(): boolean;
+//         isPreferredSecondary(): boolean;
+//         address(): ServerAddress;
+//     }
+//
+//     export interface Session {
+//         transaction(type: TransactionType, options?: GraknOptions): Promise<Transaction>;
+//         type(): SessionType;
+//         options(): GraknOptions;
+//         isOpen(): boolean;
+//         close(): Promise<void>;
+//         database(): Database;
+//     }
+//
+//     export interface Transaction {
+//         type(): TransactionType;
+//         options(): GraknOptions;
+//         isOpen(): boolean;
+//         concepts(): ConceptManager;
+//         logic(): LogicManager;
+//         query(): QueryManager;
+//         commit(): Promise<void>;
+//         rollback(): Promise<void>;
+//         close(): Promise<void>;
+//     }
+// }
+//
+// export enum SessionType {
+//     DATA,
+//     SCHEMA,
+// }
+//
+// export enum TransactionType {
+//     READ,
+//     WRITE,
+// }
 }

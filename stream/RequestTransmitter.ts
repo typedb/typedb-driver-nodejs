@@ -18,27 +18,32 @@
  */
 
 
-import {Transaction} from "grakn-protocol/common/transaction_pb";
+import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {Core} from "../common/rpc/RequestBuilder";
 import {ClientDuplexStream} from "@grpc/grpc-js";
 
 export class BatchDispatcher {
 
     private readonly _transmitter: RequestTransmitter;
-    private readonly _bufferedRequests: Transaction.Req[];
-    private readonly _transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>;
+    private readonly _bufferedRequests: TransactionProto.Req[];
+    private readonly _transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>;
 
-    constructor(transmitter: RequestTransmitter, transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>) {
+    constructor(transmitter: RequestTransmitter, transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>) {
         this._transmitter = transmitter;
         this._transactionStream = transactionStream;
-        this._bufferedRequests = new Array<Transaction.Req>();
+        this._bufferedRequests = new Array<TransactionProto.Req>();
     }
 
-    public dispatch(req : Transaction.Req): void {
-
+    public dispatch(req : TransactionProto.Req): void {
+        // TODO implement batching
+        const clientRequest = Core.Transaction.clientReq([req])
+        this._transactionStream.write(clientRequest);
     }
 
-    public dispatchNow(req: Transaction.Req): void {
-
+    public dispatchNow(req: TransactionProto.Req): void {
+        // TODO implement batching
+        const clientRequest = Core.Transaction.clientReq([req])
+        this._transactionStream.write(clientRequest);
     }
 
     close(): void {
@@ -65,7 +70,7 @@ export class RequestTransmitter {
         }
     }
 
-    public dispatcher(transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>) : BatchDispatcher {
+    public dispatcher(transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>) : BatchDispatcher {
         let dispatcher = new BatchDispatcher(this, transactionStream);
         this._dispatchers.add(dispatcher);
         return dispatcher;

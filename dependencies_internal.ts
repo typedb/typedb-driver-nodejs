@@ -24,86 +24,86 @@
  * NOTE: this does not apply to interfaces, which are erased at runtime.
  */
 
-/* common */
-export * from "./common_old/errors/ErrorMessage";
-export * from "./common_old/errors/GraknClientError";
-export * from "./common_old/BlockingQueue";
-export * from "./common_old/Bytes";
-export * from "./common_old/utils";
-
-/* concept.answer */
-export * from "./concept/answer/ConceptMap";
-export * from "./concept/answer/Numeric";
-export * from "./concept/answer/ConceptMapGroup";
-export * from "./concept/answer/NumericGroup";
-
-/* logic.impl */
-export * from "./logic/impl/RuleImpl";
-
-/* logic */
-export * from "./logic/Rule";
-export * from "./logic/LogicManager";
-
-/* concept.impl */
-export * from "./concept/impl/ConceptImpl";
-
-/* concept.thing */
-export * from "./concept/thing/Attribute";
-export * from "./concept/thing/Entity";
-export * from "./concept/thing/Relation";
-export * from "./concept/thing/Thing";
-
-/* concept.thing.impl */
-export * from "./concept/thing/impl/ThingImpl";
-export * from "./concept/thing/impl/AttributeImpl";
-export * from "./concept/thing/impl/EntityImpl";
-export * from "./concept/thing/impl/RelationImpl";
-
-/* concept.type */
-export * from "./concept/type/AttributeType";
-export * from "./concept/type/EntityType";
-export * from "./concept/type/RelationType";
-export * from "./concept/type/RoleType";
-export * from "./concept/type/ThingType";
-export * from "./concept/type/Type";
-
-/* concept.type.impl */
-export * from "./concept/type/impl/TypeImpl";
-export * from "./concept/type/impl/ThingTypeImpl";
-export * from "./concept/type/impl/AttributeTypeImpl";
-export * from "./concept/type/impl/EntityTypeImpl";
-export * from "./concept/type/impl/RelationTypeImpl";
-export * from "./concept/type/impl/RoleTypeImpl";
-
-/* concept */
-export * from "./concept/Concept";
-export * from "./concept/ConceptManager";
-
-/* query */
-export * from "./query/QueryManager";
-
-/* ROOT */
-export * from "./GraknClient";
-export * from "./GraknOptions";
-
-/* rpc */
-export * from "./rpc/ClientRPC";
-export * from "./rpc/DatabaseManagerRPC";
-export * from "./rpc/DatabaseRPC";
-export * from "./rpc/SessionRPC";
-export * from "./rpc/TransactionRPC";
-export * from "./rpc/Stream";
-
-/* rpc.cluster */
-export * from "./rpc/cluster/FailsafeTask";
-export * from "./rpc/cluster/ServerAddress";
-export * from "./rpc/cluster/ClientClusterRPC";
-export * from "./rpc/cluster/DatabaseManagerClusterRPC";
-export * from "./rpc/cluster/DatabaseClusterRPC";
-export * from "./rpc/cluster/SessionClusterRPC";
-
-/* common.proto */
-export * from "./common_old/proto/OptionsProtoBuilder";
-
-/* concept.proto */
-export * from "./concept/proto/ConceptProtoBuilder";
+// /* common */
+// export * from "./common_old/errors/ErrorMessage";
+// export * from "./common_old/errors/GraknClientError";
+// export * from "./common_old/BlockingQueue";
+// export * from "./common_old/Bytes";
+// export * from "./common_old/utils";
+//
+// /* concept.answer */
+// export * from "./concept/answer/ConceptMap";
+// export * from "./concept/answer/Numeric";
+// export * from "./concept/answer/ConceptMapGroup";
+// export * from "./concept/answer/NumericGroup";
+//
+// /* logic.impl */
+// export * from "./logic/impl/RuleImpl";
+//
+// /* logic */
+// export * from "./logic/Rule";
+// export * from "./logic/LogicManager";
+//
+// /* concept.impl */
+// export * from "./concept/impl/ConceptImpl";
+//
+// /* concept.thing */
+// export * from "./concept/thing/Attribute";
+// export * from "./concept/thing/Entity";
+// export * from "./concept/thing/Relation";
+// export * from "./concept/thing/Thing";
+//
+// /* concept.thing.impl */
+// export * from "./concept/thing/impl/ThingImpl";
+// export * from "./concept/thing/impl/AttributeImpl";
+// export * from "./concept/thing/impl/EntityImpl";
+// export * from "./concept/thing/impl/RelationImpl";
+//
+// /* concept.type */
+// export * from "./concept/type/AttributeType";
+// export * from "./concept/type/EntityType";
+// export * from "./concept/type/RelationType";
+// export * from "./concept/type/RoleType";
+// export * from "./concept/type/ThingType";
+// export * from "./concept/type/Type";
+//
+// /* concept.type.impl */
+// export * from "./concept/type/impl/TypeImpl";
+// export * from "./concept/type/impl/ThingTypeImpl";
+// export * from "./concept/type/impl/AttributeTypeImpl";
+// export * from "./concept/type/impl/EntityTypeImpl";
+// export * from "./concept/type/impl/RelationTypeImpl";
+// export * from "./concept/type/impl/RoleTypeImpl";
+//
+// /* concept */
+// export * from "./concept/Concept";
+// export * from "./concept/ConceptManager";
+//
+// /* query */
+// export * from "./query/QueryManager";
+//
+// /* ROOT */
+// export * from "./GraknClient";
+// export * from "./GraknOptions";
+//
+// /* rpc */
+// export * from "./rpc/ClientRPC";
+// export * from "./rpc/DatabaseManagerRPC";
+// export * from "./rpc/DatabaseRPC";
+// export * from "./rpc/SessionRPC";
+// export * from "./rpc/TransactionRPC";
+// export * from "./common/util/Stream";
+//
+// /* rpc.cluster */
+// export * from "./rpc/cluster/FailsafeTask";
+// export * from "./rpc/cluster/ServerAddress";
+// export * from "./rpc/cluster/ClientClusterRPC";
+// export * from "./rpc/cluster/DatabaseManagerClusterRPC";
+// export * from "./rpc/cluster/DatabaseClusterRPC";
+// export * from "./rpc/cluster/SessionClusterRPC";
+//
+// /* common.proto */
+// export * from "./common_old/proto/OptionsProtoBuilder";
+//
+// /* concept.proto */
+// export * from "./concept/proto/ConceptProtoBuilder";

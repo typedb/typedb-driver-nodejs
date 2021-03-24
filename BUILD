@@ -97,10 +97,15 @@ ts_project(
     srcs = glob([
         "*.ts",
         "common/**/*.ts",
-        "concept/**/*.ts",
-        "logic/**/*.ts",
-        "query/**/*.ts",
-        "rpc/**/*.ts",
+        "core/*.ts",
+        "api/**/*.ts",
+        "stream/*.ts",
+
+#        "concept/**/*.ts",
+#        "logic/**/*.ts",
+#        "query/**/*.ts",
+#        "rpc/**/*.ts",
+
     ]),
     tsconfig = "tsconfig.json",
     declaration = True,

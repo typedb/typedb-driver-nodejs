@@ -34,7 +34,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
     private readonly _options: GraknOptions;
     private _bidirectionalStream: BidirectionalStream;
 
-    constructor(session: CoreSession, _sessionId: string, type: GraknTransaction.Type, options?: GraknOptions) {
+    constructor(session: CoreSession, _sessionId: string, type: GraknTransaction.Type, options: GraknOptions) {
         this._session = session;
         this._sessionId = _sessionId;
         this._type = type;
@@ -43,20 +43,20 @@ export class CoreTransaction implements GraknTransaction.Extended {
         this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter());
     }
 
+    async open(): Promise<void> {
+        let openReq = Core.Transaction.openReq(this._sessionId, this._type.proto(), this._options.proto(), this._session.networkLatency());
+        await this.rpcExecute(openReq, false);
+    }
+
     async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
         if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
         let useBatch = batch ? batch : true;
         return this._bidirectionalStream.single(request, useBatch);
     }
 
-
     rpcStream(request: Transaction.Req): any {
-        // TODO with typing
-    }
-
-    async open(): Promise<void> {
-        let openReq = Core.Transaction.openReq(this._sessionId, this._type.proto(), this._options.proto(), this._session.networkLatency());
-        await this.rpcExecute(openReq, false);
+        if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
+        return this._bidirectionalStream.stream(request);
     }
 
 
@@ -78,15 +78,15 @@ export class CoreTransaction implements GraknTransaction.Extended {
         await this.rpcExecute(rollbackReq);
     }
 
-    concepts(): ConceptManager {
+    concepts(): any {//ConceptManager {
         return undefined;
     }
 
-    logic(): LogicManager {
+    logic(): any {//LogicManager {
         return undefined;
     }
 
-    query(): QueryManager {
+    query(): any {//QueryManager {
         return undefined;
     }
 
