@@ -18,42 +18,19 @@
  */
 
 
-import {GraknTransaction} from "../GraknTransaction";
+import {ConceptManager as ConceptProto} from "grakn-protocol/common/concept_pb";
+import {ThingTypeImpl} from "./ThingTypeImpl";
+import {EntityType} from "../../api/concept/type/EntityType";
 
-export interface Concept {
-
-    asRemote(transaction: GraknTransaction): RemoteConcept;
-
-    isRemote(): boolean;
-
-    isType(): boolean;
-
-    isRoleType(): boolean;
-
-    isThingType(): boolean;
-
-    isEntityType(): boolean;
-
-    isAttributeType(): boolean;
-
-    isRelationType(): boolean;
-
-    isThing(): boolean;
-
-    isEntity(): boolean;
-
-    isAttribute(): boolean;
-
-    isRelation(): boolean;
-
-    equals(concept: Concept): boolean;
+export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
 }
 
-export interface RemoteConcept extends Concept {
+export namespace EntityTypeImpl {
 
-    delete(): Promise<void>;
-
-    isDeleted(): Promise<boolean>;
+    export function of(entityTypeProto: ConceptProto.PutEntityType.Res) {
+        // TODO
+        return new EntityTypeImpl();
+    }
 
 }

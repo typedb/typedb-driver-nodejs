@@ -18,42 +18,32 @@
  */
 
 
-import {GraknTransaction} from "../GraknTransaction";
+import {GraknTransaction} from "../../GraknTransaction";
+import {Concept, RemoteConcept} from "../Concept";
+import {Stream} from "../../../common/util/Stream";
 
-export interface Concept {
+export interface Type extends Concept {
 
-    asRemote(transaction: GraknTransaction): RemoteConcept;
+    getLabel(): string;
 
-    isRemote(): boolean;
+    isRoot(): boolean;
 
-    isType(): boolean;
-
-    isRoleType(): boolean;
-
-    isThingType(): boolean;
-
-    isEntityType(): boolean;
-
-    isAttributeType(): boolean;
-
-    isRelationType(): boolean;
-
-    isThing(): boolean;
-
-    isEntity(): boolean;
-
-    isAttribute(): boolean;
-
-    isRelation(): boolean;
-
-    equals(concept: Concept): boolean;
+    asRemote(transaction: GraknTransaction): RemoteType;
 
 }
 
-export interface RemoteConcept extends Concept {
+export interface RemoteType extends Type, RemoteConcept {
 
-    delete(): Promise<void>;
+    asRemote(transaction: GraknTransaction): RemoteType;
 
-    isDeleted(): Promise<boolean>;
+    setLabel(label: string): Promise<void>;
+
+    isAbstract(): Promise<boolean>;
+
+    getSupertype(): Promise<Type>;
+
+    getSupertypes(): Stream<Type>;
+
+    getSubtypes(): Stream<Type>;
 
 }

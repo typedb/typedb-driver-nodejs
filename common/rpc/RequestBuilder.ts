@@ -22,6 +22,7 @@ import {Session as SessionProto} from "grakn-protocol/common/session_pb";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
 import {LogicManager as LogicProto, Rule as RuleProto} from "grakn-protocol/common/logic_pb";
 import {QueryManager as QueryProto} from "grakn-protocol/common/query_pb";
+import {ConceptManager as ConceptProto, AttributeType as AttributeTypeProto} from "grakn-protocol/common/concept_pb";
 import {Options} from "grakn-protocol/common/options_pb";
 
 export namespace Core {
@@ -200,5 +201,44 @@ export namespace Core {
         //         new QueryProto.Explain.Req().setExplainableId(id)
         //     ), options);
         // }
+    }
+
+
+    export namespace ConceptManager {
+
+        function conceptManagerReq(req: ConceptProto.Req): TransactionProto.Req {
+            // TODO grabl metadata
+            return new TransactionProto.Req().setConceptManagerReq(req);
+        }
+
+        export function putEntityTypeReq(label: string) {
+            return conceptManagerReq(new ConceptProto.Req().setPutEntityTypeReq(
+                new ConceptProto.PutEntityType.Req().setLabel(label))
+            );
+        }
+
+        export function putRelationTypeReq(label: string) {
+            return conceptManagerReq(new ConceptProto.Req().setPutRelationTypeReq(
+                new ConceptProto.PutRelationType.Req().setLabel(label))
+            );
+        }
+
+        export function putAttributeTypeReq(label: string, valueType: AttributeTypeProto.ValueType) {
+            return conceptManagerReq(new ConceptProto.Req().setPutAttributeTypeReq(
+                new ConceptProto.PutAttributeType.Req().setLabel(label).setValueType(valueType)
+            ));
+        }
+
+        export function getThingTypeReq(label: string) {
+            return conceptManagerReq(new ConceptProto.Req().setGetThingTypeReq(
+                new ConceptProto.GetThingType.Req().setLabel(label)
+            ));
+        }
+
+        export function getThingReq(iid: string) {
+            return conceptManagerReq(new ConceptProto.Req().setGetThingReq(
+                new ConceptProto.GetThing.Req().setIid(iid)
+            ));
+        }
     }
 }

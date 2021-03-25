@@ -18,42 +18,34 @@
  */
 
 
-import {GraknTransaction} from "../GraknTransaction";
+import {RemoteThing, Thing} from "./Thing";
+import {RelationType} from "../type/RelationType";
+import {GraknTransaction} from "../../GraknTransaction";
+import {Stream} from "../../../common/util/Stream";
+import {RoleType} from "../type/RoleType";
 
-export interface Concept {
+export interface Relation extends Thing {
 
-    asRemote(transaction: GraknTransaction): RemoteConcept;
+    asRemote(transaction: GraknTransaction): RemoteRelation;
 
-    isRemote(): boolean;
-
-    isType(): boolean;
-
-    isRoleType(): boolean;
-
-    isThingType(): boolean;
-
-    isEntityType(): boolean;
-
-    isAttributeType(): boolean;
-
-    isRelationType(): boolean;
-
-    isThing(): boolean;
-
-    isEntity(): boolean;
-
-    isAttribute(): boolean;
-
-    isRelation(): boolean;
-
-    equals(concept: Concept): boolean;
+    getType(): RelationType;
 
 }
 
-export interface RemoteConcept extends Concept {
+export interface RemoteRelation extends Relation, RemoteThing {
 
-    delete(): Promise<void>;
+    asRemote(transaction: GraknTransaction): RemoteRelation;
 
-    isDeleted(): Promise<boolean>;
+    getType(): RelationType;
+
+    addPlayer(roleType: RoleType, player: Thing): Promise<void>;
+
+    removePlayer(roleType: RoleType, player: Thing): Promise<void>;
+
+    getPlayers(): Stream<Thing>;
+
+    getPlayers(roleTypes: RoleType[]): Stream<Thing>;
+
+    getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>>;
 
 }

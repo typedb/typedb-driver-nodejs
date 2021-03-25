@@ -18,42 +18,25 @@
  */
 
 
-import {GraknTransaction} from "../GraknTransaction";
+import {GraknTransaction} from "../../GraknTransaction";
+import {RemoteThingType, ThingType} from "./ThingType";
+import {Stream} from "../../../common/util/Stream";
+import {Entity} from "../thing/Entity";
 
-export interface Concept {
-
-    asRemote(transaction: GraknTransaction): RemoteConcept;
-
-    isRemote(): boolean;
-
-    isType(): boolean;
-
-    isRoleType(): boolean;
-
-    isThingType(): boolean;
-
-    isEntityType(): boolean;
-
-    isAttributeType(): boolean;
-
-    isRelationType(): boolean;
-
-    isThing(): boolean;
-
-    isEntity(): boolean;
-
-    isAttribute(): boolean;
-
-    isRelation(): boolean;
-
-    equals(concept: Concept): boolean;
-
+export interface EntityType extends ThingType {
+    asRemote(transaction: GraknTransaction): RemoteEntityType;
 }
 
-export interface RemoteConcept extends Concept {
+export interface RemoteEntityType extends ThingType, RemoteThingType {
 
-    delete(): Promise<void>;
+    asRemote(transaction: GraknTransaction): RemoteEntityType;
 
-    isDeleted(): Promise<boolean>;
+    getSubtypes(): Stream<EntityType>;
+
+    getInstances(): Stream<Entity>;
+
+    create(): Promise<Entity>;
+
+    setSupertype(superEntityType: EntityType): Promise<void>;
 
 }

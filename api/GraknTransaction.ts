@@ -21,6 +21,9 @@
 import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {GraknOptions} from "./GraknOptions";
 import {Stream} from "../common/util/Stream";
+import {ConceptManager} from "./concept/ConceptManager";
+import {LogicManager} from "./logic/LogicManager";
+import {QueryManager} from "./query/QueryManager";
 
 export interface GraknTransaction {
 

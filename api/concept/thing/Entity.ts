@@ -17,43 +17,22 @@
  * under the License.
  */
 
+import {EntityType} from "../type/EntityType";
+import {RemoteThing, Thing} from "./Thing";
+import {GraknTransaction} from "../../GraknTransaction";
 
-import {GraknTransaction} from "../GraknTransaction";
+export interface Entity extends Thing {
 
-export interface Concept {
+    asRemote(transaction: GraknTransaction): RemoteEntity;
 
-    asRemote(transaction: GraknTransaction): RemoteConcept;
-
-    isRemote(): boolean;
-
-    isType(): boolean;
-
-    isRoleType(): boolean;
-
-    isThingType(): boolean;
-
-    isEntityType(): boolean;
-
-    isAttributeType(): boolean;
-
-    isRelationType(): boolean;
-
-    isThing(): boolean;
-
-    isEntity(): boolean;
-
-    isAttribute(): boolean;
-
-    isRelation(): boolean;
-
-    equals(concept: Concept): boolean;
+    getType(): EntityType;
 
 }
 
-export interface RemoteConcept extends Concept {
+export interface RemoteEntity extends RemoteThing {
 
-    delete(): Promise<void>;
+    asRemote(transaction: GraknTransaction): RemoteEntity;
 
-    isDeleted(): Promise<boolean>;
+    getType(): EntityType;
 
 }
