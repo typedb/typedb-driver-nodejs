@@ -21,10 +21,11 @@
 import {GraknTransaction} from "../../GraknTransaction";
 import {Concept, RemoteConcept} from "../Concept";
 import {Stream} from "../../../common/util/Stream";
+import {Label} from "../../../common/Label";
 
 export interface Type extends Concept {
 
-    getLabel(): string;
+    getLabel(): Label ;
 
     isRoot(): boolean;
 

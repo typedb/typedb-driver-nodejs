@@ -19,18 +19,22 @@
 
 
 import {ThingTypeImpl} from "./ThingTypeImpl";
-import {ConceptManager as ConceptProto} from "grakn-protocol/common/concept_pb";
+import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import {RelationType} from "../../api/concept/type/RelationType";
+import {EntityTypeImpl} from "./EntityTypeImpl";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
+
+    constructor(label: string, isRoot: boolean) {
+        super(label, isRoot);
+    }
 
 }
 
 export namespace RelationTypeImpl {
 
-    export function of(relationTypeProto: ConceptProto.PutRelationType.Res) {
-        // TODO
-        return new RelationTypeImpl();
+    export function of(relationTypeProto: TypeProto) {
+        return new EntityTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getRoot());
     }
 
 }

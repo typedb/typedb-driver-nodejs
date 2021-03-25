@@ -26,10 +26,6 @@ import {ThingType} from "./ThingType";
 
 export interface RoleType extends Type {
 
-    getScope(): string;
-
-    getScopedLabel(): string;
-
     asRemote(transaction: GraknTransaction): RemoteRoleType;
 
 }

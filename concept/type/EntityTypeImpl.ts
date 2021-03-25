@@ -18,19 +18,33 @@
  */
 
 
-import {ConceptManager as ConceptProto} from "grakn-protocol/common/concept_pb";
 import {ThingTypeImpl} from "./ThingTypeImpl";
-import {EntityType} from "../../api/concept/type/EntityType";
+import {EntityType, RemoteEntityType} from "../../api/concept/type/EntityType";
+import {GraknTransaction} from "../../api/GraknTransaction";
+import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {RemoteThingType} from "../../api/concept/type/ThingType";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
+
+    constructor(name: string, isRoot: boolean) {
+        super(name, isRoot);
+    }
+
+    asRemote(transaction: GraknTransaction): RemoteEntityType {
+        return undefined;
+    }
 
 }
 
 export namespace EntityTypeImpl {
 
-    export function of(entityTypeProto: ConceptProto.PutEntityType.Res) {
-        // TODO
-        return new EntityTypeImpl();
+    export function of(entityTypeProto: TypeProto) {
+        return new EntityTypeImpl(entityTypeProto.getLabel(), entityTypeProto.getRoot());
     }
+
+    export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements RemoteEntityType {
+
+    }
+
 
 }

@@ -17,24 +17,44 @@
  * under the License.
  */
 
+export class Label {
+    private _scope: string;
+    private _name: string;
 
-import {ThingTypeImpl} from "./ThingTypeImpl";
-import {AttributeType, RemoteAttributeType} from "../../api/concept/type/AttributeType";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
-
-export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
-
-}
-
-export namespace AttributeTypeImpl {
-
-    export function of(attributeTypeProto: TypeProto) {
-        return new AttributeTypeImpl(attributeTypeProto.getLabel(), attributeTypeProto.getRoot());
+    constructor(scope: string, label: string) {
+        this._scope = scope;
+        this._name = label;
     }
 
+    scope(): string {
+        return this._scope;
+    }
 
-    export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements RemoteAttributeType {
+    name(): string {
+        return this._name;
+    }
 
+    scopedName(): string {
+        return this._scope == null ? this._name : `${this._scope}:${this._name}`;
+    }
+
+    toString() {
+        return this.scopedName();
+    }
+
+    equals(that: Label) {
+        return this._scope === that._scope && this._name === that._name;
+    }
+}
+
+export namespace Label {
+
+    export function of(name: string) {
+        return new Label(null, name);
+    }
+
+    export function scoped(scope: string, name: string) {
+        return new Label(scope, name);
     }
 
 }
