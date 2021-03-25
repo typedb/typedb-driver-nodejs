@@ -18,35 +18,58 @@
  */
 
 
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
 import {Core} from "../common/rpc/RequestBuilder";
+import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
 import {ClientDuplexStream} from "@grpc/grpc-js";
 
 export class BatchDispatcher {
 
+    private static BATCH_WINDOW_SMALL_MILLIS = 1;
+    private static BATCH_WINDOW_LARGE_MILLIS = 3;
+
     private readonly _transmitter: RequestTransmitter;
-    private readonly _bufferedRequests: TransactionProto.Req[];
     private readonly _transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>;
+    private _bufferedRequests: TransactionProto.Req[];
+    private _isRunning: boolean;
 
     constructor(transmitter: RequestTransmitter, transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>) {
         this._transmitter = transmitter;
         this._transactionStream = transactionStream;
         this._bufferedRequests = new Array<TransactionProto.Req>();
+        this._isRunning = false;
     }
 
-    public dispatch(req : TransactionProto.Req): void {
-        // TODO implement batching
-        const clientRequest = Core.Transaction.clientReq([req])
+    private sendNow(): void {
+        const clientRequest = Core.Transaction.clientReq(this._bufferedRequests);
         this._transactionStream.write(clientRequest);
+        this._bufferedRequests = [];
+    }
+
+    private sendScheduledBatch(first: boolean): void {
+        if (this._isRunning) return;
+        this._isRunning = true;
+        const wait = first ? BatchDispatcher.BATCH_WINDOW_SMALL_MILLIS : BatchDispatcher.BATCH_WINDOW_LARGE_MILLIS;
+        setTimeout(() => {
+            if (this._bufferedRequests.length > 0) {
+                this.sendNow();
+                this.sendScheduledBatch(false);
+            } else {
+                this._isRunning = false;
+            }
+        }, wait);
+    }
+
+    public dispatch(req: TransactionProto.Req): void {
+        this._bufferedRequests.push(req);
+        this.sendNow();
     }
 
     public dispatchNow(req: TransactionProto.Req): void {
-        // TODO implement batching
-        const clientRequest = Core.Transaction.clientReq([req])
-        this._transactionStream.write(clientRequest);
+        this._bufferedRequests.push(req);
+        this.sendScheduledBatch(true);
     }
 
-    close(): void {
+    public close(): void {
         this._transmitter._dispatchers.delete(this);
         this._transactionStream.end();
     }
@@ -63,14 +86,14 @@ export class RequestTransmitter {
         this._isOpen = true;
     }
 
-    public close() : void {
+    public close(): void {
         if (this._isOpen) {
             this._isOpen = false;
             this._dispatchers.forEach(dispatcher => dispatcher.close());
         }
     }
 
-    public dispatcher(transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>) : BatchDispatcher {
+    public dispatcher(transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>): BatchDispatcher {
         let dispatcher = new BatchDispatcher(this, transactionStream);
         this._dispatchers.add(dispatcher);
         return dispatcher;

@@ -43,28 +43,27 @@ export class CoreTransaction implements GraknTransaction.Extended {
         this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter());
     }
 
-    async open(): Promise<void> {
+    public async open(): Promise<void> {
         let openReq = Core.Transaction.openReq(this._sessionId, this._type.proto(), this._options.proto(), this._session.networkLatency());
         await this.rpcExecute(openReq, false);
     }
 
-    async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
+    private async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
         if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
         let useBatch = batch ? batch : true;
         return this._bidirectionalStream.single(request, useBatch);
     }
 
-    rpcStream(request: Transaction.Req): any {
+    private rpcStream(request: Transaction.Req): any {
         if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
         return this._bidirectionalStream.stream(request);
     }
 
-
-    async close(): Promise<void> {
+    public async close(): Promise<void> {
         await this._bidirectionalStream.close();
     }
 
-    async commit(): Promise<void> {
+    public async commit(): Promise<void> {
         const commitReq = Core.Transaction.commitReq();
         try {
             await this.rpcExecute(commitReq);
@@ -73,32 +72,32 @@ export class CoreTransaction implements GraknTransaction.Extended {
         }
     }
 
-    async rollback(): Promise<void> {
+    public async rollback(): Promise<void> {
         const rollbackReq = Core.Transaction.rollbackReq();
         await this.rpcExecute(rollbackReq);
     }
 
-    concepts(): any {//ConceptManager {
+    public concepts(): ConceptManager {
         return undefined;
     }
 
-    logic(): any {//LogicManager {
+    public logic(): LogicManager {
         return undefined;
     }
 
-    query(): any {//QueryManager {
+    public query(): QueryManager {
         return undefined;
     }
 
-    options(): GraknOptions {
+    public options(): GraknOptions {
         return this._options;
     }
 
-    type(): GraknTransaction.Type {
+    public type(): GraknTransaction.Type {
         return this._type;
     }
 
-    isOpen(): boolean {
+    public isOpen(): boolean {
         return this._bidirectionalStream.isOpen();
     }
 

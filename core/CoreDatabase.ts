@@ -52,4 +52,8 @@ export class CoreDatabase implements Database {
         return Promise.resolve("");
     }
 
+    toString(): string {
+        return "Database[" + this._name + "]";
+    }
+
 }

@@ -42,7 +42,7 @@ build:
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel build //... --spawn_strategy=local
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
-        bazel test $(bazel query 'kind(checkstyle_test, //...)')
+        bazel test $(bazel query_old 'kind(checkstyle_test, //...)')
         npm install
         npm run lint
     test-integration:
@@ -75,13 +75,13 @@ build:
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel test //test/behaviour/connection/... --test_output=errors --jobs=1
-    test-behaviour-concept:
+    test-behaviour-concept_old:
       image: graknlabs-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/concept/... --test_output=errors --jobs=1
+        bazel test //test/behaviour/concept_old/... --test_output=errors --jobs=1
     # TODO: Delete --jobs=1 once tests are parallelisable
     test-behaviour-match:
       image: graknlabs-ubuntu-20.04
@@ -122,7 +122,7 @@ build:
         export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
         export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
-      dependencies: [build, test-integration, test-behaviour-connection, test-behaviour-concept, test-behaviour-match, test-behaviour-writable, test-behaviour-definable]
+      dependencies: [build, test-integration, test-behaviour-connection, test-behaviour-concept_old, test-behaviour-match, test-behaviour-writable, test-behaviour-definable]
     test-deployment-npm:
       filter:
         owner: graknlabs

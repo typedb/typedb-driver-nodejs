@@ -54,7 +54,7 @@ export class CoreSession implements GraknSession {
         this._transactions = new Set();
     }
 
-    async open(): Promise<void> {
+    public async open(): Promise<void> {
         const openReq = Core.Session.openReq(this._databaseName, this._type.proto(), this._options.proto())
         this._database = await this._client.databases().get(this._databaseName);
         const start = (new Date()).getMilliseconds();
@@ -72,7 +72,7 @@ export class CoreSession implements GraknSession {
         this._pulse = setTimeout(() => this.pulse(), 5000); // TODO update
     }
 
-    async close(): Promise<void> {
+    public async close(): Promise<void> {
         if (this._isOpen) {
             this._isOpen = false;
             this._transactions.forEach(tx => tx.close());
@@ -87,7 +87,7 @@ export class CoreSession implements GraknSession {
         }
     }
 
-    async transaction(type: GraknTransaction.Type, options?: GraknOptions): Promise<GraknTransaction> {
+    public async transaction(type: GraknTransaction.Type, options?: GraknOptions): Promise<GraknTransaction> {
         if (!this.isOpen()) throw new GraknClientError(SESSION_CLOSED);
         if (!options) options = new GraknOptions();
         let transaction = new CoreTransaction(this, this._sessionId, type, options);
@@ -96,23 +96,23 @@ export class CoreSession implements GraknSession {
         return transaction;
     }
 
-    database(): Database {
+    public database(): Database {
         return this._database;
     }
 
-    isOpen(): boolean {
+    public isOpen(): boolean {
         return this._isOpen;
     }
 
-    options(): GraknOptions {
+    public options(): GraknOptions {
         return this._options;
     }
 
-    type(): GraknSession.Type {
+    public type(): GraknSession.Type {
         return this._type;
     }
 
-    id() {
+    private id() {
         return this._sessionId;
     }
 
@@ -125,15 +125,15 @@ export class CoreSession implements GraknSession {
         });
     }
 
-    rpc(): GraknCoreClient {
+    public rpc(): GraknCoreClient {
         return this._client.rpc();
     }
 
-    requestTransmitter(): RequestTransmitter {
+    public requestTransmitter(): RequestTransmitter {
         return this._client.transmitter();
     }
 
-    networkLatency() {
+    private networkLatency() {
         return this._networkLatencyMillis;
     }
 }

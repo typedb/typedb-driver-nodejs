@@ -30,11 +30,11 @@ export interface GraknTransaction {
 
     options() : GraknOptions;
 
-    // concepts() : ConceptManager;
-    //
-    // logic() : LogicManager;
-    //
-    // query() : QueryManager;
+    concepts() : ConceptManager;
+
+    logic() : LogicManager;
+
+    query() : QueryManager;
 
     commit() : void ;
 

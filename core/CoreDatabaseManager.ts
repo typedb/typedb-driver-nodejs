@@ -33,12 +33,12 @@ export class CoreDatabaseManager implements DatabaseManager {
         this._rpcClient = client;
     }
 
-    async get(name: string): Promise<Database> {
+    public async get(name: string): Promise<Database> {
         if (await this.contains(name)) return new CoreDatabase(name, this._rpcClient);
         else throw new GraknClientError(ErrorMessage.Client.DB_DOES_NOT_EXIST);
     }
 
-    create(name: string): Promise<void> {
+    public create(name: string): Promise<void> {
         if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME);
         const req = Core.DatabaseManager.createReq(name);
         return new Promise((resolve, reject) => {
@@ -49,7 +49,7 @@ export class CoreDatabaseManager implements DatabaseManager {
         });
     }
 
-    contains(name: string): Promise<boolean> {
+    public contains(name: string): Promise<boolean> {
         if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME);
         const req = Core.DatabaseManager.containsReq(name);
         return new Promise((resolve, reject) => {
@@ -60,7 +60,7 @@ export class CoreDatabaseManager implements DatabaseManager {
         });
     }
 
-    all(): Promise<Database[]> {
+    public all(): Promise<Database[]> {
         const req = Core.DatabaseManager.allReq();
         return new Promise((resolve, reject) => {
             this._rpcClient.databases_all(req, (err, res) => {

@@ -20,6 +20,7 @@
 import {CoreDatabaseManager, CoreDatabase} from "grakn-protocol/core/core_database_pb";
 import {Session as SessionProto} from "grakn-protocol/common/session_pb";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {LogicManager as LogicProto} from "grakn-protocol/common/logic_pb";
 import {Options} from "grakn-protocol/common/options_pb";
 
 export namespace Core {
@@ -87,5 +88,29 @@ export namespace Core {
             return new TransactionProto.Req().setReqId(requestId).setStreamReq(new TransactionProto.Stream.Req());
         }
 
+    }
+
+    export namespace LogicManager {
+
+        export function logicManagerReq(logicReq: LogicProto.Req) : TransactionProto.Req {
+            // TODO grabl tracing
+            return new TransactionProto.Req().setLogicManagerReq(logicReq);
+        }
+
+        export function putRuleReq(label: string, when: string, then: string): TransactionProto.Req {
+            return logicManagerReq(new LogicProto.Req().setPutRuleReq(
+                new LogicProto.PutRule.Req().setLabel(label).setWhen(when).setThen(then)
+            ));
+        }
+
+        export function getRuleReq(label: string) : TransactionProto.Req {
+            return logicManagerReq(new LogicProto.Req().setGetRuleReq(
+                new LogicProto.GetRule.Req().setLabel(label)
+            ));
+        }
+
+        export function getRulesReq() : TransactionProto.Req {
+            return logicManagerReq(new LogicProto.Req().setGetRulesReq(new LogicProto.GetRules()));
+        }
     }
 }

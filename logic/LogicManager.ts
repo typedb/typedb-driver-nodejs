@@ -17,48 +17,37 @@
  * under the License.
  */
 
-import { TransactionRPC, Rule, RuleImpl, Stream } from "../dependencies_internal"
-import LogicProto from "grakn-protocol/protobuf/logic_pb";
-import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
+import {LogicManager} from "../api/logic/LogicManager";
+import {Rule} from "../api/logic/Rule";
+import {Stream} from "../common/util/Stream";
+import {Core} from "../common/rpc/RequestBuilder";
+import {GraknTransaction} from "../api/GraknTransaction";
+import {Transaction} from "grakn-protocol/common/transaction_pb";
 
-export class LogicManager {
-    private readonly _transactionRPC: TransactionRPC;
+export class LogicManagerImpl implements LogicManager {
+    private _transaction: GraknTransaction.Extended;
 
-    constructor (transactionRPC: TransactionRPC) {
-        this._transactionRPC = transactionRPC;
+    constructor(transaction: GraknTransaction.Extended) {
+        this._transaction = transaction;
     }
 
-    async putRule(label: string, when: string, then: string): Promise<Rule> {
-        const req = new LogicProto.LogicManager.Req()
-            .setPutRuleReq(new LogicProto.LogicManager.PutRule.Req()
-                .setLabel(label)
-                .setWhen(when)
-                .setThen(then));
-        const res = await this.execute(req);
-        return RuleImpl.of(res.getPutRuleRes().getRule());
+    public async getRule(label: string): Promise<Rule | undefined> {
+        const request = Core.LogicManager.getRuleReq(label);
+        let response = await this.execute(request);
+
+
     }
 
-    async getRule(label: string): Promise<Rule> {
-        const req = new LogicProto.LogicManager.Req()
-            .setGetRuleReq(new LogicProto.LogicManager.GetRule.Req().setLabel(label));
-        const res = await this.execute(req);
-        if (res.getGetRuleRes().getResCase() === LogicProto.LogicManager.GetRule.Res.ResCase.RULE) return RuleImpl.of(res.getGetRuleRes().getRule());
-        return null;
+    getRules(): Stream<Rule> {
+        return undefined;
     }
 
-    getRules(): Stream<RuleImpl> {
-        const method = new LogicProto.LogicManager.Req().setGetRulesReq(new LogicProto.LogicManager.GetRules.Req());
-        return this.ruleStream(method, res => res.getGetRulesRes().getRulesList());
+    putRule(label: string, when: string, then: string): Promise<Rule> {
+        return Promise.resolve(undefined);
     }
 
-    private async execute(logicManagerReq: LogicProto.LogicManager.Req): Promise<LogicProto.LogicManager.Res> {
-        const transactionReq = new TransactionProto.Transaction.Req()
-            .setLogicManagerReq(logicManagerReq);
-        return await this._transactionRPC.execute(transactionReq, res => res.getLogicManagerRes());
+    private execute(request: Transaction.Req) {
+        return this._transaction.rpcExecute(request);
     }
 
-    private ruleStream(method: LogicProto.LogicManager.Req, ruleListGetter: (res: LogicProto.LogicManager.Res) => LogicProto.Rule[]): Stream<RuleImpl> {
-        const request = new TransactionProto.Transaction.Req().setLogicManagerReq(method);
-        return this._transactionRPC.stream(request, res => ruleListGetter(res.getLogicManagerRes()).map(RuleImpl.of));
-    }
 }
