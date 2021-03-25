@@ -23,6 +23,8 @@ import {Stream} from "../common/util/Stream";
 import {Core} from "../common/rpc/RequestBuilder";
 import {GraknTransaction} from "../api/GraknTransaction";
 import {Transaction} from "grakn-protocol/common/transaction_pb";
+import {LogicManager as LogicProto} from "grakn-protocol/common/logic_pb";
+import {RuleImpl} from "./RuleImpl";
 
 export class LogicManagerImpl implements LogicManager {
     private _transaction: GraknTransaction.Extended;
@@ -33,21 +35,37 @@ export class LogicManagerImpl implements LogicManager {
 
     public async getRule(label: string): Promise<Rule | undefined> {
         const request = Core.LogicManager.getRuleReq(label);
-        let response = await this.execute(request);
-
-
+        const response = await this.execute(request);
+        const ruleResponse = response.getGetRuleRes();
+        switch (ruleResponse.getResCase()) {
+            case LogicProto.GetRule.Res.ResCase.RULE:
+                return RuleImpl.of(ruleResponse.getRule());
+            case LogicProto.GetRule.Res.ResCase.RES_NOT_SET:
+            default:
+                return null;
+        }
     }
 
-    getRules(): Stream<Rule> {
-        return undefined;
+    public getRules(): Stream<Rule> {
+        const request = Core.LogicManager.getRulesReq();
+        return this.stream(request).flatMap((resPart) =>
+            Stream.array(resPart.getGetRulesResPart().getRulesList()).map((ruleProto) => RuleImpl.of(ruleProto))
+        );
     }
 
-    putRule(label: string, when: string, then: string): Promise<Rule> {
-        return Promise.resolve(undefined);
+    public async putRule(label: string, when: string, then: string): Promise<Rule> {
+        const request = Core.LogicManager.putRuleReq(label, when, then);
+        const response = await this.execute(request);
+        const ruleResponse = response.getPutRuleRes();
+        return RuleImpl.of(ruleResponse.getRule());
     }
 
     private execute(request: Transaction.Req) {
-        return this._transaction.rpcExecute(request);
+        return this._transaction.rpcExecute(request).then((res) => res.getLogicManagerRes());
+    }
+
+    private stream(request: Transaction.Req) {
+        return this._transaction.rpcStream(request).map((res) => res.getLogicManagerResPart());
     }
 
 }

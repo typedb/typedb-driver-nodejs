@@ -17,10 +17,11 @@
  * under the License.
  */
 
-import {CoreDatabaseManager, CoreDatabase} from "grakn-protocol/core/core_database_pb";
+import {CoreDatabase, CoreDatabaseManager} from "grakn-protocol/core/core_database_pb";
 import {Session as SessionProto} from "grakn-protocol/common/session_pb";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
-import {LogicManager as LogicProto} from "grakn-protocol/common/logic_pb";
+import {LogicManager as LogicProto, Rule as RuleProto} from "grakn-protocol/common/logic_pb";
+import {QueryManager as QueryProto} from "grakn-protocol/common/query_pb";
 import {Options} from "grakn-protocol/common/options_pb";
 
 export namespace Core {
@@ -66,7 +67,7 @@ export namespace Core {
 
     export namespace Transaction {
 
-        export function clientReq(reqs :TransactionProto.Req[]) {
+        export function clientReq(reqs: TransactionProto.Req[]) {
             return new TransactionProto.Client().setReqsList(reqs);
         }
 
@@ -92,25 +93,112 @@ export namespace Core {
 
     export namespace LogicManager {
 
-        export function logicManagerReq(logicReq: LogicProto.Req) : TransactionProto.Req {
+        export function logicManagerReq(logicReq: LogicProto.Req) {
             // TODO grabl tracing
             return new TransactionProto.Req().setLogicManagerReq(logicReq);
         }
 
-        export function putRuleReq(label: string, when: string, then: string): TransactionProto.Req {
+        export function putRuleReq(label: string, when: string, then: string) {
             return logicManagerReq(new LogicProto.Req().setPutRuleReq(
                 new LogicProto.PutRule.Req().setLabel(label).setWhen(when).setThen(then)
             ));
         }
 
-        export function getRuleReq(label: string) : TransactionProto.Req {
+        export function getRuleReq(label: string) {
             return logicManagerReq(new LogicProto.Req().setGetRuleReq(
                 new LogicProto.GetRule.Req().setLabel(label)
             ));
         }
 
-        export function getRulesReq() : TransactionProto.Req {
+        export function getRulesReq() {
             return logicManagerReq(new LogicProto.Req().setGetRulesReq(new LogicProto.GetRules()));
         }
+    }
+
+    export namespace Rule {
+
+        export function ruleReq(request: RuleProto.Req) {
+            return new TransactionProto.Req().setRuleReq(request);
+        }
+
+        export function setLabelReq(currentLabel: string, newLabel: string) {
+            return ruleReq(new RuleProto.Req().setLabel(currentLabel).setRuleSetLabelReq(
+                new RuleProto.SetLabel.Req().setLabel(newLabel)
+            ));
+        }
+
+        export function deleteReq(label: string) {
+            return ruleReq(new RuleProto.Req().setLabel(label).setRuleDeleteReq(
+                new RuleProto.Delete.Req()
+            ));
+        }
+    }
+
+    export namespace QueryManager {
+
+        function queryManagerReq(queryReq: QueryProto.Req, options: Options) {
+            return new TransactionProto.Req().setQueryManagerReq(queryReq.setOptions(options));
+        }
+
+        export function defineReq(query: string, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setDefineReq(
+                new QueryProto.Define.Req().setQuery(query.toString())
+            ), options);
+        }
+
+        export function undefineReq(query: string, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setUndefineReq(
+                new QueryProto.Undefine.Req().setQuery(query.toString())
+            ), options);
+        }
+
+        export function matchReq(query: string, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setMatchReq(
+                new QueryProto.Match.Req().setQuery(query.toString())
+            ), options);
+        }
+
+        export function matchAggregateReq(
+            query: string, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setMatchAggregateReq(
+                new QueryProto.MatchAggregate.Req().setQuery(query.toString())
+            ), options);
+        }
+
+        export function matchGroupReq(query: string, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setMatchGroupReq(
+                new QueryProto.MatchGroup.Req().setQuery(query.toString())
+            ), options);
+        }
+
+        export function matchGroupAggregateReq(query: string, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setMatchGroupAggregateReq(
+                new QueryProto.MatchGroupAggregate.Req().setQuery(query.toString())
+            ), options);
+        }
+
+        export function insertReq(query: string, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setInsertReq(
+                new QueryProto.Insert.Req().setQuery(query.toString())
+            ), options);
+        }
+
+        export function deleteReq(query: string, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setDeleteReq(
+                new QueryProto.Delete.Req().setQuery(query.toString())
+            ), options);
+        }
+
+        export function updateReq(query: string, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setUpdateReq(
+                new QueryProto.Update.Req().setQuery(query)
+            ), options);
+        }
+
+        // export function explainReq(id: number, options : Options ) {
+        //     return queryManagerReq(new QueryProto.Req().setExplainReq(
+        //         new QueryProto.Explain.Req().setExplainableId(id)
+        //     ), options);
+        // }
     }
 }

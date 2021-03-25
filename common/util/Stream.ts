@@ -66,13 +66,16 @@ export abstract class Stream<T> implements AsyncIterable<T> {
 
 export namespace Stream {
 
-    export function stream<T>(iterable: AsyncIterable<T>) {
-        return new Base(iterable);
+    export function iterable<T>(iterable: AsyncIterable<T>) {
+        return new Iterable<T>(iterable);
     }
 
-    class Base<T> extends Stream<T> {
+    export function array<T>(items: T[]) {
+        return new Array<T>(items);
+    }
 
-        // private _receivedAnswers: T[];
+    class Iterable<T> extends Stream<T> {
+
         private _provider: AsyncIterable<T>;
 
         public constructor(provider: AsyncIterable<T>) {
@@ -89,6 +92,23 @@ export namespace Stream {
 
     }
 
+    class Array<T> extends Stream<T> {
+
+        private _array: T[];
+
+        public constructor(array: T[]) {
+            super();
+            this._array = array;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async* [Symbol.asyncIterator](): AsyncIterator<T, any, undefined> {
+            for await (const val of this._array) {
+                yield val;
+            }
+        }
+
+    }
     export class Filtered<T> extends Stream<T> {
 
         private _filter: (value: T) => boolean;

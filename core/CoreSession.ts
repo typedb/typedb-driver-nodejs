@@ -89,7 +89,7 @@ export class CoreSession implements GraknSession {
 
     public async transaction(type: GraknTransaction.Type, options?: GraknOptions): Promise<GraknTransaction> {
         if (!this.isOpen()) throw new GraknClientError(SESSION_CLOSED);
-        if (!options) options = new GraknOptions();
+        if (!options) options = GraknOptions.core();
         let transaction = new CoreTransaction(this, this._sessionId, type, options);
         await transaction.open();
         this._transactions.add(transaction);

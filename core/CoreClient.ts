@@ -53,7 +53,7 @@ export class CoreClient implements GraknClient {
     }
 
     async session(database: string, type: GraknSession.Type, options?: GraknOptions): Promise<GraknSession> {
-        if (!options) options = new GraknOptions();
+        if (!options) options = GraknOptions.core();
         const session = new CoreSession(database, type, options, this);
         await session.open();
         if (this._sessions[session.id()]) throw new GraknClientError(SESSION_ID_EXISTS.message(session.id()));
