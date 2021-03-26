@@ -31,11 +31,11 @@ export interface RemoteEntityType extends ThingType, RemoteThingType {
 
     asRemote(transaction: GraknTransaction): RemoteEntityType;
 
-    getSubtypes(): Stream<EntityType>;
+    create(): Promise<Entity>;
 
     getInstances(): Stream<Entity>;
 
-    create(): Promise<Entity>;
+    getSubtypes(): Stream<EntityType>;
 
     setSupertype(superEntityType: EntityType): Promise<void>;
 

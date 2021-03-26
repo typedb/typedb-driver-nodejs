@@ -32,11 +32,13 @@ export interface RemoteRelationType extends RelationType, RemoteThingType {
 
     asRemote(transaction: GraknTransaction): RemoteRelationType;
 
+    create(): Promise<Relation>;
+
     getSubtypes(): Stream<RelationType>;
 
-    getInstances(): Stream<Relation>;
+    setSupertype(relationType: RelationType): Promise<void>;
 
-    create(): Promise<Relation>;
+    getInstances(): Stream<Relation>;
 
     getRelates(roleLabel: string): Promise<RoleType>;
 
@@ -48,5 +50,4 @@ export interface RemoteRelationType extends RelationType, RemoteThingType {
 
     unsetRelates(roleLabel: string): Promise<void>;
 
-    setSupertype(relationType: RelationType): Promise<void>;
 }

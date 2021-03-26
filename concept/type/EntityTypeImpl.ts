@@ -23,6 +23,9 @@ import {EntityType, RemoteEntityType} from "../../api/concept/type/EntityType";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import {RemoteThingType} from "../../api/concept/type/ThingType";
+import {Label} from "../../common/Label";
+import {Entity} from "../../api/concept/thing/Entity";
+import {Stream} from "../../common/util/Stream";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
@@ -31,7 +34,7 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     asRemote(transaction: GraknTransaction): RemoteEntityType {
-        return undefined;
+        return new EntityTypeImpl.RemoteImpl((transaction as GraknTransaction.Extended), this.getLabel(), this.isRoot());
     }
 
 }
@@ -43,6 +46,26 @@ export namespace EntityTypeImpl {
     }
 
     export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements RemoteEntityType {
+
+        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+            super(transaction, label, isRoot);
+        }
+
+        create(): Promise<Entity> {
+            return Promise.resolve(undefined);
+        }
+
+        setSupertype(superEntityType: EntityType): Promise<void> {
+            return Promise.resolve(undefined);
+        }
+
+        getInstances(): Stream<Entity> {
+            return super.getInstances() as Stream<Entity>;
+        }
+
+        getSubtypes(): Stream<EntityType> {
+            return super.getSubtypes() as Stream<EntityType>;
+        }
 
     }
 

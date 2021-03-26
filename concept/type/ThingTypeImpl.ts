@@ -185,6 +185,10 @@ export namespace ThingTypeImpl {
             await this.execute(request);
         }
 
+        isDeleted(): Promise<boolean> {
+            // TODO
+        }
+
     }
 
 }
