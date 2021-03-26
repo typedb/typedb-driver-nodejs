@@ -24,10 +24,12 @@ import {Stream} from "../../common/util/Stream";
 import {ConceptImpl} from "../ConceptImpl";
 import {GraknClientError} from "../../common_old/errors/GraknClientError";
 import {ErrorMessage} from "../../common_old/errors/ErrorMessage";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import {ThingTypeImpl} from "./ThingTypeImpl";
 import {Label} from "../../common/Label";
 import {RoleTypeImpl} from "./RoleTypeImpl";
+import {Core} from "../../common/rpc/RequestBuilder";
+import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
 
 export abstract class TypeImpl extends ConceptImpl implements Type {
@@ -64,7 +66,6 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 }
 
 
-
 export namespace TypeImpl {
 
     export function of(typeProto: TypeProto) {
@@ -78,18 +79,24 @@ export namespace TypeImpl {
 
     export abstract class RemoteImpl extends ConceptImpl.Remote implements RemoteType {
 
-        private _transaction: GraknTransaction.Extended;
         private _label: Label;
         private _isRoot: boolean;
+        protected _transaction: GraknTransaction.Extended;
 
         constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
             super();
+            if (!transaction) throw new GraknClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
+            if (!label) throw new GraknClientError(ErrorMessage.Concept.MISSING_LABEL.message());
             this._transaction = transaction;
             this._label = label;
             this._isRoot = isRoot;
         }
 
-        getLabel(): Label  {
+        asRemote(transaction: GraknTransaction): RemoteType {
+            return this;
+        }
+
+        getLabel(): Label {
             return this._label;
         }
 
@@ -97,41 +104,51 @@ export namespace TypeImpl {
             return this._isRoot;
         }
 
-        asRemote(transaction: GraknTransaction): RemoteType {
-            return this;
-        }
-
         equals(concept: Concept): boolean {
             if (!concept.isType()) return false;
             return (concept as Type).getLabel().equals(this.getLabel());
         }
 
-        delete(): Promise<void> {
-            return Promise.resolve(undefined);
+        async delete(): Promise<void> {
+            const request = Core.Type.deleteReq(this._label);
+            await this.execute(request);
         }
 
         getSubtypes(): Stream<Type> {
-            return undefined;
+            const request = Core.Type.getSubtypesReq(this._label);
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getTypeGetSubtypesResPart().getTypesList()))
+                .map((typeProto) => of(typeProto));
         }
 
         getSupertype(): Promise<Type> {
-            return Promise.resolve(undefined);
+            const request = Core.Type.getSupertypeReq(this._label);
+            return this.execute(request).then((res) => of(res.getTypeGetSupertypeRes().getType()));
         }
 
         getSupertypes(): Stream<Type> {
-            return undefined;
+            const request = Core.Type.getSupertypesReq(this._label);
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getTypeGetSupertypesResPart().getTypesList()))
+                .map((typeProto) => of(typeProto));
         }
 
-        setLabel(label: string): Promise<void> {
-            return Promise.resolve(undefined);
+        async setLabel(label: string): Promise<void> {
+            const request = Core.Type.setLabelReq(this._label, label);
+            await this.execute(request);
         }
 
-        isDeleted(): Promise<boolean> {
-            return Promise.resolve(false);
+        async isAbstract(): Promise<boolean> {
+            const request = Core.Type.isAbstractReq(this._label);
+            return this.execute(request).then((res) => res.getTypeIsAbstractRes().getAbstract());
         }
 
-        isAbstract(): Promise<boolean> {
-            return Promise.resolve(false);
+        protected async execute(request: TransactionProto.Req): Promise<TypeProto.Res> {
+            return (await this._transaction.rpcExecute(request)).getTypeRes();
+        }
+
+        protected stream(request: TransactionProto.Req): Stream<TypeProto.ResPart> {
+            return this._transaction.rpcStream(request).map((res) => res.getTypeResPart());
         }
 
     }

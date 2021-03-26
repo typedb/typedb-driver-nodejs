@@ -18,13 +18,16 @@
  */
 
 import {RemoteRoleType, RoleType} from "../../api/concept/type/RoleType";
-import {RemoteTypeImpl, TypeImpl} from "./TypeImpl";
+import {TypeImpl} from "./TypeImpl";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import {Label} from "../../common/Label";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {Stream} from "../../common/util/Stream";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {RelationType} from "../../api/concept/type/RelationType";
+import {ThingTypeImpl} from "./ThingTypeImpl";
+import {Core} from "../../common/rpc/RequestBuilder";
+import {RelationTypeImpl} from "./RelationTypeImpl";
 
 export class RoleTypeImpl extends TypeImpl implements RoleType {
 
@@ -33,7 +36,7 @@ export class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     asRemote(transaction: GraknTransaction): RemoteRoleType {
-        return new RoleTypeImpl.RemoteRoleTypeImpl((transaction as GraknTransaction.Extended), this.getLabel(), this.isRoot());
+        return new RoleTypeImpl.RemoteImpl((transaction as GraknTransaction.Extended), this.getLabel(), this.isRoot());
     }
 
 }
@@ -44,7 +47,7 @@ export namespace RoleTypeImpl {
         return new RoleTypeImpl(typeProto.getScope(), typeProto.getLabel(), typeProto.getRoot());
     }
 
-    export class RemoteRoleTypeImpl extends RemoteTypeImpl implements RemoteRoleType {
+    export class RemoteImpl extends TypeImpl.RemoteImpl implements RemoteRoleType {
 
         constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
@@ -55,27 +58,38 @@ export namespace RoleTypeImpl {
         }
 
         getSupertype(): Promise<RoleType> {
-            return null;
+            return super.getSupertype() as Promise<RoleType>;
         }
 
         getSupertypes(): Stream<RoleType> {
-            return null;
+            return super.getSupertypes() as Stream<RoleType>;
         }
 
         getSubtypes(): Stream<RoleType> {
-            return null;
+            return super.getSubtypes() as Stream<RoleType>;
         }
 
         getRelationType(): Promise<RelationType> {
-            return null;
+            return this._transaction.concepts().getRelationType(this.getLabel().scope());
         }
 
         getRelationTypes(): Stream<RelationType> {
-            return null;
+            const request = Core.Type.RoleType.getRelationTypesReq(this.getLabel());
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getRoleTypeGetRelationTypesResPart().getRelationTypesList()))
+                .map((res) => RelationTypeImpl.of(res));
         }
 
         getPlayers(): Stream<ThingType> {
-            return null;
+            const request = Core.Type.RoleType.getPlayersReq(this.getLabel());
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getRoleTypeGetPlayersResPart().getThingTypesList()))
+                .map((thing) => ThingTypeImpl.of(thing));
+        }
+
+        async isDeleted(): Promise<boolean> {
+            return !this.getRelationType() ||
+                (!(await this.getRelationType()).asRemote(this._transaction).getRelates(this.getLabel().name()))
         }
     }
 

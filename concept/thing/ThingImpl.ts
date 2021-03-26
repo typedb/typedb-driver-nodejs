@@ -18,7 +18,7 @@
  */
 
 
-import {ConceptManager as ConceptProto} from "grakn-protocol/common/concept_pb";
+import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
 import {Thing} from "../../api/concept/thing/Thing";
 
 export class ThingImpl implements Thing {
@@ -27,7 +27,7 @@ export class ThingImpl implements Thing {
 
 export namespace ThingImpl {
 
-    export function of(thingProto: ConceptProto.GetThing.Res) {
+    export function of(thingProto: ThingProto) {
         // TODO
         return new ThingImpl();
     }

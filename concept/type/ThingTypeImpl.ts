@@ -19,7 +19,6 @@
 
 import {RemoteThingType, ThingType} from "../../api/concept/type/ThingType";
 import {TypeImpl} from "./TypeImpl";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {Label} from "../../common/Label";
 import {EntityTypeImpl} from "./EntityTypeImpl";
@@ -32,6 +31,10 @@ import {Stream} from "../../common/util/Stream";
 import {Thing} from "../../api/concept/thing/Thing";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {RoleType} from "../../api/concept/type/RoleType";
+import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {Core} from "../../common/rpc/RequestBuilder";
+import {ThingImpl} from "../thing/ThingImpl";
+import {RoleTypeImpl} from "./RoleTypeImpl";
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
 
@@ -40,7 +43,11 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     asRemote(transaction: GraknTransaction): RemoteThingType {
-        return undefined;
+        return new ThingTypeImpl.RemoteImpl((transaction as GraknTransaction.Extended), this.getLabel(), this.isRoot());
+    }
+
+    isThingType(): boolean {
+        return true;
     }
 
 }
@@ -68,50 +75,114 @@ export namespace ThingTypeImpl {
             super(transaction, label, isRoot);
         }
 
+        asRemote(transaction: GraknTransaction): RemoteThingType {
+            return this;
+        }
+
+        isThingType(): boolean {
+            return true;
+        }
+
+        getSupertype(): Promise<ThingTypeImpl> {
+            return super.getSupertype() as Promise<ThingTypeImpl>;
+        }
+
+        getSupertypes(): Stream<ThingTypeImpl> {
+            return super.getSupertypes() as Stream<ThingTypeImpl>;
+        }
+
+        getSubtypes(): Stream<ThingTypeImpl> {
+            return super.getSubtypes() as Stream<ThingTypeImpl>;
+        }
+
         getInstances(): Stream<Thing> {
-            return undefined;
+            const request = Core.Type.ThingType.getInstancesReq(this.getLabel());
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetInstancesResPart().getThingsList()))
+                .map((thingProto) => ThingImpl.of(thingProto));
         }
 
         getOwns(): Stream<AttributeType>;
         getOwns(valueType: AttributeType.ValueType): Stream<AttributeType>;
         getOwns(keysOnly: boolean): Stream<AttributeType>;
         getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
-        getOwns(valueType?: AttributeType.ValueType | boolean, keysOnly?: boolean): Stream<AttributeType> {
-            return undefined;
+        getOwns(valueTypeOrKeysOnly?: AttributeType.ValueType | boolean, keysOnly?: boolean): Stream<AttributeType> {
+            let request;
+            if (!valueTypeOrKeysOnly) {
+                request = Core.Type.ThingType.getOwnsReq(this.getLabel(), false);
+            } else if (typeof valueTypeOrKeysOnly === "boolean") {
+                request = Core.Type.ThingType.getOwnsReq(this.getLabel(), valueTypeOrKeysOnly as boolean)
+            } else if (!keysOnly) {
+                request = Core.Type.ThingType.getOwnsByTypeReq(
+                    this.getLabel(), (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), false
+                );
+            } else {
+                request = Core.Type.ThingType.getOwnsByTypeReq(
+                    this.getLabel(), (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), keysOnly
+                );
+            }
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetOwnsResPart().getAttributeTypesList()))
+                .map((attributeTypeProto) => AttributeTypeImpl.of(attributeTypeProto));
+        }
+
+        async setOwns(attributeType: AttributeType): Promise<void>;
+        async setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
+        async setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
+        async setOwns(attributeType: AttributeType, overriddenTypeOrIsKey: AttributeType | boolean, isKey?: boolean): Promise<void> {
+            let request;
+            if (!overriddenTypeOrIsKey) {
+                request = Core.Type.ThingType.setOwnsReq(this.getLabel(), attributeType.proto(), false);
+            } else if (typeof overriddenTypeOrIsKey === "boolean") {
+                request = Core.Type.ThingType.setOwnsReq(this.getLabel(),  attributeType.proto(), overriddenTypeOrIsKey as boolean)
+            } else if (!isKey) {
+                request = Core.Type.ThingType.setOwnsReq(
+                    this.getLabel(), attributeType.proto(), (overriddenTypeOrIsKey as AttributeType).proto(), false
+                );
+            } else {
+                request = Core.Type.ThingType.setOwnsReq(
+                    this.getLabel(), attributeType.proto(), (overriddenTypeOrIsKey as AttributeType).proto(), isKey
+                );
+            }
+            await this.execute(request);
+        }
+
+        async unsetOwns(attributeType: AttributeType): Promise<void> {
+            const request = Core.Type.ThingType.unsetOwnsReq(this.getLabel(), attributeType.proto());
+            await this.execute(request);
         }
 
         getPlays(): Stream<RoleType> {
-            return undefined;
+            const request = Core.Type.ThingType.getPlaysReq(this.getLabel());
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetPlaysResPart().getRolesList()))
+                .map((roleProto) => RoleTypeImpl.of(roleProto));
         }
 
-        setAbstract(): Promise<void> {
-            return Promise.resolve(undefined);
+        async setPlays(role: RoleType): Promise<void>;
+        async setPlays(role: RoleType, overriddenType?: RoleType): Promise<void> {
+            let request;
+            if (!overriddenType) {
+                request = Core.Type.ThingType.setPlaysReq(this.getLabel(), role.proto());
+            } else {
+                request = Core.Type.ThingType.setPlaysOverriddenReq(this.getLabel(), role.proto(), overriddenType.proto());
+            }
+            await this.execute(request);
         }
 
-        setOwns(attributeType: AttributeType): Promise<void>;
-        setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
-        setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
-        setOwns(attributeType: AttributeType, overriddenType: AttributeType, isKey: boolean): Promise<void>;
-        setOwns(attributeType: AttributeType, isKey?: boolean | AttributeType, isKey?: boolean): Promise<void> {
-            return Promise.resolve(undefined);
+        async unsetPlays(role: RoleType): Promise<void> {
+            const request = Core.Type.ThingType.unsetPlaysReq(this.getLabel(), role.proto());
+            await this.execute(request);
         }
 
-        setPlays(role: RoleType): Promise<void>;
-        setPlays(role: RoleType, overriddenType: RoleType): Promise<void>;
-        setPlays(role: RoleType, overriddenType?: RoleType): Promise<void> {
-            return Promise.resolve(undefined);
+        async setAbstract(): Promise<void> {
+            const request = Core.Type.ThingType.setAbstractReq(this.getLabel());
+            await this.execute(request);
         }
 
-        unsetAbstract(): Promise<void> {
-            return Promise.resolve(undefined);
-        }
-
-        unsetOwns(attributeType: AttributeType): Promise<void> {
-            return Promise.resolve(undefined);
-        }
-
-        unsetPlays(role: RoleType): Promise<void> {
-            return Promise.resolve(undefined);
+        async unsetAbstract(): Promise<void> {
+            const request = Core.Type.ThingType.unsetAbstractReq(this.getLabel());
+            await this.execute(request);
         }
 
     }

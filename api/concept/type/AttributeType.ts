@@ -30,7 +30,6 @@ import {
     LongAttribute,
     StringAttribute
 } from "../thing/Attribute";
-import {Transaction} from "grakn-protocol/common/transaction_pb";
 
 export interface AttributeType extends ThingType {
 
