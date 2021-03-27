@@ -91,7 +91,7 @@ export namespace ThingTypeImpl {
             return super.getSupertypes() as Stream<ThingTypeImpl>;
         }
 
-        getSubtypes(): Stream<ThingTypeImpl> {
+        getSubtypes(): Stream<ThingType> {
             return super.getSubtypes() as Stream<ThingTypeImpl>;
         }
 
@@ -185,8 +185,13 @@ export namespace ThingTypeImpl {
             await this.execute(request);
         }
 
-        isDeleted(): Promise<boolean> {
-            // TODO
+        async isDeleted(): Promise<boolean> {
+            return (await this._transaction.concepts().getThingType(this.getLabel().name())) != null;
+        }
+
+        protected async setSupertype(thingType: ThingType): Promise<void> {
+            const request = Core.Type.ThingType.setSupertypeReq(this.getLabel(), thingType.proto());
+            await this.execute(request);
         }
 
     }

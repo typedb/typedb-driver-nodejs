@@ -104,11 +104,11 @@ export class ConceptManagerImpl implements ConceptManager {
     async putRelationType(label: string): Promise<RelationType> {
         const request = Core.ConceptManager.putRelationTypeReq(label);
         const response = await this.execute(request);
-        return RelationTypeImpl.of(response.getPutRelationTypeRes().getRelationType();
+        return RelationTypeImpl.of(response.getPutRelationTypeRes().getRelationType());
     }
 
     async putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType | null> {
-        const request = Core.ConceptManager.putAttributeTypeReq(label);
+        const request = Core.ConceptManager.putAttributeTypeReq(label, valueType.proto());
         const response = await this.execute(request);
         return AttributeTypeImpl.of(response.getPutEntityTypeRes().getEntityType());
     }

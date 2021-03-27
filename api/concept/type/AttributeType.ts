@@ -21,7 +21,7 @@
 import {RemoteThingType, ThingType} from "./ThingType";
 import {GraknTransaction} from "../../GraknTransaction";
 import {Stream} from "../../../common/util/Stream";
-import {Concept as ConceptProto, AttributeType as AttributeTypeProto} from "grakn-protocol/common/concept_pb";
+import {AttributeType as AttributeTypeProto} from "grakn-protocol/common/concept_pb";
 import {
     Attribute,
     BooleanAttribute,
@@ -47,163 +47,201 @@ export interface AttributeType extends ThingType {
 
     isDateTime(): boolean;
 
-    asBoolean(): BooleanAttributeType;
+    asBoolean(): AttributeType.Boolean;
 
-    asLong(): LongAttributeType;
+    asLong(): AttributeType.Long;
 
-    asDouble(): DoubleAttributeType;
+    asDouble(): AttributeType.Double;
 
-    asString(): StringAttributeType;
+    asString(): AttributeType.String;
 
-    asDateTime(): DateTimeAttributeType;
+    asDateTime(): AttributeType.DateTime;
 
-    asRemote(transaction: GraknTransaction): RemoteAttributeType;
-
-}
-
-export interface RemoteAttributeType extends RemoteThingType, AttributeType {
-
-    setSupertype(type: AttributeType): Promise<void>;
-
-    getSubtypes(): Stream<AttributeType>;
-
-    getInstances(): Stream<Attribute<AttributeType.ValueClass>>;
-
-    getOwners(): Stream<ThingType>;
-
-    getOwners(onlyKey: boolean): Stream<ThingType>;
-
-    asBoolean(): RemoteBooleanAttributeType;
-
-    asLong(): RemoteLongAttributeType;
-
-    asDouble(): RemoteDoubleAttributeType;
-
-    asString(): RemoteStringAttributeType;
-
-    asDateTime(): RemoteDateTimeAttributeType;
-
-    asRemote(transaction: GraknTransaction): RemoteAttributeType;
-
-}
-
-export interface BooleanAttributeType extends AttributeType {
-
-    asRemote(transaction: GraknTransaction): RemoteBooleanAttributeType;
-
-}
-
-export interface RemoteBooleanAttributeType extends RemoteAttributeType, BooleanAttributeType {
-
-    asRemote(transaction: GraknTransaction): RemoteBooleanAttributeType;
-
-    setSupertype(type: BooleanAttributeType): Promise<void>;
-
-    getSubtypes(): Stream<BooleanAttributeType>;
-
-    getInstances(): Stream<BooleanAttribute>;
-
-    put(value: boolean): Promise<BooleanAttribute>;
-
-    get(value: boolean): Promise<BooleanAttribute>;
-
-}
-
-export interface LongAttributeType extends AttributeType {
-
-    asRemote(transaction: GraknTransaction): RemoteLongAttributeType;
-
-}
-
-export interface RemoteLongAttributeType extends RemoteAttributeType, LongAttributeType {
-
-    asRemote(transaction: GraknTransaction): RemoteLongAttributeType;
-
-    setSupertype(type: LongAttributeType): Promise<void>;
-
-    getSubtypes(): Stream<LongAttributeType>;
-
-    getInstances(): Stream<LongAttribute>;
-
-    put(value: number): Promise<LongAttribute>;
-
-    get(value: number): Promise<LongAttribute>;
-
-}
-
-export interface DoubleAttributeType extends AttributeType {
-
-    asRemote(transaction: GraknTransaction): RemoteDoubleAttributeType;
-
-}
-
-export interface RemoteDoubleAttributeType extends RemoteAttributeType, DoubleAttributeType {
-    asRemote(transaction: GraknTransaction): RemoteDoubleAttributeType;
-
-    setSupertype(type: DoubleAttributeType): Promise<void>;
-
-    getSubtypes(): Stream<DoubleAttributeType>;
-
-    getInstances(): Stream<DoubleAttribute>;
-
-    put(value: number): Promise<DoubleAttribute>;
-
-    get(value: number): Promise<DoubleAttribute>;
-}
-
-export interface StringAttributeType extends AttributeType {
-
-    asRemote(transaction: GraknTransaction): RemoteStringAttributeType;
-
-}
-
-export interface RemoteStringAttributeType extends RemoteAttributeType, StringAttributeType {
-
-    asRemote(transaction: GraknTransaction): RemoteStringAttributeType;
-
-    setSupertype(type: StringAttributeType): Promise<void>;
-
-    getSubtypes(): Stream<StringAttributeType>;
-
-    getInstances(): Stream<StringAttribute>;
-
-    put(value: string): Promise<StringAttribute>;
-
-    get(value: string): Promise<StringAttribute>;
-
-    getRegex(): Promise<string>;
-
-    setRegex(regex: string): Promise<void>;
-
-}
-
-export interface DateTimeAttributeType extends AttributeType {
-
-    asRemote(transaction: GraknTransaction): RemoteDateTimeAttributeType;
-
-}
-
-export interface RemoteDateTimeAttributeType extends RemoteAttributeType, DateTimeAttributeType {
-
-    asRemote(transaction: GraknTransaction): RemoteDateTimeAttributeType;
-
-    setSupertype(type: DateTimeAttributeType): Promise<void>;
-
-    getSubtypes(): Stream<DateTimeAttributeType>;
-
-    getInstances(): Stream<DateTimeAttribute>;
-
-    put(value: Date): Promise<DateTimeAttribute>;
-
-    get(value: Date): Promise<DateTimeAttribute>;
+    asRemote(transaction: GraknTransaction): AttributeType.Remote;
 
 }
 
 export namespace AttributeType {
 
+    export interface Remote extends RemoteThingType, AttributeType {
+
+        setSupertype(type: AttributeType): Promise<void>;
+
+        getSubtypes(): Stream<AttributeType>;
+
+        getInstances(): Stream<Attribute<AttributeType.ValueClass>>;
+
+        getOwners(): Stream<ThingType>;
+
+        getOwners(onlyKey: boolean): Stream<ThingType>;
+
+        asBoolean(): AttributeType.RemoteBoolean;
+
+        asLong(): AttributeType.RemoteLong;
+
+        asDouble(): AttributeType.RemoteDouble;
+
+        asString(): AttributeType.RemoteString;
+
+        asDateTime(): AttributeType.RemoteDateTime;
+
+        asRemote(transaction: GraknTransaction): AttributeType.Remote;
+
+    }
+
+    export interface Boolean extends AttributeType {
+
+        asRemote(transaction: GraknTransaction): AttributeType.RemoteBoolean;
+
+    }
+
+    export interface RemoteBoolean extends AttributeType.Remote, Boolean {
+
+        asRemote(transaction: GraknTransaction): RemoteBoolean;
+
+        // TODO avoid this typing workaround
+        asBoolean(): RemoteBoolean;
+        asLong(): RemoteLong;
+        asDouble(): RemoteDouble;
+        asString(): RemoteString;
+        asDateTime(): RemoteDateTime;
+
+        setSupertype(type: Boolean): Promise<void>;
+
+        getSubtypes(): Stream<Boolean>;
+
+        getInstances(): Stream<BooleanAttribute>;
+
+        put(value: boolean): Promise<BooleanAttribute>;
+
+        get(value: boolean): Promise<BooleanAttribute>;
+
+    }
+
+    export interface Long extends AttributeType {
+
+        asRemote(transaction: GraknTransaction): AttributeType.RemoteLong;
+
+    }
+    export interface RemoteLong extends AttributeType.Remote, Long {
+
+        asRemote(transaction: GraknTransaction): RemoteLong;
+
+        // TODO avoid this typing workaround
+        asBoolean(): RemoteBoolean;
+        asLong(): RemoteLong;
+        asDouble(): RemoteDouble;
+        asString(): RemoteString;
+        asDateTime(): RemoteDateTime;
+
+        setSupertype(type: Long): Promise<void>;
+
+        getSubtypes(): Stream<Long>;
+
+        getInstances(): Stream<LongAttribute>;
+
+        put(value: number): Promise<LongAttribute>;
+
+        get(value: number): Promise<LongAttribute>;
+
+    }
+
+    export interface Double extends AttributeType {
+
+        asRemote(transaction: GraknTransaction): AttributeType.RemoteDouble;
+
+    }
+
+    export interface RemoteDouble extends AttributeType.Remote, Double {
+        asRemote(transaction: GraknTransaction): RemoteDouble;
+
+        // TODO avoid this typing workaround
+        asBoolean(): RemoteBoolean;
+        asLong(): RemoteLong;
+        asDouble(): RemoteDouble;
+        asString(): RemoteString;
+        asDateTime(): RemoteDateTime;
+
+        setSupertype(type: Double): Promise<void>;
+
+        getSubtypes(): Stream<Double>;
+
+        getInstances(): Stream<DoubleAttribute>;
+
+        put(value: number): Promise<DoubleAttribute>;
+
+        get(value: number): Promise<DoubleAttribute>;
+    }
+
+    export interface String extends AttributeType {
+
+        asRemote(transaction: GraknTransaction): AttributeType.RemoteString;
+
+    }
+
+    export interface RemoteString extends AttributeType.Remote, String {
+
+        asRemote(transaction: GraknTransaction): RemoteString;
+
+        // TODO avoid this typing workaround
+        asBoolean(): RemoteBoolean;
+        asLong(): RemoteLong;
+        asDouble(): RemoteDouble;
+        asString(): RemoteString;
+        asDateTime(): RemoteDateTime;
+
+        setSupertype(type: String): Promise<void>;
+
+        getSubtypes(): Stream<String>;
+
+        getInstances(): Stream<StringAttribute>;
+
+        put(value: string): Promise<StringAttribute>;
+
+        get(value: string): Promise<StringAttribute>;
+
+        getRegex(): Promise<string>;
+
+        setRegex(regex: string): Promise<void>;
+
+    }
+
+    export interface DateTime extends AttributeType {
+
+        asRemote(transaction: GraknTransaction): AttributeType.RemoteDateTime;
+
+    }
+
+    export interface RemoteDateTime extends AttributeType.Remote, DateTime {
+
+        asRemote(transaction: GraknTransaction): RemoteDateTime;
+
+        // TODO avoid this typing workaround
+        asBoolean(): RemoteBoolean;
+        asLong(): RemoteLong;
+        asDouble(): RemoteDouble;
+        asString(): RemoteString;
+        asDateTime(): RemoteDateTime;
+
+        setSupertype(type: DateTime): Promise<void>;
+
+        getSubtypes(): Stream<DateTime>;
+
+        getInstances(): Stream<DateTimeAttribute>;
+
+        put(value: Date): Promise<DateTimeAttribute>;
+
+        get(value: Date): Promise<DateTimeAttribute>;
+
+    }
+
     export interface ValueType {
 
-        proto() : AttributeTypeProto.ValueType;
+        isKeyable(): boolean;
+
+        isWritable(): boolean;
+
+        proto(): AttributeTypeProto.ValueType;
 
     }
 
@@ -243,9 +281,7 @@ export namespace AttributeType {
         export const STRING = new Impl(AttributeTypeProto.ValueType.STRING, "STRING");
         export const DATETIME = new Impl(AttributeTypeProto.ValueType.DATETIME, "DATETIME");
 
-
-        export type ValueClass = number | string | boolean | Date;
-
     }
 
+    export type ValueClass = number | string | boolean | Date;
 }

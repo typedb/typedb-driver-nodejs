@@ -35,40 +35,34 @@ namespace Opts {
         readAnyReplica?: boolean;
     }
 
-    export function proto(options: GraknOptions) : Options {
+    export function proto(options: Opts.Core | Opts.Cluster) : Options {
         const optionsProto = new Options();
         if (options) {
-            const opts = options.opts();
-            if (opts.infer != null) optionsProto.setInfer(opts.infer);
-            if (opts.traceInference != null) optionsProto.setTraceInference(opts.traceInference);
-            if (opts.explain != null) optionsProto.setExplain(opts.explain);
-            if (opts.parallel != null) optionsProto.setParallel(opts.parallel);
-            if (opts.batchSize != null) optionsProto.setBatchSize(opts.batchSize);
-            if (opts.prefetch != null) optionsProto.setPrefetch(opts.prefetch);
-            if (opts.sessionIdleTimeoutMillis != null) optionsProto.setSessionIdleTimeoutMillis(opts.sessionIdleTimeoutMillis);
-            if (opts.schemaLockAcquireTimeoutMillis != null) optionsProto.setSchemaLockAcquireTimeoutMillis(opts.schemaLockAcquireTimeoutMillis);
-            if (options.isCluster()) {
-                if ((opts as Opts.Cluster).readAnyReplica != null) optionsProto.setReadAnyReplica((opts as Opts.Cluster).readAnyReplica);
+            if (options.infer != null) optionsProto.setInfer(options.infer);
+            if (options.traceInference != null) optionsProto.setTraceInference(options.traceInference);
+            if (options.explain != null) optionsProto.setExplain(options.explain);
+            if (options.parallel != null) optionsProto.setParallel(options.parallel);
+            if (options.batchSize != null) optionsProto.setBatchSize(options.batchSize);
+            if (options.prefetch != null) optionsProto.setPrefetch(options.prefetch);
+            if (options.sessionIdleTimeoutMillis != null) optionsProto.setSessionIdleTimeoutMillis(options.sessionIdleTimeoutMillis);
+            if (options.schemaLockAcquireTimeoutMillis != null) optionsProto.setSchemaLockAcquireTimeoutMillis(options.schemaLockAcquireTimeoutMillis);
+            if (options instanceof Opts.Cluster) {
+                if ((options as Opts.Cluster).readAnyReplica != null) optionsProto.setReadAnyReplica((options as Opts.Cluster).readAnyReplica);
             }
         }
         return optionsProto;
     }
 }
 
-export class GraknOptions {
-
-    private _opts : Opts.Core;
+export class GraknOptions extends Opts.Core {
 
     constructor(obj: {[K in keyof Opts.Core]: Opts.Core[K]} = {}) {
-        this._opts = obj;
+        super();
+        Object.assign(this, obj);
     }
 
     public isCluster() : boolean {
         return false;
-    }
-
-    public opts() : Opts.Core {
-        return this._opts;
     }
 
     proto() : Options {
@@ -76,14 +70,19 @@ export class GraknOptions {
     }
 }
 
-export class GraknClusterOptions extends GraknOptions {
+export class GraknClusterOptions extends Opts.Cluster {
 
     constructor(obj: {[K in keyof Opts.Cluster]: Opts.Cluster[K]} = {}) {
-        super(obj);
+        super();
+        Object.assign(this, obj);
     }
 
     public isCluster() : boolean {
         return true;
+    }
+
+    proto(): Options {
+        return Opts.proto(this);
     }
 }
 

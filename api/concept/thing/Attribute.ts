@@ -17,22 +17,15 @@
  * under the License.
  */
 
-import {
-    AttributeType,
-    BooleanAttributeType,
-    DateTimeAttributeType,
-    DoubleAttributeType,
-    LongAttributeType,
-    StringAttributeType
-} from "../type/AttributeType";
 import {RemoteThing, Thing} from "./Thing";
 import {GraknTransaction} from "../../GraknTransaction";
 import {Stream} from "../../../common/util/Stream";
 import {ThingType} from "../type/ThingType";
+import {AttributeType} from "../type/AttributeType";
 
 export interface Attribute<T extends AttributeType.ValueClass> extends Thing {
 
-    asRemote(transaction: GraknTransaction): RemoteAttribute<T>;
+    asRemote(transaction: GraknTransaction): Attribute.Remote<T>;
 
     getType(): AttributeType;
 
@@ -50,94 +43,99 @@ export interface Attribute<T extends AttributeType.ValueClass> extends Thing {
 
 }
 
-export interface RemoteAttribute<T extends AttributeType.ValueClass> extends Attribute<T>, RemoteThing {
+export namespace Attribute {
 
-    asRemote(transaction: GraknTransaction): RemoteAttribute<T>;
+    export interface Remote<T extends AttributeType.ValueClass> extends Attribute<T>, RemoteThing {
 
-    getType(): AttributeType;
+        asRemote(transaction: GraknTransaction): Attribute.Remote<T>;
 
-    getOwners(): Stream<Thing>;
+        getType(): AttributeType;
 
-    getOwners(ownerType: ThingType): Stream<Thing>;
+        getOwners(): Stream<Thing>;
 
+        getOwners(ownerType: ThingType): Stream<Thing>;
+
+    }
+
+    export interface Boolean extends Attribute<boolean> {
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteBoolean;
+
+        getType(): AttributeType.Boolean;
+
+    }
+
+    export interface RemoteBoolean extends Attribute.Remote<boolean>, Attribute.Boolean {
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteBoolean;
+
+        getType(): AttributeType.Boolean;
+
+    }
+
+    export interface Long extends Attribute<number> {
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteLong;
+
+        getType(): AttributeType.Long;
+
+    }
+
+    export interface RemoteLong extends Attribute.Remote<number>, Attribute.Long{
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteLong;
+
+        getType(): AttributeType.Long;
+
+    }
+
+    export interface Double extends Attribute<number> {
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteDouble;
+
+        getType():AttributeType.Double;
+
+    }
+
+    export interface RemoteDouble extends Attribute.Remote<number>, Attribute.Double {
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteDouble;
+
+        getType(): AttributeType.Double;
+
+    }
+
+    export interface String extends Attribute<string> {
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteString;
+
+        getType(): AttributeType.String;
+
+    }
+
+    export interface RemoteString extends Attribute.Remote<string>, Attribute.String {
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteString;
+
+        getType(): AttributeType.String;
+
+    }
+
+    export interface DateTime extends Attribute<Date> {
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteDateTime;
+
+        getType(): AttributeType.DateTime;
+
+    }
+
+    export interface RemoteDateTime extends Attribute.Remote<Date>, Attribute.DateTime {
+
+        asRemote(transaction: GraknTransaction): Attribute.RemoteDateTime;
+
+        getType(): AttributeType.DateTime;
+
+    }
 }
 
-export interface BooleanAttribute extends Attribute<boolean> {
 
-    asRemote(transaction: GraknTransaction): RemoteBooleanAttribute;
-
-    getType(): BooleanAttributeType;
-
-}
-
-export interface RemoteBooleanAttribute extends RemoteAttribute<boolean>, BooleanAttribute {
-
-    asRemote(transaction: GraknTransaction): RemoteBooleanAttribute;
-
-    getType(): BooleanAttributeType;
-
-}
-
-export interface LongAttribute extends Attribute<number> {
-
-    asRemote(transaction: GraknTransaction): RemoteLongAttribute;
-
-    getType(): LongAttributeType;
-
-}
-
-export interface RemoteLongAttribute extends RemoteAttribute<number>, LongAttribute {
-
-    asRemote(transaction: GraknTransaction): RemoteLongAttribute;
-
-    getType(): LongAttributeType;
-
-}
-
-export interface DoubleAttribute extends Attribute<number> {
-
-    asRemote(transaction: GraknTransaction): RemoteDoubleAttribute;
-
-    getType(): DoubleAttributeType;
-
-}
-
-export interface RemoteDoubleAttribute extends RemoteAttribute<number>, LongAttribute {
-
-    asRemote(transaction: GraknTransaction): RemoteDoubleAttribute;
-
-    getType(): DoubleAttributeType;
-
-}
-
-export interface StringAttribute extends Attribute<string> {
-
-    asRemote(transaction: GraknTransaction): RemoteStringAttribute;
-
-    getType(): StringAttributeType;
-
-}
-
-export interface RemoteStringAttribute extends RemoteAttribute<string>, StringAttribute {
-
-    asRemote(transaction: GraknTransaction): RemoteStringAttribute;
-
-    getType(): StringAttributeType;
-
-}
-
-export interface DateTimeAttribute extends Attribute<Date> {
-
-    asRemote(transaction: GraknTransaction): RemoteDateTimeAttribute;
-
-    getType(): DateTimeAttributeType;
-
-}
-
-export interface RemoteDateTimeAttribute extends RemoteAttribute<Date>, DateTimeAttribute {
-
-    asRemote(transaction: GraknTransaction): RemoteDateTimeAttribute;
-
-    getType(): DateTimeAttributeType;
-
-}

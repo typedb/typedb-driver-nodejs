@@ -20,8 +20,15 @@
 
 import {ThingTypeImpl} from "./ThingTypeImpl";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
-import {RelationType} from "../../api/concept/type/RelationType";
-import {EntityTypeImpl} from "./EntityTypeImpl";
+import {RelationType, RemoteRelationType} from "../../api/concept/type/RelationType";
+import {GraknTransaction} from "../../api/GraknTransaction";
+import {Label} from "../../common/Label";
+import {Relation} from "../../api/concept/thing/Relation";
+import {RoleType} from "../../api/concept/type/RoleType";
+import {Stream} from "../../common/util/Stream";
+import {Core} from "../../common/rpc/RequestBuilder";
+import {RelationImpl} from "../thing/RelationImpl";
+import {RoleTypeImpl} from "./RoleTypeImpl";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
@@ -29,12 +36,73 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         super(label, isRoot);
     }
 
+    asRemote(transaction: GraknTransaction): RemoteRelationType {
+        return new RelationTypeImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+    }
+
 }
 
 export namespace RelationTypeImpl {
 
     export function of(relationTypeProto: TypeProto) {
-        return new EntityTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getRoot());
+        return new RelationTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getRoot());
+    }
+
+    export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements RemoteRelationType {
+
+        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+            super(transaction, label, isRoot);
+        }
+
+        asRemote(transaction: GraknTransaction): RemoteRelationType {
+            return this;
+        }
+
+        async create(): Promise<Relation> {
+            const request = Core.Type.RelationType.createReq(this.getLabel());
+            return this.execute(request).then((res) => RelationImpl.of(res.getRelationTypeCreateRes().getRelation()));
+        }
+
+        getSubtypes(): Stream<RelationType> {
+            return super.getSubtypes() as Stream<RelationType>;
+        }
+
+        setSupertype(relationType: RelationType): Promise<void> {
+            return super.setSupertype(relationType);
+        }
+
+        getInstances(): Stream<Relation> {
+            return super.getInstances() as Stream<Relation>;
+        }
+
+        getRelates(roleLabel?: string): Promise<RoleType> | Stream<RoleType> {
+            if (roleLabel) {
+                const request = Core.Type.RelationType.getRelatesByRoleReq(this.getLabel(), roleLabel);
+                return this.execute(request)
+                    .then((res) => RoleTypeImpl.of(res.getRelationTypeGetRelatesForRoleLabelRes().getRoleType()));
+            } else {
+                const request = Core.Type.RelationType.getRelatesReq(this.getLabel());
+                return this.stream(request)
+                    .flatMap((resPart) => Stream.array(resPart.getRelationTypeGetRelatesResPart().getRolesList()))
+                    .map((roleProto) => RoleTypeImpl.of(roleProto));
+            }
+        }
+
+        async setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {
+            let request;
+            if (overriddenLabel) {
+                request = Core.Type.RelationType.setRelatesOverriddenReq(this.getLabel(), roleLabel, overriddenLabel);
+            } else {
+                request = Core.Type.RelationType.setRelatesReq(this.getLabel(), roleLabel);
+            }
+            await this.execute(request);
+        }
+
+        async unsetRelates(roleLabel: string): Promise<void> {
+            const request = Core.Type.RelationType.unsetRelatesReq(this.getLabel(), roleLabel);
+            await this.execute(request);
+        }
+
     }
 
 }

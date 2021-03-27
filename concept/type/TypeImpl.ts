@@ -109,6 +109,10 @@ export namespace TypeImpl {
             return (concept as Type).getLabel().equals(this.getLabel());
         }
 
+        toString(): string {
+            return `${this.constructor.name}[label:${this._label}]`;
+        }
+
         async delete(): Promise<void> {
             const request = Core.Type.deleteReq(this._label);
             await this.execute(request);

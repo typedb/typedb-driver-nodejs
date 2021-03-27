@@ -26,6 +26,8 @@ import {RemoteThingType} from "../../api/concept/type/ThingType";
 import {Label} from "../../common/Label";
 import {Entity} from "../../api/concept/thing/Entity";
 import {Stream} from "../../common/util/Stream";
+import {Core} from "../../common/rpc/RequestBuilder";
+import {EntityImpl} from "../thing/EntityImpl";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
@@ -51,12 +53,17 @@ export namespace EntityTypeImpl {
             super(transaction, label, isRoot);
         }
 
-        create(): Promise<Entity> {
-            return Promise.resolve(undefined);
+        asRemote(transaction: GraknTransaction): RemoteEntityType {
+            return this;
         }
 
-        setSupertype(superEntityType: EntityType): Promise<void> {
-            return Promise.resolve(undefined);
+        create(): Promise<Entity> {
+            const request = Core.Type.EntityType.createReq(this.getLabel());
+            return this.execute(request).then((res) => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
+        }
+
+        async setSupertype(superEntityType: EntityType): Promise<void> {
+            super.setSupertype(superEntityType);
         }
 
         getInstances(): Stream<Entity> {

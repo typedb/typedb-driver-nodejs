@@ -76,7 +76,7 @@ export interface RemoteThing extends Thing, RemoteConcept {
 
     getHas(attributeTypes: AttributeType[]): Stream<Attribute<AttributeType.ValueClass>>;
 
-    getPlays(): Stream<RoleType>;
+    getPlaying(): Stream<RoleType>;
 
     getRelations(): Stream<Relation>;
 
