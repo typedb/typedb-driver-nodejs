@@ -19,7 +19,7 @@
 
 import {Entity, RemoteEntity} from "../../api/concept/thing/Entity";
 import {EntityType} from "../../api/concept/type/EntityType";
-import {ThingImpl} from "./ThingImpl";
+import {RemoteThingImpl, ThingImpl} from "./ThingImpl";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {EntityTypeImpl} from "../type/EntityTypeImpl";
 import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
@@ -44,6 +44,8 @@ export class EntityImpl extends ThingImpl implements Entity {
 
 }
 
+
+
 export namespace EntityImpl {
 
     export function of(thingProto: ThingProto): Entity {
@@ -51,7 +53,8 @@ export namespace EntityImpl {
         return new EntityImpl(iid, EntityTypeImpl.of(thingProto.getType()));
     }
 
-    export class RemoteImpl extends ThingImpl.RemoteImpl implements RemoteEntity {
+
+    export class RemoteImpl extends RemoteThingImpl implements RemoteEntity {
 
         private _type: EntityType;
 
@@ -69,5 +72,4 @@ export namespace EntityImpl {
         }
 
     }
-
 }

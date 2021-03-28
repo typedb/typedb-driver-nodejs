@@ -63,6 +63,104 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
 
 }
 
+
+export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
+
+    private _transaction: GraknTransaction.Extended;
+
+    constructor(transaction: GraknTransaction.Extended, iid: string) {
+        super(iid);
+        this._transaction = transaction;
+    }
+
+    abstract asRemote(transaction: GraknTransaction): RemoteThing;
+
+    abstract getType(): ThingType;
+
+    async delete(): Promise<void> {
+        const request = Core.Thing.deleteReq(this.getIID());
+        await this.execute(request);
+    }
+
+    getHas(): Stream<Attribute<AttributeType.ValueClass>>;
+    getHas(onlyKey: boolean): Stream<Attribute<AttributeType.ValueClass>>;
+    getHas(attributeType: AttributeType.Boolean): Stream<Attribute.Boolean>;
+    getHas(attributeType: AttributeType.Long): Stream<Attribute.Long>;
+    getHas(attributeType: AttributeType.Double): Stream<Attribute.Double>;
+    getHas(attributeType: AttributeType.String): Stream<Attribute.String>;
+    getHas(attributeType: AttributeType.DateTime): Stream<Attribute.DateTime>;
+    getHas(attributeTypes: AttributeType[]): Stream<Attribute<AttributeType.ValueClass>>;
+    getHas(onlyKeyAttrTypeAttrTypes?: boolean | AttributeType | AttributeType[])
+        : Stream<Attribute<AttributeType.ValueClass>> | Stream<Attribute.Boolean> | Stream<Attribute.Long> | Stream<Attribute.Double> | Stream<Attribute.String> | Stream<Attribute.DateTime> {
+        let isSingleAttrType = false;
+        let request;
+        if (typeof onlyKeyAttrTypeAttrTypes === "undefined") {
+            request = Core.Thing.getHasReq(this.getIID(), false);
+        } else if (typeof onlyKeyAttrTypeAttrTypes === "boolean") {
+            request = Core.Thing.getHasReq(this.getIID(), onlyKeyAttrTypeAttrTypes);
+        } else if (onlyKeyAttrTypeAttrTypes instanceof Array) {
+            const attrTypesProto = onlyKeyAttrTypeAttrTypes.map((attrType) => ThingType.proto(attrType));
+            request = Core.Thing.getHasByTypeReq(this.getIID(), attrTypesProto);
+        } else {
+            request = Core.Thing.getHasByTypeReq(this.getIID(), [ThingType.proto(onlyKeyAttrTypeAttrTypes)]);
+            isSingleAttrType = true;
+        }
+        const attributes = this.stream(request).flatMap((resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList()))
+            .map((attrProto) => AttributeImpl.of(attrProto));
+        if (isSingleAttrType) {
+            let arg = onlyKeyAttrTypeAttrTypes as AttributeType;
+            if (arg.isBoolean()) return attributes as Stream<Attribute.Boolean>;
+            else if (arg.isLong) return attributes as Stream<Attribute.Long>;
+            else if (arg.isDouble) return attributes as Stream<Attribute.Double>;
+            else if (arg.isString) return attributes as Stream<Attribute.String>;
+            else if (arg.isDateTime()) return attributes as Stream<Attribute.DateTime>;
+        } else return attributes;
+    }
+
+    getPlaying(): Stream<RoleType> {
+        const request = Core.Thing.getPlayingReq(this.getIID());
+        return this.stream(request)
+            .flatMap((resPart) => Stream.array(resPart.getThingGetPlayingResPart().getRoleTypesList()))
+            .map((res) => RoleTypeImpl.of(res));
+    }
+
+    getRelations(roleTypes?: RoleType[]): Stream<Relation> {
+        if (!roleTypes) roleTypes = [];
+        const request = Core.Thing.getRelationsReq(this.getIID(), roleTypes.map((roleType) => RoleType.proto(roleType)));
+        return this.stream(request)
+            .flatMap((resPart) => Stream.array(resPart.getThingGetRelationsResPart().getRelationsList()))
+            .map((res) => RelationImpl.of(res));
+    }
+
+    async isDeleted(): Promise<boolean> {
+        return !(await this._transaction.concepts().getThing(this.getIID()));
+    }
+
+    async isInferred(): Promise<boolean> {
+        const request = Core.Thing.isInferredReq(this.getIID());
+        return (await this.execute(request)).getThingIsInferredRes().getInferred();
+    }
+
+    async setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
+        const request = Core.Thing.setHasReq(this.getIID(), Thing.proto(attribute));
+        await this.execute(request);
+    }
+
+    async unsetHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
+        const request = Core.Thing.unsetHasReq(this.getIID(), Thing.proto(attribute));
+        await this.execute(request);
+    }
+
+    protected async execute(request: TransactionProto.Req): Promise<ThingProto.Res> {
+        return (await this._transaction.rpcExecute(request)).getThingRes();
+    }
+
+    protected stream(request: TransactionProto.Req): Stream<ThingProto.ResPart> {
+        return this._transaction.rpcStream(request).map((res) => res.getThingResPart());
+    }
+
+}
+
 export namespace ThingImpl {
 
     export function of(thingProto: ThingProto) {
@@ -77,102 +175,4 @@ export namespace ThingImpl {
                 throw new GraknClientError(BAD_ENCODING.message(thingProto.getType().getEncoding()));
         }
     }
-
-    export abstract class RemoteImpl extends ThingImpl implements RemoteThing {
-
-        private _transaction: GraknTransaction.Extended;
-
-        constructor(transaction: GraknTransaction.Extended, iid: string) {
-            super(iid);
-            this._transaction = transaction;
-        }
-
-        abstract asRemote(transaction: GraknTransaction): RemoteThing;
-
-        abstract getType(): ThingType;
-
-        async delete(): Promise<void> {
-            const request = Core.Thing.deleteReq(this.getIID());
-            await this.execute(request);
-        }
-
-        getHas(): Stream<Attribute<AttributeType.ValueClass>>;
-        getHas(onlyKey: boolean): Stream<Attribute<AttributeType.ValueClass>>;
-        getHas(attributeType: AttributeType.Boolean): Stream<Attribute.Boolean>;
-        getHas(attributeType: AttributeType.Long): Stream<Attribute.Long>;
-        getHas(attributeType: AttributeType.Double): Stream<Attribute.Double>;
-        getHas(attributeType: AttributeType.String): Stream<Attribute.String>;
-        getHas(attributeType: AttributeType.DateTime): Stream<Attribute.DateTime>;
-        getHas(attributeTypes: AttributeType[]): Stream<Attribute<AttributeType.ValueClass>>;
-        getHas(onlyKeyAttrTypeAttrTypes?: boolean | AttributeType | AttributeType[])
-            : Stream<Attribute<AttributeType.ValueClass>> | Stream<Attribute.Boolean> | Stream<Attribute.Long> | Stream<Attribute.Double> | Stream<Attribute.String> | Stream<Attribute.DateTime> {
-            let isSingleAttrType = false;
-            let request;
-            if (typeof onlyKeyAttrTypeAttrTypes === "undefined") {
-                request = Core.Thing.getHasReq(this.getIID(), false);
-            } else if (typeof onlyKeyAttrTypeAttrTypes === "boolean") {
-                request = Core.Thing.getHasReq(this.getIID(), onlyKeyAttrTypeAttrTypes);
-            } else if (onlyKeyAttrTypeAttrTypes instanceof Array) {
-                const attrTypesProto = onlyKeyAttrTypeAttrTypes.map((attrType) => ThingType.proto(attrType));
-                request = Core.Thing.getHasByTypeReq(this.getIID(), attrTypesProto);
-            } else {
-                request = Core.Thing.getHasByTypeReq(this.getIID(), [ThingType.proto(onlyKeyAttrTypeAttrTypes)]);
-                isSingleAttrType = true;
-            }
-            const attributes = this.stream(request).flatMap((resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList()))
-                .map((attrProto) => AttributeImpl.of(attrProto));
-            if (isSingleAttrType) {
-                let arg = onlyKeyAttrTypeAttrTypes as AttributeType;
-                if (arg.isBoolean()) return attributes as Stream<Attribute.Boolean>;
-                else if (arg.isLong) return attributes as Stream<Attribute.Long>;
-                else if (arg.isDouble) return attributes as Stream<Attribute.Double>;
-                else if (arg.isString) return attributes as Stream<Attribute.String>;
-                else if (arg.isDateTime()) return attributes as Stream<Attribute.DateTime>;
-            } else return attributes;
-        }
-
-        getPlaying(): Stream<RoleType> {
-            const request = Core.Thing.getPlayingReq(this.getIID());
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingGetPlayingResPart().getRoleTypesList()))
-                .map((res) => RoleTypeImpl.of(res));
-        }
-
-        getRelations(roleTypes?: RoleType[]): Stream<Relation> {
-            if (!roleTypes) roleTypes = [];
-            const request = Core.Thing.getRelationsReq(this.getIID(), roleTypes.map((roleType) => RoleType.proto(roleType)));
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingGetRelationsResPart().getRelationsList()))
-                .map((res) => RelationImpl.of(res));
-        }
-
-        async isDeleted(): Promise<boolean> {
-            return !(await this._transaction.concepts().getThing(this.getIID()));
-        }
-
-        async isInferred(): Promise<boolean> {
-            const request = Core.Thing.isInferredReq(this.getIID());
-            return (await this.execute(request)).getThingIsInferredRes().getInferred();
-        }
-
-        async setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
-            const request = Core.Thing.setHasReq(this.getIID(), Thing.proto(attribute));
-            await this.execute(request);
-        }
-
-        async unsetHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
-            const request = Core.Thing.unsetHasReq(this.getIID(), Thing.proto(attribute));
-            await this.execute(request);
-        }
-
-        protected async execute(request: TransactionProto.Req): Promise<ThingProto.Res> {
-            return (await this._transaction.rpcExecute(request)).getThingRes();
-        }
-
-        protected stream(request: TransactionProto.Req): Stream<ThingProto.ResPart> {
-            return this._transaction.rpcStream(request).map((res) => res.getThingResPart());
-        }
-
-    }
-
 }

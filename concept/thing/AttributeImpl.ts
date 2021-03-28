@@ -17,19 +17,19 @@
  * under the License.
  */
 
-import {ThingImpl} from "./ThingImpl";
 import {Attribute} from "../../api/concept/thing/Attribute";
-import {AttributeType as AttributeTypeProto, Thing as ThingProto} from "grakn-protocol/common/concept_pb";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {Thing} from "../../api/concept/thing/Thing";
-import {Stream} from "../../common/util/Stream";
-import {Core} from "../../common/rpc/RequestBuilder";
-import {GraknClientError} from "../../common/errors/GraknClientError";
+import {RemoteThingImpl, ThingImpl} from "./ThingImpl";
 import {AttributeTypeImpl} from "../type/AttributeTypeImpl";
+import {Core} from "../../common/rpc/RequestBuilder";
+import {Stream} from "../../common/util/Stream";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {GraknClientError} from "../../common/errors/GraknClientError";
 import {Bytes} from "../../common/util/Bytes";
+import {AttributeType as AttributeTypeProto, Thing as ThingProto} from "grakn-protocol/common/concept_pb";
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 export abstract class AttributeImpl<T extends AttributeType.ValueClass> extends ThingImpl implements Attribute<T> {
@@ -93,7 +93,7 @@ export namespace AttributeImpl {
         }
     }
 
-    export abstract class RemoteImpl<T extends AttributeType.ValueClass> extends ThingImpl.RemoteImpl implements Attribute.Remote<T> {
+    export abstract class RemoteImpl<T extends AttributeType.ValueClass> extends RemoteThingImpl implements Attribute.Remote<T> {
 
         private _type: AttributeType;
 
