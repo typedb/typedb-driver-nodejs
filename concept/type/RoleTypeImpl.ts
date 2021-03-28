@@ -17,17 +17,17 @@
  * under the License.
  */
 
-import {RemoteRoleType, RoleType} from "../../api/concept/type/RoleType";
-import {TypeImpl} from "./TypeImpl";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
-import {Label} from "../../common/Label";
 import {GraknTransaction} from "../../api/GraknTransaction";
-import {Stream} from "../../common/util/Stream";
+import {RemoteRoleType, RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {RelationType} from "../../api/concept/type/RelationType";
-import {ThingTypeImpl} from "./ThingTypeImpl";
-import {Core} from "../../common/rpc/RequestBuilder";
 import {RelationTypeImpl} from "./RelationTypeImpl";
+import {ThingTypeImpl} from "./ThingTypeImpl";
+import {TypeImpl} from "./TypeImpl";
+import {Stream} from "../../common/util/Stream";
+import {Label} from "../../common/Label";
+import {Core} from "../../common/rpc/RequestBuilder";
+import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 
 export class RoleTypeImpl extends TypeImpl implements RoleType {
 

@@ -23,8 +23,8 @@ import {GraknOptions} from "../api/GraknOptions";
 import {BidirectionalStream} from "../stream/BidirectionalStream";
 import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {Core} from "../common/rpc/RequestBuilder";
-import {GraknClientError} from "../common_old/errors/GraknClientError";
-import {ErrorMessage} from "../common_old/errors/ErrorMessage";
+import {GraknClientError} from "../common/errors/GraknClientError";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 
 export class CoreTransaction implements GraknTransaction.Extended {

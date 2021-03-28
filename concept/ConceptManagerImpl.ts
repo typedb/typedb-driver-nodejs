@@ -17,21 +17,21 @@
  * under the License.
  */
 
+import {GraknTransaction} from "../api/GraknTransaction";
 import {ConceptManager} from "../api/concept/ConceptManager";
-import {AttributeType} from "../api/concept/type/AttributeType";
+import {Thing} from "../api/concept/thing/Thing";
+import {ThingType} from "../api/concept/type/ThingType";
 import {EntityType} from "../api/concept/type/EntityType";
 import {RelationType} from "../api/concept/type/RelationType";
-import {ThingType} from "../api/concept/type/ThingType";
-import {Thing} from "../api/concept/thing/Thing";
-import {GraknTransaction} from "../api/GraknTransaction";
-import {ConceptManager as ConceptProto} from "grakn-protocol/common/concept_pb";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
-import {Core} from "../common/rpc/RequestBuilder";
+import {AttributeType} from "../api/concept/type/AttributeType";
 import {ThingTypeImpl} from "./type/ThingTypeImpl";
 import {ThingImpl} from "./thing/ThingImpl";
 import {EntityTypeImpl} from "./type/EntityTypeImpl";
 import {RelationTypeImpl} from "./type/RelationTypeImpl";
 import {AttributeTypeImpl} from "./type/AttributeTypeImpl";
+import {Core} from "../common/rpc/RequestBuilder";
+import {ConceptManager as ConceptProto} from "grakn-protocol/common/concept_pb";
+import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
 
 export class ConceptManagerImpl implements ConceptManager {
 

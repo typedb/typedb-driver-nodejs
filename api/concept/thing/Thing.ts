@@ -17,28 +17,15 @@
  * under the License.
  */
 
-import {Concept, RemoteConcept} from "../Concept";
 import {GraknTransaction} from "../../GraknTransaction";
-import {RemoteThingType, ThingType} from "../type/ThingType";
-import {
-    Attribute,
-    BooleanAttribute,
-    DateTimeAttribute,
-    DoubleAttribute,
-    LongAttribute,
-    StringAttribute
-} from "./Attribute";
-import {
-    AttributeType,
-    BooleanAttributeType,
-    DateTimeAttributeType,
-    DoubleAttributeType,
-    LongAttributeType,
-    StringAttributeType
-} from "../type/AttributeType";
-import {Stream} from "../../../common/util/Stream";
-import {RoleType} from "../type/RoleType";
 import {Relation} from "./Relation";
+import {Attribute} from "./Attribute";
+import {RoleType} from "../type/RoleType";
+import {ThingType} from "../type/ThingType";
+import {AttributeType} from "../type/AttributeType";
+import {Concept, RemoteConcept} from "../Concept";
+import {Stream} from "../../../common/util/Stream";
+import {Core} from "../../../common/rpc/RequestBuilder";
 
 export interface Thing extends Concept {
 
@@ -62,15 +49,15 @@ export interface RemoteThing extends Thing, RemoteConcept {
 
     getHas(onlyKey: boolean): Stream<Attribute<AttributeType.ValueClass>>;
 
-    getHas(attributeType: BooleanAttributeType): Stream<BooleanAttribute>;
+    getHas(attributeType: AttributeType.Boolean): Stream<Attribute.Boolean>;
 
-    getHas(attributeType: LongAttributeType): Stream<LongAttribute>;
+    getHas(attributeType: AttributeType.Long): Stream<Attribute.Long>;
 
-    getHas(attributeType: DoubleAttributeType): Stream<DoubleAttribute>;
+    getHas(attributeType: AttributeType.Double): Stream<Attribute.Double>;
 
-    getHas(attributeType: StringAttributeType): Stream<StringAttribute>;
+    getHas(attributeType: AttributeType.String): Stream<Attribute.String>;
 
-    getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttribute>;
+    getHas(attributeType: AttributeType.DateTime): Stream<Attribute.DateTime>;
 
     getHas(): Stream<Attribute<AttributeType.ValueClass>>;
 
@@ -81,5 +68,13 @@ export interface RemoteThing extends Thing, RemoteConcept {
     getRelations(): Stream<Relation>;
 
     getRelations(roleTypes: RoleType[]): Stream<Relation>;
+
+}
+
+export namespace Thing {
+
+    export function proto(thing: Thing) {
+        return Core.Thing.protoThing(thing.getIID());
+    }
 
 }

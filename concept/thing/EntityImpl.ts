@@ -20,12 +20,12 @@
 import {Entity, RemoteEntity} from "../../api/concept/thing/Entity";
 import {EntityType} from "../../api/concept/type/EntityType";
 import {ThingImpl} from "./ThingImpl";
-import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
-import {Bytes} from "../../dependencies_internal";
-import {EntityTypeImpl} from "../type/EntityTypeImpl";
 import {GraknTransaction} from "../../api/GraknTransaction";
+import {EntityTypeImpl} from "../type/EntityTypeImpl";
+import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
+import {Bytes} from "../../common/util/Bytes";
 
-export class EntityImpl extends ThingImpl implements Entity{
+export class EntityImpl extends ThingImpl implements Entity {
 
     private _type: EntityType;
 
@@ -60,7 +60,7 @@ export namespace EntityImpl {
             this._type = type;
         }
 
-        asRemote(transaction: GraknTransaction):  RemoteEntity {
+        asRemote(transaction: GraknTransaction): RemoteEntity {
             return this;
         }
 

@@ -17,19 +17,19 @@
  * under the License.
  */
 
-import {RemoteType, Type} from "../../api/concept/type/Type";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {Concept} from "../../api/concept/Concept";
-import {Stream} from "../../common/util/Stream";
+import {RemoteType, Type} from "../../api/concept/type/Type";
 import {ConceptImpl} from "../ConceptImpl";
-import {GraknClientError} from "../../common_old/errors/GraknClientError";
-import {ErrorMessage} from "../../common_old/errors/ErrorMessage";
 import {ThingTypeImpl} from "./ThingTypeImpl";
-import {Label} from "../../common/Label";
 import {RoleTypeImpl} from "./RoleTypeImpl";
+import {Label} from "../../common/Label";
 import {Core} from "../../common/rpc/RequestBuilder";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {Stream} from "../../common/util/Stream";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {GraknClientError} from "../../common/errors/GraknClientError";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
 import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
 
 export abstract class TypeImpl extends ConceptImpl implements Type {
@@ -76,6 +76,7 @@ export namespace TypeImpl {
                 return ThingTypeImpl.of(typeProto);
         }
     }
+
 
     export abstract class RemoteImpl extends ConceptImpl.Remote implements RemoteType {
 

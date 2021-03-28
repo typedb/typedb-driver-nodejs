@@ -18,17 +18,17 @@
  */
 
 
-import {ThingTypeImpl} from "./ThingTypeImpl";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
-import {RelationType, RemoteRelationType} from "../../api/concept/type/RelationType";
 import {GraknTransaction} from "../../api/GraknTransaction";
-import {Label} from "../../common/Label";
+import {RelationType, RemoteRelationType} from "../../api/concept/type/RelationType";
 import {Relation} from "../../api/concept/thing/Relation";
 import {RoleType} from "../../api/concept/type/RoleType";
+import {ThingTypeImpl} from "./ThingTypeImpl";
+import {RoleTypeImpl} from "./RoleTypeImpl";
+import {RelationImpl} from "../thing/RelationImpl";
+import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {Core} from "../../common/rpc/RequestBuilder";
-import {RelationImpl} from "../thing/RelationImpl";
-import {RoleTypeImpl} from "./RoleTypeImpl";
+import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 

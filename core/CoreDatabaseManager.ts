@@ -19,8 +19,8 @@
 
 import {DatabaseManager} from "../api/database/DatabaseManager";
 import {Database} from "../api/database/Database";
-import {GraknClientError} from "../common_old/errors/GraknClientError";
-import {ErrorMessage} from "../common_old/errors/ErrorMessage";
+import {GraknClientError} from "../common/errors/GraknClientError";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {Core} from "../common/rpc/RequestBuilder";
 import {CoreDatabase} from "./CoreDatabase";
 import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";

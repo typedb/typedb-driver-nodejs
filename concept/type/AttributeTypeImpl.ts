@@ -20,15 +20,20 @@
 
 import {ThingTypeImpl} from "./ThingTypeImpl";
 import {AttributeType} from "../../api/concept/type/AttributeType";
-import {AttributeType as AttributeTypeProto, Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {
+    Attribute as AttributeProto,
+    AttributeType as AttributeTypeProto,
+    Type as TypeProto
+} from "grakn-protocol/common/concept_pb";
 import {Stream} from "../../common/util/Stream";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {Core} from "../../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../../common_old/errors/ErrorMessage";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {Label} from "../../common/Label";
-import {GraknClientError} from "../../common_old/errors/GraknClientError";
+import {GraknClientError} from "../../common/errors/GraknClientError";
+import {AttributeImpl} from "../thing/AttributeImpl";
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
@@ -39,7 +44,7 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     asRemote(transaction: GraknTransaction): AttributeType.Remote {
-        return new AttributeTypeImpl.Remote(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+        return new AttributeTypeImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
     }
 
     getValueType(): AttributeType.ValueType {
@@ -109,7 +114,7 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
 export namespace AttributeTypeImpl {
 
-    export function of(attributeTypeProto: TypeProto) {
+    export function of(attributeTypeProto: TypeProto): AttributeType {
         switch (attributeTypeProto.getValueType()) {
             case AttributeTypeProto.ValueType.BOOLEAN:
                 return new AttributeTypeImpl.Boolean(attributeTypeProto.getLabel(), attributeTypeProto.getRoot());
@@ -128,7 +133,7 @@ export namespace AttributeTypeImpl {
         }
     }
 
-    export class Remote extends ThingTypeImpl.RemoteImpl implements AttributeType.Remote {
+    export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements AttributeType.Remote {
 
         constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
@@ -155,8 +160,7 @@ export namespace AttributeTypeImpl {
         }
 
         getInstances(): Stream<Attribute<AttributeType.ValueClass>> {
-            // TODO
-            return null;
+            return super.getInstances() as Stream<Attribute<AttributeType.ValueClass>>;
         }
 
         getOwners(onlyKey?: boolean): Stream<ThingType> {
@@ -169,6 +173,13 @@ export namespace AttributeTypeImpl {
                 .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersResPart().getOwnersList()))
                 .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));
         }
+
+        protected getImpl(valueProto: AttributeProto.Value): Promise<Attribute<any>> {
+            const request = Core.Type.AttributeType.getReq(this.getLabel(), valueProto);
+            return this.execute(request)
+                .then((attrProto) => AttributeImpl.of(attrProto.getAttributeTypeGetRes().getAttribute()));
+        }
+
 
         isBoolean(): boolean {
             return false;
@@ -252,7 +263,7 @@ export namespace AttributeTypeImpl {
 
     }
 
-    export class RemoteBoolean extends AttributeTypeImpl.Remote implements AttributeType.RemoteBoolean {
+    export class RemoteBoolean extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteBoolean {
 
         constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
@@ -262,8 +273,16 @@ export namespace AttributeTypeImpl {
             return this;
         }
 
-        get(value: boolean): Promise<Attribute.Boolean> {
-            return Promise.resolve(undefined);
+        async get(value: boolean): Promise<Attribute.Boolean> {
+            return await (super.getImpl(Core.Thing.Attribute.attributeValueBooleanReq(value)) as Promise<Attribute.Boolean>);
+        }
+
+        getInstances(): Stream<Attribute.Boolean> {
+            return super.getInstances() as Stream<Attribute.Boolean>;
+        }
+
+        getSubtypes(): Stream<AttributeType.RemoteBoolean> {
+            return super.getSubtypes() as Stream<AttributeType.RemoteBoolean>;
         }
 
         getValueType(): AttributeType.ValueType {
@@ -303,7 +322,7 @@ export namespace AttributeTypeImpl {
         }
     }
 
-    export class RemoteLong extends AttributeTypeImpl.Remote implements AttributeType.RemoteLong {
+    export class RemoteLong extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteLong {
 
         constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
@@ -313,13 +332,22 @@ export namespace AttributeTypeImpl {
             return this;
         }
 
-        get(value: number): Promise<Attribute.Long> {
-            return Promise.resolve(undefined);
+        getInstances(): Stream<Attribute.Long> {
+            return super.getInstances() as Stream<Attribute.Long>;
+        }
+
+        getSubtypes(): Stream<AttributeType.RemoteLong> {
+            return super.getSubtypes() as Stream<AttributeType.RemoteLong>;
+        }
+
+        async get(value: number): Promise<Attribute.Long> {
+            return await (super.getImpl(Core.Thing.Attribute.attributeValueLongReq(value)) as Promise<Attribute.Long>);
         }
 
         getValueType(): AttributeType.ValueType {
             return AttributeType.ValueType.LONG;
         }
+
 
         put(value: number): Promise<Attribute.Long> {
             return Promise.resolve(undefined);
@@ -342,8 +370,7 @@ export namespace AttributeTypeImpl {
         }
 
         asRemote(transaction: GraknTransaction): AttributeType.RemoteDouble {
-            // TODO
-            return null;
+            return new AttributeTypeImpl.RemoteDouble(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
         }
 
         getValueType(): AttributeType.ValueType {
@@ -355,7 +382,7 @@ export namespace AttributeTypeImpl {
         }
     }
 
-    export class RemoteDouble extends AttributeTypeImpl.Remote implements AttributeType.RemoteDouble {
+    export class RemoteDouble extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteDouble {
 
         constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
@@ -365,8 +392,16 @@ export namespace AttributeTypeImpl {
             return this;
         }
 
-        get(value: number): Promise<Attribute.Double> {
-            return Promise.resolve(undefined);
+        getInstances(): Stream<Attribute.Double> {
+            return super.getInstances() as Stream<Attribute.Double>;
+        }
+
+        getSubtypes(): Stream<AttributeType.RemoteDouble> {
+            return super.getSubtypes() as Stream<AttributeType.RemoteDouble>;
+        }
+
+        async get(value: number): Promise<Attribute.Double> {
+            return await (super.getImpl(Core.Thing.Attribute.attributeValueDoubleReq(value)) as Promise<Attribute.Double>);
         }
 
         getValueType(): AttributeType.ValueType {
@@ -406,7 +441,7 @@ export namespace AttributeTypeImpl {
         }
     }
 
-    export class RemoteString extends AttributeTypeImpl.Remote implements AttributeType.RemoteString {
+    export class RemoteString extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteString {
 
         constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
@@ -416,8 +451,16 @@ export namespace AttributeTypeImpl {
             return this;
         }
 
-        get(value: string): Promise<Attribute.String> {
-            return Promise.resolve(undefined);
+        getInstances(): Stream<Attribute.String> {
+            return super.getInstances() as Stream<Attribute.String>;
+        }
+
+        getSubtypes(): Stream<AttributeType.RemoteString> {
+            return super.getSubtypes() as Stream<AttributeType.RemoteString>;
+        }
+
+        async get(value: string): Promise<Attribute.String> {
+            return await (super.getImpl(Core.Thing.Attribute.attributeValueStringReq(value)) as Promise<Attribute.String>);
         }
 
         getValueType(): AttributeType.ValueType {
@@ -434,6 +477,16 @@ export namespace AttributeTypeImpl {
 
         asString(): AttributeType.RemoteString {
             return this;
+        }
+
+        async getRegex(): Promise<string> {
+            const request = Core.Type.AttributeType.getRegexReq(this.getLabel());
+            return await this.execute(request).then((res) => res.getAttributeTypeGetRegexRes().getRegex());
+        }
+
+        async setRegex(regex: string): Promise<void> {
+            const request = Core.Type.AttributeType.setRegexReq(this.getLabel(), regex);
+            await this.execute(request);
         }
 
     }
@@ -457,18 +510,26 @@ export namespace AttributeTypeImpl {
         }
     }
 
-    export class RemoteDateTime extends AttributeTypeImpl.Remote implements AttributeType.RemoteDateTime {
+    export class RemoteDateTime extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteDateTime {
 
         constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.Remote {
+        asRemote(transaction: GraknTransaction): AttributeType.RemoteDateTime {
             return this;
         }
 
-        get(value: Date): Promise<Attribute.DateTime> {
-            return Promise.resolve(undefined);
+        getInstances(): Stream<Attribute.DateTime> {
+            return super.getInstances() as Stream<Attribute.DateTime>;
+        }
+
+        getSubtypes(): Stream<AttributeType.RemoteDateTime> {
+            return super.getSubtypes() as Stream<AttributeType.RemoteDateTime>;
+        }
+
+        async get(value: Date): Promise<Attribute.DateTime> {
+            return await (super.getImpl(Core.Thing.Attribute.attributeValueDateTimeReq(value)) as Promise<Attribute.DateTime>);
         }
 
         getValueType(): AttributeType.ValueType {

@@ -17,9 +17,9 @@
  * under the License.
  */
 
-import {BlockingQueue} from "../common_old/BlockingQueue";
-import {GraknClientError} from "../common_old/errors/GraknClientError";
-import {ErrorMessage} from "../common_old/errors/ErrorMessage";
+import {BlockingQueue} from "../common/util/BlockingQueue";
+import {GraknClientError} from "../common/errors/GraknClientError";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
 
 export class ResponseCollector<T> {
 

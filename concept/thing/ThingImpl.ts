@@ -23,9 +23,9 @@ import {ConceptImpl} from "../ConceptImpl";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {Concept} from "../../api/concept/Concept";
 import {ThingType} from "../../api/concept/type/ThingType";
-import {GraknClientError} from "../../common_old/errors/GraknClientError";
+import {GraknClientError} from "../../common/errors/GraknClientError";
 import {EntityImpl} from "./EntityImpl";
-import {ErrorMessage} from "../../common_old/errors/ErrorMessage";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {RelationImpl} from "./RelationImpl";
 import {AttributeImpl} from "./AttributeImpl";
 import {Stream} from "../../common/util/Stream";
@@ -48,7 +48,7 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         this._iid = iid;
     }
 
-    abstract asRemote(transaction: GraknTransaction): any;
+    abstract asRemote(transaction: GraknTransaction): RemoteThing;
 
     equals(concept: Concept): boolean {
         if (concept.isType()) return false;
@@ -96,17 +96,39 @@ export namespace ThingImpl {
             await this.execute(request);
         }
 
-        getHas(onlyKey: boolean): Stream<Attribute<AttributeType.ValueClass>>;
-        getHas(attributeType: AttributeType.Boolean): Stream<AttributeType.Boolean>;
-        getHas(attributeType: AttributeType.Long): Stream<AttributeType.Long>;
-        getHas(attributeType: AttributeType.Double): Stream<AttributeType.Double>;
-        getHas(attributeType: AttributeType.String): Stream<AttributeType.String>;
-        getHas(attributeType: AttributeType.DateTime): Stream<AttributeType.DateTime>;
         getHas(): Stream<Attribute<AttributeType.ValueClass>>;
+        getHas(onlyKey: boolean): Stream<Attribute<AttributeType.ValueClass>>;
+        getHas(attributeType: AttributeType.Boolean): Stream<Attribute.Boolean>;
+        getHas(attributeType: AttributeType.Long): Stream<Attribute.Long>;
+        getHas(attributeType: AttributeType.Double): Stream<Attribute.Double>;
+        getHas(attributeType: AttributeType.String): Stream<Attribute.String>;
+        getHas(attributeType: AttributeType.DateTime): Stream<Attribute.DateTime>;
         getHas(attributeTypes: AttributeType[]): Stream<Attribute<AttributeType.ValueClass>>;
-
-        getHas(onlyKey?: boolean | AttributeType.Boolean | AttributeType.Long | AttributeType.Double | AttributeType.String | AttributeType.DateTime | AttributeType[]): Stream<Attribute<AttributeType.ValueClass>> | Stream<BooleanAttribute> | Stream<LongAttribute> | Stream<DoubleAttribute> | Stream<StringAttribute> | Stream<DateTimeAttribute> {
-            return undefined;
+        getHas(onlyKeyAttrTypeAttrTypes?: boolean | AttributeType | AttributeType[])
+            : Stream<Attribute<AttributeType.ValueClass>> | Stream<Attribute.Boolean> | Stream<Attribute.Long> | Stream<Attribute.Double> | Stream<Attribute.String> | Stream<Attribute.DateTime> {
+            let isSingleAttrType = false;
+            let request;
+            if (typeof onlyKeyAttrTypeAttrTypes === "undefined") {
+                request = Core.Thing.getHasReq(this.getIID(), false);
+            } else if (typeof onlyKeyAttrTypeAttrTypes === "boolean") {
+                request = Core.Thing.getHasReq(this.getIID(), onlyKeyAttrTypeAttrTypes);
+            } else if (onlyKeyAttrTypeAttrTypes instanceof Array) {
+                const attrTypesProto = onlyKeyAttrTypeAttrTypes.map((attrType) => ThingType.proto(attrType));
+                request = Core.Thing.getHasByTypeReq(this.getIID(), attrTypesProto);
+            } else {
+                request = Core.Thing.getHasByTypeReq(this.getIID(), [ThingType.proto(onlyKeyAttrTypeAttrTypes)]);
+                isSingleAttrType = true;
+            }
+            const attributes = this.stream(request).flatMap((resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList()))
+                .map((attrProto) => AttributeImpl.of(attrProto));
+            if (isSingleAttrType) {
+                let arg = onlyKeyAttrTypeAttrTypes as AttributeType;
+                if (arg.isBoolean()) return attributes as Stream<Attribute.Boolean>;
+                else if (arg.isLong) return attributes as Stream<Attribute.Long>;
+                else if (arg.isDouble) return attributes as Stream<Attribute.Double>;
+                else if (arg.isString) return attributes as Stream<Attribute.String>;
+                else if (arg.isDateTime()) return attributes as Stream<Attribute.DateTime>;
+            } else return attributes;
         }
 
         getPlaying(): Stream<RoleType> {
@@ -118,7 +140,7 @@ export namespace ThingImpl {
 
         getRelations(roleTypes?: RoleType[]): Stream<Relation> {
             if (!roleTypes) roleTypes = [];
-            const request = Core.Thing.getRelationsReq(this.getIID(), roleTypes.map((roleType) => roleType.proto()));
+            const request = Core.Thing.getRelationsReq(this.getIID(), roleTypes.map((roleType) => RoleType.proto(roleType)));
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getThingGetRelationsResPart().getRelationsList()))
                 .map((res) => RelationImpl.of(res));
@@ -134,12 +156,12 @@ export namespace ThingImpl {
         }
 
         async setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
-            const request = Core.Thing.setHasReq(this.getIID(), attribute.proto());
+            const request = Core.Thing.setHasReq(this.getIID(), Thing.proto(attribute));
             await this.execute(request);
         }
 
         async unsetHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
-            const request = Core.Thing.unsetHasReq(this.getIID(), attribute.proto());
+            const request = Core.Thing.unsetHasReq(this.getIID(), Thing.proto(attribute));
             await this.execute(request);
         }
 

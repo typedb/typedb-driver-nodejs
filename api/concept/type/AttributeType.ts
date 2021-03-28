@@ -22,14 +22,7 @@ import {RemoteThingType, ThingType} from "./ThingType";
 import {GraknTransaction} from "../../GraknTransaction";
 import {Stream} from "../../../common/util/Stream";
 import {AttributeType as AttributeTypeProto} from "grakn-protocol/common/concept_pb";
-import {
-    Attribute,
-    BooleanAttribute,
-    DateTimeAttribute,
-    DoubleAttribute,
-    LongAttribute,
-    StringAttribute
-} from "../thing/Attribute";
+import {Attribute} from "../thing/Attribute";
 
 export interface AttributeType extends ThingType {
 
@@ -110,11 +103,11 @@ export namespace AttributeType {
 
         getSubtypes(): Stream<Boolean>;
 
-        getInstances(): Stream<BooleanAttribute>;
+        getInstances(): Stream<Attribute.Boolean>;
 
-        put(value: boolean): Promise<BooleanAttribute>;
+        put(value: boolean): Promise<Attribute.Boolean>;
 
-        get(value: boolean): Promise<BooleanAttribute>;
+        get(value: boolean): Promise<Attribute.Boolean>;
 
     }
 
@@ -138,11 +131,11 @@ export namespace AttributeType {
 
         getSubtypes(): Stream<Long>;
 
-        getInstances(): Stream<LongAttribute>;
+        getInstances(): Stream<Attribute.Long>;
 
-        put(value: number): Promise<LongAttribute>;
+        put(value: number): Promise<Attribute.Long>;
 
-        get(value: number): Promise<LongAttribute>;
+        get(value: number): Promise<Attribute.Long>;
 
     }
 
@@ -166,11 +159,11 @@ export namespace AttributeType {
 
         getSubtypes(): Stream<Double>;
 
-        getInstances(): Stream<DoubleAttribute>;
+        getInstances(): Stream<Attribute.Double>;
 
-        put(value: number): Promise<DoubleAttribute>;
+        put(value: number): Promise<Attribute.Double>;
 
-        get(value: number): Promise<DoubleAttribute>;
+        get(value: number): Promise<Attribute.Double>;
     }
 
     export interface String extends AttributeType {
@@ -194,11 +187,11 @@ export namespace AttributeType {
 
         getSubtypes(): Stream<String>;
 
-        getInstances(): Stream<StringAttribute>;
+        getInstances(): Stream<Attribute.String>;
 
-        put(value: string): Promise<StringAttribute>;
+        put(value: string): Promise<Attribute.String>;
 
-        get(value: string): Promise<StringAttribute>;
+        get(value: string): Promise<Attribute.String>;
 
         getRegex(): Promise<string>;
 
@@ -227,11 +220,11 @@ export namespace AttributeType {
 
         getSubtypes(): Stream<DateTime>;
 
-        getInstances(): Stream<DateTimeAttribute>;
+        getInstances(): Stream<Attribute.DateTime>;
 
-        put(value: Date): Promise<DateTimeAttribute>;
+        put(value: Date): Promise<Attribute.DateTime>;
 
-        get(value: Date): Promise<DateTimeAttribute>;
+        get(value: Date): Promise<Attribute.DateTime>;
 
     }
 

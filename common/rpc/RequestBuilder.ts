@@ -613,16 +613,13 @@ export namespace Core {
                 return new AttributeProto.Value().setDouble(value);
             }
 
-            export function attributeValuestringReq(value: string): AttributeProto.Value {
+            export function attributeValueStringReq(value: string): AttributeProto.Value {
                 return new AttributeProto.Value().setString(value);
             }
 
-            // TODO
-
-            // export function attributeValueDateTimeReq(value: LocalDateTime): AttributeProto.Value {
-            //     epochMillis = value.atZone(ZoneId.of("Z")).toInstant().toEpochMilli();
-            //     return new AttributeProto.Value().setDateTime(epochMillis);
-            // }
+            export function attributeValueDateTimeReq(value: Date): AttributeProto.Value {
+                return new AttributeProto.Value().setDateTime(value.getTime());
+            }
         }
     }
 }

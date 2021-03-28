@@ -23,6 +23,7 @@ import {RemoteType, Type} from "./Type";
 import {Stream} from "../../../common/util/Stream";
 import {RelationType} from "./RelationType";
 import {ThingType} from "./ThingType";
+import {Core} from "../../../common/rpc/RequestBuilder";
 
 export interface RoleType extends Type {
 
@@ -45,5 +46,13 @@ export interface RemoteRoleType extends RoleType, RemoteType {
     getRelationTypes(): Stream<RelationType>;
 
     getPlayers(): Stream<ThingType>;
+
+}
+
+export namespace RoleType {
+
+    export function proto(roleType: RoleType) {
+        return Core.Type.RoleType.protoRoleType(roleType.getLabel(), Type.encoding(roleType));
+    }
 
 }

@@ -17,9 +17,7 @@
  * under the License.
  */
 
-// import { Stringable } from "../../dependencies_internal";
-
-import {Stringable} from "../utils";
+import {Stringable} from "../util/utils";
 
 export abstract class ErrorMessage {
     private readonly _codePrefix: string;

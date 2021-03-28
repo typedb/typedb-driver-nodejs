@@ -18,16 +18,15 @@
  */
 
 
-import {ThingTypeImpl} from "./ThingTypeImpl";
-import {EntityType, RemoteEntityType} from "../../api/concept/type/EntityType";
 import {GraknTransaction} from "../../api/GraknTransaction";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
-import {RemoteThingType} from "../../api/concept/type/ThingType";
-import {Label} from "../../common/Label";
+import {EntityType, RemoteEntityType} from "../../api/concept/type/EntityType";
+import {ThingTypeImpl} from "./ThingTypeImpl";
 import {Entity} from "../../api/concept/thing/Entity";
+import {EntityImpl} from "../thing/EntityImpl";
+import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {Core} from "../../common/rpc/RequestBuilder";
-import {EntityImpl} from "../thing/EntityImpl";
+import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
@@ -75,6 +74,5 @@ export namespace EntityTypeImpl {
         }
 
     }
-
 
 }

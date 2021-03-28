@@ -26,10 +26,10 @@ import {ThingType} from "../../api/concept/type/ThingType";
 import {Thing} from "../../api/concept/thing/Thing";
 import {Stream} from "../../common/util/Stream";
 import {Core} from "../../common/rpc/RequestBuilder";
-import {GraknClientError} from "../../common_old/errors/GraknClientError";
+import {GraknClientError} from "../../common/errors/GraknClientError";
 import {AttributeTypeImpl} from "../type/AttributeTypeImpl";
-import {ErrorMessage} from "../../common_old/errors/ErrorMessage";
-import {Bytes} from "../../dependencies_internal";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {Bytes} from "../../common/util/Bytes";
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 export abstract class AttributeImpl<T extends AttributeType.ValueClass> extends ThingImpl implements Attribute<T> {
@@ -115,7 +115,7 @@ export namespace AttributeImpl {
             if (!ownerType) {
                 request = Core.Thing.Attribute.getOwnersReq(this.getIID());
             } else {
-                request = Core.Thing.Attribute.getOwnersByTypeReq(this.getIID(), ownerType.proto());
+                request = Core.Thing.Attribute.getOwnersByTypeReq(this.getIID(), ThingType.proto(ownerType));
             }
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getAttributeGetOwnersResPart().getThingsList()))

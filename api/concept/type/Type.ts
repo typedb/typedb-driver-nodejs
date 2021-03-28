@@ -22,10 +22,17 @@ import {GraknTransaction} from "../../GraknTransaction";
 import {Concept, RemoteConcept} from "../Concept";
 import {Stream} from "../../../common/util/Stream";
 import {Label} from "../../../common/Label";
+import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {GraknClientError} from "../../../common/errors/GraknClientError";
+import {ErrorMessage} from "../../../common/errors/ErrorMessage";
+import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
+
+
+
 
 export interface Type extends Concept {
 
-    getLabel(): Label ;
+    getLabel(): Label;
 
     isRoot(): boolean;
 
@@ -47,4 +54,23 @@ export interface RemoteType extends Type, RemoteConcept {
 
     getSubtypes(): Stream<Type>;
 
+}
+
+export namespace Type {
+
+    export function encoding(type: Type): TypeProto.Encoding {
+        if (type.isEntityType()) {
+            return TypeProto.Encoding.ENTITY_TYPE;
+        } else if (type.isRelationType()) {
+            return TypeProto.Encoding.RELATION_TYPE;
+        } else if (type.isAttributeType()) {
+            return TypeProto.Encoding.ATTRIBUTE_TYPE;
+        } else if (type.isRoleType()) {
+            return TypeProto.Encoding.ROLE_TYPE;
+        } else if (type.isThingType()) {
+            return TypeProto.Encoding.THING_TYPE;
+        } else {
+            throw new GraknClientError(BAD_ENCODING);
+        }
+    }
 }

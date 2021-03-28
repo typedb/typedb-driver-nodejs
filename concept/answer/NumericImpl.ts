@@ -20,8 +20,8 @@
 
 import {Numeric} from "../../api/answer/Numeric";
 import {Numeric as NumericProto} from "grakn-protocol/common/answer_pb";
-import {ErrorMessage} from "../../common_old/errors/ErrorMessage";
-import {GraknClientError} from "../../common_old/errors/GraknClientError";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {GraknClientError} from "../../common/errors/GraknClientError";
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 import BAD_ANSWER_TYPE = ErrorMessage.Query.BAD_ANSWER_TYPE;
 

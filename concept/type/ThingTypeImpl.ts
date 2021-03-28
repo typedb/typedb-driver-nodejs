@@ -17,24 +17,25 @@
  * under the License.
  */
 
+import {GraknTransaction} from "../../api/GraknTransaction";
+import {Thing} from "../../api/concept/thing/Thing";
+import {RoleType} from "../../api/concept/type/RoleType";
+import {AttributeType} from "../../api/concept/type/AttributeType";
 import {RemoteThingType, ThingType} from "../../api/concept/type/ThingType";
 import {TypeImpl} from "./TypeImpl";
-import {GraknTransaction} from "../../api/GraknTransaction";
-import {Label} from "../../common/Label";
+import {ThingImpl} from "../thing/ThingImpl";
+import {RoleTypeImpl} from "./RoleTypeImpl";
 import {EntityTypeImpl} from "./EntityTypeImpl";
 import {RelationTypeImpl} from "./RelationTypeImpl";
 import {AttributeTypeImpl} from "./AttributeTypeImpl";
-import {ErrorMessage} from "../../common_old/errors/ErrorMessage";
-import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
-import {GraknClientError} from "../../common_old/errors/GraknClientError";
-import {Stream} from "../../common/util/Stream";
-import {Thing} from "../../api/concept/thing/Thing";
-import {AttributeType} from "../../api/concept/type/AttributeType";
-import {RoleType} from "../../api/concept/type/RoleType";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {Label} from "../../common/Label";
 import {Core} from "../../common/rpc/RequestBuilder";
-import {ThingImpl} from "../thing/ThingImpl";
-import {RoleTypeImpl} from "./RoleTypeImpl";
+import {Stream} from "../../common/util/Stream";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {GraknClientError} from "../../common/errors/GraknClientError";
+import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {ConceptProtoBuilder} from "../../concept_old/proto/ConceptProtoBuilder";
+import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
 
@@ -53,6 +54,8 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
 }
 
 export namespace ThingTypeImpl {
+
+
 
     export function of(thingTypeProto: TypeProto) {
         switch (thingTypeProto.getEncoding()) {
@@ -74,6 +77,7 @@ export namespace ThingTypeImpl {
         constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
+
 
         asRemote(transaction: GraknTransaction): RemoteThingType {
             return this;
@@ -129,26 +133,26 @@ export namespace ThingTypeImpl {
         async setOwns(attributeType: AttributeType): Promise<void>;
         async setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
         async setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
-        async setOwns(attributeType: AttributeType, overriddenTypeOrIsKey: AttributeType | boolean, isKey?: boolean): Promise<void> {
+        async setOwns(attributeType: AttributeType, overriddenTypeOrIsKey?: AttributeType | boolean, isKey?: boolean): Promise<void> {
             let request;
             if (!overriddenTypeOrIsKey) {
-                request = Core.Type.ThingType.setOwnsReq(this.getLabel(), attributeType.proto(), false);
+                request = Core.Type.ThingType.setOwnsReq(this.getLabel(), ThingType.proto(attributeType), false);
             } else if (typeof overriddenTypeOrIsKey === "boolean") {
-                request = Core.Type.ThingType.setOwnsReq(this.getLabel(),  attributeType.proto(), overriddenTypeOrIsKey as boolean)
+                request = Core.Type.ThingType.setOwnsReq(this.getLabel(), ThingType.proto(attributeType), overriddenTypeOrIsKey as boolean)
             } else if (!isKey) {
                 request = Core.Type.ThingType.setOwnsReq(
-                    this.getLabel(), attributeType.proto(), (overriddenTypeOrIsKey as AttributeType).proto(), false
+                    this.getLabel(), ThingType.proto((overriddenTypeOrIsKey as AttributeType)), false
                 );
             } else {
                 request = Core.Type.ThingType.setOwnsReq(
-                    this.getLabel(), attributeType.proto(), (overriddenTypeOrIsKey as AttributeType).proto(), isKey
+                    this.getLabel(), ThingType.proto(overriddenTypeOrIsKey as AttributeType), isKey
                 );
             }
             await this.execute(request);
         }
 
         async unsetOwns(attributeType: AttributeType): Promise<void> {
-            const request = Core.Type.ThingType.unsetOwnsReq(this.getLabel(), attributeType.proto());
+            const request = Core.Type.ThingType.unsetOwnsReq(this.getLabel(), ThingType.proto(attributeType));
             await this.execute(request);
         }
 
@@ -163,15 +167,15 @@ export namespace ThingTypeImpl {
         async setPlays(role: RoleType, overriddenType?: RoleType): Promise<void> {
             let request;
             if (!overriddenType) {
-                request = Core.Type.ThingType.setPlaysReq(this.getLabel(), role.proto());
+                request = Core.Type.ThingType.setPlaysReq(this.getLabel(), RoleType.proto(role));
             } else {
-                request = Core.Type.ThingType.setPlaysOverriddenReq(this.getLabel(), role.proto(), overriddenType.proto());
+                request = Core.Type.ThingType.setPlaysOverriddenReq(this.getLabel(), RoleType.proto(role), RoleType.proto(overriddenType));
             }
             await this.execute(request);
         }
 
         async unsetPlays(role: RoleType): Promise<void> {
-            const request = Core.Type.ThingType.unsetPlaysReq(this.getLabel(), role.proto());
+            const request = Core.Type.ThingType.unsetPlaysReq(this.getLabel(), RoleType.proto(role));
             await this.execute(request);
         }
 
@@ -190,7 +194,7 @@ export namespace ThingTypeImpl {
         }
 
         protected async setSupertype(thingType: ThingType): Promise<void> {
-            const request = Core.Type.ThingType.setSupertypeReq(this.getLabel(), thingType.proto());
+            const request = Core.Type.ThingType.setSupertypeReq(this.getLabel(), ThingType.proto(thingType));
             await this.execute(request);
         }
 

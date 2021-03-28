@@ -18,8 +18,8 @@
  */
 
 
-import {Concept, RemoteConcept} from "../api/concept/Concept";
 import {GraknTransaction} from "../api/GraknTransaction";
+import {Concept, RemoteConcept} from "../api/concept/Concept";
 
 export abstract class ConceptImpl implements Concept {
 

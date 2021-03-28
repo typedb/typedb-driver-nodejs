@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import {GraknClientError} from "../../common_old/errors/GraknClientError";
+import {GraknClientError} from "../errors/GraknClientError";
 
 export abstract class Stream<T> implements AsyncIterable<T> {
 
