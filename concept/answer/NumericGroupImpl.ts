@@ -22,6 +22,9 @@ import {Numeric} from "../../api/answer/Numeric";
 import {Concept} from "../../api/concept/Concept";
 import {NumericGroup as NumericGroupProto} from "grakn-protocol/common/answer_pb";
 import {NumericImpl} from "./NumericImpl";
+import {ThingImpl} from "../thing/ThingImpl";
+import {RoleTypeImpl} from "../type/RoleTypeImpl";
+import {ThingTypeImpl} from "../type/ThingTypeImpl";
 
 export class NumericGroupImpl implements NumericGroup {
 
@@ -47,9 +50,9 @@ export namespace NumericGroupImpl {
 
     export function of(numericGroupProto: NumericGroupProto) {
         let concept: Concept;
-        // TODO concepts
-        // if (numericGroupProto.getOwner().hasThing()) concept = ThingImpl.of(numericGroupProto.getOwner().getThing());
-        // else concept = TypeImpl.of(numericGroupProto.getOwner().getType());
+        if (numericGroupProto.getOwner().hasThing()) concept = ThingImpl.of(numericGroupProto.getOwner().getThing());
+        else if (numericGroupProto.getOwner().getType().getScope() != null) concept = RoleTypeImpl.of(numericGroupProto.getOwner().getType());
+        else concept = ThingTypeImpl.of(numericGroupProto.getOwner().getType());
         return new NumericGroupImpl(concept, NumericImpl.of(numericGroupProto.getNumber()))
     }
 

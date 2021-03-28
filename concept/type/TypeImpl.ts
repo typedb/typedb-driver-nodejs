@@ -27,8 +27,9 @@ import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
-import {ConceptImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
+// import {ConceptImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
 import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
+import {ConceptImpl} from "../ConceptImpl";
 
 export abstract class TypeImpl extends ConceptImpl implements Type {
 
@@ -65,15 +66,15 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
 
 export namespace TypeImpl {
-
-    export function of(typeProto: TypeProto) {
-        switch (typeProto.getEncoding()) {
-            case TypeProto.Encoding.ROLE_TYPE:
-                return RoleTypeImpl.of(typeProto);
-            default:
-                return ThingTypeImpl.of(typeProto);
-        }
-    }
+    //
+    // export function of(typeProto: TypeProto) {
+    //     switch (typeProto.getEncoding()) {
+    //         case TypeProto.Encoding.ROLE_TYPE:
+    //             return RoleTypeImpl.of(typeProto);
+    //         default:
+    //             return ThingTypeImpl.of(typeProto);
+    //     }
+    // }
 
 
     export abstract class RemoteImpl extends ConceptImpl.Remote implements RemoteType {
@@ -117,24 +118,27 @@ export namespace TypeImpl {
             await this.execute(request);
         }
 
-        getSubtypes(): Stream<Type> {
-            const request = Core.Type.getSubtypesReq(this._label);
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getTypeGetSubtypesResPart().getTypesList()))
-                .map((typeProto) => of(typeProto));
-        }
+        abstract getSubtypes(): Stream<Type>;
+        abstract getSupertype(): Promise<Type>;
+        abstract getSupertypes(): Stream<Type>;
 
-        getSupertype(): Promise<Type> {
-            const request = Core.Type.getSupertypeReq(this._label);
-            return this.execute(request).then((res) => of(res.getTypeGetSupertypeRes().getType()));
-        }
-
-        getSupertypes(): Stream<Type> {
-            const request = Core.Type.getSupertypesReq(this._label);
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getTypeGetSupertypesResPart().getTypesList()))
-                .map((typeProto) => of(typeProto));
-        }
+        // getSubtypes(): Stream<Type> {
+        //     const request = Core.Type.getSubtypesReq(this._label);
+        //     return this.stream(request)
+        //         .flatMap((resPart) => Stream.array(resPart.getTypeGetSubtypesResPart().getTypesList()))
+        //         .map((typeProto) => of(typeProto));
+        // }
+        // getSupertype(): Promise<Type> {
+        //     const request = Core.Type.getSupertypeReq(this._label);
+        //     return this.execute(request).then((res) => of(res.getTypeGetSupertypeRes().getType()));
+        // }
+        //
+        // getSupertypes(): Stream<Type> {
+        //     const request = Core.Type.getSupertypesReq(this._label);
+        //     return this.stream(request)
+        //         .flatMap((resPart) => Stream.array(resPart.getTypeGetSupertypesResPart().getTypesList()))
+        //         .map((typeProto) => of(typeProto));
+        // }
 
         async setLabel(label: string): Promise<void> {
             const request = Core.Type.setLabelReq(this._label, label);

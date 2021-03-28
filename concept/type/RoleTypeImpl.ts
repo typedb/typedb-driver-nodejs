@@ -21,14 +21,14 @@ import {GraknTransaction} from "../../api/GraknTransaction";
 import {RemoteRoleType, RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {RelationType} from "../../api/concept/type/RelationType";
-import {RelationTypeImpl, ThingTypeImpl, TypeImpl} from "../../dependencies_internal";
-// import {RelationTypeImpl} from "./RelationTypeImpl";
-// import {ThingTypeImpl} from "./ThingTypeImpl";
-// import {TypeImpl} from "./TypeImpl";
+// import {RelationTypeImpl, ThingTypeImpl, TypeImpl} from "../../dependencies_internal";
+import {TypeImpl} from "./TypeImpl";
+import {RelationTypeImpl} from "./RelationTypeImpl";
 import {Stream} from "../../common/util/Stream";
 import {Label} from "../../common/Label";
 import {Core} from "../../common/rpc/RequestBuilder";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {ThingTypeImpl} from "./ThingTypeImpl";
 
 export class RoleTypeImpl extends TypeImpl implements RoleType {
 
@@ -54,20 +54,27 @@ export namespace RoleTypeImpl {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): RemoteRoleType {
-            return this;
+        getSubtypes(): Stream<RoleType> {
+            const request = Core.Type.getSubtypesReq(this.getLabel());
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getTypeGetSubtypesResPart().getTypesList()))
+                .map((typeProto) => of(typeProto));
         }
 
         getSupertype(): Promise<RoleType> {
-            return super.getSupertype() as Promise<RoleType>;
+            const request = Core.Type.getSupertypeReq(this.getLabel());
+            return this.execute(request).then((res) => of(res.getTypeGetSupertypeRes().getType()));
         }
 
         getSupertypes(): Stream<RoleType> {
-            return super.getSupertypes() as Stream<RoleType>;
+            const request = Core.Type.getSupertypesReq(this.getLabel());
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getTypeGetSupertypesResPart().getTypesList()))
+                .map((typeProto) => of(typeProto));
         }
 
-        getSubtypes(): Stream<RoleType> {
-            return super.getSubtypes() as Stream<RoleType>;
+        asRemote(transaction: GraknTransaction): RemoteRoleType {
+            return this;
         }
 
         getRelationType(): Promise<RelationType> {

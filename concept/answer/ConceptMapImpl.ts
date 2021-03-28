@@ -20,18 +20,28 @@
 import {ConceptMap as ConceptMapProto} from "grakn-protocol/common/answer_pb";
 import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
+import {ThingImpl} from "../thing/ThingImpl";
+import {TypeImpl} from "../type/TypeImpl";
+import {RoleTypeImpl} from "../type/RoleTypeImpl";
+import {ThingTypeImpl} from "../type/ThingTypeImpl";
 
 export class ConceptMapImpl implements ConceptMap {
+    private _concepts: Map<string, Concept>;
+
+    constructor(concepts: Map<string, Concept>) {
+        this._concepts = concepts;
+    }
+
     concepts(): IterableIterator<Concept> {
-        return undefined;
+        return this._concepts.values();
     }
 
     get(variable: string): Concept {
-        return undefined;
+        return this._concepts.get(variable);
     }
 
     map(): Map<string, Concept> {
-        return undefined;
+        return this._concepts;
     }
 
 }
@@ -39,7 +49,15 @@ export class ConceptMapImpl implements ConceptMap {
 export namespace ConceptMapImpl {
 
     export function of(proto: ConceptMapProto) {
-        return new ConceptMapImpl();
+        const variableMap = new Map<string, Concept>();
+        proto.getMapMap().forEach((protoConcept , resLabel ) => {
+            let concept;
+            if (protoConcept.hasThing()) concept = ThingImpl.of(protoConcept.getThing());
+            else if (protoConcept.getType().getScope() != null) concept = RoleTypeImpl.of(protoConcept.getType());
+            else concept = ThingTypeImpl.of(protoConcept.getType());
+            variableMap.set(resLabel, concept);
+        })
+        return new ConceptMapImpl(variableMap);
     }
 
 }

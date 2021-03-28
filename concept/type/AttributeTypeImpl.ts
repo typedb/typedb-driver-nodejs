@@ -22,9 +22,9 @@ import {GraknTransaction} from "../../api/GraknTransaction";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {ThingType} from "../../api/concept/type/ThingType";
-import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
-// import {AttributeImpl} from "../thing/AttributeImpl";
-// import {ThingTypeImpl} from "./ThingTypeImpl";
+// import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
+import {AttributeImpl} from "../thing/AttributeImpl";
+import {ThingTypeImpl} from "./ThingTypeImpl";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {Core} from "../../common/rpc/RequestBuilder";
@@ -181,7 +181,6 @@ export namespace AttributeTypeImpl {
                 .then((attrProto) => AttributeImpl.of(attrProto.getAttributeTypeGetRes().getAttribute()));
         }
 
-
         isBoolean(): boolean {
             return false;
         }
@@ -290,8 +289,9 @@ export namespace AttributeTypeImpl {
             return AttributeType.ValueType.BOOLEAN;
         }
 
-        put(value: boolean): Promise<Attribute.Boolean> {
-            return Promise.resolve(undefined);
+        async put(value: boolean): Promise<Attribute.Boolean> {
+            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueBooleanReq(value));
+            return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Boolean>);
         }
 
         isBoolean(): boolean {
@@ -349,9 +349,9 @@ export namespace AttributeTypeImpl {
             return AttributeType.ValueType.LONG;
         }
 
-
-        put(value: number): Promise<Attribute.Long> {
-            return Promise.resolve(undefined);
+        async put(value: number): Promise<Attribute.Long> {
+            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueLongReq(value));
+            return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Long>);
         }
 
         isLong(): boolean {
@@ -409,8 +409,9 @@ export namespace AttributeTypeImpl {
             return AttributeType.ValueType.LONG;
         }
 
-        put(value: number): Promise<Attribute.Double> {
-            return Promise.resolve(undefined);
+        async put(value: number): Promise<Attribute.Double> {
+            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueDoubleReq(value));
+            return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Double>);
         }
 
         isDouble(): boolean {
@@ -468,8 +469,9 @@ export namespace AttributeTypeImpl {
             return AttributeType.ValueType.STRING;
         }
 
-        put(value: string): Promise<Attribute.String> {
-            return Promise.resolve(undefined);
+        async put(value: string): Promise<Attribute.String> {
+            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueStringReq(value));
+            return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.String>);
         }
 
         isString(): boolean {
@@ -537,8 +539,9 @@ export namespace AttributeTypeImpl {
             return AttributeType.ValueType.DATETIME;
         }
 
-        put(value: Date): Promise<Attribute.DateTime> {
-            return Promise.resolve(undefined);
+        async put(value: Date): Promise<Attribute.DateTime> {
+            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueDateTimeReq(value));
+            return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.DateTime>);
         }
 
         isDateTime(): boolean {

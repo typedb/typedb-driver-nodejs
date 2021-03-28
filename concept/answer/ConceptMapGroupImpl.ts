@@ -22,6 +22,9 @@ import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
 import {ConceptMapImpl} from "./ConceptMapImpl";
 import {ConceptMapGroup as MapGroupProto} from "grakn-protocol/common/answer_pb";
+import {ThingImpl} from "../thing/ThingImpl";
+import {RoleTypeImpl} from "../type/RoleTypeImpl";
+import {ThingTypeImpl} from "../type/ThingTypeImpl";
 
 export class ConceptMapGroupImpl implements ConceptMapGroup {
 
@@ -47,9 +50,9 @@ export namespace ConceptMapGroupImpl {
 
     export function of(mapGroupProto: MapGroupProto) {
         let owner: Concept;
-        // TODO concepts
-        // if (mapGroupProto.getOwner().hasThing()) owner = ThingImpl.of(mapGroupProto.getOwner().getThing());
-        // else owner = TypeImpl.of(mapGroupProto.getOwner().getType());
+        if (mapGroupProto.getOwner().hasThing()) owner = ThingImpl.of(mapGroupProto.getOwner().getThing());
+        else if (mapGroupProto.getOwner().getType().getScope() != null) owner = RoleTypeImpl.of(mapGroupProto.getOwner().getType());
+        else owner = ThingTypeImpl.of(mapGroupProto.getOwner().getType());
         return new ConceptMapGroupImpl(owner, mapGroupProto.getConceptMapsList()
             .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto)) as ConceptMap[]);
     }

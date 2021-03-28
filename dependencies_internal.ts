@@ -48,12 +48,12 @@ export * from "./concept/thing/RelationImpl";
 export * from "./concept/thing/AttributeImpl";
 
 /* concept.type */
-export * from "./concept/type/TypeImpl";
-export * from "./concept/type/ThingTypeImpl";
-export * from "./concept/type/RoleTypeImpl";
+// export * from "./concept/type/TypeImpl";
+// export * from "./concept/type/ThingTypeImpl";
+export * from "./concept/type/AttributeTypeImpl";
 export * from "./concept/type/EntityTypeImpl";
 export * from "./concept/type/RelationTypeImpl";
-export * from "./concept/type/AttributeTypeImpl";
+export * from "./concept/type/RoleTypeImpl";
 //
 // /* concept.type.impl */
 // export * from "./concept/type/impl/TypeImpl";
