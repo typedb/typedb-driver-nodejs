@@ -18,22 +18,23 @@
  */
 
 
-import {ThingTypeImpl} from "./ThingTypeImpl";
+import {GraknTransaction} from "../../api/GraknTransaction";
 import {AttributeType} from "../../api/concept/type/AttributeType";
+import {Attribute} from "../../api/concept/thing/Attribute";
+import {ThingType} from "../../api/concept/type/ThingType";
+import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
+// import {AttributeImpl} from "../thing/AttributeImpl";
+// import {ThingTypeImpl} from "./ThingTypeImpl";
+import {Label} from "../../common/Label";
+import {Stream} from "../../common/util/Stream";
+import {Core} from "../../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {GraknClientError} from "../../common/errors/GraknClientError";
 import {
     Attribute as AttributeProto,
     AttributeType as AttributeTypeProto,
     Type as TypeProto
 } from "grakn-protocol/common/concept_pb";
-import {Stream} from "../../common/util/Stream";
-import {Attribute} from "../../api/concept/thing/Attribute";
-import {ThingType} from "../../api/concept/type/ThingType";
-import {GraknTransaction} from "../../api/GraknTransaction";
-import {Core} from "../../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {Label} from "../../common/Label";
-import {GraknClientError} from "../../common/errors/GraknClientError";
-import {AttributeImpl} from "../thing/AttributeImpl";
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 

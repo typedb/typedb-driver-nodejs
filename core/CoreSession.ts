@@ -112,7 +112,7 @@ export class CoreSession implements GraknSession {
         return this._type;
     }
 
-    private id() {
+    public sessionId() {
         return this._sessionId;
     }
 
@@ -133,7 +133,7 @@ export class CoreSession implements GraknSession {
         return this._client.transmitter();
     }
 
-    private networkLatency() {
+    public networkLatency() {
         return this._networkLatencyMillis;
     }
 }

@@ -30,7 +30,7 @@ export interface ConceptManager {
 
     getRootEntityType(): Promise<EntityType>;
 
-    getRootRelationType():Promise<RelationType>;
+    getRootRelationType(): Promise<RelationType>;
 
     getRootAttributeType(): Promise<AttributeType>;
 
@@ -38,16 +38,16 @@ export interface ConceptManager {
 
     getThing(iid: string): Promise<Thing>;
 
-    getEntityType( label: string): Promise<EntityType>;
+    getEntityType(label: string): Promise<EntityType>;
 
-    putEntityType( label: string): Promise<EntityType>;
+    putEntityType(label: string): Promise<EntityType>;
 
-    getRelationType( label: string): Promise<RelationType>;
+    getRelationType(label: string): Promise<RelationType>;
 
-    putRelationType( label: string): Promise<RelationType>;
+    putRelationType(label: string): Promise<RelationType>;
 
-    getAttributeType( label: string): Promise<AttributeType | null>;
+    getAttributeType(label: string): Promise<AttributeType | null>;
 
-    putAttributeType( label: string, valueType: AttributeType.ValueType): Promise<AttributeType | null>;
+    putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType | null>;
 
 }

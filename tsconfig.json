@@ -69,18 +69,14 @@
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
-//    "common_old",
-//    "concept",
-//    "logic",
-//    "query",
-//    "rpc",
-//    "dependencies_internal.ts",
+    "dependencies_internal.ts",
     "GraknClient.ts",
-//    "GraknOptions.ts"
     "api",
     "common",
     "core",
-    "stream"
-
+    "concept",
+    "logic",
+    "query",
+    "stream",
   ]
 }

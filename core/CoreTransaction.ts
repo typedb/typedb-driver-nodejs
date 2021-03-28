@@ -25,6 +25,12 @@ import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {Core} from "../common/rpc/RequestBuilder";
 import {GraknClientError} from "../common/errors/GraknClientError";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {ConceptManager} from "../api/concept/ConceptManager";
+import {LogicManager} from "../api/logic/LogicManager";
+import {QueryManager} from "../api/query/QueryManager";
+import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
+import {LogicManagerImpl} from "../logic/LogicManagerImpl";
+import {QueryManagerImpl} from "../query/QueryManagerImpl";
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 
 export class CoreTransaction implements GraknTransaction.Extended {
@@ -33,6 +39,9 @@ export class CoreTransaction implements GraknTransaction.Extended {
     private readonly _type: GraknTransaction.Type;
     private readonly _options: GraknOptions;
     private _bidirectionalStream: BidirectionalStream;
+    private _conceptManager: ConceptManager;
+    private _logicManager: LogicManager;
+    private _queryManager: QueryManager;
 
     constructor(session: CoreSession, _sessionId: string, type: GraknTransaction.Type, options: GraknOptions) {
         this._session = session;
@@ -41,22 +50,14 @@ export class CoreTransaction implements GraknTransaction.Extended {
         this._options = options;
         let rpcClient = this._session.rpc();
         this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter());
+        this._conceptManager = new ConceptManagerImpl(this);
+        this._logicManager = new LogicManagerImpl(this);
+        this._queryManager = new QueryManagerImpl(this);
     }
 
     public async open(): Promise<void> {
         let openReq = Core.Transaction.openReq(this._sessionId, this._type.proto(), this._options.proto(), this._session.networkLatency());
         await this.rpcExecute(openReq, false);
-    }
-
-    private async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
-        if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
-        let useBatch = batch ? batch : true;
-        return this._bidirectionalStream.single(request, useBatch);
-    }
-
-    private rpcStream(request: Transaction.Req): any {
-        if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
-        return this._bidirectionalStream.stream(request);
     }
 
     public async close(): Promise<void> {
@@ -78,15 +79,15 @@ export class CoreTransaction implements GraknTransaction.Extended {
     }
 
     public concepts(): ConceptManager {
-        return undefined;
+        return this._conceptManager;
     }
 
     public logic(): LogicManager {
-        return undefined;
+        return this._logicManager;
     }
 
     public query(): QueryManager {
-        return undefined;
+        return this._queryManager;
     }
 
     public options(): GraknOptions {
@@ -99,6 +100,17 @@ export class CoreTransaction implements GraknTransaction.Extended {
 
     public isOpen(): boolean {
         return this._bidirectionalStream.isOpen();
+    }
+
+    public async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
+        if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
+        let useBatch = batch ? batch : true;
+        return this._bidirectionalStream.single(request, useBatch);
+    }
+
+    public rpcStream(request: Transaction.Req): any {
+        if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
+        return this._bidirectionalStream.stream(request);
     }
 
 }

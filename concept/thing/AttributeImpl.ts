@@ -17,18 +17,19 @@
  * under the License.
  */
 
-import {Attribute} from "../../api/concept/thing/Attribute";
-import {AttributeType} from "../../api/concept/type/AttributeType";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {ThingType} from "../../api/concept/type/ThingType";
+import {Attribute} from "../../api/concept/thing/Attribute";
 import {Thing} from "../../api/concept/thing/Thing";
-import {RemoteThingImpl, ThingImpl} from "./ThingImpl";
-import {AttributeTypeImpl} from "../type/AttributeTypeImpl";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {AttributeType} from "../../api/concept/type/AttributeType";
+import {RemoteThingImpl, ThingImpl, AttributeTypeImpl} from "../../dependencies_internal";
+// import {RemoteThingImpl, ThingImpl} from "./ThingImpl";
+// import {AttributeTypeImpl} from "../type/AttributeTypeImpl";
+import {Bytes} from "../../common/util/Bytes";
 import {Stream} from "../../common/util/Stream";
+import {Core} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
-import {Bytes} from "../../common/util/Bytes";
 import {AttributeType as AttributeTypeProto, Thing as ThingProto} from "grakn-protocol/common/concept_pb";
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
@@ -102,7 +103,7 @@ export namespace AttributeImpl {
             this._type = type;
         }
 
-        abstract getValue();
+        abstract getValue(): T;
 
         abstract asRemote(transaction: GraknTransaction): any; //TODO this is bad typing
 

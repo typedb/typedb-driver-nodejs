@@ -17,13 +17,14 @@
  * under the License.
  */
 
-import {Entity, RemoteEntity} from "../../api/concept/thing/Entity";
-import {EntityType} from "../../api/concept/type/EntityType";
-import {RemoteThingImpl, ThingImpl} from "./ThingImpl";
 import {GraknTransaction} from "../../api/GraknTransaction";
-import {EntityTypeImpl} from "../type/EntityTypeImpl";
-import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
+import {EntityType} from "../../api/concept/type/EntityType";
+import {Entity, RemoteEntity} from "../../api/concept/thing/Entity";
+import {EntityTypeImpl, RemoteThingImpl, ThingImpl} from "../../dependencies_internal";
+// import {RemoteThingImpl, ThingImpl} from "./ThingImpl";
+// import {EntityTypeImpl} from "../type/EntityTypeImpl";
 import {Bytes} from "../../common/util/Bytes";
+import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
 
 export class EntityImpl extends ThingImpl implements Entity {
 

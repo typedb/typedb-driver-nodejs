@@ -18,26 +18,28 @@
  */
 
 
-import {RemoteThing, Thing} from "../../api/concept/thing/Thing";
-import {ConceptImpl} from "../ConceptImpl";
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {Concept} from "../../api/concept/Concept";
 import {ThingType} from "../../api/concept/type/ThingType";
-import {GraknClientError} from "../../common/errors/GraknClientError";
-import {EntityImpl} from "./EntityImpl";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {RelationImpl} from "./RelationImpl";
-import {AttributeImpl} from "./AttributeImpl";
-import {Stream} from "../../common/util/Stream";
-import {Attribute} from "../../api/concept/thing/Attribute";
 import {AttributeType} from "../../api/concept/type/AttributeType";
-import {Thing as ThingProto, Type as TypeProto} from "grakn-protocol/common/concept_pb";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
-import {Core} from "../../common/rpc/RequestBuilder";
-import {RoleType} from "../../api/concept/type/RoleType";
-import {RoleTypeImpl} from "../type/RoleTypeImpl";
 import {Relation} from "../../api/concept/thing/Relation";
+import {Attribute} from "../../api/concept/thing/Attribute";
+import {RemoteThing, Thing} from "../../api/concept/thing/Thing";
+import {RoleType} from "../../api/concept/type/RoleType";
+import {ConceptImpl, EntityImpl, RelationImpl, AttributeImpl, RoleTypeImpl} from "../../dependencies_internal";
+// import {ConceptImpl} from "../ConceptImpl";
+// import {EntityImpl} from "./EntityImpl";
+// import {RelationImpl} from "./RelationImpl";
+// import {AttributeImpl} from "./AttributeImpl";
+// import {RoleTypeImpl} from "../type/RoleTypeImpl";
+import {Stream} from "../../common/util/Stream";
+import {Core} from "../../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {GraknClientError} from "../../common/errors/GraknClientError";
+import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {Thing as ThingProto, Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
+import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 export abstract class ThingImpl extends ConceptImpl implements Thing {
     private _iid: string;
@@ -91,7 +93,8 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
     getHas(attributeType: AttributeType.DateTime): Stream<Attribute.DateTime>;
     getHas(attributeTypes: AttributeType[]): Stream<Attribute<AttributeType.ValueClass>>;
     getHas(onlyKeyAttrTypeAttrTypes?: boolean | AttributeType | AttributeType[])
-        : Stream<Attribute<AttributeType.ValueClass>> | Stream<Attribute.Boolean> | Stream<Attribute.Long> | Stream<Attribute.Double> | Stream<Attribute.String> | Stream<Attribute.DateTime> {
+        : Stream<Attribute<AttributeType.ValueClass>> | Stream<Attribute.Boolean> | Stream<Attribute.Long>
+        | Stream<Attribute.Double> | Stream<Attribute.String> | Stream<Attribute.DateTime> {
         let isSingleAttrType = false;
         let request;
         if (typeof onlyKeyAttrTypeAttrTypes === "undefined") {
@@ -114,7 +117,10 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
             else if (arg.isDouble) return attributes as Stream<Attribute.Double>;
             else if (arg.isString) return attributes as Stream<Attribute.String>;
             else if (arg.isDateTime()) return attributes as Stream<Attribute.DateTime>;
-        } else return attributes;
+            else throw new GraknClientError(BAD_VALUE_TYPE.message(arg));
+        } else {
+            return attributes;
+        }
     }
 
     getPlaying(): Stream<RoleType> {

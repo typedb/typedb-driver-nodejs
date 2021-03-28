@@ -56,8 +56,8 @@ export class CoreClient implements GraknClient {
         if (!options) options = GraknOptions.core();
         const session = new CoreSession(database, type, options, this);
         await session.open();
-        if (this._sessions[session.id()]) throw new GraknClientError(SESSION_ID_EXISTS.message(session.id()));
-        this._sessions[session.id()] = session;
+        if (this._sessions[session.sessionId()]) throw new GraknClientError(SESSION_ID_EXISTS.message(session.sessionId()));
+        this._sessions[session.sessionId()] = session;
         return session;
     }
 
@@ -91,7 +91,7 @@ export class CoreClient implements GraknClient {
     }
 
     closedSession(session : CoreSession) : void {
-        delete this._sessions[session.id()];
+        delete this._sessions[session.sessionId()];
     }
 
 }

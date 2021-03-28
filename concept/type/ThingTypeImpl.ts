@@ -22,19 +22,13 @@ import {Thing} from "../../api/concept/thing/Thing";
 import {RoleType} from "../../api/concept/type/RoleType";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {RemoteThingType, ThingType} from "../../api/concept/type/ThingType";
-import {TypeImpl} from "./TypeImpl";
-import {ThingImpl} from "../thing/ThingImpl";
-import {RoleTypeImpl} from "./RoleTypeImpl";
-import {EntityTypeImpl} from "./EntityTypeImpl";
-import {RelationTypeImpl} from "./RelationTypeImpl";
-import {AttributeTypeImpl} from "./AttributeTypeImpl";
+import {TypeImpl, ThingImpl, RoleTypeImpl, EntityTypeImpl, RelationTypeImpl, AttributeTypeImpl} from "../../dependencies_internal";
 import {Label} from "../../common/Label";
 import {Core} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
-import {ConceptProtoBuilder} from "../../concept_old/proto/ConceptProtoBuilder";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
@@ -54,8 +48,6 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
 }
 
 export namespace ThingTypeImpl {
-
-
 
     export function of(thingTypeProto: TypeProto) {
         switch (thingTypeProto.getEncoding()) {

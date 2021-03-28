@@ -24,13 +24,7 @@
  * NOTE: this does not apply to interfaces, which are erased at runtime.
  */
 
-// /* common */
-// export * from "./common_old/errors/ErrorMessage";
-// export * from "./common_old/errors/GraknClientError";
-// export * from "./common_old/BlockingQueue";
-// export * from "./common_old/Bytes";
-// export * from "./common_old/utils";
-//
+
 // /* concept.answer */
 // export * from "./concept/answer/ConceptMap";
 // export * from "./concept/answer/Numeric";
@@ -43,29 +37,23 @@
 // /* logic */
 // export * from "./logic/Rule";
 // export * from "./logic/LogicManager";
-//
-// /* concept.impl */
-// export * from "./concept/impl/ConceptImpl";
-//
-// /* concept.thing */
-// export * from "./concept/thing/Attribute";
-// export * from "./concept/thing/Entity";
-// export * from "./concept/thing/Relation";
-// export * from "./concept/thing/Thing";
-//
-// /* concept.thing.impl */
-// export * from "./concept/thing/impl/ThingImpl";
-// export * from "./concept/thing/impl/AttributeImpl";
-// export * from "./concept/thing/impl/EntityImpl";
-// export * from "./concept/thing/impl/RelationImpl";
-//
-// /* concept.type */
-// export * from "./concept/type/AttributeType";
-// export * from "./concept/type/EntityType";
-// export * from "./concept/type/RelationType";
-// export * from "./concept/type/RoleType";
-// export * from "./concept/type/ThingType";
-// export * from "./concept/type/Type";
+
+/* concept.impl */
+export * from "./concept/ConceptImpl";
+
+/* concept.thing */
+export * from "./concept/thing/ThingImpl";
+export * from "./concept/thing/EntityImpl";
+export * from "./concept/thing/RelationImpl";
+export * from "./concept/thing/AttributeImpl";
+
+/* concept.type */
+export * from "./concept/type/TypeImpl";
+export * from "./concept/type/ThingTypeImpl";
+export * from "./concept/type/RoleTypeImpl";
+export * from "./concept/type/EntityTypeImpl";
+export * from "./concept/type/RelationTypeImpl";
+export * from "./concept/type/AttributeTypeImpl";
 //
 // /* concept.type.impl */
 // export * from "./concept/type/impl/TypeImpl";

@@ -21,7 +21,7 @@ config:
   version-candidate: VERSION
   dependencies:
     dependencies: [build]
-    common_old: [build, release]
+    common: [build, release]
     behaviour: [build]
 
 build:
@@ -42,7 +42,7 @@ build:
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel build //... --spawn_strategy=local
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
-        bazel test $(bazel query_old 'kind(checkstyle_test, //...)')
+        bazel test $(bazel query 'kind(checkstyle_test, //...)')
         npm install
         npm run lint
     test-integration:
@@ -52,9 +52,9 @@ build:
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         npm install
-        ./test/common_old/start-core-server.sh
+        ./test/common/start-core-server.sh
         npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        ./test/common_old/stop-core-server.sh
+        ./test/common/stop-core-server.sh
         exit $TEST_SUCCESS
     test-cluster-failover:
       machine: 4-core-8-gb
@@ -64,9 +64,9 @@ build:
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         npm install
-        ./test/common_old/start-cluster-servers.sh
+        ./test/common/start-cluster-servers.sh
         npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        ./test/common_old/stop-cluster-servers.sh
+        ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     test-behaviour-connection:
       image: graknlabs-ubuntu-20.04
@@ -75,13 +75,13 @@ build:
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel test //test/behaviour/connection/... --test_output=errors --jobs=1
-    test-behaviour-concept_old:
+    test-behaviour-concept:
       image: graknlabs-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/concept_old/... --test_output=errors --jobs=1
+        bazel test //test/behaviour/concept/... --test_output=errors --jobs=1
     # TODO: Delete --jobs=1 once tests are parallelisable
     test-behaviour-match:
       image: graknlabs-ubuntu-20.04
@@ -122,14 +122,14 @@ build:
         export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
         export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
-      dependencies: [build, test-integration, test-behaviour-connection, test-behaviour-concept_old, test-behaviour-match, test-behaviour-writable, test-behaviour-definable]
+      dependencies: [build, test-integration, test-behaviour-connection, test-behaviour-concept, test-behaviour-match, test-behaviour-writable, test-behaviour-definable]
     test-deployment-npm:
       filter:
         owner: graknlabs
         branch: master
       image: graknlabs-ubuntu-20.04
       command: |
-        ./test/common_old/start-core-server.sh
+        ./test/common/start-core-server.sh
         cd test/deployment/
         echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
         npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz

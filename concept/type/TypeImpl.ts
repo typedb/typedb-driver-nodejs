@@ -20,9 +20,6 @@
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {Concept} from "../../api/concept/Concept";
 import {RemoteType, Type} from "../../api/concept/type/Type";
-import {ConceptImpl} from "../ConceptImpl";
-import {ThingTypeImpl} from "./ThingTypeImpl";
-import {RoleTypeImpl} from "./RoleTypeImpl";
 import {Label} from "../../common/Label";
 import {Core} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
@@ -30,6 +27,7 @@ import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {ConceptImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
 import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
 
 export abstract class TypeImpl extends ConceptImpl implements Type {

@@ -63,7 +63,7 @@ export class BidirectionalStream {
         request.setReqId(requestId);
         const responseQueue = this._responseCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
         const responseIterator = new ResponsePartIterator(requestId, responseQueue, this._dispatcher);
-        return Stream.stream(responseIterator);
+        return Stream.iterable(responseIterator);
     }
 
     isOpen(): boolean {
