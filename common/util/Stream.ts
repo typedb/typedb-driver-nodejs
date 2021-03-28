@@ -62,6 +62,12 @@ export abstract class Stream<T> implements AsyncIterable<T> {
     flatMap<U>(mapper: (value: T) => Stream<U>): Stream<U> {
         return new Stream.FlatMapped<T, U, Stream<U>>(this, mapper);
     }
+
+    async forEach(fn: (value: T) => void): Promise<void> {
+        for await (const val of this) {
+            fn(val);
+        }
+    }
 }
 
 export namespace Stream {

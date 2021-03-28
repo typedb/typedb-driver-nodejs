@@ -48,7 +48,7 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         this._iid = iid;
     }
 
-    abstract asRemote(transaction: GraknTransaction): RemoteThing;
+    abstract asRemote(transaction: GraknTransaction): any;
 
     equals(concept: Concept): boolean {
         if (concept.isType()) return false;

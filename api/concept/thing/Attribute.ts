@@ -51,9 +51,7 @@ export namespace Attribute {
 
         getType(): AttributeType;
 
-        getOwners(): Stream<Thing>;
-
-        getOwners(ownerType: ThingType): Stream<Thing>;
+        getOwners(ownerType?: ThingType): Stream<Thing>;
 
     }
 

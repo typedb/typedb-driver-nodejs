@@ -42,9 +42,7 @@ export interface RemoteRelation extends Relation, RemoteThing {
 
     removePlayer(roleType: RoleType, player: Thing): Promise<void>;
 
-    getPlayers(): Stream<Thing>;
-
-    getPlayers(roleTypes: RoleType[]): Stream<Thing>;
+    getPlayers(roleTypes?: RoleType[]): Stream<Thing>;
 
     getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>>;
 

@@ -17,19 +17,29 @@
  * under the License.
  */
 
-import {Entity} from "../../api/concept/thing/Entity";
+import {Entity, RemoteEntity} from "../../api/concept/thing/Entity";
 import {EntityType} from "../../api/concept/type/EntityType";
 import {ThingImpl} from "./ThingImpl";
 import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
 import {Bytes} from "../../dependencies_internal";
 import {EntityTypeImpl} from "../type/EntityTypeImpl";
+import {GraknTransaction} from "../../api/GraknTransaction";
 
 export class EntityImpl extends ThingImpl implements Entity{
+
     private _type: EntityType;
 
     constructor(iid: string, type: EntityType) {
         super(iid);
         this._type = type;
+    }
+
+    asRemote(transaction: GraknTransaction): RemoteEntity {
+        return new EntityImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getIID(), this.getType());
+    }
+
+    getType(): EntityType {
+        return this._type;
     }
 
 }
@@ -39,6 +49,25 @@ export namespace EntityImpl {
     export function of(thingProto: ThingProto): Entity {
         let iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
         return new EntityImpl(iid, EntityTypeImpl.of(thingProto.getType()));
+    }
+
+    export class RemoteImpl extends ThingImpl.RemoteImpl implements RemoteEntity {
+
+        private _type: EntityType;
+
+        constructor(transaction: GraknTransaction.Extended, iid: string, type: EntityType) {
+            super(transaction, iid);
+            this._type = type;
+        }
+
+        asRemote(transaction: GraknTransaction):  RemoteEntity {
+            return this;
+        }
+
+        getType(): EntityType {
+            return this._type;
+        }
+
     }
 
 }

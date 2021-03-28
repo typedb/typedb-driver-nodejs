@@ -83,16 +83,16 @@ export namespace ThingTypeImpl {
             return true;
         }
 
-        getSupertype(): Promise<ThingTypeImpl> {
-            return super.getSupertype() as Promise<ThingTypeImpl>;
+        getSupertype(): Promise<ThingType> {
+            return super.getSupertype() as Promise<ThingType>;
         }
 
-        getSupertypes(): Stream<ThingTypeImpl> {
-            return super.getSupertypes() as Stream<ThingTypeImpl>;
+        getSupertypes(): Stream<ThingType> {
+            return super.getSupertypes() as Stream<ThingType>;
         }
 
         getSubtypes(): Stream<ThingType> {
-            return super.getSubtypes() as Stream<ThingTypeImpl>;
+            return super.getSubtypes() as Stream<ThingType>;
         }
 
         getInstances(): Stream<Thing> {

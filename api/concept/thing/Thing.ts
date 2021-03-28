@@ -38,7 +38,7 @@ import {
 } from "../type/AttributeType";
 import {Stream} from "../../../common/util/Stream";
 import {RoleType} from "../type/RoleType";
-import {Relation} from "grakn-protocol/common/concept_pb";
+import {Relation} from "./Relation";
 
 export interface Thing extends Concept {
 

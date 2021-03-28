@@ -151,7 +151,7 @@ export namespace AttributeTypeImpl {
         }
 
         getSubtypes(): Stream<AttributeType> {
-            return super.getSupertype() as Stream<AttributeType>;
+            return super.getSupertypes() as Stream<AttributeType>;
         }
 
         getInstances(): Stream<Attribute<AttributeType.ValueClass>> {
