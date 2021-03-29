@@ -117,7 +117,7 @@ export namespace RelationImpl {
             let next = iter.next();
             while (!next.done) {
                 const roleType = next.value;
-                if (roleType.label().scopedName() === role.getLabel().scopedName()) {
+                if (roleType.getLabel().scopedName() === role.getLabel().scopedName()) {
                     return roleType;
                 }
                 next = iter.next();

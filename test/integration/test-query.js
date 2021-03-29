@@ -224,7 +224,7 @@ async function run() {
         tx = await session.transaction(TransactionType.READ, GraknOptions.core({infer: true, explain: true}));
         const answers = await tx.query().match("match $x has inferred-age $a;").collect();
         const ans = answers[0];
-        assert(ans.explainables().ownerships().length > 0);
+        assert(ans.explainables().ownerships().size > 0);
         console.log("open data read transaction - SUCCESS");
     } catch (err) {
         console.error(`open data read transaction - ERROR: ${err.stack || err}`);

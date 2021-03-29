@@ -63,7 +63,7 @@ export namespace ConceptMapImpl {
     import NONEXISTENT_EXPLAINABLE_CONCEPT = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_CONCEPT;
     import NONEXISTENT_EXPLAINABLE_OWNERSHIP = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
 
-    export function of(proto: ConceptMapProto) {
+    export function of(proto: ConceptMapProto): ConceptMap {
         const variableMap = new Map<string, Concept>();
         proto.getMapMap().forEach((protoConcept: ConceptProto, resLabel: string) => {
             let concept;
@@ -71,10 +71,10 @@ export namespace ConceptMapImpl {
             else concept = TypeImpl.of(protoConcept.getType());
             variableMap.set(resLabel, concept);
         })
-        return new ConceptMapImpl(variableMap, null);
+        return new ConceptMapImpl(variableMap, ofExplainables(proto.getExplainables()));
     }
 
-    function ofExplainables(proto: ExplainablesProto) {
+    function ofExplainables(proto: ExplainablesProto): ConceptMap.Explainables {
         const relations = new Map<string, ConceptMap.Explainable>();
         proto.getExplainableRelationsMap().forEach((explainable, variable) =>
             relations.set(variable, ofExplainable(explainable))
@@ -88,6 +88,7 @@ export namespace ConceptMapImpl {
         proto.getExplainableOwnershipsList().forEach((explainableOwnership) =>
             ownerships.set([explainableOwnership.getOwner(), explainableOwnership.getAttribute()], ofExplainable(explainableOwnership.getExplainable()))
         );
+        return new ExplainablesImpl(relations, attributes, ownerships)
     }
 
     function ofExplainable(proto: ExplainableProto): ConceptMap.Explainable {
