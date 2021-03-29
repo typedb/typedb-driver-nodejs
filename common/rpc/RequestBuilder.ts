@@ -183,6 +183,7 @@ export namespace RequestBuilder {
         }
     }
 
+
     export namespace QueryManager {
 
         function queryManagerReq(queryReq: QueryProto.Req, options: Options) {
@@ -243,11 +244,11 @@ export namespace RequestBuilder {
             ), options);
         }
 
-        // export function explainReq(: id: number, options : Options) {
-        //     return queryManagerReq(new QueryProto.Req().setExplainReq(
-        //         new QueryProto.Explain.Req().setExplainableId(id)
-        //     ), options);
-        // }
+        export function explainReq(id: number, options: Options) {
+            return queryManagerReq(new QueryProto.Req().setExplainReq(
+                new QueryProto.Explain.Req().setExplainableId(id)
+            ), options);
+        }
     }
 
 

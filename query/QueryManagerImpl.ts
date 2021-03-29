@@ -32,6 +32,8 @@ import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
 import {NumericImpl} from "../concept/answer/NumericImpl";
 import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
 import {NumericGroupImpl} from "../concept/answer/NumericGroupImpl";
+import {Explanation} from "../api/logic/Explanation";
+import {ExplanationImpl} from "../logic/ExplanationImpl";
 
 
 export class QueryManagerImpl implements QueryManager {
@@ -109,6 +111,14 @@ export class QueryManagerImpl implements QueryManager {
         if (!options) options = GraknOptions.core();
         const request = RequestBuilder.QueryManager.undefineReq(query, options.proto());
         return this.query(request).then(() => null);
+    }
+
+    explain(explainable: ConceptMap.Explainable, options?: GraknOptions): Stream<Explanation> {
+        if (!options) options = GraknOptions.core();
+        const request = RequestBuilder.QueryManager.explainReq(explainable.id(), options.proto());
+        return this.stream(request)
+            .flatMap((resPart) => Stream.array(resPart.getExplainResPart().getExplanationsList()))
+            .map((explanationProto) => ExplanationImpl.of(explanationProto));
     }
 
     private query(req: TransactionProto.Req): Promise<QueryProto.Res> {

@@ -17,7 +17,11 @@
  * under the License.
  */
 
-import {ConceptMap as ConceptMapProto} from "grakn-protocol/common/answer_pb";
+import {
+    ConceptMap as ConceptMapProto,
+    Explainable as ExplainableProto,
+    Explainables as ExplainablesProto
+} from "grakn-protocol/common/answer_pb";
 import {Concept as ConceptProto} from "grakn-protocol/common/concept_pb";
 import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
@@ -69,9 +73,25 @@ export namespace ConceptMapImpl {
         return new ConceptMapImpl(variableMap, null);
     }
 
-    // function of(proto: ConceptMapProto.Explainables) {
-    //
-    // }
+    function ofExplainables(proto: ExplainablesProto) {
+        let relations = new Map<string, ConceptMap.Explainable>();
+        proto.getExplainableRelationsMap().forEach((explainable, variable) =>
+            relations.set(variable, ofExplainable(explainable))
+        );
+        let attributes = new Map<string, ConceptMap.Explainable>();
+        proto.getExplainableAttributesMap().forEach((explainable, variable) =>
+            relations.set(variable, ofExplainable(explainable))
+        );
+
+        let ownerships = new Map<[string, string], ConceptMap.Explainable>();
+        proto.getExplainableOwnershipsList().forEach((explainableOwnership) =>
+            ownerships.set([explainableOwnership.getOwner(), explainableOwnership.getAttribute()], ofExplainable(explainableOwnership.getExplainable()))
+        );
+    }
+
+    function ofExplainable(proto: ExplainableProto): ConceptMap.Explainable {
+        return new ExplainableImpl(proto.getConjunction(), proto.getId());
+    }
 
     export class ExplainablesImpl implements ConceptMap.Explainables {
         private _relations: Map<string, ConceptMap.Explainable>;
@@ -117,7 +137,7 @@ export namespace ConceptMapImpl {
 
     }
 
-    export class Explainable implements ConceptMap.Explainable {
+    export class ExplainableImpl implements ConceptMap.Explainable {
         private _conjunction: string;
         private _id: number;
 

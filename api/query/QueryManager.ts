@@ -23,6 +23,7 @@ import {ConceptMap} from "../answer/ConceptMap";
 import {Numeric} from "../answer/Numeric";
 import {ConceptMapGroup} from "../answer/ConceptMapGroup";
 import {NumericGroup} from "../answer/NumericGroup";
+import {Explanation} from "../logic/Explanation";
 
 export interface QueryManager {
 
@@ -44,7 +45,6 @@ export interface QueryManager {
 
     undefine(query: string, options?: GraknOptions): Promise<void>;
 
-    // TODO
-    // explain(query: string, options?: GraknOptions): Stream<Explanation>;
+    explain(explainable: ConceptMap.Explainable, options?: GraknOptions): Stream<Explanation>;
 
 }
