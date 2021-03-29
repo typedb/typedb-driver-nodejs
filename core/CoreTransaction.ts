@@ -49,7 +49,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
         this._sessionId = _sessionId;
         this._type = type;
         this._options = options;
-        let rpcClient = this._session.rpc();
+        const rpcClient = this._session.rpc();
         this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter());
         this._conceptManager = new ConceptManagerImpl(this);
         this._logicManager = new LogicManagerImpl(this);
@@ -57,7 +57,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
     }
 
     public async open(): Promise<void> {
-        let openReq = RequestBuilder.Transaction.openReq(this._sessionId, this._type.proto(), this._options.proto(), this._session.networkLatency());
+        const openReq = RequestBuilder.Transaction.openReq(this._sessionId, this._type.proto(), this._options.proto(), this._session.networkLatency());
         await this.rpcExecute(openReq, false);
     }
 
@@ -105,7 +105,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
 
     public async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
         if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
-        let useBatch = batch ? batch : true;
+        const useBatch = batch ? batch : true;
         return this._bidirectionalStream.single(request, useBatch);
     }
 

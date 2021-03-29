@@ -21,10 +21,8 @@ import {tx} from "../../../connection/ConnectionStepsBase";
 import {Then, When} from "@cucumber/cucumber";
 import {parseList, ScopedLabel} from "../../../config/Parameters";
 import {assertThrows} from "../../../util/Util";
-import assert = require("assert");
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {RoleType} from "../../../../../dist/api/concept/type/RoleType";
-import {Stream} from "../../../../../dist/common/util/Stream";
+import assert = require("assert");
 
 
 When("relation\\({type_label}) set relates role: {type_label}", async (relationLabel: string, roleLabel: string) => {

@@ -17,22 +17,22 @@
  * under the License.
  */
 
-import { Then, When } from "@cucumber/cucumber";
-import { tx } from "../connection/ConnectionStepsBase";
-import { assertThrows, assertThrowsWithMessage, splitString } from "../util/Util";
-import { ConceptMap } from "../../../dist/api/answer/ConceptMap";
-import { Numeric } from "../../../dist/api/answer/Numeric";
-import { ConceptMapGroup } from "../../../dist/api/answer/ConceptMapGroup";
-import { NumericGroup } from "../../../dist/api/answer/NumericGroup";
-import { Concept } from "../../../dist/api/concept/Concept";
-import { RoleType } from "../../../dist/api/concept/type/RoleType";
-import { Type } from "../../../dist/api/concept/type/Type";
-import { AttributeType } from "../../../dist/api/concept/type/AttributeType";
-import { Attribute } from "../../../dist/api/concept/thing/Attribute";
-import { Thing } from "../../../dist/api/concept/thing/Thing";
-import { parseBool } from "../config/Parameters";
+import {Then, When} from "@cucumber/cucumber";
+import {tx} from "../connection/ConnectionStepsBase";
+import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
+import {ConceptMap} from "../../../dist/api/answer/ConceptMap";
+import {Numeric} from "../../../dist/api/answer/Numeric";
+import {ConceptMapGroup} from "../../../dist/api/answer/ConceptMapGroup";
+import {NumericGroup} from "../../../dist/api/answer/NumericGroup";
+import {Concept} from "../../../dist/api/concept/Concept";
+import {RoleType} from "../../../dist/api/concept/type/RoleType";
+import {Type} from "../../../dist/api/concept/type/Type";
+import {AttributeType} from "../../../dist/api/concept/type/AttributeType";
+import {Attribute} from "../../../dist/api/concept/thing/Attribute";
+import {Thing} from "../../../dist/api/concept/thing/Thing";
+import {parseBool} from "../config/Parameters";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { fail } from "assert";
+import {fail} from "assert";
 import assert = require("assert");
 import ValueClass = AttributeType.ValueClass;
 

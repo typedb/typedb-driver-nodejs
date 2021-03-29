@@ -17,14 +17,14 @@
  * under the License.
  */
 
-import { When } from "@cucumber/cucumber";
-import { get, put} from "../ThingSteps";
-import { tx } from "../../../connection/ConnectionStepsBase";
+import {When} from "@cucumber/cucumber";
+import {get, put} from "../ThingSteps";
+import {tx} from "../../../connection/ConnectionStepsBase";
+import {AttributeType} from "../../../../../dist/api/concept/type/AttributeType";
+
+
+import {assertThrows} from "../../../util/Util";
 import assert = require("assert");
-import { AttributeType } from "../../../../../dist/api/concept/type/AttributeType";
-
-
-import { assertThrows } from "../../../util/Util";
 
 When("{var} = entity\\({type_label}) create new instance", async (var0: string, typeLabel: string) => {
     put(var0, await (await tx().concepts().getEntityType(typeLabel)).asRemote(tx()).create());

@@ -17,15 +17,15 @@
  * under the License.
  */
 
-import { tx } from "../../../connection/ConnectionStepsBase";
-import { Then, When } from "@cucumber/cucumber";
+import {tx} from "../../../connection/ConnectionStepsBase";
+import {Then, When} from "@cucumber/cucumber";
 import assert from "assert";
-import { AttributeType } from "../../../../../dist/api/concept/type/AttributeType";
-import ValueType = AttributeType.ValueType;
-import { GraknClientError } from "../../../../../dist/common/errors/GraknClientError";
-import { ErrorMessage } from "../../../../../dist/common/errors/ErrorMessage";
+import {AttributeType} from "../../../../../dist/api/concept/type/AttributeType";
+import {GraknClientError} from "../../../../../dist/common/errors/GraknClientError";
+import {ErrorMessage} from "../../../../../dist/common/errors/ErrorMessage";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { parseList } from "../../../config/Parameters";
+import {parseList} from "../../../config/Parameters";
+import ValueType = AttributeType.ValueType;
 
 When("put attribute type: {type_label}, with value type: {value_type}", async (typeLabel: string, valueType: ValueType) => {
     await tx().concepts().putAttributeType(typeLabel, valueType);

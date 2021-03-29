@@ -55,7 +55,7 @@ export class RelationImpl extends ThingImpl implements Relation {
 export namespace RelationImpl {
 
     export function of(thingProto: ThingProto) {
-        let iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
+        const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
         return new RelationImpl(iid, RelationTypeImpl.of(thingProto.getType()));
     }
 
@@ -113,7 +113,7 @@ export namespace RelationImpl {
         }
 
         private findRole(map: Map<RoleType, Thing[]>, role: RoleType) {
-            let iter = map.keys();
+            const iter = map.keys();
             let next = iter.next();
             while (!next.done) {
                 const roleType = next.value;

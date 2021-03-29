@@ -17,15 +17,15 @@
  * under the License.
  */
 
-import { When } from "@cucumber/cucumber";
-import { get, put} from "../ThingSteps";
-import { tx } from "../../../connection/ConnectionStepsBase";
-import assert = require("assert");
-import { assertThrows } from "../../../util/Util";
-import { AttributeType } from "../../../../../dist/api/concept/type/AttributeType";
-import { Relation } from "../../../../../dist/api/concept/thing/Relation";
+import {When} from "@cucumber/cucumber";
+import {get, put} from "../ThingSteps";
+import {tx} from "../../../connection/ConnectionStepsBase";
+import {assertThrows} from "../../../util/Util";
+import {AttributeType} from "../../../../../dist/api/concept/type/AttributeType";
+import {Relation} from "../../../../../dist/api/concept/thing/Relation";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { parseVar } from "../../../config/Parameters";
+import {parseVar} from "../../../config/Parameters";
+import assert = require("assert");
 
 When("{var} = relation\\({type_label}) create new instance", async (var0: string, typeLabel: string) => {
     put(var0, await (await tx().concepts().getRelationType(typeLabel)).asRemote(tx()).create());

@@ -59,7 +59,7 @@ export namespace ResponseCollector {
         }
 
         async take(): Promise<T> {
-            let element = await this._queue.take();
+            const element = await this._queue.take();
             if (element.isResponse()) return (element as Response<T>).value();
             else {
                 if ((element as Done).hasError()) {

@@ -55,7 +55,7 @@ export class ConceptManagerImpl implements ConceptManager {
 
     async getThingType(label: string): Promise<ThingType> {
         const request = RequestBuilder.ConceptManager.getThingTypeReq(label);
-        let response = await this.execute(request);
+        const response = await this.execute(request);
         if (response.getGetThingTypeRes().getResCase() == ConceptProto.GetThingType.Res.ResCase.THING_TYPE) {
             return ThingTypeImpl.of(response.getGetThingTypeRes().getThingType());
         } else {
@@ -83,7 +83,7 @@ export class ConceptManagerImpl implements ConceptManager {
 
     async getThing(iid: string): Promise<Thing> {
         const request = RequestBuilder.ConceptManager.getThingReq(iid);
-        let response = await this.execute(request);
+        const response = await this.execute(request);
         if (response.getGetThingRes().getResCase() === ConceptProto.GetThing.Res.ResCase.THING) {
             return ThingImpl.of(response.getGetThingRes().getThing());
         } else {

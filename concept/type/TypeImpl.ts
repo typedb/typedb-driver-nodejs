@@ -158,7 +158,7 @@ export namespace TypeImpl {
         }
 
         protected stream(request: TransactionProto.Req): Stream<TypeProto.ResPart> {
-            let resPartStream = this._transaction.rpcStream(request);
+            const resPartStream = this._transaction.rpcStream(request);
             return resPartStream.map((res) => res.getTypeResPart());
         }
 

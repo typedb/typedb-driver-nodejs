@@ -114,7 +114,7 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
         const attributes = this.stream(request).flatMap((resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList()))
             .map((attrProto) => AttributeImpl.of(attrProto));
         if (isSingleAttrType) {
-            let arg = onlyKeyAttrTypeAttrTypes as AttributeType;
+            const arg = onlyKeyAttrTypeAttrTypes as AttributeType;
             if (arg.isBoolean()) return attributes as Stream<Attribute.Boolean>;
             else if (arg.isLong) return attributes as Stream<Attribute.Long>;
             else if (arg.isDouble) return attributes as Stream<Attribute.Double>;

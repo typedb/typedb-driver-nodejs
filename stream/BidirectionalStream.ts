@@ -43,7 +43,7 @@ export class BidirectionalStream {
     constructor(rpcClient: GraknCoreClient, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
         this._responseCollector = new ResponseCollector();
-        let transactionStream = rpcClient.transaction();
+        const transactionStream = rpcClient.transaction();
         this.registerObserver(transactionStream);
         this._dispatcher = requestTransmitter.dispatcher(transactionStream);
         this._isOpen = true;
@@ -52,7 +52,7 @@ export class BidirectionalStream {
     async single(request: Transaction.Req, batch: boolean): Promise<Transaction.Res> {
         const requestId = uuidv4();
         request.setReqId(requestId);
-        let responseQueue = this._responseCollector.queue(requestId);
+        const responseQueue = this._responseCollector.queue(requestId);
         if (batch) this._dispatcher.dispatch(request);
         else this._dispatcher.dispatchNow(request);
         return (await responseQueue.take() as Transaction.Res); // TODO can we do this without cast?

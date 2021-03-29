@@ -17,10 +17,9 @@
  * under the License.
  */
 
-import { When, Then } from "@cucumber/cucumber";
-import { client, sessions } from "../ConnectionStepsBase";
+import {Then, When} from "@cucumber/cucumber";
+import {client, sessions} from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {GraknClient } from "../../../../dist/api/GraknClient";
 import {GraknSession, SessionType} from "../../../../dist/api/GraknSession";
 import assert = require("assert");
 

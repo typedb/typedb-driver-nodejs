@@ -52,7 +52,7 @@ export class EntityImpl extends ThingImpl implements Entity {
 export namespace EntityImpl {
 
     export function of(thingProto: ThingProto): Entity {
-        let iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
+        const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
         return new EntityImpl(iid, EntityTypeImpl.of(thingProto.getType()));
     }
 

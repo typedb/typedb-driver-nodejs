@@ -21,7 +21,6 @@
 import {GraknClient} from "../api/GraknClient";
 import {GraknSession, SessionType} from "../api/GraknSession";
 import {GraknOptions} from "../api/GraknOptions";
-import {DatabaseManager} from "../api/database/DatabaseManager";
 import {CoreDatabaseManager} from "./CoreDatabaseManager";
 import {CoreSession} from "./CoreSession";
 import {GraknClientError} from "../common/errors/GraknClientError";

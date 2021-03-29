@@ -21,12 +21,10 @@ import {GraknClientError} from "../errors/GraknClientError";
 
 export abstract class Stream<T> implements AsyncIterable<T> {
 
-    constructor() { }
-
     // TODO why can't this abstract?
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async* [Symbol.asyncIterator](): AsyncIterator<T, any, undefined> {
-        throw new GraknClientError("ILLEGAL STATE"); // TODO better error
+        throw new GraknClientError("ILLEGAL STATE");
     }
 
     async collect(): Promise<T[]> {

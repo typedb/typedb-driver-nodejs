@@ -94,7 +94,7 @@ export class RequestTransmitter {
     }
 
     public dispatcher(transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>): BatchDispatcher {
-        let dispatcher = new BatchDispatcher(this, transactionStream);
+        const dispatcher = new BatchDispatcher(this, transactionStream);
         this._dispatchers.add(dispatcher);
         return dispatcher;
     }

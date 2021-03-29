@@ -24,7 +24,6 @@ import assert from "assert";
 import {parseList, RootLabel, ScopedLabel} from "../../../config/Parameters";
 import {assertThrows} from "../../../util/Util";
 import {ThingType} from "../../../../../dist/api/concept/type/ThingType";
-import {RoleType} from "../../../../../dist/api/concept/type/RoleType";
 
 export function getThingType(rootLabel: RootLabel, typeLabel: string): Promise<ThingType> {
     switch (rootLabel) {

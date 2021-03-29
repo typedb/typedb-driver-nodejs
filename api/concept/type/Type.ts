@@ -28,8 +28,6 @@ import {ErrorMessage} from "../../../common/errors/ErrorMessage";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 
-
-
 export interface Type extends Concept {
 
     getLabel(): Label;

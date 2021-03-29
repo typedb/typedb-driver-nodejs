@@ -57,6 +57,7 @@ export class ConceptMapImpl implements ConceptMap {
 
 }
 
+/*tslint:disable:no-inner-declarations*/
 export namespace ConceptMapImpl {
 
     import NONEXISTENT_EXPLAINABLE_CONCEPT = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_CONCEPT;
@@ -74,16 +75,16 @@ export namespace ConceptMapImpl {
     }
 
     function ofExplainables(proto: ExplainablesProto) {
-        let relations = new Map<string, ConceptMap.Explainable>();
+        const relations = new Map<string, ConceptMap.Explainable>();
         proto.getExplainableRelationsMap().forEach((explainable, variable) =>
             relations.set(variable, ofExplainable(explainable))
         );
-        let attributes = new Map<string, ConceptMap.Explainable>();
+        const attributes = new Map<string, ConceptMap.Explainable>();
         proto.getExplainableAttributesMap().forEach((explainable, variable) =>
             relations.set(variable, ofExplainable(explainable))
         );
 
-        let ownerships = new Map<[string, string], ConceptMap.Explainable>();
+        const ownerships = new Map<[string, string], ConceptMap.Explainable>();
         proto.getExplainableOwnershipsList().forEach((explainableOwnership) =>
             ownerships.set([explainableOwnership.getOwner(), explainableOwnership.getAttribute()], ofExplainable(explainableOwnership.getExplainable()))
         );
@@ -106,19 +107,19 @@ export namespace ConceptMapImpl {
         }
 
         relation(variable: string): ConceptMap.Explainable {
-            let explainable = this._relations.get(variable);
+            const explainable = this._relations.get(variable);
             if (!explainable) throw new GraknClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
             return explainable;
         }
 
         attribute(variable: string): ConceptMap.Explainable {
-            let explainable = this._attributes.get(variable);
+            const explainable = this._attributes.get(variable);
             if (!explainable) throw new GraknClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
             return explainable;
         }
 
         ownership(owner: string, attribute: string): ConceptMap.Explainable {
-            let explainable = this._ownerships.get([owner, attribute]);
+            const explainable = this._ownerships.get([owner, attribute]);
             if (!explainable) throw new GraknClientError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));
             return explainable;
         }

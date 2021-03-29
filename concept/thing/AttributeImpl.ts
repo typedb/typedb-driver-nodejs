@@ -78,7 +78,7 @@ export namespace AttributeImpl {
 
     export function of(thingProto: ThingProto): Attribute<any> {
         const attrType = AttributeTypeImpl.of(thingProto.getType());
-        let iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
+        const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
         switch (thingProto.getType().getValueType()) {
             case AttributeTypeProto.ValueType.BOOLEAN:
                 return new AttributeImpl.Boolean(iid, attrType as AttributeType.Boolean, thingProto.getValue().getBoolean());
@@ -89,8 +89,7 @@ export namespace AttributeImpl {
             case AttributeTypeProto.ValueType.STRING:
                 return new AttributeImpl.String(iid, attrType as AttributeType.String, thingProto.getValue().getString());
             case AttributeTypeProto.ValueType.DATETIME:
-                let date = new Date(thingProto.getValue().getDateTime());
-                return new AttributeImpl.DateTime(iid, attrType as AttributeType.DateTime, date);
+                return new AttributeImpl.DateTime(iid, attrType as AttributeType.DateTime, new Date(thingProto.getValue().getDateTime()));
             default:
                 throw new GraknClientError(BAD_VALUE_TYPE.message(thingProto.getType().getValueType()));
         }

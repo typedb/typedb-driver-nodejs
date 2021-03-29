@@ -36,7 +36,7 @@ export namespace DatabaseManager {
 
    export interface Cluster extends DatabaseManager {
 
-        get(name: String): Promise<Database.Cluster>;
+        get(name: string): Promise<Database.Cluster>;
 
         all(): Promise<Database.Cluster[]>;
 
