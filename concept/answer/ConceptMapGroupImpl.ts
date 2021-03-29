@@ -49,10 +49,10 @@ export class ConceptMapGroupImpl implements ConceptMapGroup {
 
 export namespace ConceptMapGroupImpl {
 
-    export function of(mapGroupProto: MapGroupProto) {
+    export function of(mapGroupProto: MapGroupProto): ConceptMapGroup {
         let owner: Concept;
         if (mapGroupProto.getOwner().hasThing()) owner = ThingImpl.of(mapGroupProto.getOwner().getThing());
-        else return owner = TypeImpl.of(mapGroupProto.getOwner().getType());
+        else owner = TypeImpl.of(mapGroupProto.getOwner().getType());
         return new ConceptMapGroupImpl(owner, mapGroupProto.getConceptMapsList()
             .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto)) as ConceptMap[]);
     }

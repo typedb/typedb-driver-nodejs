@@ -64,14 +64,10 @@ async function run() {
     }
 
     try {
-        console.log("1");
         tx = await session.transaction(GraknTransaction.Type.WRITE);
         lionFamily = await tx.concepts().putRelationType("lion-family");
-        console.log("2");
         await lionFamily.asRemote(tx).setRelates("lion-cub");
-        console.log("3");
         lionCub = await lionFamily.asRemote(tx).getRelates().collect().then(roles => roles[0]);
-        console.log("4");
         await lion.asRemote(tx).setPlays(lionCub);
         await tx.commit();
         await tx.close();
@@ -328,12 +324,9 @@ async function run() {
     try {
         session = await client.session("grakn", GraknSession.Type.DATA);
         tx = await session.transaction(GraknTransaction.Type.WRITE);
-        for (let i = 0; i < 10; i++) {
-            console.log(await stoneLion.asRemote(tx).create());
-        }
+        for (let i = 0; i < 10; i++)  stoneLion.asRemote(tx).create();
         const lions = await lion.asRemote(tx).getInstances().collect();
         const firstLion = lions[0];
-        console.log(firstLion);
         const isInferred = await firstLion.asRemote(tx).isInferred();
         const lionType = await firstLion.asRemote(tx).getType();
         const age42 = await age.asRemote(tx).put(42);
