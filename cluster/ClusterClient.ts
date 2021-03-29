@@ -18,44 +18,50 @@
  */
 
 
-import { ChannelCredentials } from "@grpc/grpc-js";
-import { GraknClusterClient as GraknClusterGrpc } from "grakn-protocol/protobuf/cluster/grakn_cluster_grpc_pb";
-import ClusterProto from "grakn-protocol/protobuf/cluster/cluster_pb";
-import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {CoreClient} from "../core/CoreClient";
+import {FailsafeTask} from "./FailsafeTask";
+import {ClusterSession} from "./ClusterSession";
+import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
 import {GraknClient} from "../api/GraknClient";
 import { DatabaseManager } from "../api/database/DatabaseManager";
 import {Database} from "../api/database/Database";
-import {CoreClient} from "../core/CoreClient";
+import {GraknSession, SessionType} from "../api/GraknSession";
+import {GraknClusterOptions, GraknOptions} from "../api/GraknOptions";
+import {GraknClientError} from "../common/errors/GraknClientError";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {GraknClusterClient} from "grakn-protocol/cluster/cluster_service_grpc_pb";
+import { ChannelCredentials } from "@grpc/grpc-js";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {ServerManager} from "grakn-protocol/cluster/cluster_server_pb";
+import {ClusterDatabase} from "./ClusterDatabase";
+import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 
 export class ClusterClient implements GraknClient.Cluster {
-    private _coreClients: {[serverAddress: string]: GraknClient };
-    private _graknClusterRPCs: {[serverAddress: string]: GraknClusterGrpc};
-    private _databaseManagers: DatabaseManager.Cluster;
-    private _clusterDatabases: {[db: string]: Database.Cluster};
+
+    private _coreClients: {[serverAddress: string]: CoreClient };
+    private _graknClusterRPCs: {[serverAddress: string]: GraknClusterClient};
+    private _databaseManagers: ClusterDatabaseManager;
+    private _clusterDatabases: {[db: string]: ClusterDatabase};
     private _isOpen: boolean;
 
     async open(addresses: string[]): Promise<this> {
         const serverAddresses = await this.fetchClusterServers(addresses);
-        this._coreClients = serverAddresses.reduce((obj: {[address: string]: GraknClient}, addr: string) => {
-            obj[addr.toString()] = new CoreClient(addr.external());
-            return obj;
-        }, {});
-        this._graknClusterRPCs = serverAddresses.reduce((obj: {[address: string]: GraknClusterGrpc}, addr: ServerAddress) => {
-            obj[addr.toString()] = new GraknClusterGrpc(addr.external(), ChannelCredentials.createInsecure());
-            return obj;
-        }, {});
-        const databaseManagers = Object.entries(this._coreClients).reduce((obj: {[address: string]: DatabaseManagerRPC}, [addr, client]) => {
-            obj[addr] = client.databases();
-            return obj;
-        }, {});
-        this._databaseManagers = new DatabaseManagerClusterRPC(this, databaseManagers);
+        this._coreClients = {}
+        serverAddresses.forEach((addr) => {
+            this._coreClients[addr] = new CoreClient(addr);
+        });
+        this._graknClusterRPCs = {};
+        serverAddresses.forEach((addr) => {
+            this._graknClusterRPCs[addr] = new GraknClusterClient(addr, ChannelCredentials.createInsecure());
+        });
+
+        this._databaseManagers = new ClusterDatabaseManager(this);
         this._clusterDatabases = {};
         this._isOpen = true;
         return this;
     }
 
-    session(database: string, type: SessionType, options: GraknClusterOptions = GraknOptions.cluster()): Promise<SessionClusterRPC> {
+    session(database: string, type: SessionType, options: GraknClusterOptions = GraknOptions.cluster()): Promise<ClusterSession> {
         if (options.readAnyReplica) {
             return this.sessionAnyReplica(database, type, options);
         } else {
@@ -63,15 +69,15 @@ export class ClusterClient implements GraknClient.Cluster {
         }
     }
 
-    private sessionPrimaryReplica(database: string, type: SessionType, options: GraknClusterOptions): Promise<SessionClusterRPC> {
+    private sessionPrimaryReplica(database: string, type: SessionType, options: GraknClusterOptions): Promise<ClusterSession> {
         return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
     }
 
-    private sessionAnyReplica(database: string, type: SessionType, options: GraknClusterOptions): Promise<SessionClusterRPC> {
+    private sessionAnyReplica(database: string, type: SessionType, options: GraknClusterOptions): Promise<ClusterSession> {
         return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
     }
 
-    databases(): DatabaseManagerClusterRPC {
+    databases(): ClusterDatabaseManager {
         return this._databaseManagers;
     }
 
@@ -90,7 +96,7 @@ export class ClusterClient implements GraknClient.Cluster {
         return true;
     }
 
-    clusterDatabases(): {[db: string]: DatabaseClusterRPC} {
+    clusterDatabases(): {[db: string]: ClusterDatabase } {
         return this._clusterDatabases;
     }
 
@@ -98,27 +104,31 @@ export class ClusterClient implements GraknClient.Cluster {
         return Object.keys(this._coreClients);
     }
 
-    coreClient(address: string): ClientRPC {
+    coreClient(address: string): GraknClient {
         return this._coreClients[address];
     }
 
-    graknClusterRPC(address: string): GraknClusterGrpc {
+    coreClients() {
+        return this._coreClients;
+    }
+
+    graknClusterRPC(address: string): GraknClusterClient {
         return this._graknClusterRPCs[address];
     }
 
-    private async fetchClusterServers(addresses: string[]): Promise<ServerAddress[]> {
+    private async fetchClusterServers(addresses: string[]): Promise<string[]> {
         for (const address of addresses) {
-            const client = new ClientRPC(address);
+            const client = new CoreClient(address);
             try {
                 console.info(`Fetching list of cluster servers from ${address}...`);
-                const grpcClusterClient = new GraknClusterGrpc(address, ChannelCredentials.createInsecure());
-                const res = await new Promise<ClusterProto.Cluster.Servers.Res>((resolve, reject) => {
-                    grpcClusterClient.cluster_servers(new ClusterProto.Cluster.Servers.Req(), (err, res) => {
+                const grpcClusterClient = new GraknClusterClient(address, ChannelCredentials.createInsecure());
+                const res = await new Promise<ServerManager.All.Res>((resolve, reject) => {
+                    grpcClusterClient.servers_all(RequestBuilder.Cluster.ServerManager.allReq(), (err, res) => {
                         if (err) reject(new GraknClientError(err));
                         else resolve(res);
                     });
                 });
-                const members = res.getServersList().map(x => ServerAddress.parse(x));
+                const members = res.getServersList().map(x => x.getAddress());
                 console.info(`The cluster servers are ${members}`);
                 return members;
             } catch (e) {
@@ -129,20 +139,24 @@ export class ClusterClient implements GraknClient.Cluster {
         }
         throw new GraknClientError(CLUSTER_UNABLE_TO_CONNECT.message(addresses.join(",")));
     }
+
+    asCluster(): GraknClient.Cluster {
+        return this;
+    }
 }
 
-class OpenSessionFailsafeTask extends FailsafeTask<SessionClusterRPC> {
+class OpenSessionFailsafeTask extends FailsafeTask<ClusterSession> {
     private readonly _type: SessionType;
     private readonly _options: GraknClusterOptions;
 
-    constructor(database: string, type: SessionType, options: GraknClusterOptions, client: ClientClusterRPC) {
+    constructor(database: string, type: SessionType, options: GraknClusterOptions, client: ClusterClient) {
         super(client, database);
         this._type = type;
         this._options = options;
     }
 
-    run(replica: DatabaseReplicaRPC): Promise<SessionClusterRPC> {
-        const session = new SessionClusterRPC(this.client, replica.address());
+    run(replica: Database.Replica): Promise<ClusterSession> {
+        const session = new ClusterSession(this.client, replica.address());
         return session.open(replica.address(), this.database, this._type, this._options);
     }
 }

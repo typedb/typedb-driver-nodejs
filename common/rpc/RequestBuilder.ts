@@ -18,6 +18,8 @@
  */
 
 import {CoreDatabase, CoreDatabaseManager} from "grakn-protocol/core/core_database_pb";
+import {ClusterDatabaseManager} from "grakn-protocol/cluster/cluster_database_pb";
+import {ServerManager as ServerManagerProto} from "grakn-protocol/cluster/cluster_server_pb";
 import {Session as SessionProto} from "grakn-protocol/common/session_pb";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
 import {LogicManager as LogicProto, Rule as RuleProto} from "grakn-protocol/common/logic_pb";
@@ -38,30 +40,63 @@ import {Options} from "grakn-protocol/common/options_pb";
 import {Label} from "../Label";
 import {Bytes} from "../util/Bytes";
 
-export namespace Core {
+export namespace RequestBuilder {
 
-    export namespace DatabaseManager {
+    export namespace Core {
 
-        export function createReq(name: string) {
-            return new CoreDatabaseManager.Create.Req().setName(name);
+        export namespace DatabaseManager {
+
+            export function createReq(name: string) {
+                return new CoreDatabaseManager.Create.Req().setName(name);
+            }
+
+            export function containsReq(name: string) {
+                return new CoreDatabaseManager.Contains.Req().setName(name);
+            }
+
+            export function allReq() {
+                return new CoreDatabaseManager.All.Req();
+            }
+
         }
 
-        export function containsReq(name: string) {
-            return new CoreDatabaseManager.Contains.Req().setName(name);
-        }
+        export namespace Database {
 
-        export function allReq() {
-            return new CoreDatabaseManager.All.Req();
-        }
+            export function schemaReq(name: string) {
+                return new CoreDatabase.Schema.Req().setName(name);
+            }
 
+
+            export function deleteReq(name: string) {
+                return new CoreDatabase.Delete.Req().setName(name);
+            }
+        }
     }
 
-    export namespace Database {
+    export namespace Cluster {
+        export namespace ServerManager {
 
-        export function deleteReq(name: string) {
-            return new CoreDatabase.Delete.Req().setName(name);
+            export function allReq() {
+                return new ServerManagerProto.All.Req();
+            }
+        }
+
+        export namespace DatabaseManager {
+
+            export function getReq(name: string) {
+                return new ClusterDatabaseManager.Get.Req().setName(name);
+            }
+
+            export function allReq() {
+                return new ClusterDatabaseManager.All.Req();
+            }
+        }
+
+        export namespace Database {
+
         }
     }
+
 
     export namespace Session {
 
@@ -622,5 +657,7 @@ export namespace Core {
                 return new AttributeProto.Value().setDateTime(value.getTime());
             }
         }
+
     }
+
 }

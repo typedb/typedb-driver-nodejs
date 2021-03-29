@@ -25,7 +25,7 @@ import {ThingType} from "../../api/concept/type/ThingType";
 import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
 import {
@@ -175,14 +175,14 @@ export namespace AttributeTypeImpl {
             if (onlyKey == undefined) {
                 onlyKey = false;
             }
-            const request = Core.Type.AttributeType.getOwnersReq(this.getLabel(), onlyKey);
+            const request = RequestBuilder.Type.AttributeType.getOwnersReq(this.getLabel(), onlyKey);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersResPart().getOwnersList()))
                 .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));
         }
 
         protected getImpl(valueProto: AttributeProto.Value): Promise<Attribute<any>> {
-            const request = Core.Type.AttributeType.getReq(this.getLabel(), valueProto);
+            const request = RequestBuilder.Type.AttributeType.getReq(this.getLabel(), valueProto);
             return this.execute(request)
                 .then((attrProto) => AttributeImpl.of(attrProto.getAttributeTypeGetRes().getAttribute()));
         }
@@ -280,7 +280,7 @@ export namespace AttributeTypeImpl {
         }
 
         async get(value: boolean): Promise<Attribute.Boolean> {
-            return await (super.getImpl(Core.Thing.Attribute.attributeValueBooleanReq(value)) as Promise<Attribute.Boolean>);
+            return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueBooleanReq(value)) as Promise<Attribute.Boolean>);
         }
 
         getInstances(): Stream<Attribute.Boolean> {
@@ -296,7 +296,7 @@ export namespace AttributeTypeImpl {
         }
 
         async put(value: boolean): Promise<Attribute.Boolean> {
-            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueBooleanReq(value));
+            const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueBooleanReq(value));
             return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Boolean>);
         }
 
@@ -348,7 +348,7 @@ export namespace AttributeTypeImpl {
         }
 
         async get(value: number): Promise<Attribute.Long> {
-            return await (super.getImpl(Core.Thing.Attribute.attributeValueLongReq(value)) as Promise<Attribute.Long>);
+            return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueLongReq(value)) as Promise<Attribute.Long>);
         }
 
         getValueType(): AttributeType.ValueType {
@@ -356,7 +356,7 @@ export namespace AttributeTypeImpl {
         }
 
         async put(value: number): Promise<Attribute.Long> {
-            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueLongReq(value));
+            const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueLongReq(value));
             return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Long>);
         }
 
@@ -408,7 +408,7 @@ export namespace AttributeTypeImpl {
         }
 
         async get(value: number): Promise<Attribute.Double> {
-            return await (super.getImpl(Core.Thing.Attribute.attributeValueDoubleReq(value)) as Promise<Attribute.Double>);
+            return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueDoubleReq(value)) as Promise<Attribute.Double>);
         }
 
         getValueType(): AttributeType.ValueType {
@@ -416,7 +416,7 @@ export namespace AttributeTypeImpl {
         }
 
         async put(value: number): Promise<Attribute.Double> {
-            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueDoubleReq(value));
+            const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueDoubleReq(value));
             return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Double>);
         }
 
@@ -468,7 +468,7 @@ export namespace AttributeTypeImpl {
         }
 
         async get(value: string): Promise<Attribute.String> {
-            return await (super.getImpl(Core.Thing.Attribute.attributeValueStringReq(value)) as Promise<Attribute.String>);
+            return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueStringReq(value)) as Promise<Attribute.String>);
         }
 
         getValueType(): AttributeType.ValueType {
@@ -476,7 +476,7 @@ export namespace AttributeTypeImpl {
         }
 
         async put(value: string): Promise<Attribute.String> {
-            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueStringReq(value));
+            const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueStringReq(value));
             return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.String>);
         }
 
@@ -489,12 +489,12 @@ export namespace AttributeTypeImpl {
         }
 
         async getRegex(): Promise<string> {
-            const request = Core.Type.AttributeType.getRegexReq(this.getLabel());
+            const request = RequestBuilder.Type.AttributeType.getRegexReq(this.getLabel());
             return await this.execute(request).then((res) => res.getAttributeTypeGetRegexRes().getRegex());
         }
 
         async setRegex(regex: string): Promise<void> {
-            const request = Core.Type.AttributeType.setRegexReq(this.getLabel(), regex);
+            const request = RequestBuilder.Type.AttributeType.setRegexReq(this.getLabel(), regex);
             await this.execute(request);
         }
 
@@ -538,7 +538,7 @@ export namespace AttributeTypeImpl {
         }
 
         async get(value: Date): Promise<Attribute.DateTime> {
-            return await (super.getImpl(Core.Thing.Attribute.attributeValueDateTimeReq(value)) as Promise<Attribute.DateTime>);
+            return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueDateTimeReq(value)) as Promise<Attribute.DateTime>);
         }
 
         getValueType(): AttributeType.ValueType {
@@ -546,7 +546,7 @@ export namespace AttributeTypeImpl {
         }
 
         async put(value: Date): Promise<Attribute.DateTime> {
-            const request = Core.Type.AttributeType.putReq(this.getLabel(), Core.Thing.Attribute.attributeValueDateTimeReq(value));
+            const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueDateTimeReq(value));
             return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.DateTime>);
         }
 

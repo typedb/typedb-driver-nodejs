@@ -21,10 +21,10 @@
 import {GraknTransaction} from "../../api/GraknTransaction";
 import {EntityType, RemoteEntityType} from "../../api/concept/type/EntityType";
 import {Entity} from "../../api/concept/thing/Entity";
-import {ThingTypeImpl, EntityImpl} from "../../dependencies_internal";
+import {EntityImpl, ThingTypeImpl} from "../../dependencies_internal";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
@@ -64,7 +64,7 @@ export namespace EntityTypeImpl {
         }
 
         create(): Promise<Entity> {
-            const request = Core.Type.EntityType.createReq(this.getLabel());
+            const request = RequestBuilder.Type.EntityType.createReq(this.getLabel());
             return this.execute(request).then((res) => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
         }
 

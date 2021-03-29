@@ -24,7 +24,7 @@ import {RelationType} from "../../api/concept/type/RelationType";
 import {RelationTypeImpl, ThingTypeImpl, TypeImpl} from "../../dependencies_internal";
 import {Stream} from "../../common/util/Stream";
 import {Label} from "../../common/Label";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 
 export class RoleTypeImpl extends TypeImpl implements RoleType {
@@ -80,14 +80,14 @@ export namespace RoleTypeImpl {
         }
 
         getRelationTypes(): Stream<RelationType> {
-            const request = Core.Type.RoleType.getRelationTypesReq(this.getLabel());
+            const request = RequestBuilder.Type.RoleType.getRelationTypesReq(this.getLabel());
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getRoleTypeGetRelationTypesResPart().getRelationTypesList()))
                 .map((res) => RelationTypeImpl.of(res));
         }
 
         getPlayers(): Stream<ThingType> {
-            const request = Core.Type.RoleType.getPlayersReq(this.getLabel());
+            const request = RequestBuilder.Type.RoleType.getPlayersReq(this.getLabel());
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getRoleTypeGetPlayersResPart().getThingTypesList()))
                 .map((thing) => ThingTypeImpl.of(thing));

@@ -22,10 +22,10 @@ import {GraknTransaction} from "../../api/GraknTransaction";
 import {RelationType, RemoteRelationType} from "../../api/concept/type/RelationType";
 import {Relation} from "../../api/concept/thing/Relation";
 import {RoleType} from "../../api/concept/type/RoleType";
-import {ThingTypeImpl, RoleTypeImpl, RelationImpl} from "../../dependencies_internal";
+import {RelationImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
@@ -65,7 +65,7 @@ export namespace RelationTypeImpl {
         }
 
         async create(): Promise<Relation> {
-            const request = Core.Type.RelationType.createReq(this.getLabel());
+            const request = RequestBuilder.Type.RelationType.createReq(this.getLabel());
             return this.execute(request).then((res) => RelationImpl.of(res.getRelationTypeCreateRes().getRelation()));
         }
 
@@ -85,11 +85,11 @@ export namespace RelationTypeImpl {
         getRelates(roleLabel: string): Promise<RoleType>;
         getRelates(roleLabel?: string): Promise<RoleType> | Stream<RoleType> {
             if (roleLabel) {
-                const request = Core.Type.RelationType.getRelatesByRoleReq(this.getLabel(), roleLabel);
+                const request = RequestBuilder.Type.RelationType.getRelatesByRoleReq(this.getLabel(), roleLabel);
                 return this.execute(request)
                     .then((res) => RoleTypeImpl.of(res.getRelationTypeGetRelatesForRoleLabelRes().getRoleType()));
             } else {
-                const request = Core.Type.RelationType.getRelatesReq(this.getLabel());
+                const request = RequestBuilder.Type.RelationType.getRelatesReq(this.getLabel());
                 return this.stream(request)
                     .flatMap((resPart) => {
                         return Stream.array(resPart.getRelationTypeGetRelatesResPart().getRolesList())
@@ -103,15 +103,15 @@ export namespace RelationTypeImpl {
         async setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {
             let request;
             if (overriddenLabel) {
-                request = Core.Type.RelationType.setRelatesOverriddenReq(this.getLabel(), roleLabel, overriddenLabel);
+                request = RequestBuilder.Type.RelationType.setRelatesOverriddenReq(this.getLabel(), roleLabel, overriddenLabel);
             } else {
-                request = Core.Type.RelationType.setRelatesReq(this.getLabel(), roleLabel);
+                request = RequestBuilder.Type.RelationType.setRelatesReq(this.getLabel(), roleLabel);
             }
             await this.execute(request);
         }
 
         async unsetRelates(roleLabel: string): Promise<void> {
-            const request = Core.Type.RelationType.unsetRelatesReq(this.getLabel(), roleLabel);
+            const request = RequestBuilder.Type.RelationType.unsetRelatesReq(this.getLabel(), roleLabel);
             await this.execute(request);
         }
 

@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import {Rule as RuleProto } from "grakn-protocol/common/logic_pb";
+import {Rule as RuleProto} from "grakn-protocol/common/logic_pb";
 import {RemoteRule, Rule} from "../api/logic/Rule";
 import {GraknTransaction} from "../api/GraknTransaction";
-import {Core} from "../common/rpc/RequestBuilder";
-import setLabelReq = Core.Rule.setLabelReq;
-import deleteReq = Core.Rule.deleteReq;
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import setLabelReq = RequestBuilder.Rule.setLabelReq;
+import deleteReq = RequestBuilder.Rule.deleteReq;
 
 export class RuleImpl implements Rule {
 

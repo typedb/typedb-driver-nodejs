@@ -24,7 +24,7 @@ import {Stream} from "../../../common/util/Stream";
 import {Thing} from "../thing/Thing";
 import {RoleType} from "./RoleType";
 import {AttributeType} from "./AttributeType";
-import {Core} from "../../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface ThingType extends Type {
 
@@ -79,7 +79,7 @@ export interface RemoteThingType extends ThingType, RemoteType {
 export namespace ThingType {
 
     export function proto(thingType: ThingType) {
-        return Core.Type.ThingType.protoThingType(thingType.getLabel(), Type.encoding(thingType));
+        return RequestBuilder.Type.ThingType.protoThingType(thingType.getLabel(), Type.encoding(thingType));
     }
 
 }

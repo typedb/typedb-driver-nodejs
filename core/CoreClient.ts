@@ -35,7 +35,7 @@ import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 export class CoreClient implements GraknClient {
 
     private readonly _rpcClient: GraknCoreClient;
-    private readonly _databases : DatabaseManager;
+    private readonly _databases : CoreDatabaseManager;
     private readonly _requestTransmitter: RequestTransmitter;
     private readonly _sessions: {[id: string]: CoreSession};
     private _isOpen : boolean;
@@ -48,7 +48,7 @@ export class CoreClient implements GraknClient {
         this._isOpen = true;
     }
 
-    databases(): DatabaseManager {
+    databases(): CoreDatabaseManager {
         return this._databases;
     }
 

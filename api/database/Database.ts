@@ -36,7 +36,7 @@ export namespace Database {
 
         primaryReplica(): Replica;
 
-        preferredSecondaryReplica(): Replica;
+        preferredSecondary(): Replica;
 
     }
 
@@ -49,9 +49,9 @@ export namespace Database {
 
         isPrimary(): boolean;
 
-        isPreferredSecondary(): boolean;
+        isPreferred(): boolean;
 
-        address(): String;
+        address(): string;
 
     }
 

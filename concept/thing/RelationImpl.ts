@@ -22,10 +22,10 @@ import {RoleType} from "../../api/concept/type/RoleType";
 import {RelationType} from "../../api/concept/type/RelationType";
 import {Thing} from "../../api/concept/thing/Thing";
 import {Relation, RemoteRelation} from "../../api/concept/thing/Relation";
-import {RoleTypeImpl, RelationTypeImpl, RemoteThingImpl, ThingImpl} from "../../dependencies_internal";
+import {RelationTypeImpl, RemoteThingImpl, RoleTypeImpl, ThingImpl} from "../../dependencies_internal";
 import {Bytes} from "../../common/util/Bytes";
 import {Stream} from "../../common/util/Stream";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
 
 export class RelationImpl extends ThingImpl implements Relation {
@@ -81,21 +81,21 @@ export namespace RelationImpl {
         }
 
         async addPlayer(roleType: RoleType, player: Thing): Promise<void> {
-            const request = Core.Thing.Relation.addPlayerReq(this.getIID(), RoleType.proto(roleType), Thing.proto(player));
+            const request = RequestBuilder.Thing.Relation.addPlayerReq(this.getIID(), RoleType.proto(roleType), Thing.proto(player));
             await this.execute(request);
         }
 
         getPlayers(roleTypes?: RoleType[]): Stream<Thing> {
             if (!roleTypes) roleTypes = []
             const roleTypesProtos = roleTypes.map((roleType) => RoleType.proto(roleType));
-            const request = Core.Thing.Relation.getPlayersReq(this.getIID(), roleTypesProtos);
+            const request = RequestBuilder.Thing.Relation.getPlayersReq(this.getIID(), roleTypesProtos);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getRelationGetPlayersResPart().getThingsList()))
                 .map((thingProto) => ThingImpl.of(thingProto));
         }
 
         async getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>> {
-            const request = Core.Thing.Relation.getPlayersByRoleTypeReq(this.getIID());
+            const request = RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq(this.getIID());
             const rolePlayersMap = new Map<RoleType, Thing[]>();
             await this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getRelationGetPlayersByRoleTypeResPart().getRoleTypesWithPlayersList()))
@@ -126,7 +126,7 @@ export namespace RelationImpl {
         }
 
         async removePlayer(roleType: RoleType, player: Thing): Promise<void> {
-            const request = Core.Thing.Relation.removePlayerReq(this.getIID(), RoleType.proto(roleType), Thing.proto(player));
+            const request = RequestBuilder.Thing.Relation.removePlayerReq(this.getIID(), RoleType.proto(roleType), Thing.proto(player));
             await this.execute(request);
         }
 

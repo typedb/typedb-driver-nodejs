@@ -21,7 +21,7 @@ import {GraknTransaction} from "../../api/GraknTransaction";
 import {Concept} from "../../api/concept/Concept";
 import {RemoteType, Type} from "../../api/concept/type/Type";
 import {Label} from "../../common/Label";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
@@ -120,36 +120,36 @@ export namespace TypeImpl {
         }
 
         async delete(): Promise<void> {
-            const request = Core.Type.deleteReq(this._label);
+            const request = RequestBuilder.Type.deleteReq(this._label);
             await this.execute(request);
         }
 
         getSubtypes(): Stream<Type> {
-            const request = Core.Type.getSubtypesReq(this._label);
+            const request = RequestBuilder.Type.getSubtypesReq(this._label);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getTypeGetSubtypesResPart().getTypesList()))
                 .map((typeProto) => of(typeProto));
         }
         getSupertype(): Promise<Type> {
-            const request = Core.Type.getSupertypeReq(this._label);
+            const request = RequestBuilder.Type.getSupertypeReq(this._label);
             return this.execute(request).then((res) => of(res.getTypeGetSupertypeRes().getType()));
         }
 
         getSupertypes(): Stream<Type> {
-            const request = Core.Type.getSupertypesReq(this._label);
+            const request = RequestBuilder.Type.getSupertypesReq(this._label);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getTypeGetSupertypesResPart().getTypesList()))
                 .map((typeProto) => of(typeProto));
         }
 
         async setLabel(label: string): Promise<void> {
-            const request = Core.Type.setLabelReq(this._label, label);
+            const request = RequestBuilder.Type.setLabelReq(this._label, label);
             await this.execute(request);
             this._label = new Label(this.getLabel().scope(), label);
         }
 
         async isAbstract(): Promise<boolean> {
-            const request = Core.Type.isAbstractReq(this._label);
+            const request = RequestBuilder.Type.isAbstractReq(this._label);
             return this.execute(request).then((res) => res.getTypeIsAbstractRes().getAbstract());
         }
 

@@ -22,7 +22,7 @@ import {CoreSession} from "./CoreSession";
 import {GraknOptions} from "../api/GraknOptions";
 import {BidirectionalStream} from "../stream/BidirectionalStream";
 import {Transaction} from "grakn-protocol/common/transaction_pb";
-import {Core} from "../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {GraknClientError} from "../common/errors/GraknClientError";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {ConceptManager} from "../api/concept/ConceptManager";
@@ -57,7 +57,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
     }
 
     public async open(): Promise<void> {
-        let openReq = Core.Transaction.openReq(this._sessionId, this._type.proto(), this._options.proto(), this._session.networkLatency());
+        let openReq = RequestBuilder.Transaction.openReq(this._sessionId, this._type.proto(), this._options.proto(), this._session.networkLatency());
         await this.rpcExecute(openReq, false);
     }
 
@@ -66,7 +66,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
     }
 
     public async commit(): Promise<void> {
-        const commitReq = Core.Transaction.commitReq();
+        const commitReq = RequestBuilder.Transaction.commitReq();
         try {
             await this.rpcExecute(commitReq);
         } finally {
@@ -75,7 +75,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
     }
 
     public async rollback(): Promise<void> {
-        const rollbackReq = Core.Transaction.rollbackReq();
+        const rollbackReq = RequestBuilder.Transaction.rollbackReq();
         await this.rpcExecute(rollbackReq);
     }
 

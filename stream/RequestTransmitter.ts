@@ -18,7 +18,7 @@
  */
 
 
-import {Core} from "../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
 import {ClientDuplexStream} from "@grpc/grpc-js";
 
@@ -40,7 +40,7 @@ export class BatchDispatcher {
     }
 
     private sendNow(): void {
-        const clientRequest = Core.Transaction.clientReq(this._bufferedRequests);
+        const clientRequest = RequestBuilder.Transaction.clientReq(this._bufferedRequests);
         this._transactionStream.write(clientRequest);
         this._bufferedRequests = [];
     }

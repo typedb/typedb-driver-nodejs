@@ -20,7 +20,7 @@
 import {LogicManager} from "../api/logic/LogicManager";
 import {Rule} from "../api/logic/Rule";
 import {Stream} from "../common/util/Stream";
-import {Core} from "../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {GraknTransaction} from "../api/GraknTransaction";
 import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {LogicManager as LogicProto} from "grakn-protocol/common/logic_pb";
@@ -34,7 +34,7 @@ export class LogicManagerImpl implements LogicManager {
     }
 
     public async getRule(label: string): Promise<Rule | undefined> {
-        const request = Core.LogicManager.getRuleReq(label);
+        const request = RequestBuilder.LogicManager.getRuleReq(label);
         const response = await this.execute(request);
         const ruleResponse = response.getGetRuleRes();
         switch (ruleResponse.getResCase()) {
@@ -47,14 +47,14 @@ export class LogicManagerImpl implements LogicManager {
     }
 
     public getRules(): Stream<Rule> {
-        const request = Core.LogicManager.getRulesReq();
+        const request = RequestBuilder.LogicManager.getRulesReq();
         return this.stream(request).flatMap((resPart) =>
             Stream.array(resPart.getGetRulesResPart().getRulesList()).map((ruleProto) => RuleImpl.of(ruleProto))
         );
     }
 
     public async putRule(label: string, when: string, then: string): Promise<Rule> {
-        const request = Core.LogicManager.putRuleReq(label, when, then);
+        const request = RequestBuilder.LogicManager.putRuleReq(label, when, then);
         const response = await this.execute(request);
         const ruleResponse = response.getPutRuleRes();
         return RuleImpl.of(ruleResponse.getRule());

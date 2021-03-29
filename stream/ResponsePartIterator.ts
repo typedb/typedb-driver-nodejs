@@ -23,9 +23,8 @@ import {ResponseCollector} from "./ResponseCollector";
 import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {GraknClientError} from "../common/errors/GraknClientError";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {Core} from "../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import ResCase = Transaction.ResPart.ResCase;
-import State = Transaction.Stream.State;
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_STREAM_STATE = ErrorMessage.Client.UNKNOWN_STREAM_STATE;
 
@@ -63,7 +62,7 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
                     case Transaction.Stream.State.DONE:
                         return null;
                     case Transaction.Stream.State.CONTINUE:
-                        this._dispatcher.dispatch(Core.Transaction.streamReq(this._requestId))
+                        this._dispatcher.dispatch(RequestBuilder.Transaction.streamReq(this._requestId))
                         return this.next();
                     default:
                         throw new GraknClientError(UNKNOWN_STREAM_STATE.message(res.getStreamResPart()));

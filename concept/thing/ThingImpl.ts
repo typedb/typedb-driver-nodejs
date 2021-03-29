@@ -26,9 +26,9 @@ import {Relation} from "../../api/concept/thing/Relation";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {RemoteThing, Thing} from "../../api/concept/thing/Thing";
 import {RoleType} from "../../api/concept/type/RoleType";
-import {ConceptImpl, EntityImpl, RelationImpl, AttributeImpl, RoleTypeImpl} from "../../dependencies_internal";
+import {AttributeImpl, ConceptImpl, EntityImpl, RelationImpl, RoleTypeImpl} from "../../dependencies_internal";
 import {Stream} from "../../common/util/Stream";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
@@ -83,7 +83,7 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
     }
 
     async delete(): Promise<void> {
-        const request = Core.Thing.deleteReq(this.getIID());
+        const request = RequestBuilder.Thing.deleteReq(this.getIID());
         await this.execute(request);
     }
 
@@ -101,14 +101,14 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
         let isSingleAttrType = false;
         let request;
         if (typeof onlyKeyAttrTypeAttrTypes === "undefined") {
-            request = Core.Thing.getHasReq(this.getIID(), false);
+            request = RequestBuilder.Thing.getHasReq(this.getIID(), false);
         } else if (typeof onlyKeyAttrTypeAttrTypes === "boolean") {
-            request = Core.Thing.getHasReq(this.getIID(), onlyKeyAttrTypeAttrTypes);
+            request = RequestBuilder.Thing.getHasReq(this.getIID(), onlyKeyAttrTypeAttrTypes);
         } else if (onlyKeyAttrTypeAttrTypes instanceof Array) {
             const attrTypesProto = onlyKeyAttrTypeAttrTypes.map((attrType) => ThingType.proto(attrType));
-            request = Core.Thing.getHasByTypeReq(this.getIID(), attrTypesProto);
+            request = RequestBuilder.Thing.getHasByTypeReq(this.getIID(), attrTypesProto);
         } else {
-            request = Core.Thing.getHasByTypeReq(this.getIID(), [ThingType.proto(onlyKeyAttrTypeAttrTypes)]);
+            request = RequestBuilder.Thing.getHasByTypeReq(this.getIID(), [ThingType.proto(onlyKeyAttrTypeAttrTypes)]);
             isSingleAttrType = true;
         }
         const attributes = this.stream(request).flatMap((resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList()))
@@ -127,7 +127,7 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
     }
 
     getPlaying(): Stream<RoleType> {
-        const request = Core.Thing.getPlayingReq(this.getIID());
+        const request = RequestBuilder.Thing.getPlayingReq(this.getIID());
         return this.stream(request)
             .flatMap((resPart) => Stream.array(resPart.getThingGetPlayingResPart().getRoleTypesList()))
             .map((res) => RoleTypeImpl.of(res));
@@ -135,7 +135,7 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
 
     getRelations(roleTypes?: RoleType[]): Stream<Relation> {
         if (!roleTypes) roleTypes = [];
-        const request = Core.Thing.getRelationsReq(this.getIID(), roleTypes.map((roleType) => RoleType.proto(roleType)));
+        const request = RequestBuilder.Thing.getRelationsReq(this.getIID(), roleTypes.map((roleType) => RoleType.proto(roleType)));
         return this.stream(request)
             .flatMap((resPart) => Stream.array(resPart.getThingGetRelationsResPart().getRelationsList()))
             .map((res) => RelationImpl.of(res));
@@ -146,17 +146,17 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
     }
 
     async isInferred(): Promise<boolean> {
-        const request = Core.Thing.isInferredReq(this.getIID());
+        const request = RequestBuilder.Thing.isInferredReq(this.getIID());
         return (await this.execute(request)).getThingIsInferredRes().getInferred();
     }
 
     async setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
-        const request = Core.Thing.setHasReq(this.getIID(), Thing.proto(attribute));
+        const request = RequestBuilder.Thing.setHasReq(this.getIID(), Thing.proto(attribute));
         await this.execute(request);
     }
 
     async unsetHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {
-        const request = Core.Thing.unsetHasReq(this.getIID(), Thing.proto(attribute));
+        const request = RequestBuilder.Thing.unsetHasReq(this.getIID(), Thing.proto(attribute));
         await this.execute(request);
     }
 

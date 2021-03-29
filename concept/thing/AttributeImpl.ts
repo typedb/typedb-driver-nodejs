@@ -22,10 +22,10 @@ import {ThingType} from "../../api/concept/type/ThingType";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {Thing} from "../../api/concept/thing/Thing";
 import {AttributeType} from "../../api/concept/type/AttributeType";
-import {RemoteThingImpl, ThingImpl, AttributeTypeImpl} from "../../dependencies_internal";
+import {AttributeTypeImpl, RemoteThingImpl, ThingImpl} from "../../dependencies_internal";
 import {Bytes} from "../../common/util/Bytes";
 import {Stream} from "../../common/util/Stream";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
 import {AttributeType as AttributeTypeProto, Thing as ThingProto} from "grakn-protocol/common/concept_pb";
@@ -120,9 +120,9 @@ export namespace AttributeImpl {
         getOwners(ownerType?: ThingType): Stream<Thing> {
             let request;
             if (!ownerType) {
-                request = Core.Thing.Attribute.getOwnersReq(this.getIID());
+                request = RequestBuilder.Thing.Attribute.getOwnersReq(this.getIID());
             } else {
-                request = Core.Thing.Attribute.getOwnersByTypeReq(this.getIID(), ThingType.proto(ownerType));
+                request = RequestBuilder.Thing.Attribute.getOwnersByTypeReq(this.getIID(), ThingType.proto(ownerType));
             }
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getAttributeGetOwnersResPart().getThingsList()))

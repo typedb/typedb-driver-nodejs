@@ -22,7 +22,7 @@ import {GraknSession, SessionType} from "../api/GraknSession";
 import {GraknOptions} from "../api/GraknOptions";
 import {Database} from "../api/database/Database";
 import {GraknTransaction, TransactionType} from "../api/GraknTransaction";
-import {Core} from "../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {GraknClientError} from "../common/errors/GraknClientError";
 import {Session} from "grakn-protocol/common/session_pb";
 import {CoreClient} from "./CoreClient";
@@ -55,7 +55,7 @@ export class CoreSession implements GraknSession {
     }
 
     public async open(): Promise<void> {
-        const openReq = Core.Session.openReq(this._databaseName, this._type.proto(), this._options.proto())
+        const openReq = RequestBuilder.Session.openReq(this._databaseName, this._type.proto(), this._options.proto())
         this._database = await this._client.databases().get(this._databaseName);
         const start = (new Date()).getMilliseconds();
         let end = 0;
@@ -78,7 +78,7 @@ export class CoreSession implements GraknSession {
             this._transactions.forEach(tx => tx.close());
             this._client.closedSession(this);
             clearTimeout(this._pulse);
-            const req = Core.Session.closeReq(this._sessionId);
+            const req = RequestBuilder.Session.closeReq(this._sessionId);
             await new Promise<void>(resolve => {
                 this._client.rpc().session_close(req, () => {
                     resolve();
@@ -118,7 +118,7 @@ export class CoreSession implements GraknSession {
 
     private pulse(): void {
         if (!this._isOpen) return;
-        const pulse = Core.Session.pulseReq(this._sessionId);
+        const pulse = RequestBuilder.Session.pulseReq(this._sessionId);
         this._client.rpc().session_pulse(pulse, (err, res) => {
             if (err || !res.getAlive()) this._isOpen = false;
             else this._pulse = setTimeout(() => this.pulse(), 5000);

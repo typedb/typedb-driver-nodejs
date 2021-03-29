@@ -25,7 +25,7 @@ import {ThingType} from "../type/ThingType";
 import {AttributeType} from "../type/AttributeType";
 import {Concept, RemoteConcept} from "../Concept";
 import {Stream} from "../../../common/util/Stream";
-import {Core} from "../../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Thing extends Concept {
 
@@ -74,7 +74,7 @@ export interface RemoteThing extends Thing, RemoteConcept {
 export namespace Thing {
 
     export function proto(thing: Thing) {
-        return Core.Thing.protoThing(thing.getIID());
+        return RequestBuilder.Thing.protoThing(thing.getIID());
     }
 
 }

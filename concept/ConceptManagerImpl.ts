@@ -24,14 +24,8 @@ import {ThingType} from "../api/concept/type/ThingType";
 import {EntityType} from "../api/concept/type/EntityType";
 import {RelationType} from "../api/concept/type/RelationType";
 import {AttributeType} from "../api/concept/type/AttributeType";
-import {
-    AttributeTypeImpl,
-    EntityTypeImpl,
-    RelationTypeImpl,
-    ThingImpl,
-    ThingTypeImpl,
-} from "../dependencies_internal";
-import {Core} from "../common/rpc/RequestBuilder";
+import {AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, ThingImpl, ThingTypeImpl,} from "../dependencies_internal";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ConceptManager as ConceptProto} from "grakn-protocol/common/concept_pb";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
 
@@ -60,7 +54,7 @@ export class ConceptManagerImpl implements ConceptManager {
     }
 
     async getThingType(label: string): Promise<ThingType> {
-        const request = Core.ConceptManager.getThingTypeReq(label);
+        const request = RequestBuilder.ConceptManager.getThingTypeReq(label);
         let response = await this.execute(request);
         if (response.getGetThingTypeRes().getResCase() == ConceptProto.GetThingType.Res.ResCase.THING_TYPE) {
             return ThingTypeImpl.of(response.getGetThingTypeRes().getThingType());
@@ -88,7 +82,7 @@ export class ConceptManagerImpl implements ConceptManager {
     }
 
     async getThing(iid: string): Promise<Thing> {
-        const request = Core.ConceptManager.getThingReq(iid);
+        const request = RequestBuilder.ConceptManager.getThingReq(iid);
         let response = await this.execute(request);
         if (response.getGetThingRes().getResCase() === ConceptProto.GetThing.Res.ResCase.THING) {
             return ThingImpl.of(response.getGetThingRes().getThing());
@@ -98,19 +92,19 @@ export class ConceptManagerImpl implements ConceptManager {
     }
 
     async putEntityType(label: string): Promise<EntityType> {
-        const request = Core.ConceptManager.putEntityTypeReq(label);
+        const request = RequestBuilder.ConceptManager.putEntityTypeReq(label);
         const response = await this.execute(request);
         return EntityTypeImpl.of(response.getPutEntityTypeRes().getEntityType());
     }
 
     async putRelationType(label: string): Promise<RelationType> {
-        const request = Core.ConceptManager.putRelationTypeReq(label);
+        const request = RequestBuilder.ConceptManager.putRelationTypeReq(label);
         const response = await this.execute(request);
         return RelationTypeImpl.of(response.getPutRelationTypeRes().getRelationType());
     }
 
     async putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType | null> {
-        const request = Core.ConceptManager.putAttributeTypeReq(label, valueType.proto());
+        const request = RequestBuilder.ConceptManager.putAttributeTypeReq(label, valueType.proto());
         const response = await this.execute(request);
         return AttributeTypeImpl.of(response.getPutAttributeTypeRes().getAttributeType());
     }

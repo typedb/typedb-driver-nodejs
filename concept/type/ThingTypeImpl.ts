@@ -31,7 +31,7 @@ import {
     TypeImpl
 } from "../../dependencies_internal";
 import {Label} from "../../common/Label";
-import {Core} from "../../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
@@ -98,7 +98,7 @@ export namespace ThingTypeImpl {
         }
 
         getInstances(): Stream<Thing> {
-            const request = Core.Type.ThingType.getInstancesReq(this.getLabel());
+            const request = RequestBuilder.Type.ThingType.getInstancesReq(this.getLabel());
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getThingTypeGetInstancesResPart().getThingsList()))
                 .map((thingProto) => ThingImpl.of(thingProto));
@@ -111,15 +111,15 @@ export namespace ThingTypeImpl {
         getOwns(valueTypeOrKeysOnly?: AttributeType.ValueType | boolean, keysOnly?: boolean): Stream<AttributeType> {
             let request;
             if (!valueTypeOrKeysOnly) {
-                request = Core.Type.ThingType.getOwnsReq(this.getLabel(), false);
+                request = RequestBuilder.Type.ThingType.getOwnsReq(this.getLabel(), false);
             } else if (typeof valueTypeOrKeysOnly === "boolean") {
-                request = Core.Type.ThingType.getOwnsReq(this.getLabel(), valueTypeOrKeysOnly as boolean)
+                request = RequestBuilder.Type.ThingType.getOwnsReq(this.getLabel(), valueTypeOrKeysOnly as boolean)
             } else if (!keysOnly) {
-                request = Core.Type.ThingType.getOwnsByTypeReq(
+                request = RequestBuilder.Type.ThingType.getOwnsByTypeReq(
                     this.getLabel(), (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), false
                 );
             } else {
-                request = Core.Type.ThingType.getOwnsByTypeReq(
+                request = RequestBuilder.Type.ThingType.getOwnsByTypeReq(
                     this.getLabel(), (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), keysOnly
                 );
             }
@@ -134,15 +134,15 @@ export namespace ThingTypeImpl {
         async setOwns(attributeType: AttributeType, overriddenTypeOrIsKey?: AttributeType | boolean, isKey?: boolean): Promise<void> {
             let request;
             if (!overriddenTypeOrIsKey) {
-                request = Core.Type.ThingType.setOwnsReq(this.getLabel(), ThingType.proto(attributeType), false);
+                request = RequestBuilder.Type.ThingType.setOwnsReq(this.getLabel(), ThingType.proto(attributeType), false);
             } else if (typeof overriddenTypeOrIsKey === "boolean") {
-                request = Core.Type.ThingType.setOwnsReq(this.getLabel(), ThingType.proto(attributeType), overriddenTypeOrIsKey as boolean)
+                request = RequestBuilder.Type.ThingType.setOwnsReq(this.getLabel(), ThingType.proto(attributeType), overriddenTypeOrIsKey as boolean)
             } else if (!isKey) {
-                request = Core.Type.ThingType.setOwnsReq(
+                request = RequestBuilder.Type.ThingType.setOwnsReq(
                     this.getLabel(), ThingType.proto((overriddenTypeOrIsKey as AttributeType)), false
                 );
             } else {
-                request = Core.Type.ThingType.setOwnsOverriddenReq(
+                request = RequestBuilder.Type.ThingType.setOwnsOverriddenReq(
                     this.getLabel(), ThingType.proto(attributeType), ThingType.proto(overriddenTypeOrIsKey as AttributeType), isKey
                 );
             }
@@ -150,12 +150,12 @@ export namespace ThingTypeImpl {
         }
 
         async unsetOwns(attributeType: AttributeType): Promise<void> {
-            const request = Core.Type.ThingType.unsetOwnsReq(this.getLabel(), ThingType.proto(attributeType));
+            const request = RequestBuilder.Type.ThingType.unsetOwnsReq(this.getLabel(), ThingType.proto(attributeType));
             await this.execute(request);
         }
 
         getPlays(): Stream<RoleType> {
-            const request = Core.Type.ThingType.getPlaysReq(this.getLabel());
+            const request = RequestBuilder.Type.ThingType.getPlaysReq(this.getLabel());
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getThingTypeGetPlaysResPart().getRolesList()))
                 .map((roleProto) => RoleTypeImpl.of(roleProto));
@@ -165,25 +165,25 @@ export namespace ThingTypeImpl {
         async setPlays(role: RoleType, overriddenType?: RoleType): Promise<void> {
             let request;
             if (!overriddenType) {
-                request = Core.Type.ThingType.setPlaysReq(this.getLabel(), RoleType.proto(role));
+                request = RequestBuilder.Type.ThingType.setPlaysReq(this.getLabel(), RoleType.proto(role));
             } else {
-                request = Core.Type.ThingType.setPlaysOverriddenReq(this.getLabel(), RoleType.proto(role), RoleType.proto(overriddenType));
+                request = RequestBuilder.Type.ThingType.setPlaysOverriddenReq(this.getLabel(), RoleType.proto(role), RoleType.proto(overriddenType));
             }
             await this.execute(request);
         }
 
         async unsetPlays(role: RoleType): Promise<void> {
-            const request = Core.Type.ThingType.unsetPlaysReq(this.getLabel(), RoleType.proto(role));
+            const request = RequestBuilder.Type.ThingType.unsetPlaysReq(this.getLabel(), RoleType.proto(role));
             await this.execute(request);
         }
 
         async setAbstract(): Promise<void> {
-            const request = Core.Type.ThingType.setAbstractReq(this.getLabel());
+            const request = RequestBuilder.Type.ThingType.setAbstractReq(this.getLabel());
             await this.execute(request);
         }
 
         async unsetAbstract(): Promise<void> {
-            const request = Core.Type.ThingType.unsetAbstractReq(this.getLabel());
+            const request = RequestBuilder.Type.ThingType.unsetAbstractReq(this.getLabel());
             await this.execute(request);
         }
 
@@ -192,7 +192,7 @@ export namespace ThingTypeImpl {
         }
 
         protected async setSupertype(thingType: ThingType): Promise<void> {
-            const request = Core.Type.ThingType.setSupertypeReq(this.getLabel(), ThingType.proto(thingType));
+            const request = RequestBuilder.Type.ThingType.setSupertypeReq(this.getLabel(), ThingType.proto(thingType));
             await this.execute(request);
         }
 

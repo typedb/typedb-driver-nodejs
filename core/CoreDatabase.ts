@@ -20,7 +20,7 @@
 import {Database} from "../api/database/Database";
 import {GraknClientError} from "../common/errors/GraknClientError";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {Core} from "../common/rpc/RequestBuilder";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
 
 export class CoreDatabase implements Database {
@@ -35,7 +35,7 @@ export class CoreDatabase implements Database {
 
     delete(): Promise<void> {
         if (!this._name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
-        const req = Core.Database.deleteReq(this._name);
+        const req = RequestBuilder.Core.Database.deleteReq(this._name);
         return new Promise((resolve, reject) => {
             this._rpcClient.database_delete(req, (err) => {
                 if (err) reject(err);
@@ -48,8 +48,10 @@ export class CoreDatabase implements Database {
         return this._name;
     }
 
-    schema(): Promise<string> {
-        return Promise.resolve("");
+    async schema(): Promise<string> {
+        // TODO
+        // return this._rpcClient.database_schema(RequestBuilder.Core.Database.schemaReq()).
+        return "";
     }
 
     toString(): string {

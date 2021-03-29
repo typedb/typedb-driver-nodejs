@@ -19,6 +19,7 @@
 
 import {GraknClient as GC} from "./api/GraknClient";
 import {CoreClient} from "./core/CoreClient";
+import {ClusterClient} from "./cluster/ClusterClient";
 
 export namespace GraknClient {
 
@@ -30,8 +31,7 @@ export namespace GraknClient {
 
 
     export function cluster(addresses: string[]): Promise<any> {//Promise<GraknClientCluster> {
-        // return new ClientClusterRPC().open(addresses);
-        return null;
+        return new ClusterClient().open(addresses);
     }
 
 }
