@@ -81,6 +81,8 @@ export namespace RelationTypeImpl {
             return super.getInstances() as Stream<Relation>;
         }
 
+        getRelates(): Stream<RoleType>;
+        getRelates(roleLabel: string): Promise<RoleType>;
         getRelates(roleLabel?: string): Promise<RoleType> | Stream<RoleType> {
             if (roleLabel) {
                 const request = Core.Type.RelationType.getRelatesByRoleReq(this.getLabel(), roleLabel);

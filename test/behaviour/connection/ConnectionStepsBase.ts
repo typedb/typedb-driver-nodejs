@@ -27,12 +27,12 @@ export const THREAD_POOL_SIZE = 32;
 
 export let client: GraknClient;
 export const sessions: GraknSession[] = [];
-export const sessionsToGraknTransactions: Map<GraknSession, GraknTransaction[]> = new Map<GraknSession, GraknTransaction[]>();
+export const sessionsToTransactions: Map<GraknSession, GraknTransaction[]> = new Map<GraknSession, GraknTransaction[]>();
 
 setDefaultTimeout(20000); // Some steps may take longer than the default limit of 5s, eg create parallel dbs
 
 export function tx(): GraknTransaction {
-    return sessionsToGraknTransactions.get(sessions[0])[0];
+    return sessionsToTransactions.get(sessions[0])[0];
 }
 
 export function setClient(value: GraknClient) {
@@ -52,7 +52,7 @@ Before(async () => {
         await db.delete();
     }
     sessions.length = 0;
-    sessionsToGraknTransactions.clear();
+    sessionsToTransactions.clear();
 });
 
 After(async () => {

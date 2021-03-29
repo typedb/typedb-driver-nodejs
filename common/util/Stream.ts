@@ -68,6 +68,13 @@ export abstract class Stream<T> implements AsyncIterable<T> {
             fn(val);
         }
     }
+
+    async first(): Promise<T | null> {
+        for await (const val of this) {
+            return val;
+        }
+        return null;
+    }
 }
 
 export namespace Stream {

@@ -81,11 +81,11 @@ When("graql insert", (query: string) => {
 });
 
 Then("graql insert; throws exception containing {string}", async (exceptionString: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query().insert(query).next(), exceptionString);
+    await assertThrowsWithMessage(async () => await tx().query().insert(query).first(), exceptionString);
 });
 
 Then("graql insert; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().insert(query).next());
+    await assertThrows(async () => await tx().query().insert(query).first());
 });
 
 When("graql delete", (query: string) => {
@@ -105,11 +105,11 @@ When("graql update", (query: string) => {
 });
 
 Then("graql update; throws exception containing {string}", async (exceptionString: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query().update(query).next(), exceptionString);
+    await assertThrowsWithMessage(async () => await tx().query().update(query).first(), exceptionString);
 });
 
 Then("graql update; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().update(query).next());
+    await assertThrows(async () => await tx().query().update(query).first());
 });
 
 When("get answers of graql insert", async (query: string) => {
@@ -128,7 +128,7 @@ When("get answers of graql match", async (query: string) => {
 });
 
 Then("graql match; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().match(query).next());
+    await assertThrows(async () => await tx().query().match(query).first());
 });
 
 When("get answer of graql match aggregate", async (query: string) => {

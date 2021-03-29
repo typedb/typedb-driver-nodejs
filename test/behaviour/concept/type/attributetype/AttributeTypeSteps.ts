@@ -20,7 +20,7 @@
 import { tx } from "../../../connection/ConnectionStepsBase";
 import { Then, When } from "@cucumber/cucumber";
 import assert from "assert";
-import { AttributeType } from "../../../../../dist/concept/type/AttributeType";
+import { AttributeType } from "../../../../../dist/api/concept/type/AttributeType";
 import ValueType = AttributeType.ValueType;
 import { GraknClientError } from "../../../../../dist/common/errors/GraknClientError";
 import { ErrorMessage } from "../../../../../dist/common/errors/ErrorMessage";
@@ -63,14 +63,14 @@ async function attributeTypeAsValueType(typeLabel: string, valueType: ValueType)
 Then("attribute\\({type_label}) as\\({value_type}) get subtypes contain:", async (typeLabel: string, valueType: ValueType, subLabelsTable: DataTable) => {
     const subLabels = parseList(subLabelsTable);
     const attributeType = await attributeTypeAsValueType(typeLabel, valueType);
-    const actuals = await attributeType.asRemote(tx()).getSubtypes().map(tt => tt.getLabel()).collect();
+    const actuals = await attributeType.asRemote(tx()).getSubtypes().map(tt => tt.getLabel().scopedName()).collect();
     subLabels.every(sl => assert(actuals.includes(sl)));
 });
 
 Then("attribute\\({type_label}) as\\({value_type}) get subtypes do not contain:", async (typeLabel: string, valueType: ValueType, subLabelsTable: DataTable) => {
     const subLabels = parseList(subLabelsTable);
     const attributeType = await attributeTypeAsValueType(typeLabel, valueType);
-    const actuals = await attributeType.asRemote(tx()).getSubtypes().map(tt => tt.getLabel()).collect();
+    const actuals = await attributeType.asRemote(tx()).getSubtypes().map(tt => tt.getLabel().scopedName()).collect();
     subLabels.every(sl => assert(!actuals.includes(sl)));
 });
 
@@ -101,27 +101,27 @@ Then("attribute\\({type_label}) as\\({value_type}) does not have any regex", asy
 Then("attribute\\({type_label}) get key owners contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
     const attributeType = await tx().concepts().getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(true).map(tt => tt.getLabel()).collect();
+    const actuals = await attributeType.asRemote(tx()).getOwners(true).map(tt => tt.getLabel().scopedName()).collect();
     ownerLabels.every(ol => assert(actuals.includes(ol)));
 });
 
 Then("attribute\\({type_label}) get key owners do not contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
     const attributeType = await tx().concepts().getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(true).map(tt => tt.getLabel()).collect();
+    const actuals = await attributeType.asRemote(tx()).getOwners(true).map(tt => tt.getLabel().scopedName()).collect();
     ownerLabels.every(ol => assert(!actuals.includes(ol)));
 });
 
 Then("attribute\\({type_label}) get attribute owners contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
     const attributeType = await tx().concepts().getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.getLabel()).collect();
+    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.getLabel().scopedName()).collect();
     ownerLabels.every(ol => assert(actuals.includes(ol)));
 });
 
 Then("attribute\\({type_label}) get attribute owners do not contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
     const attributeType = await tx().concepts().getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.getLabel()).collect();
+    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.getLabel().scopedName()).collect();
     ownerLabels.every(ol => assert(!actuals.includes(ol)));
 });

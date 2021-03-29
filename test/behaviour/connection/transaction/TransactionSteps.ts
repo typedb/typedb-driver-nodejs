@@ -20,9 +20,9 @@
 import { Then } from "@cucumber/cucumber";
 import { sessions, sessionsToTransactions } from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { GraknClient } from "../../../dist/api/GraknClient";
-import { GraknSession, SessionType } from "../../../dist/api/GraknSession";
-import { GraknTransaction, TransactionType } from "../../../dist/api/GraknTransaction";
+import { GraknClient } from "../../../../dist/api/GraknClient";
+import { GraknSession, SessionType } from "../../../../dist/api/GraknSession";
+import { GraknTransaction, TransactionType } from "../../../../dist/api/GraknTransaction";
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
 import assert = require("assert");
 

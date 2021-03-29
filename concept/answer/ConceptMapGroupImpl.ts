@@ -21,11 +21,8 @@ import {ConceptMapGroup} from "../../api/answer/ConceptMapGroup";
 import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
 import {ConceptMapImpl} from "./ConceptMapImpl";
+import {ThingImpl, TypeImpl} from "../../dependencies_internal";
 import {ConceptMapGroup as MapGroupProto} from "grakn-protocol/common/answer_pb";
-import {ThingImpl} from "../thing/ThingImpl";
-import {RoleTypeImpl} from "../type/RoleTypeImpl";
-import {ThingTypeImpl} from "../type/ThingTypeImpl";
-import {TypeImpl} from "../type/TypeImpl";
 
 export class ConceptMapGroupImpl implements ConceptMapGroup {
 

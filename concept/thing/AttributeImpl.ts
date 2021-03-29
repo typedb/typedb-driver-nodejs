@@ -23,8 +23,6 @@ import {Attribute} from "../../api/concept/thing/Attribute";
 import {Thing} from "../../api/concept/thing/Thing";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {RemoteThingImpl, ThingImpl, AttributeTypeImpl} from "../../dependencies_internal";
-// import {RemoteThingImpl, ThingImpl} from "./ThingImpl";
-// import {AttributeTypeImpl} from "../type/AttributeTypeImpl";
 import {Bytes} from "../../common/util/Bytes";
 import {Stream} from "../../common/util/Stream";
 import {Core} from "../../common/rpc/RequestBuilder";

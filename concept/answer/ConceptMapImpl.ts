@@ -20,10 +20,7 @@
 import {ConceptMap as ConceptMapProto} from "grakn-protocol/common/answer_pb";
 import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
-import {ThingImpl} from "../thing/ThingImpl";
-import {TypeImpl} from "../type/TypeImpl";
-import {RoleTypeImpl} from "../type/RoleTypeImpl";
-import {ThingTypeImpl} from "../type/ThingTypeImpl";
+import {ThingImpl, TypeImpl} from "../../dependencies_internal";
 
 export class ConceptMapImpl implements ConceptMap {
     private _concepts: Map<string, Concept>;

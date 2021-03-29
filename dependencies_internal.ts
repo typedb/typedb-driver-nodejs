@@ -25,19 +25,6 @@
  */
 
 
-// /* concept.answer */
-// export * from "./concept/answer/ConceptMap";
-// export * from "./concept/answer/Numeric";
-// export * from "./concept/answer/ConceptMapGroup";
-// export * from "./concept/answer/NumericGroup";
-//
-// /* logic.impl */
-// export * from "./logic/impl/RuleImpl";
-//
-// /* logic */
-// export * from "./logic/Rule";
-// export * from "./logic/LogicManager";
-
 /* concept.impl */
 export * from "./concept/ConceptImpl";
 
@@ -54,44 +41,3 @@ export * from "./concept/type/AttributeTypeImpl";
 export * from "./concept/type/EntityTypeImpl";
 export * from "./concept/type/RelationTypeImpl";
 export * from "./concept/type/RoleTypeImpl";
-//
-// /* concept.type.impl */
-// export * from "./concept/type/impl/TypeImpl";
-// export * from "./concept/type/impl/ThingTypeImpl";
-// export * from "./concept/type/impl/AttributeTypeImpl";
-// export * from "./concept/type/impl/EntityTypeImpl";
-// export * from "./concept/type/impl/RelationTypeImpl";
-// export * from "./concept/type/impl/RoleTypeImpl";
-//
-// /* concept */
-// export * from "./concept/Concept";
-// export * from "./concept/ConceptManager";
-//
-// /* query */
-// export * from "./query/QueryManager";
-//
-// /* ROOT */
-// export * from "./GraknClient";
-// export * from "./GraknOptions";
-//
-// /* rpc */
-// export * from "./rpc/ClientRPC";
-// export * from "./rpc/DatabaseManagerRPC";
-// export * from "./rpc/DatabaseRPC";
-// export * from "./rpc/SessionRPC";
-// export * from "./rpc/TransactionRPC";
-// export * from "./common/util/Stream";
-//
-// /* rpc.cluster */
-// export * from "./rpc/cluster/FailsafeTask";
-// export * from "./rpc/cluster/ServerAddress";
-// export * from "./rpc/cluster/ClientClusterRPC";
-// export * from "./rpc/cluster/DatabaseManagerClusterRPC";
-// export * from "./rpc/cluster/DatabaseClusterRPC";
-// export * from "./rpc/cluster/SessionClusterRPC";
-//
-// /* common.proto */
-// export * from "./common_old/proto/OptionsProtoBuilder";
-//
-// /* concept.proto */
-// export * from "./concept/proto/ConceptProtoBuilder";
