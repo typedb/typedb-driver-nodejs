@@ -22,9 +22,6 @@ import {RemoteRoleType, RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {RelationType} from "../../api/concept/type/RelationType";
 import {RelationTypeImpl, ThingTypeImpl, TypeImpl} from "../../dependencies_internal";
-// import {TypeImpl} from "./TypeImpl";
-// import {RelationTypeImpl} from "./RelationTypeImpl";
-// import {ThingTypeImpl} from "./ThingTypeImpl";
 import {Stream} from "../../common/util/Stream";
 import {Label} from "../../common/Label";
 import {Core} from "../../common/rpc/RequestBuilder";
@@ -58,31 +55,24 @@ export namespace RoleTypeImpl {
             super(transaction, label, isRoot);
         }
 
-        getSubtypes(): Stream<RoleType> {
-            const request = Core.Type.getSubtypesReq(this.getLabel());
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getTypeGetSubtypesResPart().getTypesList()))
-                .map((typeProto) => of(typeProto));
-        }
-
-        getSupertype(): Promise<RoleType> {
-            const request = Core.Type.getSupertypeReq(this.getLabel());
-            return this.execute(request).then((res) => of(res.getTypeGetSupertypeRes().getType()));
-        }
-
-        getSupertypes(): Stream<RoleType> {
-            const request = Core.Type.getSupertypesReq(this.getLabel());
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getTypeGetSupertypesResPart().getTypesList()))
-                .map((typeProto) => of(typeProto));
-        }
-
         asRemote(transaction: GraknTransaction): RemoteRoleType {
             return this;
         }
 
         isRoleType(): boolean {
             return true;
+        }
+
+        getSubtypes(): Stream<RoleType> {
+            return super.getSubtypes() as Stream<RoleType>;
+        }
+
+        getSupertype(): Promise<RoleType> {
+            return super.getSupertype() as Promise<RoleType>;
+        }
+
+        getSupertypes(): Stream<RoleType> {
+            return super.getSupertypes() as Stream<RoleType>;
         }
 
         getRelationType(): Promise<RelationType> {

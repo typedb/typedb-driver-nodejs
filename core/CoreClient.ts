@@ -40,7 +40,7 @@ export class CoreClient implements GraknClient {
     private readonly _sessions: {[id: string]: CoreSession};
     private _isOpen : boolean;
 
-    constructor(address : string, parallelisation? : number) { // TODO do we need parallelisation?
+    constructor(address : string) {
         this._rpcClient = new GraknCoreClient(address, ChannelCredentials.createInsecure());
         this._databases = new CoreDatabaseManager(this._rpcClient);
         this._requestTransmitter = new RequestTransmitter();
@@ -79,7 +79,7 @@ export class CoreClient implements GraknClient {
     }
 
     asCluster(): GraknClient.Cluster {
-        throw new GraknClientError(ILLEGAL_CAST.message(this.constructor.toString(), "ClusterClient")); // TODO
+        throw new GraknClientError(ILLEGAL_CAST.message(this.constructor.toString(), "ClusterClient"));
     }
 
     rpc() : GraknCoreClient {

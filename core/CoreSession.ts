@@ -69,7 +69,7 @@ export class CoreSession implements GraknSession {
         this._sessionId = res.getSessionId_asB64();
         this._networkLatencyMillis = (end - start) - res.getServerDurationMillis();
         this._isOpen = true;
-        this._pulse = setTimeout(() => this.pulse(), 5000); // TODO update
+        this._pulse = setTimeout(() => this.pulse(), 5000);
     }
 
     public async close(): Promise<void> {

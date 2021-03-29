@@ -53,8 +53,7 @@ export namespace ConceptMapImpl {
         proto.getMapMap().forEach((protoConcept , resLabel ) => {
             let concept;
             if (protoConcept.hasThing()) concept = ThingImpl.of(protoConcept.getThing());
-            else if (protoConcept.getType().getScope() != null) concept = RoleTypeImpl.of(protoConcept.getType());
-            else concept = ThingTypeImpl.of(protoConcept.getType());
+            else concept = TypeImpl.of(protoConcept.getType());
             variableMap.set(resLabel, concept);
         })
         return new ConceptMapImpl(variableMap);

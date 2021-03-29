@@ -25,6 +25,7 @@ import {NumericImpl} from "./NumericImpl";
 import {ThingImpl} from "../thing/ThingImpl";
 import {RoleTypeImpl} from "../type/RoleTypeImpl";
 import {ThingTypeImpl} from "../type/ThingTypeImpl";
+import {TypeImpl} from "../type/TypeImpl";
 
 export class NumericGroupImpl implements NumericGroup {
 
@@ -51,8 +52,7 @@ export namespace NumericGroupImpl {
     export function of(numericGroupProto: NumericGroupProto) {
         let concept: Concept;
         if (numericGroupProto.getOwner().hasThing()) concept = ThingImpl.of(numericGroupProto.getOwner().getThing());
-        else if (numericGroupProto.getOwner().getType().getScope() != null) concept = RoleTypeImpl.of(numericGroupProto.getOwner().getType());
-        else concept = ThingTypeImpl.of(numericGroupProto.getOwner().getType());
+        else concept = TypeImpl.of(numericGroupProto.getOwner().getType());
         return new NumericGroupImpl(concept, NumericImpl.of(numericGroupProto.getNumber()))
     }
 

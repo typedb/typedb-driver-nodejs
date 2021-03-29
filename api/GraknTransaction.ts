@@ -79,13 +79,11 @@ export namespace GraknTransaction {
             }
 
             isRead(): boolean {
-                return this == READ; // TODO switch if it causes cycles
-                // return this._type== Transaction.Type.READ;
+                return this == READ;
             }
 
             isWrite(): boolean {
-                return this == WRITE; // TODO switch if it causes cycles
-                // return this._type == Transaction.Type.WRITE;
+                return this == WRITE;
             }
 
         }

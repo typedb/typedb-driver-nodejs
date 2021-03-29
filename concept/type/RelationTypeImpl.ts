@@ -23,9 +23,6 @@ import {RelationType, RemoteRelationType} from "../../api/concept/type/RelationT
 import {Relation} from "../../api/concept/thing/Relation";
 import {RoleType} from "../../api/concept/type/RoleType";
 import {ThingTypeImpl, RoleTypeImpl, RelationImpl} from "../../dependencies_internal";
-// import {ThingTypeImpl} from "./ThingTypeImpl";
-// import {RoleTypeImpl} from "./RoleTypeImpl";
-// import {RelationImpl} from "../thing/RelationImpl";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {Core} from "../../common/rpc/RequestBuilder";

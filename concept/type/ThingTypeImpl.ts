@@ -30,7 +30,6 @@ import {
     ThingImpl,
     TypeImpl
 } from "../../dependencies_internal";
-// import {TypeImpl} from "./TypeImpl";
 import {Label} from "../../common/Label";
 import {Core} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
@@ -78,31 +77,24 @@ export namespace ThingTypeImpl {
             super(transaction, label, isRoot);
         }
 
-        getSubtypes(): Stream<ThingType> {
-            const request = Core.Type.getSubtypesReq(this.getLabel());
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getTypeGetSubtypesResPart().getTypesList()))
-                .map((typeProto) => of(typeProto));
-        }
-
-        getSupertype(): Promise<ThingType> {
-            const request = Core.Type.getSupertypeReq(this.getLabel());
-            return this.execute(request).then((res) => of(res.getTypeGetSupertypeRes().getType()));
-        }
-
-        getSupertypes(): Stream<ThingType> {
-            const request = Core.Type.getSupertypesReq(this.getLabel());
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getTypeGetSupertypesResPart().getTypesList()))
-                .map((typeProto) => of(typeProto));
-        }
-
         asRemote(transaction: GraknTransaction): RemoteThingType {
             return this;
         }
 
         isThingType(): boolean {
             return true;
+        }
+
+        getSubtypes(): Stream<ThingType> {
+            return super.getSubtypes() as Stream<ThingType>;
+        }
+
+        getSupertype(): Promise<ThingType> {
+            return super.getSupertype() as Promise<ThingType>;
+        }
+
+        getSupertypes(): Stream<ThingType> {
+            return super.getSupertypes() as Stream<ThingType>;
         }
 
         getInstances(): Stream<Thing> {

@@ -109,7 +109,7 @@ export namespace AttributeImpl {
 
         abstract getValue(): T;
 
-        abstract asRemote(transaction: GraknTransaction): any; //TODO this is bad typing
+        abstract asRemote(transaction: GraknTransaction): any; // TODO improve typing
 
         isAttribute(): boolean {
             return true;

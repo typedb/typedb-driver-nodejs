@@ -61,13 +61,11 @@ export namespace GraknSession {
             }
 
             isData(): boolean {
-                return this == DATA; // TODO switch if it causes cycles
-                // return this._type== Session.Type.DATA;
+                return this == DATA;
             }
 
             isSchema(): boolean {
-                return this == SCHEMA; // TODO switch if it causes cycles
-                // return this._type == Session.Type.SCHEMA;
+                return this == SCHEMA;
             }
 
         }

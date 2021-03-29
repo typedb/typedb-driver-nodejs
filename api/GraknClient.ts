@@ -33,7 +33,7 @@ export interface GraknClient {
 
     isCluster() : boolean;
 
-    asCluster() : GraknClient.Cluster; // TODO this might break
+    asCluster() : GraknClient.Cluster;
 
     close() : void;
 

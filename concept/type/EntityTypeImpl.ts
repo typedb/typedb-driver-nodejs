@@ -22,8 +22,6 @@ import {GraknTransaction} from "../../api/GraknTransaction";
 import {EntityType, RemoteEntityType} from "../../api/concept/type/EntityType";
 import {Entity} from "../../api/concept/thing/Entity";
 import {ThingTypeImpl, EntityImpl} from "../../dependencies_internal";
-// import {EntityImpl} from "../thing/EntityImpl";
-// import {ThingTypeImpl} from "./ThingTypeImpl";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {Core} from "../../common/rpc/RequestBuilder";
