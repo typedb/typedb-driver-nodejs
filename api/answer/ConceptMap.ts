@@ -28,8 +28,35 @@ export interface ConceptMap {
 
     get(variable: string): Concept
 
-    // TODO
-    // explainables(): Set<Concept>;
+    explainables(): ConceptMap.Explainables;
 
 }
 
+export namespace ConceptMap {
+
+
+    export interface Explainables {
+
+        relation(variable: string): Explainable;
+
+        attribute(variable: string): Explainable;
+
+        ownership(owner: string, attribute: string): Explainable;
+
+        relations(): Map<string, Explainable>;
+
+        attributes(): Map<string, Explainable>;
+
+        ownerships(): Map<[string, string], Explainable>;
+
+    }
+
+    export interface Explainable {
+
+        conjunction(): string;
+
+        id(): number;
+
+    }
+
+}

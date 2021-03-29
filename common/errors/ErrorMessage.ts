@@ -66,8 +66,11 @@ export abstract class ErrorMessage {
 
 export namespace ErrorMessage {
     export class Client extends ErrorMessage {
-        constructor(code: number, message: (args?: Stringable[]) => string) {super("CLI", code, "Client Error", message)}
+        constructor(code: number, message: (args?: Stringable[]) => string) {
+            super("CLI", code, "Client Error", message)
+        }
     }
+
     export namespace Client {
         export const SESSION_ID_EXISTS = new Client(1, (args: Stringable[]) => `The newly opened session id '${args[0]}' already exists`);
         export const SESSION_CLOSED = new Client(2, (args: Stringable[]) => `Session is closed.`);
@@ -87,8 +90,11 @@ export namespace ErrorMessage {
     }
 
     export class Concept extends ErrorMessage {
-        constructor(code: number, message: (args: Stringable[]) => string) {super("CON", code, "Concept Error", message)}
+        constructor(code: number, message: (args: Stringable[]) => string) {
+            super("CON", code, "Concept Error", message)
+        }
     }
+
     export namespace Concept {
         export const INVALID_CONCEPT_CASTING = new Concept(1, (args: Stringable[]) => `Invalid concept conversion from '${args[0]}' to '${args[1]}'.`);
         export const MISSING_TRANSACTION = new Concept(2, () => `Transaction cannot be null.`);
@@ -100,18 +106,25 @@ export namespace ErrorMessage {
     }
 
     export class Query extends ErrorMessage {
-        constructor(code: number, message: (args: Stringable[]) => string) {super("QRY", code, "Query Error", message)}
+        constructor(code: number, message: (args: Stringable[]) => string) {
+            super("QRY", code, "Query Error", message)
+        }
     }
+
     export namespace Query {
         export const VARIABLE_DOES_NOT_EXIST = new Query(1, (args: Stringable[]) => `The variable '${args[0]}' does not exist.`);
-        export const NO_EXPLANATION = new Query(2, () => `No explanation was found.`);
-        export const BAD_ANSWER_TYPE = new Query(3, (args: Stringable[]) => `The answer type '${args[0]}' was not recognised.`);
-        export const MISSING_ANSWER = new Query(4, (args: Stringable[]) => `The required field 'answer' of type '${args[0]}' was not set.`);
+        export const NONEXISTENT_EXPLAINABLE_CONCEPT = new Query(2, (args: Stringable[]) => `The concept identified by '${args[0]}' is not explainable.`);
+        export const NONEXISTENT_EXPLAINABLE_OWNERSHIP = new Query(3, (args: Stringable[]) => `The ownership by owner '${args[0]}'of attribute '${args[1]}' is not explainable.`);
+        export const BAD_ANSWER_TYPE = new Query(4, (args: Stringable[]) => `The answer type '${args[0]}' was not recognised.`);
+        export const MISSING_ANSWER = new Query(5, (args: Stringable[]) => `The required field 'answer' of type '${args[0]}' was not set.`);
     }
 
     export class Internal extends ErrorMessage {
-        constructor(code: number, message: (args: Stringable[]) => string) {super("INT", code, "Internal Error", message)}
+        constructor(code: number, message: (args: Stringable[]) => string) {
+            super("INT", code, "Internal Error", message)
+        }
     }
+
     export namespace Internal {
         export const ILLEGAL_CAST = new Internal(2, (args: Stringable[]) => `Illegal casting operation from '${args[0]}' to '${args[1]}'.`);
         export const ILLEGAL_ARGUMENT = new Internal(3, (args: Stringable[]) => `Illegal argument provided: '${args[0]}'`);

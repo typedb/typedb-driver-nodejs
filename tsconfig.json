@@ -71,12 +71,14 @@
   "include": [
     "dependencies_internal.ts",
     "GraknClient.ts",
+    "GraknOptions.ts",
     "api",
     "common",
     "core",
+    "cluster",
     "concept",
     "logic",
     "query",
-    "stream",
+    "stream"
   ]
 }

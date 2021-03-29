@@ -18,15 +18,21 @@
  */
 
 import {ConceptMap as ConceptMapProto} from "grakn-protocol/common/answer_pb";
+import {Concept as ConceptProto} from "grakn-protocol/common/concept_pb";
 import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
 import {ThingImpl, TypeImpl} from "../../dependencies_internal";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {GraknClientError} from "../../common/errors/GraknClientError";
 
 export class ConceptMapImpl implements ConceptMap {
-    private _concepts: Map<string, Concept>;
 
-    constructor(concepts: Map<string, Concept>) {
+    private _concepts: Map<string, Concept>;
+    private _explainables: ConceptMap.Explainables;
+
+    constructor(concepts: Map<string, Concept>, explainables: ConceptMap.Explainables) {
         this._concepts = concepts;
+        this._explainables = explainables;
     }
 
     concepts(): IterableIterator<Concept> {
@@ -41,19 +47,93 @@ export class ConceptMapImpl implements ConceptMap {
         return this._concepts;
     }
 
+    explainables(): ConceptMap.Explainables {
+        return this._explainables;
+    }
+
 }
 
 export namespace ConceptMapImpl {
 
+    import NONEXISTENT_EXPLAINABLE_CONCEPT = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_CONCEPT;
+    import NONEXISTENT_EXPLAINABLE_OWNERSHIP = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
+
     export function of(proto: ConceptMapProto) {
         const variableMap = new Map<string, Concept>();
-        proto.getMapMap().forEach((protoConcept , resLabel ) => {
+        proto.getMapMap().forEach((protoConcept: ConceptProto, resLabel: string) => {
             let concept;
             if (protoConcept.hasThing()) concept = ThingImpl.of(protoConcept.getThing());
             else concept = TypeImpl.of(protoConcept.getType());
             variableMap.set(resLabel, concept);
         })
-        return new ConceptMapImpl(variableMap);
+        return new ConceptMapImpl(variableMap, null);
+    }
+
+    // function of(proto: ConceptMapProto.Explainables) {
+    //
+    // }
+
+    export class ExplainablesImpl implements ConceptMap.Explainables {
+        private _relations: Map<string, ConceptMap.Explainable>;
+        private _attributes: Map<string, ConceptMap.Explainable>;
+        private _ownerships: Map<[string, string], ConceptMap.Explainable>;
+
+        constructor(relations: Map<string, ConceptMap.Explainable>, attributes: Map<string, ConceptMap.Explainable>,
+                    ownerships: Map<[string, string], ConceptMap.Explainable>) {
+            this._relations = relations;
+            this._attributes = attributes;
+            this._ownerships = ownerships;
+        }
+
+        relation(variable: string): ConceptMap.Explainable {
+            let explainable = this._relations.get(variable);
+            if (!explainable) throw new GraknClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
+            return explainable;
+        }
+
+        attribute(variable: string): ConceptMap.Explainable {
+            let explainable = this._attributes.get(variable);
+            if (!explainable) throw new GraknClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
+            return explainable;
+        }
+
+        ownership(owner: string, attribute: string): ConceptMap.Explainable {
+            let explainable = this._ownerships.get([owner, attribute]);
+            if (!explainable) throw new GraknClientError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));
+            return explainable;
+        }
+
+        relations(): Map<string, ConceptMap.Explainable> {
+            return this._relations;
+        }
+
+        attributes(): Map<string, ConceptMap.Explainable> {
+            return this._attributes;
+        }
+
+        ownerships(): Map<[string, string], ConceptMap.Explainable> {
+            return this._ownerships;
+        }
+
+    }
+
+    export class Explainable implements ConceptMap.Explainable {
+        private _conjunction: string;
+        private _id: number;
+
+        constructor(conjunction: string, id: number) {
+            this._conjunction = conjunction;
+            this._id = id;
+        }
+
+        conjunction(): string {
+            return this._conjunction;
+        }
+
+        id(): number {
+            return this._id;
+        }
+
     }
 
 }

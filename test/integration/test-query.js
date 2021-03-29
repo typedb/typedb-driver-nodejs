@@ -57,6 +57,7 @@ async function run() {
     try {
         await tx.query().define("define name sub attribute, value string;")
         await tx.query().define("define rank sub attribute, value string;")
+        await tx.query().define("define inferred-age sub attribute, value long;")
         await tx.query().define("define power-level sub attribute, value double;")
         console.log("define attributes query - SUCCESS");
     } catch (err) {
@@ -104,12 +105,26 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        await tx.query().define("define lion sub entity, owns name, owns rank, owns power-level, plays lionfight:victor, plays lionfight:loser;")
+        await tx.query().define("define lion sub entity, owns name, owns rank, owns power-level, owns inferred-age, plays lionfight:victor, plays lionfight:loser;")
         await tx.commit();
         await tx.close();
         console.log("define entity query - SUCCESS");
     } catch (err) {
         console.error(`define entity query - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        process.exit(1);
+    }
+
+    try {
+        tx = await session.transaction(TransactionType.WRITE);
+        await tx.query().define("define rule lions-have-age: when { $x isa lion;} then { $x has inferred-age 10; };");
+        await tx.commit();
+        await tx.close();
+        console.log("define rule query - SUCCESS");
+    } catch (err) {
+        console.error(`define rule query - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();
@@ -199,6 +214,20 @@ async function run() {
         console.log("commit data write transaction - SUCCESS");
     } catch (err) {
         console.error(`commit data write transaction - ERROR: ${err.stack || err}`);
+        await tx.close();
+        await session.close();
+        client.close();
+        process.exit(1);
+    }
+
+    try {
+        tx = await session.transaction(TransactionType.READ, GraknOptions.core({infer: true, explain: true}));
+        const answers = await tx.query().match("match $x has inferred-age $a;").collect();
+        const ans = answers[0];
+        assert(ans.explainables().ownerships().length > 0);
+        console.log("open data read transaction - SUCCESS");
+    } catch (err) {
+        console.error(`open data read transaction - ERROR: ${err.stack || err}`);
         await tx.close();
         await session.close();
         client.close();

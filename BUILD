@@ -102,6 +102,7 @@ ts_project(
         "api/**/*.ts",
         "common/**/*.ts",
         "core/**/*.ts",
+        "cluster/**/*.ts",
         "concept/**/*.ts",
         "logic/**/*.ts",
         "query/**/*.ts",
