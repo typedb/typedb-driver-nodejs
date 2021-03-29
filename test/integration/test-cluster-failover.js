@@ -17,7 +17,9 @@
  * under the License.
  */
 
-const { GraknClient, SessionType, TransactionType } = require("../../dist/GraknClient");
+const { GraknClient } = require("../../dist/GraknClient");
+const {GraknSession, SessionType} = require("../../dist/api/GraknSession")
+const {GraknTransaction, TransactionType} = require("../../dist/api/GraknTransaction")
 const assert = require("assert");
 const { spawn, spawnSync } = require("child_process");
 

@@ -20,17 +20,17 @@
 import { Then, When } from "@cucumber/cucumber";
 import { tx } from "../connection/ConnectionStepsBase";
 import { assertThrows, assertThrowsWithMessage, splitString } from "../util/Util";
-import { ConceptMap } from "../../../dist/concept/answer/ConceptMap";
-import { Numeric } from "../../../dist/concept/answer/Numeric";
-import { ConceptMapGroup } from "../../../dist/concept/answer/ConceptMapGroup";
-import { NumericGroup } from "../../../dist/concept/answer/NumericGroup";
-import { Concept } from "../../../dist/concept/Concept";
-import { RoleType } from "../../../dist/concept/type/RoleType";
-import { Type } from "../../../dist/concept/type/Type";
-import { AttributeType } from "../../../dist/concept/type/AttributeType";
-import { Attribute } from "../../../dist/concept/thing/Attribute";
+import { ConceptMap } from "../../../dist/api/answer/ConceptMap";
+import { Numeric } from "../../../dist/api/answer/Numeric";
+import { ConceptMapGroup } from "../../../dist/api/answer/ConceptMapGroup";
+import { NumericGroup } from "../../../dist/api/answer/NumericGroup";
+import { Concept } from "../../../dist/api/concept/Concept";
+import { RoleType } from "../../../dist/api/concept/type/RoleType";
+import { Type } from "../../../dist/api/concept/type/Type";
+import { AttributeType } from "../../../dist/api/concept/type/AttributeType";
+import { Attribute } from "../../../dist/api/concept/thing/Attribute";
+import { Thing } from "../../../dist/api/concept/thing/Thing";
 import { parseBool } from "../config/Parameters";
-import { Thing } from "../../../dist/concept/thing/Thing";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { fail } from "assert";
 import assert = require("assert");
@@ -179,8 +179,8 @@ class TypeLabelMatcher implements ConceptMatcher {
     }
 
     async matches(concept: Concept): Promise<boolean> {
-        if (concept.isRoleType()) return this.label == (concept as RoleType).getScopedLabel();
-        else if (concept.isType()) return this.label == (concept as Type).getLabel();
+        if (concept.isRoleType()) return this.label == (concept as RoleType).getLabel().scopedName();
+        else if (concept.isType()) return this.label == (concept as Type).getLabel().scopedName();
         else throw new TypeError("A Concept was matched by label, but it is not a Type.");
     }
 }
@@ -224,7 +224,7 @@ class AttributeValueMatcher extends AttributeMatcher {
 
         const attribute = concept as Attribute<ValueClass>;
 
-        if (this.typeLabel !== attribute.getType().getLabel()) return false;
+        if (this.typeLabel !== attribute.getType().getLabel().scopedName()) return false;
 
         return this.check(attribute);
     }
@@ -238,7 +238,7 @@ class ThingKeyMatcher extends AttributeMatcher {
         const keys = (concept as Thing).asRemote(tx()).getHas(true);
 
         for await (const key of keys) {
-            if (key.getType().getLabel() === this.typeLabel) {
+            if (key.getType().getLabel().scopedName() === this.typeLabel) {
                 return this.check(key);
             }
         }

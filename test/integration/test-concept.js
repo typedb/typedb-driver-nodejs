@@ -18,8 +18,8 @@
  */
 
 const {GraknClient} = require("../../dist/GraknClient");
-const {GraknSession} = require("../../dist/api/GraknSession")
-const {GraknTransaction} = require("../../dist/api/GraknTransaction")
+const {GraknSession, SessionType} = require("../../dist/api/GraknSession")
+const {GraknTransaction, TransactionType} = require("../../dist/api/GraknTransaction")
 const {AttributeType} = require("../../dist/api/concept/type/AttributeType");
 const assert = require("assert");
 
@@ -49,8 +49,8 @@ async function run() {
     let session, tx;
     let lion, lionFamily, lionCub, maneSize;
     try {
-        session = await client.session("grakn", GraknSession.Type.SCHEMA);
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        session = await client.session("grakn", SessionType.SCHEMA);
+        tx = await session.transaction(TransactionType.WRITE);
         lion = await tx.concepts().putEntityType("lion");
         await tx.commit();
         await tx.close();
@@ -64,7 +64,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         lionFamily = await tx.concepts().putRelationType("lion-family");
         await lionFamily.asRemote(tx).setRelates("lion-cub");
         lionCub = await lionFamily.asRemote(tx).getRelates().collect().then(roles => roles[0]);
@@ -81,7 +81,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         maneSize = await tx.concepts().putAttributeType("mane-size", AttributeType.ValueType.LONG);
         await lion.asRemote(tx).setOwns(maneSize);
         await tx.commit();
@@ -97,7 +97,7 @@ async function run() {
 
     let stoneLion;
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         stoneLion = await tx.concepts().putEntityType("stone-lion");
         await stoneLion.asRemote(tx).setSupertype(lion);
         await tx.commit();
@@ -112,7 +112,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.READ);
+        tx = await session.transaction(TransactionType.READ);
         const supertypeOfLion = await lion.asRemote(tx).getSupertype();
         await tx.close();
         console.log(`get supertype - SUCCESS - the supertype of 'lion' is '${supertypeOfLion.getLabel()}'.`);
@@ -125,7 +125,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.READ);
+        tx = await session.transaction(TransactionType.READ);
         const supertypesOfStoneLion = await stoneLion.asRemote(tx).getSupertypes().collect();
         await tx.close();
         console.log(`get supertypes - SUCCESS - the supertypes of 'stone-lion' are [${supertypesOfStoneLion.map(x => x.getLabel())}].`);
@@ -138,7 +138,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.READ);
+        tx = await session.transaction(TransactionType.READ);
         const subtypesOfLion = await lion.asRemote(tx).getSubtypes().collect();
         await tx.close();
         console.log(`get subtypes - SUCCESS - the subtypes of 'lion' are [${subtypesOfLion.map(x => x.getLabel())}].`);
@@ -151,7 +151,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         const monkey = await tx.concepts().putEntityType("monkey");
         await monkey.asRemote(tx).setLabel("orangutan");
         const newLabel = await tx.concepts().getEntityType("orangutan").then(entityType => entityType.getLabel().scopedName());
@@ -168,7 +168,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         const whale = await tx.concepts().putEntityType("whale");
         await whale.asRemote(tx).setAbstract();
         const isAbstractAfterSet = await whale.asRemote(tx).isAbstract();
@@ -190,7 +190,7 @@ async function run() {
 
     let parentship, fathership, person, man, parent, father;
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         parentship = await tx.concepts().putRelationType("parentship");
         await parentship.asRemote(tx).setRelates("parent");
         fathership = await tx.concepts().putRelationType("fathership");
@@ -220,7 +220,7 @@ async function run() {
 
     let email, workEmail, customer, age;
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         email = await tx.concepts().putAttributeType("email", AttributeType.ValueType.STRING);
         await email.asRemote(tx).setAbstract();
         workEmail = await tx.concepts().putAttributeType("work-email", AttributeType.ValueType.STRING);
@@ -252,7 +252,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         await person.asRemote(tx).unsetOwns(age);
         await person.asRemote(tx).unsetPlays(parent);
         await fathership.asRemote(tx).unsetRelates("father");
@@ -276,7 +276,7 @@ async function run() {
 
     let password, shoeSize, volume, isAlive, startDate;
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         password = await tx.concepts().putAttributeType("password", AttributeType.ValueType.STRING);
         shoeSize = await tx.concepts().putAttributeType("shoe-size", AttributeType.ValueType.LONG);
         volume = await tx.concepts().putAttributeType("volume", AttributeType.ValueType.DOUBLE);
@@ -295,7 +295,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         await tx.logic().putRule("septuagenarian-rule", "{$x isa person;}", "$x has age 70");
         await tx.commit();
         await tx.close();
@@ -322,8 +322,8 @@ async function run() {
     /////////////////////
 
     try {
-        session = await client.session("grakn", GraknSession.Type.DATA);
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        session = await client.session("grakn", SessionType.DATA);
+        tx = await session.transaction(TransactionType.WRITE);
         for (let i = 0; i < 10; i++)  stoneLion.asRemote(tx).create();
         const lions = await lion.asRemote(tx).getInstances().collect();
         const firstLion = lions[0];
@@ -364,7 +364,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         const firstLionFamily = (await lionFamily.asRemote(tx).getInstances().collect())[0];
         const firstLion = (await firstLionFamily.asRemote(tx).getPlayers().collect())[0];
         const firstLionFamily2 = (await firstLion.asRemote(tx).getRelations().collect())[0];
@@ -391,7 +391,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         const passwordAttr = await password.asRemote(tx).put("rosebud");
         const shoeSizeAttr = await shoeSize.asRemote(tx).put(9);
         const volumeAttr = await volume.asRemote(tx).put(1.618);

@@ -18,8 +18,8 @@
  */
 
 const {GraknClient} = require("../../dist/GraknClient");
-const {GraknSession} = require("../../dist/api/GraknSession")
-const {GraknTransaction} = require("../../dist/api/GraknTransaction")
+const {SessionType} = require("../../dist/api/GraknSession")
+const {TransactionType} = require("../../dist/api/GraknTransaction")
 const {GraknOptions} = require("../../dist/api/GraknOptions");
 const assert = require("assert");
 
@@ -44,8 +44,8 @@ async function run() {
     let session;
     let tx;
     try {
-        session = await client.session("grakn", GraknSession.Type.SCHEMA);
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        session = await client.session("grakn", SessionType.SCHEMA);
+        tx = await session.transaction(TransactionType.WRITE);
         console.log("open schema write tx - SUCCESS");
     } catch (err) {
         console.error(`open schema write tx - ERROR: ${err.stack || err}`);
@@ -89,7 +89,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         await tx.query().define("define lionfight sub relation, relates victor, relates loser;")
         await tx.commit();
         await tx.close();
@@ -103,7 +103,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         await tx.query().define("define lion sub entity, owns name, owns rank, owns power-level, plays lionfight:victor, plays lionfight:loser;")
         await tx.commit();
         await tx.close();
@@ -117,7 +117,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         await tx.query().define("define giraffe sub entity, owns name, plays lionfight:victor;")
         await tx.query().undefine("undefine giraffe plays lionfight:victor;")
         await tx.commit();
@@ -140,7 +140,7 @@ async function run() {
         process.exit(1);
     }
     try {
-        session = await client.session("grakn", GraknSession.Type.DATA, GraknOptions.core({
+        session = await client.session("grakn", SessionType.DATA, GraknOptions.core({
             sessionIdleTimeoutMillis: 3600000,
         }));
         console.log("open data session - SUCCESS");
@@ -151,7 +151,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         console.log("open data transaction - SUCCESS");
     } catch (err) {
         console.error(`open data write transaction - ERROR: ${err.stack || err}`);
@@ -179,7 +179,7 @@ async function run() {
         }
         // await tx.commit();
         // await tx.close();
-        // tx = await session.transaction(GraknTransaction.Type.WRITE);
+        // tx = await session.transaction(TransactionType.WRITE);
         // const matchresult = await tx.query().match("match $x isa lion, has name $y, has rank $z;");
         // for await (const match of matchresult) {
         //     console.log(match);

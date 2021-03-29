@@ -18,24 +18,24 @@
  */
 
 
-import {GraknSession} from "../api/GraknSession";
+import {GraknSession, SessionType} from "../api/GraknSession";
 import {GraknOptions} from "../api/GraknOptions";
 import {Database} from "../api/database/Database";
-import {GraknTransaction} from "../api/GraknTransaction";
+import {GraknTransaction, TransactionType} from "../api/GraknTransaction";
 import {Core} from "../common/rpc/RequestBuilder";
 import {GraknClientError} from "../common/errors/GraknClientError";
 import {Session} from "grakn-protocol/common/session_pb";
 import {CoreClient} from "./CoreClient";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 import {CoreTransaction} from "./CoreTransaction";
 import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
 import {RequestTransmitter} from "../stream/RequestTransmitter";
+import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 
 export class CoreSession implements GraknSession {
 
     private readonly _databaseName: string;
-    private readonly _type: GraknSession.Type;
+    private readonly _type: SessionType;
     private readonly _options: GraknOptions;
     private readonly _client: CoreClient;
     private _sessionId: string;
@@ -45,7 +45,7 @@ export class CoreSession implements GraknSession {
     private _networkLatencyMillis: number;
     private _transactions: Set<GraknTransaction.Extended>;
 
-    constructor(database: string, type: GraknSession.Type, options: GraknOptions, client: CoreClient) {
+    constructor(database: string, type: SessionType, options: GraknOptions, client: CoreClient) {
         this._databaseName = database;
         this._type = type;
         this._options = options;
@@ -87,7 +87,7 @@ export class CoreSession implements GraknSession {
         }
     }
 
-    public async transaction(type: GraknTransaction.Type, options?: GraknOptions): Promise<GraknTransaction> {
+    public async transaction(type: TransactionType, options?: GraknOptions): Promise<GraknTransaction> {
         if (!this.isOpen()) throw new GraknClientError(SESSION_CLOSED);
         if (!options) options = GraknOptions.core();
         let transaction = new CoreTransaction(this, this._sessionId, type, options);
@@ -108,7 +108,7 @@ export class CoreSession implements GraknSession {
         return this._options;
     }
 
-    public type(): GraknSession.Type {
+    public type(): SessionType {
         return this._type;
     }
 

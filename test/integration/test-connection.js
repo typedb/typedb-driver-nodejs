@@ -17,9 +17,9 @@
  * under the License.
  */
 
-const { GraknClient } = require("../../dist/GraknClient");
-const { GraknSession } = require("../../dist/api/GraknSession")
-const { GraknTransaction } = require("../../dist/api/GraknTransaction")
+const {GraknClient} = require("../../dist/GraknClient");
+const {SessionType} = require("../../dist/api/GraknSession")
+const {TransactionType} = require("../../dist/api/GraknTransaction")
 
 async function run() {
     const client = GraknClient.core();
@@ -42,7 +42,7 @@ async function run() {
 
     let session;
     try {
-        session = await client.session("grakn", GraknSession.Type.SCHEMA);
+        session = await client.session("grakn", SessionType.SCHEMA);
         console.log("open schema session - SUCCESS");
     } catch (err) {
         console.error(`open schema session - ERROR: ${err.stack || err}`);
@@ -52,7 +52,7 @@ async function run() {
 
     let tx;
     try {
-        tx = await session.transaction(GraknTransaction.Type.WRITE);
+        tx = await session.transaction(TransactionType.WRITE);
         console.log("open schema write tx - SUCCESS");
     } catch (err) {
         console.error(`open schema write tx - ERROR: ${err.stack || err}`);

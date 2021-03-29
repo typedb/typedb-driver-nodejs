@@ -19,60 +19,55 @@
 
 import {Session} from "grakn-protocol/common/session_pb";
 import {GraknOptions} from "./GraknOptions";
-import {GraknTransaction} from "./GraknTransaction";
+import {GraknTransaction, TransactionType} from "./GraknTransaction";
 import {Database} from "./database/Database";
 
 export interface GraknSession {
 
     isOpen() : boolean;
 
-    type() : GraknSession.Type;
+    type() : SessionType;
 
     database(): Database;
 
     options() : GraknOptions;
 
-    transaction(type : GraknTransaction.Type, options? : GraknOptions) : Promise<GraknTransaction>;
+    transaction(type : TransactionType, options? : GraknOptions) : Promise<GraknTransaction>;
 
     close() : void;
 
 }
 
-export namespace GraknSession {
-
-    export interface Type {
-        proto(): Session.Type;
-        isData(): boolean;
-        isSchema(): boolean;
-    }
-
-    export namespace Type {
-
-        class Impl implements Type {
-
-            private _type: Session.Type;
-
-            constructor(type: Session.Type) {
-                this._type = type;
-            }
-
-            proto(): Session.Type {
-                return this._type;
-            }
-
-            isData(): boolean {
-                return this == DATA;
-            }
-
-            isSchema(): boolean {
-                return this == SCHEMA;
-            }
-
-        }
-
-        export const DATA = new Impl(Session.Type.DATA);
-        export const SCHEMA = new Impl(Session.Type.SCHEMA);
-    }
+export interface SessionType {
+    proto(): Session.Type;
+    isData(): boolean;
+    isSchema(): boolean;
 }
 
+export namespace SessionType {
 
+    class Impl implements SessionType {
+
+        private _type: Session.Type;
+
+        constructor(type: Session.Type) {
+            this._type = type;
+        }
+
+        proto(): Session.Type {
+            return this._type;
+        }
+
+        isData(): boolean {
+            return this == DATA;
+        }
+
+        isSchema(): boolean {
+            return this == SCHEMA;
+        }
+
+    }
+
+    export const DATA = new Impl(Session.Type.DATA);
+    export const SCHEMA = new Impl(Session.Type.SCHEMA);
+}

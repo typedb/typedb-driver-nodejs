@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import {GraknTransaction} from "../api/GraknTransaction";
+import {GraknTransaction, TransactionType} from "../api/GraknTransaction";
 import {CoreSession} from "./CoreSession";
 import {GraknOptions} from "../api/GraknOptions";
 import {BidirectionalStream} from "../stream/BidirectionalStream";
@@ -31,20 +31,20 @@ import {QueryManager} from "../api/query/QueryManager";
 import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
 import {LogicManagerImpl} from "../logic/LogicManagerImpl";
 import {QueryManagerImpl} from "../query/QueryManagerImpl";
-import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 import {Stream} from "../common/util/Stream";
+import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 
 export class CoreTransaction implements GraknTransaction.Extended {
     private readonly _session: CoreSession;
     private readonly _sessionId: string;
-    private readonly _type: GraknTransaction.Type;
+    private readonly _type: TransactionType;
     private readonly _options: GraknOptions;
     private _bidirectionalStream: BidirectionalStream;
     private _conceptManager: ConceptManager;
     private _logicManager: LogicManager;
     private _queryManager: QueryManager;
 
-    constructor(session: CoreSession, _sessionId: string, type: GraknTransaction.Type, options: GraknOptions) {
+    constructor(session: CoreSession, _sessionId: string, type: TransactionType, options: GraknOptions) {
         this._session = session;
         this._sessionId = _sessionId;
         this._type = type;
@@ -95,7 +95,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
         return this._options;
     }
 
-    public type(): GraknTransaction.Type {
+    public type(): TransactionType {
         return this._type;
     }
 

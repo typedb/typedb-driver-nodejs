@@ -28,9 +28,10 @@ export namespace GraknClient {
         return new CoreClient(address);
     }
 
-//
-//     export function cluster(addresses: string[]): Promise<GraknClientCluster> {
-//         return new ClientClusterRPC().open(addresses);
-//     }
-//
+
+    export function cluster(addresses: string[]): Promise<any> {//Promise<GraknClientCluster> {
+        // return new ClientClusterRPC().open(addresses);
+        return null;
+    }
+
 }

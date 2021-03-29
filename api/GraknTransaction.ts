@@ -29,7 +29,7 @@ export interface GraknTransaction {
 
     isOpen() : boolean;
 
-    type() : GraknTransaction.Type;
+    type() : TransactionType;
 
     options() : GraknOptions;
 
@@ -48,6 +48,40 @@ export interface GraknTransaction {
 }
 
 
+export interface TransactionType {
+    proto() : Transaction.Type;
+    isRead() : boolean;
+    isWrite() : boolean;
+}
+
+export namespace TransactionType {
+
+    class Impl implements TransactionType {
+
+        private _type: Transaction.Type;
+
+        constructor(type: Transaction.Type) {
+            this._type = type;
+        }
+
+        proto(): Transaction.Type {
+            return this._type;
+        }
+
+        isRead(): boolean {
+            return this == READ;
+        }
+
+        isWrite(): boolean {
+            return this == WRITE;
+        }
+
+    }
+
+    export const READ = new Impl(Transaction.Type.READ);
+    export const WRITE = new Impl(Transaction.Type.WRITE);
+}
+
 export namespace GraknTransaction {
 
     export interface Extended extends GraknTransaction {
@@ -58,38 +92,4 @@ export namespace GraknTransaction {
 
     }
 
-    export interface Type {
-        proto() : Transaction.Type;
-        isRead() : boolean;
-        isWrite() : boolean;
-    }
-
-    export namespace Type {
-
-        class Impl implements Type {
-
-            private _type: Transaction.Type;
-
-            constructor(type: Transaction.Type) {
-                this._type = type;
-            }
-
-            proto(): Transaction.Type {
-                return this._type;
-            }
-
-            isRead(): boolean {
-                return this == READ;
-            }
-
-            isWrite(): boolean {
-                return this == WRITE;
-            }
-
-        }
-
-        export const READ = new Impl(Transaction.Type.READ);
-        export const WRITE = new Impl(Transaction.Type.WRITE);
-    }
 }
-

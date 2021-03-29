@@ -18,10 +18,9 @@
  */
 
 
-import {GraknSession} from "./GraknSession";
+import {GraknSession, SessionType} from "./GraknSession";
 import {GraknOptions} from "./GraknOptions";
 import {DatabaseManager} from "./database/DatabaseManager";
-import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
 
 export interface GraknClient {
 
@@ -29,7 +28,7 @@ export interface GraknClient {
 
     databases() : DatabaseManager;
 
-    session(database : String, type : GraknSession.Type , options? : GraknOptions) : Promise<GraknSession>;
+    session(database : String, type : SessionType , options? : GraknOptions) : Promise<GraknSession>;
 
     isCluster() : boolean;
 

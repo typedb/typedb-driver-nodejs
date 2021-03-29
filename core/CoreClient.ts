@@ -19,7 +19,7 @@
 
 
 import {GraknClient} from "../api/GraknClient";
-import {GraknSession} from "../api/GraknSession";
+import {GraknSession, SessionType} from "../api/GraknSession";
 import {GraknOptions} from "../api/GraknOptions";
 import {DatabaseManager} from "../api/database/DatabaseManager";
 import {CoreDatabaseManager} from "./CoreDatabaseManager";
@@ -52,7 +52,7 @@ export class CoreClient implements GraknClient {
         return this._databases;
     }
 
-    async session(database: string, type: GraknSession.Type, options?: GraknOptions): Promise<GraknSession> {
+    async session(database: string, type: SessionType, options?: GraknOptions): Promise<GraknSession> {
         if (!options) options = GraknOptions.core();
         const session = new CoreSession(database, type, options, this);
         await session.open();
