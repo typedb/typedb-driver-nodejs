@@ -24,11 +24,13 @@ import {ThingType} from "../api/concept/type/ThingType";
 import {EntityType} from "../api/concept/type/EntityType";
 import {RelationType} from "../api/concept/type/RelationType";
 import {AttributeType} from "../api/concept/type/AttributeType";
-import {ThingTypeImpl} from "./type/ThingTypeImpl";
-import {ThingImpl} from "./thing/ThingImpl";
-import {EntityTypeImpl} from "./type/EntityTypeImpl";
-import {RelationTypeImpl} from "./type/RelationTypeImpl";
-import {AttributeTypeImpl} from "./type/AttributeTypeImpl";
+import {
+    AttributeTypeImpl,
+    EntityTypeImpl,
+    RelationTypeImpl,
+    ThingImpl,
+    ThingTypeImpl,
+} from "../dependencies_internal";
 import {Core} from "../common/rpc/RequestBuilder";
 import {ConceptManager as ConceptProto} from "grakn-protocol/common/concept_pb";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
@@ -110,7 +112,7 @@ export class ConceptManagerImpl implements ConceptManager {
     async putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType | null> {
         const request = Core.ConceptManager.putAttributeTypeReq(label, valueType.proto());
         const response = await this.execute(request);
-        return AttributeTypeImpl.of(response.getPutEntityTypeRes().getEntityType());
+        return AttributeTypeImpl.of(response.getPutAttributeTypeRes().getAttributeType());
     }
 
     private execute(request: TransactionProto.Req): Promise<ConceptProto.Res> {

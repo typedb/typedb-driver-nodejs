@@ -63,6 +63,10 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
 
     abstract getType(): ThingType;
 
+    isThing(): boolean {
+        return true;
+    }
+
 }
 
 
@@ -78,6 +82,10 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
     abstract asRemote(transaction: GraknTransaction): RemoteThing;
 
     abstract getType(): ThingType;
+
+    isThing(): boolean {
+        return true;
+    }
 
     async delete(): Promise<void> {
         const request = Core.Thing.deleteReq(this.getIID());

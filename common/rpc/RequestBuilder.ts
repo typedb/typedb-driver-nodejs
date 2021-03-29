@@ -36,6 +36,7 @@ import {
 } from "grakn-protocol/common/concept_pb";
 import {Options} from "grakn-protocol/common/options_pb";
 import {Label} from "../Label";
+import {Bytes} from "../util/Bytes";
 
 export namespace Core {
 
@@ -248,7 +249,7 @@ export namespace Core {
 
         export function getThingReq(iid: string) {
             return conceptManagerReq(new ConceptMgrProto.Req().setGetThingReq(
-                new ConceptMgrProto.GetThing.Req().setIid(iid)
+                new ConceptMgrProto.GetThing.Req().setIid(Bytes.hexStringToBytes(iid))
             ));
         }
     }
@@ -502,54 +503,54 @@ export namespace Core {
         }
 
         export function protoThing(iid: string): ThingProto {
-            return new ThingProto().setIid(iid);
+            return new ThingProto().setIid(Bytes.hexStringToBytes(iid));
         }
 
 
         export function isInferredReq(iid: string) {
-            return thingReq(new ThingProto.Req().setIid(iid).setThingIsInferredReq(
+            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingIsInferredReq(
                 new ThingProto.IsInferred.Req()
             ));
         }
 
         export function getHasReq(iid: string, onlyKey: boolean) {
-            return thingReq(new ThingProto.Req().setIid(iid).setThingGetHasReq(
+            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetHasReq(
                 new ThingProto.GetHas.Req().setKeysOnly(onlyKey)
             ));
         }
 
         export function getHasByTypeReq(iid: string, attributeTypes: TypeProto[]) {
-            return thingReq(new ThingProto.Req().setIid(iid).setThingGetHasReq(
+            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetHasReq(
                 new ThingProto.GetHas.Req().setAttributeTypesList(attributeTypes)
             ));
         }
 
         export function setHasReq(iid: string, attribute: ThingProto) {
-            return thingReq(new ThingProto.Req().setIid(iid).setThingSetHasReq(
+            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingSetHasReq(
                 new ThingProto.SetHas.Req().setAttribute(attribute)
             ));
         }
 
         export function unsetHasReq(iid: string, attribute: ThingProto) {
-            return thingReq(new ThingProto.Req().setIid(iid).setThingUnsetHasReq(
+            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingUnsetHasReq(
                 new ThingProto.UnsetHas.Req().setAttribute(attribute)
             ));
         }
 
         export function getPlayingReq(iid: string) {
-            return thingReq(new ThingProto.Req().setIid(iid).setThingGetPlayingReq(
+            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetPlayingReq(
                 new ThingProto.GetPlaying.Req()
             ));
         }
 
         export function getRelationsReq(iid: string, roleTypes: TypeProto[]) {
-            return thingReq(new ThingProto.Req().setIid(iid).setThingGetRelationsReq(
+            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetRelationsReq(
                 new ThingProto.GetRelations.Req().setRoleTypesList(roleTypes)
             ));
         }
 
         export function deleteReq(iid: string) {
-            return thingReq(new ThingProto.Req().setIid(iid).setThingDeleteReq(
+            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingDeleteReq(
                 new ThingProto.Delete.Req()
             ));
         }
@@ -557,31 +558,31 @@ export namespace Core {
         export namespace Relation {
 
             export function addPlayerReq(iid: string, roleType: TypeProto, player: ThingProto) {
-                return thingReq(new ThingProto.Req().setIid(iid).setRelationAddPlayerReq(
+                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationAddPlayerReq(
                     new RelationProto.AddPlayer.Req().setRoleType(roleType).setPlayer(player)
                 ));
             }
 
             export function removePlayerReq(iid: string, roleType: TypeProto, player: ThingProto) {
-                return thingReq(new ThingProto.Req().setIid(iid).setRelationRemovePlayerReq(
+                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationRemovePlayerReq(
                     new RelationProto.RemovePlayer.Req().setRoleType(roleType).setPlayer(player)
                 ));
             }
 
             export function getPlayersReq(iid: string, roleTypes: TypeProto[]) {
-                return thingReq(new ThingProto.Req().setIid(iid).setRelationGetPlayersReq(
+                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationGetPlayersReq(
                     new RelationProto.GetPlayers.Req().setRoleTypesList(roleTypes)
                 ));
             }
 
             export function getPlayersByRoleTypeReq(iid: string) {
-                return thingReq(new ThingProto.Req().setIid(iid).setRelationGetPlayersByRoleTypeReq(
+                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationGetPlayersByRoleTypeReq(
                     new RelationProto.GetPlayersByRoleType.Req()
                 ));
             }
 
             export function getRelatingReq(iid: string) {
-                return thingReq(new ThingProto.Req().setIid(iid).setRelationGetRelatingReq(
+                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationGetRelatingReq(
                     new RelationProto.GetRelating.Req()
                 ));
             }
@@ -590,13 +591,13 @@ export namespace Core {
         export namespace Attribute {
 
             export function getOwnersReq(iid: string) {
-                return thingReq(new ThingProto.Req().setIid(iid).setAttributeGetOwnersReq(
+                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setAttributeGetOwnersReq(
                     new AttributeProto.GetOwners.Req()
                 ));
             }
 
             export function getOwnersByTypeReq(iid: string, ownerType: TypeProto) {
-                return thingReq(new ThingProto.Req().setIid(iid).setAttributeGetOwnersReq(
+                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setAttributeGetOwnersReq(
                     new AttributeProto.GetOwners.Req().setThingType(ownerType)
                 ));
             }

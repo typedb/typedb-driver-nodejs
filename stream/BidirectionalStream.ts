@@ -58,11 +58,12 @@ export class BidirectionalStream {
         return (await responseQueue.take() as Transaction.Res); // TODO can we do this without cast?
     }
 
-    async stream(request: Transaction.Req): Promise<Stream<Transaction.ResPart>> {
+    stream(request: Transaction.Req): Stream<Transaction.ResPart> {
         const requestId = uuidv4();
         request.setReqId(requestId);
         const responseQueue = this._responseCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
         const responseIterator = new ResponsePartIterator(requestId, responseQueue, this._dispatcher);
+        this._dispatcher.dispatch(request);
         return Stream.iterable(responseIterator);
     }
 

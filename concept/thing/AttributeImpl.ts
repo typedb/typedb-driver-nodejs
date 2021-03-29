@@ -46,6 +46,10 @@ export abstract class AttributeImpl<T extends AttributeType.ValueClass> extends 
 
     abstract getValue(): T;
 
+    isAttribute(): boolean {
+        return true;
+    }
+
     getType(): AttributeType {
         return this._type;
     }
@@ -106,6 +110,10 @@ export namespace AttributeImpl {
         abstract getValue(): T;
 
         abstract asRemote(transaction: GraknTransaction): any; //TODO this is bad typing
+
+        isAttribute(): boolean {
+            return true;
+        }
 
         getType(): AttributeType {
             return this._type;

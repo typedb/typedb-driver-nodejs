@@ -27,9 +27,10 @@ import {
     EntityTypeImpl,
     RelationTypeImpl,
     RoleTypeImpl,
-    ThingImpl
+    ThingImpl,
+    TypeImpl
 } from "../../dependencies_internal";
-import {TypeImpl} from "./TypeImpl";
+// import {TypeImpl} from "./TypeImpl";
 import {Label} from "../../common/Label";
 import {Core} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
@@ -149,8 +150,8 @@ export namespace ThingTypeImpl {
                     this.getLabel(), ThingType.proto((overriddenTypeOrIsKey as AttributeType)), false
                 );
             } else {
-                request = Core.Type.ThingType.setOwnsReq(
-                    this.getLabel(), ThingType.proto(overriddenTypeOrIsKey as AttributeType), isKey
+                request = Core.Type.ThingType.setOwnsOverriddenReq(
+                    this.getLabel(), ThingType.proto(attributeType), ThingType.proto(overriddenTypeOrIsKey as AttributeType), isKey
                 );
             }
             await this.execute(request);

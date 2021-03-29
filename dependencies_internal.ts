@@ -48,8 +48,8 @@ export * from "./concept/thing/RelationImpl";
 export * from "./concept/thing/AttributeImpl";
 
 /* concept.type */
-// export * from "./concept/type/TypeImpl";
-// export * from "./concept/type/ThingTypeImpl";
+export * from "./concept/type/TypeImpl";
+export * from "./concept/type/ThingTypeImpl";
 export * from "./concept/type/AttributeTypeImpl";
 export * from "./concept/type/EntityTypeImpl";
 export * from "./concept/type/RelationTypeImpl";

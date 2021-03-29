@@ -17,10 +17,10 @@
  * under the License.
  */
 
-const { GraknClient } = require("../../dist/GraknClient");
-const { GraknSession } = require("../../dist/api/GraknSession")
-const { GraknTransaction } = require("../../dist/api/GraknTransaction")
-const { AttributeType } = require("../../dist/api/concept/type/AttributeType");
+const {GraknClient} = require("../../dist/GraknClient");
+const {GraknSession} = require("../../dist/api/GraknSession")
+const {GraknTransaction} = require("../../dist/api/GraknTransaction")
+const {AttributeType} = require("../../dist/api/concept/type/AttributeType");
 const assert = require("assert");
 
 async function run() {
@@ -64,10 +64,14 @@ async function run() {
     }
 
     try {
+        console.log("1");
         tx = await session.transaction(GraknTransaction.Type.WRITE);
         lionFamily = await tx.concepts().putRelationType("lion-family");
+        console.log("2");
         await lionFamily.asRemote(tx).setRelates("lion-cub");
+        console.log("3");
         lionCub = await lionFamily.asRemote(tx).getRelates().collect().then(roles => roles[0]);
+        console.log("4");
         await lion.asRemote(tx).setPlays(lionCub);
         await tx.commit();
         await tx.close();
@@ -154,7 +158,7 @@ async function run() {
         tx = await session.transaction(GraknTransaction.Type.WRITE);
         const monkey = await tx.concepts().putEntityType("monkey");
         await monkey.asRemote(tx).setLabel("orangutan");
-        const newLabel = await tx.concepts().getEntityType("orangutan").then(entityType => entityType.getLabel());
+        const newLabel = await tx.concepts().getEntityType("orangutan").then(entityType => entityType.getLabel().scopedName());
         await tx.rollback();
         await tx.close();
         assert(newLabel === "orangutan");
@@ -203,8 +207,8 @@ async function run() {
         await man.asRemote(tx).setSupertype(person);
         father = await fathership.asRemote(tx).getRelates("father");
         await man.asRemote(tx).setPlays(father, parent);
-        const playingRoles = (await man.asRemote(tx).getPlays().collect()).map(role => role.getScopedLabel());
-        const roleplayers = (await father.asRemote(tx).getPlayers().collect()).map(player => player.getLabel());
+        const playingRoles = (await man.asRemote(tx).getPlays().collect()).map(role => role.getLabel().scopedName());
+        const roleplayers = (await father.asRemote(tx).getPlayers().collect()).map(player => player.getLabel().scopedName());
         await tx.commit();
         await tx.close();
         assert(playingRoles.includes("fathership:father"));
@@ -241,8 +245,8 @@ async function run() {
         assert(ownedAttributes.length === 2);
         assert(ownedKeys.length === 1);
         assert(ownedDateTimes.length === 0);
-        console.log(`get/set owns, overriding a super-attribute - SUCCESS - 'customer' owns [${ownedAttributes.map(x => x.getLabel())}], ` +
-            `of which [${ownedKeys.map(x => x.getLabel())}] are keys, and [${ownedDateTimes.map((x => x.getLabel()))}] are datetimes`);
+        console.log(`get/set owns, overriding a super-attribute - SUCCESS - 'customer' owns [${ownedAttributes.map(x => x.getLabel().scopedName())}], ` +
+            `of which [${ownedKeys.map(x => x.getLabel().scopedName())}] are keys, and [${ownedDateTimes.map((x => x.getLabel()))}] are datetimes`);
     } catch (err) {
         console.error(`get/set owns, overriding a super-attribute - ERROR: ${err.stack || err}`);
         await tx.close();
@@ -256,9 +260,9 @@ async function run() {
         await person.asRemote(tx).unsetOwns(age);
         await person.asRemote(tx).unsetPlays(parent);
         await fathership.asRemote(tx).unsetRelates("father");
-        const personOwns = (await person.asRemote(tx).getOwns().collect()).map(x => x.getLabel());
-        const personPlays = (await person.asRemote(tx).getPlays().collect()).map(x => x.getLabel());
-        const fathershipRelates = (await fathership.asRemote(tx).getRelates().collect()).map(x => x.getLabel());
+        const personOwns = (await person.asRemote(tx).getOwns().collect()).map(x => x.getLabel().scopedName());
+        const personPlays = (await person.asRemote(tx).getPlays().collect()).map(x => x.getLabel().scopedName());
+        const fathershipRelates = (await fathership.asRemote(tx).getRelates().collect()).map(x => x.getLabel().scopedName());
         await tx.rollback();
         await tx.close();
         assert(!personOwns.includes("age"));
@@ -324,9 +328,12 @@ async function run() {
     try {
         session = await client.session("grakn", GraknSession.Type.DATA);
         tx = await session.transaction(GraknTransaction.Type.WRITE);
-        for (let i = 0; i < 10; i++) stoneLion.asRemote(tx).create();
+        for (let i = 0; i < 10; i++) {
+            console.log(await stoneLion.asRemote(tx).create());
+        }
         const lions = await lion.asRemote(tx).getInstances().collect();
         const firstLion = lions[0];
+        console.log(firstLion);
         const isInferred = await firstLion.asRemote(tx).isInferred();
         const lionType = await firstLion.asRemote(tx).getType();
         const age42 = await age.asRemote(tx).put(42);
@@ -341,7 +348,7 @@ async function run() {
         assert(!firstLionWorkEmails.length);
         const firstFamily = await lionFamily.asRemote(tx).create();
         await firstFamily.asRemote(tx).addPlayer(lionCub, firstLion);
-        const firstLionPlaying = (await firstLion.asRemote(tx).getPlays().collect()).map(x => x.getScopedLabel());
+        const firstLionPlaying = (await firstLion.asRemote(tx).getPlaying().collect()).map(x => x.getLabel().scopedName());
         assert(firstLionPlaying.length === 1);
         assert(firstLionPlaying[0] === "lion-family:lion-cub");
         const firstLionRelations = await firstLion.asRemote(tx).getRelations().collect();
@@ -353,7 +360,7 @@ async function run() {
         assert(lions.length === 10);
         assert(!isInferred);
         console.log(`Thing methods - SUCCESS - There are ${lions.length} lions.`);
-        assert(lionType.getLabel() === "stone-lion");
+        assert(lionType.getLabel().scopedName() === "stone-lion");
         console.log(`getType - SUCCESS - After looking more closely, it turns out that there are ${lions.length} stone lions.`);
     } catch (err) {
         console.error(`Thing methods - ERROR: ${err.stack || err}`);
@@ -375,7 +382,7 @@ async function run() {
         assert(lionCubPlayers.length === 1);
         const playersByRoleType = (await firstLionFamily.asRemote(tx).getPlayersByRoleType()).keys();
         const firstPlayer = playersByRoleType.next().value;
-        assert(firstPlayer.getScopedLabel() === "lion-family:lion-cub");
+        assert(firstPlayer.getLabel().scopedName() === "lion-family:lion-cub");
         await firstLionFamily.asRemote(tx).removePlayer(lionCub, firstLion);
         const lionFamilyCleanedUp = await firstLionFamily.asRemote(tx).isDeleted();
         assert(lionFamilyCleanedUp);

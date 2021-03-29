@@ -22,9 +22,9 @@ import {GraknTransaction} from "../../api/GraknTransaction";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {ThingType} from "../../api/concept/type/ThingType";
-// import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
-import {AttributeImpl} from "../thing/AttributeImpl";
-import {ThingTypeImpl} from "./ThingTypeImpl";
+import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
+// import {AttributeImpl} from "../thing/AttributeImpl";
+// import {ThingTypeImpl} from "./ThingTypeImpl";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {Core} from "../../common/rpc/RequestBuilder";
@@ -46,6 +46,10 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     asRemote(transaction: GraknTransaction): AttributeType.Remote {
         return new AttributeTypeImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+    }
+
+    isAttributeType(): boolean {
+        return true;
     }
 
     getValueType(): AttributeType.ValueType {
@@ -142,6 +146,10 @@ export namespace AttributeTypeImpl {
 
         asRemote(transaction: GraknTransaction): AttributeType.Remote {
             return this;
+        }
+
+        isAttributeType(): boolean {
+            return true;
         }
 
         isKeyable(): boolean {

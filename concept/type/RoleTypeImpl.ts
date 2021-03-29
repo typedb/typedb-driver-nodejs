@@ -21,14 +21,14 @@ import {GraknTransaction} from "../../api/GraknTransaction";
 import {RemoteRoleType, RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {RelationType} from "../../api/concept/type/RelationType";
-// import {RelationTypeImpl, ThingTypeImpl, TypeImpl} from "../../dependencies_internal";
-import {TypeImpl} from "./TypeImpl";
-import {RelationTypeImpl} from "./RelationTypeImpl";
+import {RelationTypeImpl, ThingTypeImpl, TypeImpl} from "../../dependencies_internal";
+// import {TypeImpl} from "./TypeImpl";
+// import {RelationTypeImpl} from "./RelationTypeImpl";
+// import {ThingTypeImpl} from "./ThingTypeImpl";
 import {Stream} from "../../common/util/Stream";
 import {Label} from "../../common/Label";
 import {Core} from "../../common/rpc/RequestBuilder";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
-import {ThingTypeImpl} from "./ThingTypeImpl";
 
 export class RoleTypeImpl extends TypeImpl implements RoleType {
 
@@ -38,6 +38,10 @@ export class RoleTypeImpl extends TypeImpl implements RoleType {
 
     asRemote(transaction: GraknTransaction): RemoteRoleType {
         return new RoleTypeImpl.RemoteImpl((transaction as GraknTransaction.Extended), this.getLabel(), this.isRoot());
+    }
+
+    isRoleType(): boolean {
+        return true;
     }
 
 }
@@ -75,6 +79,10 @@ export namespace RoleTypeImpl {
 
         asRemote(transaction: GraknTransaction): RemoteRoleType {
             return this;
+        }
+
+        isRoleType(): boolean {
+            return true;
         }
 
         getRelationType(): Promise<RelationType> {

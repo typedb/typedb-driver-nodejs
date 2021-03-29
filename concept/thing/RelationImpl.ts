@@ -48,6 +48,10 @@ export class RelationImpl extends ThingImpl implements Relation {
         return this._type;
     }
 
+    isRelation(): boolean {
+        return true;
+    }
+
 }
 
 
@@ -69,6 +73,10 @@ export namespace RelationImpl {
 
         asRemote(transaction: GraknTransaction): RemoteRelation {
             return this;
+        }
+
+        isRelation(): boolean {
+            return true;
         }
 
         getType(): RelationType {

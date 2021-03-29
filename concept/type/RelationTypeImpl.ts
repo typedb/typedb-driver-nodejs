@@ -22,10 +22,10 @@ import {GraknTransaction} from "../../api/GraknTransaction";
 import {RelationType, RemoteRelationType} from "../../api/concept/type/RelationType";
 import {Relation} from "../../api/concept/thing/Relation";
 import {RoleType} from "../../api/concept/type/RoleType";
-// import {ThingTypeImpl, RoleTypeImpl, RelationImpl} from "../../dependencies_internal";
-import {ThingTypeImpl} from "./ThingTypeImpl";
-import {RoleTypeImpl} from "./RoleTypeImpl";
-import {RelationImpl} from "../thing/RelationImpl";
+import {ThingTypeImpl, RoleTypeImpl, RelationImpl} from "../../dependencies_internal";
+// import {ThingTypeImpl} from "./ThingTypeImpl";
+// import {RoleTypeImpl} from "./RoleTypeImpl";
+// import {RelationImpl} from "../thing/RelationImpl";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {Core} from "../../common/rpc/RequestBuilder";
@@ -39,6 +39,10 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     asRemote(transaction: GraknTransaction): RemoteRelationType {
         return new RelationTypeImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+    }
+
+    isRelationType(): boolean {
+        return true;
     }
 
 }
@@ -57,6 +61,10 @@ export namespace RelationTypeImpl {
 
         asRemote(transaction: GraknTransaction): RemoteRelationType {
             return this;
+        }
+
+        isRelationType(): boolean {
+            return true;
         }
 
         async create(): Promise<Relation> {
@@ -84,8 +92,12 @@ export namespace RelationTypeImpl {
             } else {
                 const request = Core.Type.RelationType.getRelatesReq(this.getLabel());
                 return this.stream(request)
-                    .flatMap((resPart) => Stream.array(resPart.getRelationTypeGetRelatesResPart().getRolesList()))
-                    .map((roleProto) => RoleTypeImpl.of(roleProto));
+                    .flatMap((resPart) => {
+                        return Stream.array(resPart.getRelationTypeGetRelatesResPart().getRolesList())
+                    })
+                    .map((roleProto) => {
+                        return RoleTypeImpl.of(roleProto)
+                    });
             }
         }
 

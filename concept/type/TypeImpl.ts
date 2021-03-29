@@ -27,9 +27,9 @@ import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {GraknClientError} from "../../common/errors/GraknClientError";
 import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
 import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
-// import {ConceptImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
+import {ConceptImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
 import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
-import {ConceptImpl} from "../ConceptImpl";
+// import {ConceptImpl} from "../ConceptImpl";
 
 export abstract class TypeImpl extends ConceptImpl implements Type {
 
@@ -47,6 +47,10 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
     isRoot(): boolean {
         return this._isRoot;
+    }
+
+    isType(): boolean {
+        return true;
     }
 
     getLabel(): Label {
@@ -96,6 +100,10 @@ export namespace TypeImpl {
             return this;
         }
 
+        isType(): boolean {
+            return true;
+        }
+
         getLabel(): Label {
             return this._label;
         }
@@ -143,6 +151,7 @@ export namespace TypeImpl {
         async setLabel(label: string): Promise<void> {
             const request = Core.Type.setLabelReq(this._label, label);
             await this.execute(request);
+            this._label = new Label(this.getLabel().scope(), label);
         }
 
         async isAbstract(): Promise<boolean> {
@@ -155,7 +164,8 @@ export namespace TypeImpl {
         }
 
         protected stream(request: TransactionProto.Req): Stream<TypeProto.ResPart> {
-            return this._transaction.rpcStream(request).map((res) => res.getTypeResPart());
+            let resPartStream = this._transaction.rpcStream(request);
+            return resPartStream.map((res) => res.getTypeResPart());
         }
 
     }

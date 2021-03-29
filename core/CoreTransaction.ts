@@ -32,6 +32,7 @@ import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
 import {LogicManagerImpl} from "../logic/LogicManagerImpl";
 import {QueryManagerImpl} from "../query/QueryManagerImpl";
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
+import {Stream} from "../common/util/Stream";
 
 export class CoreTransaction implements GraknTransaction.Extended {
     private readonly _session: CoreSession;
@@ -108,7 +109,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
         return this._bidirectionalStream.single(request, useBatch);
     }
 
-    public rpcStream(request: Transaction.Req): any {
+    public rpcStream(request: Transaction.Req): Stream<Transaction.ResPart> {
         if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
         return this._bidirectionalStream.stream(request);
     }

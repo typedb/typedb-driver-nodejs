@@ -43,6 +43,10 @@ export class EntityImpl extends ThingImpl implements Entity {
         return this._type;
     }
 
+    isEntity(): boolean {
+        return true;
+    }
+
 }
 
 
@@ -72,5 +76,8 @@ export namespace EntityImpl {
             return this._type;
         }
 
+        isEntity(): boolean {
+            return true;
+        }
     }
 }
