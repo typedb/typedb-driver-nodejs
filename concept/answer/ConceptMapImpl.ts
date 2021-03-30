@@ -76,11 +76,11 @@ export namespace ConceptMapImpl {
 
     function ofExplainables(proto: ExplainablesProto): ConceptMap.Explainables {
         const relations = new Map<string, ConceptMap.Explainable>();
-        proto.getExplainableRelationsMap().forEach((explainable, variable) =>
+        proto.getExplainableRelationsMap().forEach((explainable: ExplainableProto, variable: string) =>
             relations.set(variable, ofExplainable(explainable))
         );
         const attributes = new Map<string, ConceptMap.Explainable>();
-        proto.getExplainableAttributesMap().forEach((explainable, variable) =>
+        proto.getExplainableAttributesMap().forEach((explainable: ExplainableProto, variable: string) =>
             relations.set(variable, ofExplainable(explainable))
         );
 

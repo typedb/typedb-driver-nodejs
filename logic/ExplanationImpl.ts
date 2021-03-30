@@ -60,7 +60,7 @@ export namespace ExplanationImpl {
 
     export function of(proto: ExplanationProto) {
         const varMapping = new Map<string, Set<string>>();
-        proto.getVarMappingMap().forEach((vars, key) => varMapping.set(key, new Set(vars.getVarsList())));
+        proto.getVarMappingMap().forEach((vars: ExplanationProto.VarsList, key: string) => varMapping.set(key, new Set(vars.getVarsList())));
         return new ExplanationImpl(
             RuleImpl.of(proto.getRule()),
             ConceptMapImpl.of(proto.getWhenAnswer()),
