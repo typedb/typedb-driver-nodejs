@@ -28,7 +28,7 @@ export interface GraknClient {
 
     databases() : DatabaseManager;
 
-    session(database : String, type : SessionType , options? : GraknOptions) : Promise<GraknSession>;
+    session(database : string, type : SessionType , options? : GraknOptions) : Promise<GraknSession>;
 
     isCluster() : boolean;
 

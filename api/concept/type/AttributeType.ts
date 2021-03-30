@@ -54,6 +54,7 @@ export interface AttributeType extends ThingType {
 
 }
 
+/* eslint @typescript-eslint/ban-types: "off" */
 export namespace AttributeType {
 
     export interface Remote extends RemoteThingType, AttributeType {

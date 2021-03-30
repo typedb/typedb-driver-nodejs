@@ -18,17 +18,16 @@
  */
 
 
-import {GraknClient} from "../api/GraknClient";
 import {Database} from "../api/database/Database";
 import {GraknClientError} from "../common/errors/GraknClientError";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
-import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import {ClusterClient} from "./ClusterClient";
 import {ClusterDatabase, DatabaseReplica} from "./ClusterDatabase";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ClusterDatabaseManager} from "grakn-protocol/cluster/cluster_database_pb";
+import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
+import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 
 const PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
 const FETCH_REPLICAS_MAX_RETRIES = 10;

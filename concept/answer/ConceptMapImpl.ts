@@ -57,7 +57,7 @@ export class ConceptMapImpl implements ConceptMap {
 
 }
 
-/*tslint:disable:no-inner-declarations*/
+/* eslint no-inner-declarations: "off" */
 export namespace ConceptMapImpl {
 
     import NONEXISTENT_EXPLAINABLE_CONCEPT = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_CONCEPT;
@@ -120,7 +120,7 @@ export namespace ConceptMapImpl {
         }
 
         ownership(owner: string, attribute: string): ConceptMap.Explainable {
-            for (let entry of this._ownerships) {
+            for (const entry of this._ownerships) {
                 if (entry[0][0] === owner && entry[0][1] === attribute) return entry[1];
             }
             throw new GraknClientError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));

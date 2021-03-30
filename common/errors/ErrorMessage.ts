@@ -73,7 +73,7 @@ export namespace ErrorMessage {
 
     export namespace Client {
         export const SESSION_ID_EXISTS = new Client(1, (args: Stringable[]) => `The newly opened session id '${args[0]}' already exists`);
-        export const SESSION_CLOSED = new Client(2, (args: Stringable[]) => `Session is closed.`);
+        export const SESSION_CLOSED = new Client(2, () => `Session is closed.`);
         export const TRANSACTION_CLOSED = new Client(3, () => `The transaction has been closed and no further operation is allowed.`);
         export const UNABLE_TO_CONNECT = new Client(4, () => `Unable to connect to Grakn server.`);
         export const NEGATIVE_VALUE_NOT_ALLOWED = new Client(5, (args: Stringable[]) => `Value cannot be less than 1, was: '${args[0]}'.`);

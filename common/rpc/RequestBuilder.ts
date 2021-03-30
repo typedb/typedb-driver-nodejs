@@ -40,7 +40,7 @@ import {Options} from "grakn-protocol/common/options_pb";
 import {Label} from "../Label";
 import {Bytes} from "../util/Bytes";
 
-/*eslint:disable:no-inner-declarations*/
+/* eslint no-inner-declarations: "off" */
 export namespace RequestBuilder {
 
     export namespace Core {

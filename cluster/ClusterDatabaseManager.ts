@@ -25,8 +25,8 @@ import {ClusterDatabase} from "./ClusterDatabase";
 import {ClusterClient} from "./ClusterClient";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "grakn-protocol/cluster/cluster_database_pb";
-import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import {CoreDatabaseManager} from "../core/CoreDatabaseManager";
+import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 

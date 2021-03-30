@@ -18,7 +18,6 @@
  */
 
 import {Database} from "../api/database/Database";
-import {DatabaseManager} from "../api/database/DatabaseManager";
 import {CoreDatabase} from "../core/CoreDatabase";
 import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
 import {ClusterDatabase as ClusterDatabaseProto} from "grakn-protocol/cluster/cluster_database_pb";
