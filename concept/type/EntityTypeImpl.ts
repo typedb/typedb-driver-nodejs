@@ -68,8 +68,8 @@ export namespace EntityTypeImpl {
             return this.execute(request).then((res) => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
         }
 
-        async setSupertype(superEntityType: EntityType): Promise<void> {
-            super.setSupertype(superEntityType);
+        setSupertype(superEntityType: EntityType): Promise<void> {
+            return super.setSupertype(superEntityType);
         }
 
         getInstances(): Stream<Entity> {
