@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const { GraknClient } = require("../../dist/GraknClient");
+const { Grakn} = require("../../dist/Grakn");
 const {GraknSession, SessionType} = require("../../dist/api/GraknSession")
 const {GraknTransaction, TransactionType} = require("../../dist/api/GraknTransaction")
 const assert = require("assert");
@@ -37,7 +37,7 @@ async function seekPrimaryReplica(databases) {
 }
 
 async function run() {
-    const client = await GraknClient.cluster(["localhost:11729", "localhost:21729", "localhost:31729"]);
+    const client = await Grakn.clusterClient(["localhost:11729", "localhost:21729", "localhost:31729"]);
     try {
         if (await client.databases().contains("grakn")) {
             await (await client.databases().get("grakn")).delete();

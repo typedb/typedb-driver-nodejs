@@ -17,14 +17,14 @@
  * under the License.
  */
 
-const {GraknClient} = require("../../dist/GraknClient");
+const {Grakn} = require("../../dist/Grakn");
 const {SessionType} = require("../../dist/api/GraknSession")
 const {TransactionType} = require("../../dist/api/GraknTransaction")
 const {GraknOptions} = require("../../dist/api/GraknOptions");
 const assert = require("assert");
 
 async function run() {
-    const client = GraknClient.core();
+    const client = Grakn.coreClient();
     try {
         const dbs = await client.databases().all();
         console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
