@@ -109,9 +109,9 @@ build:
         bazel test //test/behaviour/graql/language/define/... --test_output=errors --jobs=1
         bazel test //test/behaviour/graql/language/undefine/... --test_output=errors --jobs=1
     deploy-npm-snapshot:
-      filter:
-        owner: graknlabs
-        branch: master
+#       filter:
+#         owner: graknlabs
+#         branch: master
       image: graknlabs-ubuntu-20.04
       command: |
         curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
@@ -122,7 +122,7 @@ build:
         export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
         export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
         bazel run --define version=$(git rev-parse HEAD) --spawn_strategy=local //:deploy-npm -- snapshot
-      dependencies: [build, test-integration, test-behaviour-connection, test-behaviour-concept, test-behaviour-match, test-behaviour-writable, test-behaviour-definable]
+#       dependencies: [build, test-integration, test-behaviour-connection, test-behaviour-concept, test-behaviour-match, test-behaviour-writable, test-behaviour-definable]
     test-deployment-npm:
       filter:
         owner: graknlabs

@@ -27,6 +27,10 @@ export abstract class Stream<T> implements AsyncIterable<T> {
         throw new GraknClientError("ILLEGAL STATE");
     }
 
+    iterator(): AsyncIterator<T, any, undefined> {
+        return this[Symbol.asyncIterator]();
+    }
+
     async collect(): Promise<T[]> {
         const answers: T[] = [];
         for await (const answer of this) {
