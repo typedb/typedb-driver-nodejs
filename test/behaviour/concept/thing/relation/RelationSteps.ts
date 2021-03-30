@@ -168,7 +168,7 @@ When("relation {var} get players contain:", async (var1: string, players: DataTa
     const playersByRoleType = await relation.asRemote(tx()).getPlayersByRoleType();
     for (const [roleLabel, var2Raw] of players.raw()) {
         const var2 = parseVar(var2Raw);
-        const roleType = Array.from(playersByRoleType.keys()).find(x => x.getLabel().scopedName() == roleLabel);
+        const roleType = Array.from(playersByRoleType.keys()).find(x => x.getLabel().name() == roleLabel);
         assert(roleType);
         assert(playersByRoleType.get(roleType).some(x => x.equals(get(var2))));
     }
