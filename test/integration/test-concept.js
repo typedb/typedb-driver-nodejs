@@ -325,11 +325,6 @@ async function run() {
         session = await client.session("grakn", SessionType.DATA);
         tx = await session.transaction(TransactionType.WRITE);
         for (let i = 0; i < 10; i++)  stoneLion.asRemote(tx).create();
-
-        const x = await stoneLion.asRemote(tx).getInstances().some((x) => x.isEntity());
-        console.log(x);
-
-
         const lions = await lion.asRemote(tx).getInstances().collect();
         const firstLion = lions[0];
         const isInferred = await firstLion.asRemote(tx).isInferred();

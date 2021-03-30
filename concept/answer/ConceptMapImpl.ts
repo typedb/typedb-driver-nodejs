@@ -63,6 +63,25 @@ export namespace ConceptMapImpl {
     import NONEXISTENT_EXPLAINABLE_CONCEPT = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_CONCEPT;
     import NONEXISTENT_EXPLAINABLE_OWNERSHIP = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
 
+    function ofExplainables(proto: ExplainablesProto): ConceptMap.Explainables {
+        const relations = new Map<string, ConceptMap.Explainable>();
+        proto.getRelationsMap().forEach((explainable: ExplainableProto, variable: string) =>
+            relations.set(variable, ofExplainable(explainable))
+        );
+        const attributes = new Map<string, ConceptMap.Explainable>();
+        proto.getAttributesMap().forEach((explainable: ExplainableProto, variable: string) =>
+            relations.set(variable, ofExplainable(explainable))
+        );
+
+        const ownerships = new Map<[string, string], ConceptMap.Explainable>();
+        proto.getOwnershipsMap().forEach((owned, owner) =>
+            owned.getOwnedMap().forEach((explainable, attribute) => {
+                ownerships.set([owner, attribute], ofExplainable(explainable))
+            })
+        );
+        return new ExplainablesImpl(relations, attributes, ownerships)
+    }
+
     export function of(proto: ConceptMapProto): ConceptMap {
         const variableMap = new Map<string, Concept>();
         proto.getMapMap().forEach((protoConcept: ConceptProto, resLabel: string) => {
@@ -72,23 +91,6 @@ export namespace ConceptMapImpl {
             variableMap.set(resLabel, concept);
         })
         return new ConceptMapImpl(variableMap, ofExplainables(proto.getExplainables()));
-    }
-
-    function ofExplainables(proto: ExplainablesProto): ConceptMap.Explainables {
-        const relations = new Map<string, ConceptMap.Explainable>();
-        proto.getExplainableRelationsMap().forEach((explainable: ExplainableProto, variable: string) =>
-            relations.set(variable, ofExplainable(explainable))
-        );
-        const attributes = new Map<string, ConceptMap.Explainable>();
-        proto.getExplainableAttributesMap().forEach((explainable: ExplainableProto, variable: string) =>
-            relations.set(variable, ofExplainable(explainable))
-        );
-
-        const ownerships = new Map<[string, string], ConceptMap.Explainable>();
-        proto.getExplainableOwnershipsList().forEach((explainableOwnership) =>
-            ownerships.set([explainableOwnership.getOwner(), explainableOwnership.getAttribute()], ofExplainable(explainableOwnership.getExplainable()))
-        );
-        return new ExplainablesImpl(relations, attributes, ownerships)
     }
 
     function ofExplainable(proto: ExplainableProto): ConceptMap.Explainable {

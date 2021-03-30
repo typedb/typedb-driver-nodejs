@@ -158,8 +158,8 @@ export namespace AttributeTypeImpl {
             return AttributeType.ValueType.OBJECT;
         }
 
-        async setSupertype(type: AttributeType): Promise<void> {
-            super.setSupertype(type);
+        setSupertype(type: AttributeType): Promise<void> {
+            return super.setSupertype(type);
         }
 
         getSubtypes(): Stream<AttributeType> {
