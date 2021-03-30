@@ -77,6 +77,7 @@ export abstract class AttributeImpl<T extends AttributeType.ValueClass> extends 
 export namespace AttributeImpl {
 
     export function of(thingProto: ThingProto): Attribute<any> {
+        if (!thingProto) return null;
         const attrType = AttributeTypeImpl.of(thingProto.getType());
         const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
         switch (thingProto.getType().getValueType()) {

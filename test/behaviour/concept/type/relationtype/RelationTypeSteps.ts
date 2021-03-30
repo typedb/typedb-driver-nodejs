@@ -133,7 +133,7 @@ Then("relation\\({type_label}) get role\\({type_label}) get players do not conta
 
 async function getActualSubtypesForRelatedRole(relationLabel: string, roleLabel: string) {
     const roleType = await (await tx().concepts().getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    return roleType.asRemote(tx()).getSubtypes().map(role => role.getLabel().scopedName()).collect();
+    return roleType.asRemote(tx()).getSubtypes().map(role => role.getLabel().name()).collect();
 }
 
 Then("relation\\({type_label}) get role\\({type_label}) get subtypes contain:", async (relationLabel: string, roleLabel: string, subLabelsTable: DataTable) => {

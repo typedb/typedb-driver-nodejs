@@ -55,6 +55,7 @@ export class RelationImpl extends ThingImpl implements Relation {
 export namespace RelationImpl {
 
     export function of(thingProto: ThingProto) {
+        if (!thingProto) return null;
         const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
         return new RelationImpl(iid, RelationTypeImpl.of(thingProto.getType()));
     }
