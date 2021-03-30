@@ -119,7 +119,7 @@ export namespace ResponseCollector {
         }
 
         hasError(): boolean {
-            return !!this._error; // TODO how to do this cleanly in TS?
+            return this._error != null;
         }
 
         error(): Error | string {

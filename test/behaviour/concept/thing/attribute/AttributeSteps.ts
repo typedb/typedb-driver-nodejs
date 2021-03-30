@@ -28,7 +28,7 @@ import ValueType = AttributeType.ValueType;
 import ValueClass = AttributeType.ValueClass;
 
 When("attribute\\({type_label}) get instances contain: {var}", async (typeLabel: string, var0: string) => {
-    assert((await tx().concepts().getAttributeType(typeLabel)).asRemote(tx()).getInstances().some(x => x.equals(get(var0))));
+    assert(await (await tx().concepts().getAttributeType(typeLabel)).asRemote(tx()).getInstances().some(x => x.equals(get(var0))));
 });
 
 When("attribute {var} get owners contain: {var}", async (var1: string, var2: string) => {

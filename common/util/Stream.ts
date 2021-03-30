@@ -100,7 +100,6 @@ export namespace Stream {
                 yield val;
             }
         }
-
     }
 
     class Array<T> extends Stream<T> {
@@ -118,8 +117,8 @@ export namespace Stream {
                 yield val;
             }
         }
-
     }
+
     export class Filtered<T> extends Stream<T> {
 
         private _filter: (value: T) => boolean;
@@ -137,7 +136,6 @@ export namespace Stream {
                 if (this._filter(val)) yield val;
             }
         }
-
     }
 
     export class Mapped<T, U> extends Stream<U> {
@@ -156,7 +154,6 @@ export namespace Stream {
                 yield this._mapper(val);
             }
         }
-
     }
 
     export class FlatMapped<T, U, S extends Stream<U>> extends Stream<U> {
@@ -177,8 +174,6 @@ export namespace Stream {
                 }
             }
         }
-
     }
-
 
 }

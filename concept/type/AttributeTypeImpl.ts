@@ -327,6 +327,10 @@ export namespace AttributeTypeImpl {
         isLong(): boolean {
             return true;
         }
+
+        asLong(): AttributeType.Long {
+            return this;
+        }
     }
 
     export class RemoteLong extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteLong {
@@ -387,6 +391,10 @@ export namespace AttributeTypeImpl {
         isDouble(): boolean {
             return true;
         }
+
+        asDouble(): AttributeType.Double {
+            return this;
+        }
     }
 
     export class RemoteDouble extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteDouble {
@@ -446,6 +454,10 @@ export namespace AttributeTypeImpl {
 
         isString(): boolean {
             return true;
+        }
+
+        asString(): AttributeType.String {
+            return this;
         }
     }
 
@@ -516,6 +528,10 @@ export namespace AttributeTypeImpl {
 
         isDateTime(): boolean {
             return true;
+        }
+
+        asDateTime(): AttributeType.DateTime {
+            return this;
         }
     }
 

@@ -120,6 +120,8 @@ async function getActualPlayersForRelatedRole(relationLabel: string, roleLabel: 
 Then("relation\\({type_label}) get role\\({type_label}) get players contain:", async (relationLabel: string, roleLabel: string, playerLabelsTable: DataTable) => {
     const playerLabels = parseList(playerLabelsTable);
     const actuals = await getActualPlayersForRelatedRole(relationLabel, roleLabel);
+    console.log(playerLabels);
+    console.log(actuals);
     actuals.every(pl => assert(playerLabels.includes(pl)));
 });
 

@@ -57,6 +57,7 @@ Before(async () => {
 
 After(async () => {
     for (const session of sessions) {
+        console.log("closing sessions");
         await session.close()
     }
     for (const db of await client.databases().all()) {

@@ -38,11 +38,13 @@ export class BidirectionalStream {
     private readonly _requestTransmitter: RequestTransmitter;
     private readonly _dispatcher: BatchDispatcher;
     private readonly _responseCollector: ResponseCollector<unknown>;
+    private readonly _responsePartCollector: ResponseCollector<unknown>;
     private _isOpen: boolean;
 
     constructor(rpcClient: GraknCoreClient, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
         this._responseCollector = new ResponseCollector();
+        this._responsePartCollector = new ResponseCollector();
         const transactionStream = rpcClient.transaction();
         this.registerObserver(transactionStream);
         this._dispatcher = requestTransmitter.dispatcher(transactionStream);
@@ -61,7 +63,7 @@ export class BidirectionalStream {
     stream(request: Transaction.Req): Stream<Transaction.ResPart> {
         const requestId = uuidv4();
         request.setReqId(requestId);
-        const responseQueue = this._responseCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
+        const responseQueue = this._responsePartCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
         const responseIterator = new ResponsePartIterator(requestId, responseQueue, this._dispatcher);
         this._dispatcher.dispatch(request);
         return Stream.iterable(responseIterator);
@@ -74,7 +76,7 @@ export class BidirectionalStream {
     async close(error?: Error | string): Promise<void> {
         this._isOpen = false;
         this._responseCollector.close(error);
-        // TODO close resPart
+        this._responsePartCollector.close(error);
         this._dispatcher.close();
 
     }
@@ -88,7 +90,7 @@ export class BidirectionalStream {
 
     private collectResPart(res: Transaction.ResPart): void {
         const requestId = res.getReqId();
-        const queue = this._responseCollector.get(requestId);
+        const queue = this._responsePartCollector.get(requestId);
         if (!queue) throw new GraknClientError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
     }
