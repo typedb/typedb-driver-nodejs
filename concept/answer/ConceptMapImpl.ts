@@ -120,9 +120,10 @@ export namespace ConceptMapImpl {
         }
 
         ownership(owner: string, attribute: string): ConceptMap.Explainable {
-            const explainable = this._ownerships.get([owner, attribute]);
-            if (!explainable) throw new GraknClientError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));
-            return explainable;
+            for (let entry of this._ownerships) {
+                if (entry[0][0] === owner && entry[0][1] === attribute) return entry[1];
+            }
+            throw new GraknClientError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));
         }
 
         relations(): Map<string, ConceptMap.Explainable> {

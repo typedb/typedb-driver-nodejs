@@ -225,6 +225,10 @@ async function run() {
         const answers = await tx.query().match("match $x has inferred-age $a;").collect();
         const ans = answers[0];
         assert(ans.explainables().ownerships().size > 0);
+        const firstExplanations = await tx.query().explain(ans.explainables().ownerships().values().next().value).collect();
+        assert(firstExplanations.length === 1);
+        const exactExplanations = await tx.query().explain(ans.explainables().ownership("x", "a")).collect();
+        assert(exactExplanations.length === 1);
         console.log("open data read transaction - SUCCESS");
     } catch (err) {
         console.error(`open data read transaction - ERROR: ${err.stack || err}`);
