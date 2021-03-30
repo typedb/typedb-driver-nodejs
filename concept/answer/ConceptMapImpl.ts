@@ -19,7 +19,7 @@
 
 import {
     ConceptMap as ConceptMapProto,
-    Explainable as ExplainableProto,
+    Explainable as ExplainableProto, Explainables,
     Explainables as ExplainablesProto
 } from "grakn-protocol/common/answer_pb";
 import {Concept as ConceptProto} from "grakn-protocol/common/concept_pb";
@@ -62,6 +62,7 @@ export namespace ConceptMapImpl {
 
     import NONEXISTENT_EXPLAINABLE_CONCEPT = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_CONCEPT;
     import NONEXISTENT_EXPLAINABLE_OWNERSHIP = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
+    import Owned = Explainables.Owned;
 
     function ofExplainables(proto: ExplainablesProto): ConceptMap.Explainables {
         const relations = new Map<string, ConceptMap.Explainable>();
@@ -74,8 +75,8 @@ export namespace ConceptMapImpl {
         );
 
         const ownerships = new Map<[string, string], ConceptMap.Explainable>();
-        proto.getOwnershipsMap().forEach((owned, owner) =>
-            owned.getOwnedMap().forEach((explainable, attribute) => {
+        proto.getOwnershipsMap().forEach((owned: Owned, owner: string) =>
+            owned.getOwnedMap().forEach((explainable: ExplainableProto, attribute: string) => {
                 ownerships.set([owner, attribute], ofExplainable(explainable))
             })
         );
