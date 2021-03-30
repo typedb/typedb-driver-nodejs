@@ -92,7 +92,7 @@ When("{root_label}\\({type_label}) set label: {type_label}", async (rootLabel: R
 });
 
 When("{root_label}\\({type_label}) get label: {type_label}", async (rootLabel: RootLabel, typeLabel: string, label: string) => {
-    await assert.strictEqual((await getThingType(rootLabel, typeLabel)).asRemote(tx()).getLabel(), label);
+    await assert.strictEqual((await getThingType(rootLabel, typeLabel)).asRemote(tx()).getLabel().scopedName(), label);
 });
 
 When("{root_label}\\({type_label}) set abstract: {bool}", async (rootLabel: RootLabel, typeLabel: string, isAbstract: boolean) => {

@@ -46,6 +46,7 @@ export class RoleTypeImpl extends TypeImpl implements RoleType {
 export namespace RoleTypeImpl {
 
     export function of(typeProto: TypeProto) {
+        if (!typeProto) return null;
         return new RoleTypeImpl(typeProto.getScope(), typeProto.getLabel(), typeProto.getRoot());
     }
 

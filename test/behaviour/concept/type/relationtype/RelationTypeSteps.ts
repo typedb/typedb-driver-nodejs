@@ -65,7 +65,7 @@ When("relation\\({type_label}) get role\\({type_label}) set label: {type_label}"
 
 When("relation\\({type_label}) get role\\({type_label}) get label: {type_label}", async (relationLabel: string, roleLabel: string, getLabel: string) => {
     const roleType = await (await tx().concepts().getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    assert.strictEqual(roleType.getLabel(), getLabel);
+    assert.strictEqual(roleType.getLabel().name(), getLabel);
 });
 
 When("relation\\({type_label}) get role\\({type_label}) is abstract: {bool}", async (relationLabel: string, roleLabel: string, isAbstract: boolean) => {

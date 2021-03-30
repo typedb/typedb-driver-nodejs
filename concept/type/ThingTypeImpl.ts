@@ -57,6 +57,7 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
 export namespace ThingTypeImpl {
 
     export function of(thingTypeProto: TypeProto) {
+        if (!thingTypeProto) return null;
         switch (thingTypeProto.getEncoding()) {
             case TypeProto.Encoding.ENTITY_TYPE:
                 return EntityTypeImpl.of(thingTypeProto);
@@ -138,8 +139,8 @@ export namespace ThingTypeImpl {
             } else if (typeof overriddenTypeOrIsKey === "boolean") {
                 request = RequestBuilder.Type.ThingType.setOwnsReq(this.getLabel(), ThingType.proto(attributeType), overriddenTypeOrIsKey as boolean)
             } else if (!isKey) {
-                request = RequestBuilder.Type.ThingType.setOwnsReq(
-                    this.getLabel(), ThingType.proto((overriddenTypeOrIsKey as AttributeType)), false
+                request = RequestBuilder.Type.ThingType.setOwnsOverriddenReq(
+                    this.getLabel(), ThingType.proto(attributeType), ThingType.proto((overriddenTypeOrIsKey as AttributeType)), false
                 );
             } else {
                 request = RequestBuilder.Type.ThingType.setOwnsOverriddenReq(
