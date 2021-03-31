@@ -141,10 +141,19 @@ When("get answers of graql match group", async (query: string) => {
     answerGroups = await tx().query().matchGroup(query).collect();
 });
 
+When("graql match group; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query().matchGroup(query).first());
+})
+
 When("get answers of graql match group aggregate", async (query: string) => {
     clearAnswers();
     numericAnswerGroups = await tx().query().matchGroupAggregate(query).collect();
 });
+
+When("graql match aggregate; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query().matchAggregate(query));
+
+})
 
 Then("answer size is: {number}", async (expectedAnswers: number) => {
     assert.strictEqual(answers.length, expectedAnswers, `Expected [${expectedAnswers}], but got [${answers.length}]`);
