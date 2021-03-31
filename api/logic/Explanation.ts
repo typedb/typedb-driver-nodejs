@@ -24,9 +24,9 @@ export interface Explanation {
 
     rule(): Rule;
 
-    whenAnswer(): ConceptMap;
+    condition(): ConceptMap;
 
-    thenAnswer(): ConceptMap;
+    conclusion(): ConceptMap;
 
     variableMapping(): Map<string, Set<string>>;
 

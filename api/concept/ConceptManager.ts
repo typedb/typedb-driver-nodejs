@@ -46,8 +46,8 @@ export interface ConceptManager {
 
     putRelationType(label: string): Promise<RelationType>;
 
-    getAttributeType(label: string): Promise<AttributeType | null>;
+    getAttributeType(label: string): Promise<AttributeType>;
 
-    putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType | null>;
+    putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType>;
 
 }

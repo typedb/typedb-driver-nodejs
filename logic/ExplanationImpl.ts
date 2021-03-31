@@ -27,14 +27,14 @@ import {Explanation as ExplanationProto} from "grakn-protocol/common/logic_pb";
 export class ExplanationImpl implements Explanation {
 
     private _rule: Rule;
-    private _whenAnswer: ConceptMap;
-    private _thenAnswer: ConceptMap;
+    private _condition: ConceptMap;
+    private _conclusion: ConceptMap;
     private _variableMapping: Map<string, Set<string>>;
 
-    constructor(rule: Rule, whenAnswer: ConceptMap, thenAnswer: ConceptMap, variableMapping: Map<string, Set<string>>) {
+    constructor(rule: Rule, condition: ConceptMap, conclusion: ConceptMap, variableMapping: Map<string, Set<string>>) {
         this._rule = rule;
-        this._whenAnswer = whenAnswer;
-        this._thenAnswer = thenAnswer;
+        this._condition = condition;
+        this._conclusion = conclusion;
         this._variableMapping = variableMapping;
     }
 
@@ -42,12 +42,12 @@ export class ExplanationImpl implements Explanation {
         return this._rule;
     }
 
-    thenAnswer(): ConceptMap {
-        return this._thenAnswer;
+    conclusion(): ConceptMap {
+        return this._conclusion;
     }
 
-    whenAnswer(): ConceptMap {
-        return this._whenAnswer;
+    condition(): ConceptMap {
+        return this._condition;
     }
 
     variableMapping(): Map<string, Set<string>> {

@@ -79,7 +79,7 @@ export namespace Attribute {
 
     }
 
-    export interface RemoteLong extends Attribute.Remote<number>, Attribute.Long{
+    export interface RemoteLong extends Attribute.Remote<number>, Attribute.Long {
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteLong;
 
@@ -91,7 +91,7 @@ export namespace Attribute {
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteDouble;
 
-        getType():AttributeType.Double;
+        getType(): AttributeType.Double;
 
     }
 

@@ -148,6 +148,7 @@ export namespace AttributeImpl {
         isString(): boolean {
             return false;
         }
+
     }
 
     export class Boolean extends AttributeImpl<boolean> implements Attribute.Boolean {
@@ -159,7 +160,7 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteBoolean {
-            return new AttributeImpl.RemoteBoolean(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.Boolean(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.Boolean {
@@ -176,30 +177,6 @@ export namespace AttributeImpl {
 
     }
 
-    export class RemoteBoolean extends AttributeImpl.RemoteImpl<boolean> implements Attribute.RemoteBoolean {
-        private _value: boolean;
-
-        constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.Boolean, value: boolean) {
-            super(transaction, iid, type);
-            this._value = value;
-        }
-
-        asRemote(transaction: GraknTransaction): Attribute.RemoteBoolean {
-            return this;
-        }
-
-        getType(): AttributeType.Boolean {
-            return super.getType() as AttributeType.Boolean;
-        }
-
-        getValue(): boolean {
-            return this._value;
-        }
-
-        isBoolean(): boolean {
-            return true;
-        }
-    }
 
     export class Long extends AttributeImpl<number> implements Attribute.Long {
         private _value: number;
@@ -210,7 +187,7 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteLong {
-            return new AttributeImpl.RemoteLong(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.Long(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.Long {
@@ -227,31 +204,6 @@ export namespace AttributeImpl {
 
     }
 
-    export class RemoteLong extends AttributeImpl.RemoteImpl<number> implements Attribute.RemoteLong {
-        private _value: number;
-
-        constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.Long, value: number) {
-            super(transaction, iid, type);
-            this._value = value;
-        }
-
-        asRemote(transaction: GraknTransaction): Attribute.RemoteLong {
-            return this;
-        }
-
-        getType(): AttributeType.Long {
-            return super.getType() as AttributeType.Long;
-        }
-
-        getValue(): number {
-            return this._value;
-        }
-
-        isLong(): boolean {
-            return true;
-        }
-
-    }
 
     export class Double extends AttributeImpl<number> implements Attribute.Double {
         private _value: number;
@@ -262,7 +214,7 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteDouble {
-            return new AttributeImpl.RemoteDouble(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.Double(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.Double {
@@ -279,31 +231,6 @@ export namespace AttributeImpl {
 
     }
 
-    export class RemoteDouble extends AttributeImpl.RemoteImpl<number> implements Attribute.RemoteDouble {
-        private _value: number;
-
-        constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.Double, value: number) {
-            super(transaction, iid, type);
-            this._value = value;
-        }
-
-        asRemote(transaction: GraknTransaction): Attribute.RemoteDouble {
-            return this;
-        }
-
-        getType(): AttributeType.Double {
-            return super.getType() as AttributeType.Double;
-        }
-
-        getValue(): number {
-            return this._value;
-        }
-
-        isDouble(): boolean {
-            return true;
-        }
-
-    }
 
     export class String extends AttributeImpl<string> implements Attribute.String {
         private _value: string;
@@ -314,7 +241,7 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteString {
-            return new AttributeImpl.RemoteString(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.String(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.String {
@@ -331,31 +258,6 @@ export namespace AttributeImpl {
 
     }
 
-    export class RemoteString extends AttributeImpl.RemoteImpl<string> implements Attribute.RemoteString {
-        private _value: string;
-
-        constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.String, value: string) {
-            super(transaction, iid, type);
-            this._value = value;
-        }
-
-        asRemote(transaction: GraknTransaction): Attribute.RemoteString {
-            return this;
-        }
-
-        getType(): AttributeType.String {
-            return super.getType() as AttributeType.String;
-        }
-
-        getValue(): string {
-            return this._value;
-        }
-
-        isString(): boolean {
-            return true;
-        }
-
-    }
 
     export class DateTime extends AttributeImpl<Date> implements Attribute.DateTime {
         private _value: Date;
@@ -366,7 +268,7 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteDateTime {
-            return new AttributeImpl.RemoteDateTime(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.DateTime(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.DateTime {
@@ -383,31 +285,139 @@ export namespace AttributeImpl {
 
     }
 
-    export class RemoteDateTime extends AttributeImpl.RemoteImpl<Date> implements Attribute.RemoteDateTime {
-        private _value: Date;
+    export namespace RemoteImpl {
 
-        constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.DateTime, value: Date) {
-            super(transaction, iid, type);
-            this._value = value;
+        export class Boolean extends AttributeImpl.RemoteImpl<boolean> implements Attribute.RemoteBoolean {
+            private _value: boolean;
+
+            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.Boolean, value: boolean) {
+                super(transaction, iid, type);
+                this._value = value;
+            }
+
+            asRemote(transaction: GraknTransaction): Attribute.RemoteBoolean {
+                return this;
+            }
+
+            getType(): AttributeType.Boolean {
+                return super.getType() as AttributeType.Boolean;
+            }
+
+            getValue(): boolean {
+                return this._value;
+            }
+
+            isBoolean(): boolean {
+                return true;
+            }
         }
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteDateTime {
-            return this;
+
+        export class Double extends AttributeImpl.RemoteImpl<number> implements Attribute.RemoteDouble {
+            private _value: number;
+
+            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.Double, value: number) {
+                super(transaction, iid, type);
+                this._value = value;
+            }
+
+            asRemote(transaction: GraknTransaction): Attribute.RemoteDouble {
+                return this;
+            }
+
+            getType(): AttributeType.Double {
+                return super.getType() as AttributeType.Double;
+            }
+
+            getValue(): number {
+                return this._value;
+            }
+
+            isDouble(): boolean {
+                return true;
+            }
+
         }
 
-        getType(): AttributeType.DateTime {
-            return super.getType() as AttributeType.DateTime;
+        export class Long extends AttributeImpl.RemoteImpl<number> implements Attribute.RemoteLong {
+            private _value: number;
+
+            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.Long, value: number) {
+                super(transaction, iid, type);
+                this._value = value;
+            }
+
+            asRemote(transaction: GraknTransaction): Attribute.RemoteLong {
+                return this;
+            }
+
+            getType(): AttributeType.Long {
+                return super.getType() as AttributeType.Long;
+            }
+
+            getValue(): number {
+                return this._value;
+            }
+
+            isLong(): boolean {
+                return true;
+            }
+
         }
 
-        getValue(): Date {
-            return this._value;
+        export class String extends AttributeImpl.RemoteImpl<string> implements Attribute.RemoteString {
+            private _value: string;
+
+            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.String, value: string) {
+                super(transaction, iid, type);
+                this._value = value;
+            }
+
+            asRemote(transaction: GraknTransaction): Attribute.RemoteString {
+                return this;
+            }
+
+            getType(): AttributeType.String {
+                return super.getType() as AttributeType.String;
+            }
+
+            getValue(): string {
+                return this._value;
+            }
+
+            isString(): boolean {
+                return true;
+            }
+
         }
 
-        isDateTime(): boolean {
-            return true;
+
+        export class DateTime extends AttributeImpl.RemoteImpl<Date> implements Attribute.RemoteDateTime {
+            private _value: Date;
+
+            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.DateTime, value: Date) {
+                super(transaction, iid, type);
+                this._value = value;
+            }
+
+            asRemote(transaction: GraknTransaction): Attribute.RemoteDateTime {
+                return this;
+            }
+
+            getType(): AttributeType.DateTime {
+                return super.getType() as AttributeType.DateTime;
+            }
+
+            getValue(): Date {
+                return this._value;
+            }
+
+            isDateTime(): boolean {
+                return true;
+            }
+
         }
 
     }
-
 
 }

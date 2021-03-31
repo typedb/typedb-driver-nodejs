@@ -30,12 +30,12 @@ import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
-    private readonly _databaseManagers: {[serverAddress: string]: CoreDatabaseManager};
+    private readonly _databaseManagers: { [serverAddress: string]: CoreDatabaseManager };
     private readonly _client: ClusterClient;
 
     constructor(client: ClusterClient) {
         this._client = client;
-        this._databaseManagers =  Object.entries(this._client.coreClients()).reduce((obj: {[address: string]: CoreDatabaseManager}, [addr, client]) => {
+        this._databaseManagers = Object.entries(this._client.coreClients()).reduce((obj: { [address: string]: CoreDatabaseManager }, [addr, client]) => {
             obj[addr] = client.databases();
             return obj;
         }, {});
@@ -83,7 +83,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         let errors = "";
         for (const address of Object.keys(this._databaseManagers)) {
             try {
-                const res:  ClusterDatabaseManagerProto.All.Res = await new Promise((resolve, reject) => {
+                const res: ClusterDatabaseManagerProto.All.Res = await new Promise((resolve, reject) => {
                     this._client.graknClusterRPC(address).databases_all(RequestBuilder.Cluster.DatabaseManager.allReq(), (err, res) => {
                         if (err) reject(new GraknClientError(err));
                         else resolve(res);
@@ -97,7 +97,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         throw new GraknClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
     }
 
-    databaseManagers(): {[address: string]: CoreDatabaseManager} {
+    databaseManagers(): { [address: string]: CoreDatabaseManager } {
         return this._databaseManagers;
     }
 

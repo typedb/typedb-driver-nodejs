@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import {GraknClient as GC} from "./api/GraknClient";
+import {GraknClient as GraknClient} from "./api/GraknClient";
 import {CoreClient} from "./core/CoreClient";
 import {ClusterClient} from "./cluster/ClusterClient";
 
@@ -25,11 +25,11 @@ export namespace Grakn {
 
     export const DEFAULT_ADDRESS = "localhost:1729";
 
-    export function coreClient(address: string = DEFAULT_ADDRESS): GC {
+    export function coreClient(address: string = DEFAULT_ADDRESS): GraknClient {
         return new CoreClient(address);
     }
 
-    export function clusterClient(addresses: string[]): Promise<GC.Cluster> {
+    export function clusterClient(addresses: string[]): Promise<GraknClient.Cluster> {
         return new ClusterClient().open(addresses);
     }
 

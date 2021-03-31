@@ -74,7 +74,7 @@ export abstract class FailsafeTask<TResult> {
         if (!databaseClusterRPC) databaseClusterRPC = await this.fetchDatabaseReplicas();
 
         // Try the preferred secondary replica first, then go through the others
-        const replicas: DatabaseReplica[] = [databaseClusterRPC.preferredSecondary()]
+        const replicas: DatabaseReplica[] = [databaseClusterRPC.preferredReplica()]
             .concat(databaseClusterRPC.replicas().filter(rep => !rep.isPreferred()));
 
         let retries = 0;

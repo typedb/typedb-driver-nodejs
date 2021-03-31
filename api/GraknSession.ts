@@ -24,23 +24,25 @@ import {Session} from "grakn-protocol/common/session_pb";
 
 export interface GraknSession {
 
-    isOpen() : boolean;
+    isOpen(): boolean;
 
-    type() : SessionType;
+    type(): SessionType;
 
     database(): Database;
 
-    options() : GraknOptions;
+    options(): GraknOptions;
 
-    transaction(type : TransactionType, options? : GraknOptions) : Promise<GraknTransaction>;
+    transaction(type: TransactionType, options?: GraknOptions): Promise<GraknTransaction>;
 
-    close() : void;
+    close(): Promise<void>;
 
 }
 
 export interface SessionType {
     proto(): Session.Type;
+
     isData(): boolean;
+
     isSchema(): boolean;
 }
 

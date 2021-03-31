@@ -37,8 +37,8 @@ export class BidirectionalStream {
 
     private readonly _requestTransmitter: RequestTransmitter;
     private readonly _dispatcher: BatchDispatcher;
-    private readonly _responseCollector: ResponseCollector<unknown>;
-    private readonly _responsePartCollector: ResponseCollector<unknown>;
+    private readonly _responseCollector: ResponseCollector<Transaction.Res>;
+    private readonly _responsePartCollector: ResponseCollector<Transaction.ResPart>;
     private _isOpen: boolean;
 
     constructor(rpcClient: GraknCoreClient, requestTransmitter: RequestTransmitter) {

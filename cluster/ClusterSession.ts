@@ -72,7 +72,7 @@ export class ClusterSession implements GraknSession {
         return this._options;
     }
 
-    async close(): Promise<void> {
+    close(): Promise<void> {
         return this._coreSession.close();
     }
 

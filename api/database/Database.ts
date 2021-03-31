@@ -24,7 +24,7 @@ export interface Database {
 
     delete(): Promise<void>;
 
-    schema() : Promise<string>;
+    schema(): Promise<string>;
 
 }
 
@@ -36,14 +36,14 @@ export namespace Database {
 
         primaryReplica(): Replica;
 
-        preferredSecondary(): Replica;
+        preferredReplica(): Replica;
 
     }
 
 
     export interface Replica extends Database {
 
-        database(): Cluster ;
+        database(): Cluster;
 
         term(): number;
 

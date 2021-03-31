@@ -27,31 +27,33 @@ import {Stream} from "../common/util/Stream";
 
 export interface GraknTransaction {
 
-    isOpen() : boolean;
+    isOpen(): boolean;
 
-    type() : TransactionType;
+    type(): TransactionType;
 
-    options() : GraknOptions;
+    options(): GraknOptions;
 
-    concepts() : ConceptManager;
+    concepts(): ConceptManager;
 
-    logic() : LogicManager;
+    logic(): LogicManager;
 
-    query() : QueryManager;
+    query(): QueryManager;
 
-    commit() : void ;
+    commit(): void;
 
-    rollback() : void ;
+    rollback(): void;
 
-    close() : void ;
+    close(): void;
 
 }
 
 
 export interface TransactionType {
-    proto() : Transaction.Type;
-    isRead() : boolean;
-    isWrite() : boolean;
+    proto(): Transaction.Type;
+
+    isRead(): boolean;
+
+    isWrite(): boolean;
 }
 
 export namespace TransactionType {
@@ -86,9 +88,9 @@ export namespace GraknTransaction {
 
     export interface Extended extends GraknTransaction {
 
-        rpcExecute(request: Transaction.Req) : Promise<Transaction.Res>;
+        rpcExecute(request: Transaction.Req): Promise<Transaction.Res>;
 
-        rpcStream(request: Transaction.Req) : Stream<Transaction.ResPart> ;
+        rpcStream(request: Transaction.Req): Stream<Transaction.ResPart>;
 
     }
 

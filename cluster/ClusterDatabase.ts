@@ -25,7 +25,7 @@ import {ClusterDatabase as ClusterDatabaseProto} from "grakn-protocol/cluster/cl
 export class ClusterDatabase implements Database.Cluster {
 
     private readonly _name: string;
-    private readonly _databases: {[address: string]: Database};
+    private readonly _databases: { [address: string]: Database };
     private readonly _databaseManagerCluster: ClusterDatabaseManager;
     private readonly _replicas: DatabaseReplica[];
 
@@ -48,13 +48,13 @@ export class ClusterDatabase implements Database.Cluster {
         return databaseClusterRPC;
     }
 
-    primaryReplica():DatabaseReplica {
+    primaryReplica(): DatabaseReplica {
         const primaryReplicas = this._replicas.filter(rep => rep.isPrimary());
         if (primaryReplicas.length) return primaryReplicas.reduce((current, next) => next.term() > current.term() ? next : current);
         else return null;
     }
 
-    preferredSecondary(): DatabaseReplica {
+    preferredReplica(): DatabaseReplica {
         return this._replicas.find(rep => rep.isPreferred()) || this._replicas[0];
     }
 

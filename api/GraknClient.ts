@@ -24,17 +24,17 @@ import {DatabaseManager} from "./database/DatabaseManager";
 
 export interface GraknClient {
 
-    isOpen() : boolean;
+    isOpen(): boolean;
 
-    databases() : DatabaseManager;
+    databases(): DatabaseManager;
 
-    session(database : string, type : SessionType , options? : GraknOptions) : Promise<GraknSession>;
+    session(database: string, type: SessionType, options?: GraknOptions): Promise<GraknSession>;
 
-    isCluster() : boolean;
+    isCluster(): boolean;
 
-    asCluster() : GraknClient.Cluster;
+    asCluster(): GraknClient.Cluster;
 
-    close() : void;
+    close(): void;
 
 }
 

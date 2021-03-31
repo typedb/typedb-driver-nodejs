@@ -105,7 +105,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
 
     public async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
         if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
-        const useBatch = batch ? batch : true;
+        const useBatch = batch !== false;
         return this._bidirectionalStream.single(request, useBatch);
     }
 

@@ -43,7 +43,9 @@ export interface RemoteRelationType extends RelationType, RemoteThingType {
     getInstances(): Stream<Relation>;
 
     getRelates(): Stream<RoleType>;
+
     getRelates(roleLabel: string): Promise<RoleType>;
+
     getRelates(roleLabel?: string): Promise<RoleType> | Stream<RoleType>;
 
     setRelates(roleLabel: string, overriddenLabel?: string): Promise<void>;

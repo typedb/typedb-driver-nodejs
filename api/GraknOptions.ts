@@ -21,21 +21,21 @@ import {Options} from "grakn-protocol/common/options_pb";
 
 namespace Opts {
     export class Core {
-        infer? : boolean;
-        traceInference? : boolean;
-        explain? : boolean;
-        parallel? : boolean;
-        batchSize? : number;
-        prefetch? : boolean;
-        sessionIdleTimeoutMillis? : number;
-        schemaLockAcquireTimeoutMillis? : number;
+        infer?: boolean;
+        traceInference?: boolean;
+        explain?: boolean;
+        parallel?: boolean;
+        batchSize?: number;
+        prefetch?: boolean;
+        sessionIdleTimeoutMillis?: number;
+        schemaLockAcquireTimeoutMillis?: number;
     }
 
     export class Cluster extends Core {
         readAnyReplica?: boolean;
     }
 
-    export function proto(options: Opts.Core | Opts.Cluster) : Options {
+    export function proto(options: Opts.Core | Opts.Cluster): Options {
         const optionsProto = new Options();
         if (options) {
             if (options.infer != null) optionsProto.setInfer(options.infer);
@@ -56,28 +56,28 @@ namespace Opts {
 
 export class GraknOptions extends Opts.Core {
 
-    constructor(obj: {[K in keyof Opts.Core]: Opts.Core[K]} = {}) {
+    constructor(obj: { [K in keyof Opts.Core]: Opts.Core[K] } = {}) {
         super();
         Object.assign(this, obj);
     }
 
-    public isCluster() : boolean {
+    public isCluster(): boolean {
         return false;
     }
 
-    proto() : Options {
+    proto(): Options {
         return Opts.proto(this);
     }
 }
 
 export class GraknClusterOptions extends Opts.Cluster {
 
-    constructor(obj: {[K in keyof Opts.Cluster]: Opts.Cluster[K]} = {}) {
+    constructor(obj: { [K in keyof Opts.Cluster]: Opts.Cluster[K] } = {}) {
         super();
         Object.assign(this, obj);
     }
 
-    public isCluster() : boolean {
+    public isCluster(): boolean {
         return true;
     }
 
@@ -88,11 +88,11 @@ export class GraknClusterOptions extends Opts.Cluster {
 
 export namespace GraknOptions {
 
-    export function core(options: {[K in keyof Opts.Core]: Opts.Core[K]} = {}) {
+    export function core(options: { [K in keyof Opts.Core]: Opts.Core[K] } = {}) {
         return new GraknOptions(options);
     }
 
-    export function cluster(options: {[K in keyof Opts.Cluster]: Opts.Cluster[K]} = {}) {
+    export function cluster(options: { [K in keyof Opts.Cluster]: Opts.Cluster[K] } = {}) {
         return new GraknClusterOptions(options);
     }
 }

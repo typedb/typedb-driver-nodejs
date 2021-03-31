@@ -95,9 +95,13 @@ export namespace AttributeType {
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
+
         asLong(): RemoteLong;
+
         asDouble(): RemoteDouble;
+
         asString(): RemoteString;
+
         asDateTime(): RemoteDateTime;
 
         setSupertype(type: Boolean): Promise<void>;
@@ -117,15 +121,20 @@ export namespace AttributeType {
         asRemote(transaction: GraknTransaction): AttributeType.RemoteLong;
 
     }
+
     export interface RemoteLong extends AttributeType.Remote, Long {
 
         asRemote(transaction: GraknTransaction): RemoteLong;
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
+
         asLong(): RemoteLong;
+
         asDouble(): RemoteDouble;
+
         asString(): RemoteString;
+
         asDateTime(): RemoteDateTime;
 
         setSupertype(type: Long): Promise<void>;
@@ -151,9 +160,13 @@ export namespace AttributeType {
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
+
         asLong(): RemoteLong;
+
         asDouble(): RemoteDouble;
+
         asString(): RemoteString;
+
         asDateTime(): RemoteDateTime;
 
         setSupertype(type: Double): Promise<void>;
@@ -179,9 +192,13 @@ export namespace AttributeType {
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
+
         asLong(): RemoteLong;
+
         asDouble(): RemoteDouble;
+
         asString(): RemoteString;
+
         asDateTime(): RemoteDateTime;
 
         setSupertype(type: String): Promise<void>;
@@ -212,9 +229,13 @@ export namespace AttributeType {
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
+
         asLong(): RemoteLong;
+
         asDouble(): RemoteDouble;
+
         asString(): RemoteString;
+
         asDateTime(): RemoteDateTime;
 
         setSupertype(type: DateTime): Promise<void>;

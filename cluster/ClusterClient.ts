@@ -37,10 +37,10 @@ import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT
 
 export class ClusterClient implements GraknClient.Cluster {
 
-    private _coreClients: {[serverAddress: string]: CoreClient };
-    private _graknClusterRPCs: {[serverAddress: string]: GraknClusterClient};
+    private _coreClients: { [serverAddress: string]: CoreClient };
+    private _graknClusterRPCs: { [serverAddress: string]: GraknClusterClient };
     private _databaseManagers: ClusterDatabaseManager;
-    private _clusterDatabases: {[db: string]: ClusterDatabase};
+    private _clusterDatabases: { [db: string]: ClusterDatabase };
     private _isOpen: boolean;
 
     async open(addresses: string[]): Promise<this> {
@@ -95,7 +95,7 @@ export class ClusterClient implements GraknClient.Cluster {
         return true;
     }
 
-    clusterDatabases(): {[db: string]: ClusterDatabase } {
+    clusterDatabases(): { [db: string]: ClusterDatabase } {
         return this._clusterDatabases;
     }
 
