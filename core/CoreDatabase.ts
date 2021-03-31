@@ -49,7 +49,7 @@ export class CoreDatabase implements Database {
     }
 
     async schema(): Promise<string> {
-        let schema: Promise<string> = new Promise((resolve, reject) => {
+        const schema: Promise<string> = new Promise((resolve, reject) => {
             return this._rpcClient.database_schema(RequestBuilder.Core.Database.schemaReq(this.name()), (err, res) => {
                 if (err) reject(err);
                 else resolve(res.getSchema());
