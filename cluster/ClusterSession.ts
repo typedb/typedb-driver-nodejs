@@ -17,13 +17,13 @@
  * under the License.
  */
 
-import {GraknSession, SessionType} from "../api/GraknSession";
 import {GraknClient} from "../api/GraknClient";
 import {GraknClusterOptions, GraknOptions} from "../api/GraknOptions";
-import {GraknTransaction, TransactionType} from "../api/GraknTransaction";
 import {Database} from "../api/database/Database";
-import {FailsafeTask} from "./FailsafeTask";
+import {GraknSession, SessionType} from "../api/GraknSession";
+import {GraknTransaction, TransactionType} from "../api/GraknTransaction";
 import {ClusterClient} from "./ClusterClient";
+import {FailsafeTask} from "./FailsafeTask";
 
 export class ClusterSession implements GraknSession {
 

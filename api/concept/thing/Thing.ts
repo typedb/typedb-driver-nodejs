@@ -29,11 +29,11 @@ import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Thing extends Concept {
 
+    asRemote(transaction: GraknTransaction): RemoteThing;
+
     getIID(): string;
 
     getType(): ThingType;
-
-    asRemote(transaction: GraknTransaction): RemoteThing;
 
 }
 

@@ -17,10 +17,10 @@
  * under the License.
  */
 
-import {Session} from "grakn-protocol/common/session_pb";
 import {GraknOptions} from "./GraknOptions";
-import {GraknTransaction, TransactionType} from "./GraknTransaction";
 import {Database} from "./database/Database";
+import {GraknTransaction, TransactionType} from "./GraknTransaction";
+import {Session} from "grakn-protocol/common/session_pb";
 
 export interface GraknSession {
 
@@ -46,7 +46,7 @@ export interface SessionType {
 
 export namespace SessionType {
 
-    class Impl implements SessionType {
+    class SessionTypeImpl implements SessionType {
 
         private _type: Session.Type;
 
@@ -68,6 +68,6 @@ export namespace SessionType {
 
     }
 
-    export const DATA = new Impl(Session.Type.DATA);
-    export const SCHEMA = new Impl(Session.Type.SCHEMA);
+    export const DATA = new SessionTypeImpl(Session.Type.DATA);
+    export const SCHEMA = new SessionTypeImpl(Session.Type.SCHEMA);
 }

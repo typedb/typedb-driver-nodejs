@@ -17,14 +17,14 @@
  * under the License.
  */
 
+import {GraknTransaction} from "../api/GraknTransaction";
 import {LogicManager} from "../api/logic/LogicManager";
 import {Rule} from "../api/logic/Rule";
+import {RuleImpl} from "./RuleImpl";
 import {Stream} from "../common/util/Stream";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {GraknTransaction} from "../api/GraknTransaction";
 import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {LogicManager as LogicProto} from "grakn-protocol/common/logic_pb";
-import {RuleImpl} from "./RuleImpl";
 
 export class LogicManagerImpl implements LogicManager {
     private _transaction: GraknTransaction.Extended;

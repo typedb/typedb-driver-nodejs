@@ -107,7 +107,7 @@ export namespace AttributeImpl {
 
         abstract getValue(): T;
 
-        abstract asRemote(transaction: GraknTransaction): any; // TODO improve typing
+        abstract asRemote(transaction: GraknTransaction): Attribute.Remote<T>;
 
         isAttribute(): boolean {
             return true;

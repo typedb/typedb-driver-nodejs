@@ -24,7 +24,9 @@ import {Stream} from "../../../common/util/Stream";
 import {Entity} from "../thing/Entity";
 
 export interface EntityType extends ThingType {
+
     asRemote(transaction: GraknTransaction): RemoteEntityType;
+
 }
 
 export interface RemoteEntityType extends ThingType, RemoteThingType {

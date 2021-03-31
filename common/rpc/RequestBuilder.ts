@@ -144,7 +144,6 @@ export namespace RequestBuilder {
     export namespace LogicManager {
 
         export function logicManagerReq(logicReq: LogicProto.Req) {
-            // TODO grabl tracing
             return new TransactionProto.Req().setLogicManagerReq(logicReq);
         }
 
@@ -256,7 +255,6 @@ export namespace RequestBuilder {
     export namespace ConceptManager {
 
         function conceptManagerReq(req: ConceptMgrProto.Req): TransactionProto.Req {
-            // TODO grabl metadata
             return new TransactionProto.Req().setConceptManagerReq(req);
         }
 

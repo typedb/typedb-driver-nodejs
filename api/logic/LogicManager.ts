@@ -17,8 +17,8 @@
  * under the License.
  */
 
-import {Stream} from "../../common/util/Stream";
 import {Rule} from "./Rule";
+import {Stream} from "../../common/util/Stream";
 
 export interface LogicManager {
 

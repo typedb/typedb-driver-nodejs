@@ -18,8 +18,8 @@
  */
 
 
-import {GraknSession, SessionType} from "./GraknSession";
 import {GraknOptions} from "./GraknOptions";
+import {GraknSession, SessionType} from "./GraknSession";
 import {DatabaseManager} from "./database/DatabaseManager";
 
 export interface GraknClient {

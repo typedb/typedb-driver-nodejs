@@ -18,11 +18,11 @@
  */
 
 
-import {RemoteThingType, ThingType} from "./ThingType";
 import {GraknTransaction} from "../../GraknTransaction";
+import {RemoteThingType, ThingType} from "./ThingType";
+import {Attribute} from "../thing/Attribute";
 import {Stream} from "../../../common/util/Stream";
 import {AttributeType as AttributeTypeProto} from "grakn-protocol/common/concept_pb";
-import {Attribute} from "../thing/Attribute";
 
 export interface AttributeType extends ThingType {
 
@@ -93,7 +93,7 @@ export namespace AttributeType {
 
         asRemote(transaction: GraknTransaction): RemoteBoolean;
 
-        // TODO avoid this typing workaround
+        // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
         asLong(): RemoteLong;
         asDouble(): RemoteDouble;
@@ -121,7 +121,7 @@ export namespace AttributeType {
 
         asRemote(transaction: GraknTransaction): RemoteLong;
 
-        // TODO avoid this typing workaround
+        // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
         asLong(): RemoteLong;
         asDouble(): RemoteDouble;
@@ -149,7 +149,7 @@ export namespace AttributeType {
     export interface RemoteDouble extends AttributeType.Remote, Double {
         asRemote(transaction: GraknTransaction): RemoteDouble;
 
-        // TODO avoid this typing workaround
+        // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
         asLong(): RemoteLong;
         asDouble(): RemoteDouble;
@@ -177,7 +177,7 @@ export namespace AttributeType {
 
         asRemote(transaction: GraknTransaction): RemoteString;
 
-        // TODO avoid this typing workaround
+        // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
         asLong(): RemoteLong;
         asDouble(): RemoteDouble;
@@ -210,7 +210,7 @@ export namespace AttributeType {
 
         asRemote(transaction: GraknTransaction): RemoteDateTime;
 
-        // TODO avoid this typing workaround
+        // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
         asLong(): RemoteLong;
         asDouble(): RemoteDouble;
@@ -241,10 +241,10 @@ export namespace AttributeType {
 
     export namespace ValueType {
 
-        class Impl implements ValueType {
+        class ValueTypeImpl implements ValueType {
 
             private readonly _attrTypeProto: AttributeTypeProto.ValueType;
-            private _name: string;
+            private readonly _name: string;
 
             constructor(type: AttributeTypeProto.ValueType, name: string) {
                 this._attrTypeProto = type;
@@ -268,12 +268,12 @@ export namespace AttributeType {
             }
         }
 
-        export const OBJECT = new Impl(AttributeTypeProto.ValueType.OBJECT, "OBJECT");
-        export const BOOLEAN = new Impl(AttributeTypeProto.ValueType.BOOLEAN, "BOOLEAN");
-        export const LONG = new Impl(AttributeTypeProto.ValueType.LONG, "LONG");
-        export const DOUBLE = new Impl(AttributeTypeProto.ValueType.DOUBLE, "DOUBLE");
-        export const STRING = new Impl(AttributeTypeProto.ValueType.STRING, "STRING");
-        export const DATETIME = new Impl(AttributeTypeProto.ValueType.DATETIME, "DATETIME");
+        export const OBJECT = new ValueTypeImpl(AttributeTypeProto.ValueType.OBJECT, "OBJECT");
+        export const BOOLEAN = new ValueTypeImpl(AttributeTypeProto.ValueType.BOOLEAN, "BOOLEAN");
+        export const LONG = new ValueTypeImpl(AttributeTypeProto.ValueType.LONG, "LONG");
+        export const DOUBLE = new ValueTypeImpl(AttributeTypeProto.ValueType.DOUBLE, "DOUBLE");
+        export const STRING = new ValueTypeImpl(AttributeTypeProto.ValueType.STRING, "STRING");
+        export const DATETIME = new ValueTypeImpl(AttributeTypeProto.ValueType.DATETIME, "DATETIME");
 
     }
 

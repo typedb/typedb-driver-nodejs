@@ -18,15 +18,15 @@
  */
 
 import {BatchDispatcher, RequestTransmitter} from "./RequestTransmitter";
-import {Transaction} from "grakn-protocol/common/transaction_pb";
-import {Stream} from "../common/util/Stream";
-import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
-import {uuidv4} from "../common/util/utils";
 import {ResponseCollector} from "./ResponseCollector";
-import {ClientDuplexStream} from "@grpc/grpc-js";
+import {ResponsePartIterator} from "./ResponsePartIterator";
+import {Stream} from "../common/util/Stream";
+import {uuidv4} from "../common/util/utils";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {GraknClientError} from "../common/errors/GraknClientError";
-import {ResponsePartIterator} from "./ResponsePartIterator";
+import {Transaction} from "grakn-protocol/common/transaction_pb";
+import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
+import {ClientDuplexStream} from "@grpc/grpc-js";
 import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import ResponseQueue = ResponseCollector.ResponseQueue;
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
@@ -57,7 +57,7 @@ export class BidirectionalStream {
         const responseQueue = this._responseCollector.queue(requestId);
         if (batch) this._dispatcher.dispatch(request);
         else this._dispatcher.dispatchNow(request);
-        return (await responseQueue.take() as Transaction.Res); // TODO can we do this without cast?
+        return (await responseQueue.take() as Transaction.Res);
     }
 
     stream(request: Transaction.Req): Stream<Transaction.ResPart> {

@@ -18,12 +18,12 @@
  */
 
 
-import {RemoteType, Type} from "./Type";
 import {GraknTransaction} from "../../GraknTransaction";
-import {Stream} from "../../../common/util/Stream";
-import {Thing} from "../thing/Thing";
+import {RemoteType, Type} from "./Type";
 import {RoleType} from "./RoleType";
 import {AttributeType} from "./AttributeType";
+import {Thing} from "../thing/Thing";
+import {Stream} from "../../../common/util/Stream";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface ThingType extends Type {

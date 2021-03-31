@@ -126,7 +126,7 @@ export namespace ErrorMessage {
     }
 
     export namespace Internal {
-        export const ILLEGAL_CAST = new Internal(2, (args: Stringable[]) => `Illegal casting operation from '${args[0]}' to '${args[1]}'.`);
-        export const ILLEGAL_ARGUMENT = new Internal(3, (args: Stringable[]) => `Illegal argument provided: '${args[0]}'`);
+        export const ILLEGAL_CAST = new Internal(1, (args: Stringable[]) => `Illegal casting operation from '${args[0]}' to '${args[1]}'.`);
+        export const ILLEGAL_ARGUMENT = new Internal(2, (args: Stringable[]) => `Illegal argument provided: '${args[0]}'`);
     }
 }

@@ -18,11 +18,11 @@
  */
 
 
-import {EntityType} from "./type/EntityType";
-import {AttributeType} from "./type/AttributeType";
-import {ThingType} from "./type/ThingType";
 import {Thing} from "./thing/Thing";
+import {ThingType} from "./type/ThingType";
+import {EntityType} from "./type/EntityType";
 import {RelationType} from "./type/RelationType";
+import {AttributeType} from "./type/AttributeType";
 
 export interface ConceptManager {
 

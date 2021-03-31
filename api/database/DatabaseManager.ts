@@ -43,4 +43,3 @@ export namespace DatabaseManager {
     }
 
 }
-

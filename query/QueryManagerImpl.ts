@@ -19,21 +19,21 @@
 
 import {QueryManager} from "../api/query/QueryManager";
 import {GraknOptions} from "../api/GraknOptions";
-import {Stream} from "../common/util/Stream";
 import {ConceptMap} from "../api/answer/ConceptMap";
 import {Numeric} from "../api/answer/Numeric";
 import {ConceptMapGroup} from "../api/answer/ConceptMapGroup";
 import {NumericGroup} from "../api/answer/NumericGroup";
 import {GraknTransaction} from "../api/GraknTransaction";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
-import {QueryManager as QueryProto} from "grakn-protocol/common/query_pb";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
-import {NumericImpl} from "../concept/answer/NumericImpl";
-import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
-import {NumericGroupImpl} from "../concept/answer/NumericGroupImpl";
 import {Explanation} from "../api/logic/Explanation";
 import {ExplanationImpl} from "../logic/ExplanationImpl";
+import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
+import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
+import {NumericImpl} from "../concept/answer/NumericImpl";
+import {NumericGroupImpl} from "../concept/answer/NumericGroupImpl";
+import {Stream} from "../common/util/Stream";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {QueryManager as QueryProto} from "grakn-protocol/common/query_pb";
 
 
 export class QueryManagerImpl implements QueryManager {

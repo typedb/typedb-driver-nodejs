@@ -172,9 +172,8 @@ export namespace AttributeTypeImpl {
 
         getOwners(onlyKey?: boolean): Stream<ThingType> {
             // TODO check this is the right way to check onlyKey is unset
-            if (onlyKey == undefined) {
-                onlyKey = false;
-            }
+            if (!onlyKey) onlyKey = false;
+
             const request = RequestBuilder.Type.AttributeType.getOwnersReq(this.getLabel(), onlyKey);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersResPart().getOwnersList()))

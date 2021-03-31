@@ -20,10 +20,10 @@
 
 import {BatchDispatcher} from "./RequestTransmitter";
 import {ResponseCollector} from "./ResponseCollector";
-import {Transaction} from "grakn-protocol/common/transaction_pb";
-import {GraknClientError} from "../common/errors/GraknClientError";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {GraknClientError} from "../common/errors/GraknClientError";
+import {Transaction} from "grakn-protocol/common/transaction_pb";
 import ResCase = Transaction.ResPart.ResCase;
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_STREAM_STATE = ErrorMessage.Client.UNKNOWN_STREAM_STATE;
@@ -71,6 +71,5 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
                 return res;
         }
     }
-
 
 }

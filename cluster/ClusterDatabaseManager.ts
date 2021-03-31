@@ -19,13 +19,13 @@
 
 import {Database} from "../api/database/Database";
 import {DatabaseManager} from "../api/database/DatabaseManager";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {GraknClientError} from "../common/errors/GraknClientError";
 import {ClusterDatabase} from "./ClusterDatabase";
 import {ClusterClient} from "./ClusterClient";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "grakn-protocol/cluster/cluster_database_pb";
 import {CoreDatabaseManager} from "../core/CoreDatabaseManager";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {GraknClientError} from "../common/errors/GraknClientError";
+import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "grakn-protocol/cluster/cluster_database_pb";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {

@@ -18,21 +18,21 @@
  */
 
 
-import {CoreClient} from "../core/CoreClient";
-import {FailsafeTask} from "./FailsafeTask";
-import {ClusterSession} from "./ClusterSession";
-import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
 import {GraknClient} from "../api/GraknClient";
+import {GraknClusterOptions, GraknOptions} from "../api/GraknOptions";
 import {Database} from "../api/database/Database";
 import {SessionType} from "../api/GraknSession";
-import {GraknClusterOptions, GraknOptions} from "../api/GraknOptions";
-import {GraknClientError} from "../common/errors/GraknClientError";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {GraknClusterClient} from "grakn-protocol/cluster/cluster_service_grpc_pb";
-import {ChannelCredentials} from "@grpc/grpc-js";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ServerManager} from "grakn-protocol/cluster/cluster_server_pb";
+import {CoreClient} from "../core/CoreClient";
+import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
 import {ClusterDatabase} from "./ClusterDatabase";
+import {ClusterSession} from "./ClusterSession";
+import {FailsafeTask} from "./FailsafeTask";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {GraknClientError} from "../common/errors/GraknClientError";
+import {GraknClusterClient} from "grakn-protocol/cluster/cluster_service_grpc_pb";
+import {ServerManager} from "grakn-protocol/cluster/cluster_server_pb";
+import {ChannelCredentials} from "@grpc/grpc-js";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 
 export class ClusterClient implements GraknClient.Cluster {

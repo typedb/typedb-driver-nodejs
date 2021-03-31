@@ -18,12 +18,12 @@
  */
 
 import {GraknOptions} from "../GraknOptions";
-import {Stream} from "../../common/util/Stream";
 import {ConceptMap} from "../answer/ConceptMap";
-import {Numeric} from "../answer/Numeric";
 import {ConceptMapGroup} from "../answer/ConceptMapGroup";
+import {Numeric} from "../answer/Numeric";
 import {NumericGroup} from "../answer/NumericGroup";
 import {Explanation} from "../logic/Explanation";
+import {Stream} from "../../common/util/Stream";
 
 export interface QueryManager {
 

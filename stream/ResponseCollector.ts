@@ -18,8 +18,8 @@
  */
 
 import {BlockingQueue} from "../common/util/BlockingQueue";
-import {GraknClientError} from "../common/errors/GraknClientError";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {GraknClientError} from "../common/errors/GraknClientError";
 
 export class ResponseCollector<T> {
 

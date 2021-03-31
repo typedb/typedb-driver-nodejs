@@ -25,7 +25,9 @@ import {RoleType} from "./RoleType";
 import {Relation} from "../thing/Relation";
 
 export interface RelationType extends ThingType {
+
     asRemote(transaction: GraknTransaction): RemoteRelationType;
+
 }
 
 export interface RemoteRelationType extends RelationType, RemoteThingType {

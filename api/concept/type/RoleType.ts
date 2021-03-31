@@ -20,9 +20,9 @@
 
 import {GraknTransaction} from "../../GraknTransaction";
 import {RemoteType, Type} from "./Type";
-import {Stream} from "../../../common/util/Stream";
-import {RelationType} from "./RelationType";
 import {ThingType} from "./ThingType";
+import {RelationType} from "./RelationType";
+import {Stream} from "../../../common/util/Stream";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface RoleType extends Type {

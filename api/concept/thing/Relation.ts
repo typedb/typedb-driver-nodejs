@@ -18,11 +18,11 @@
  */
 
 
-import {RemoteThing, Thing} from "./Thing";
-import {RelationType} from "../type/RelationType";
 import {GraknTransaction} from "../../GraknTransaction";
-import {Stream} from "../../../common/util/Stream";
+import {RelationType} from "../type/RelationType";
 import {RoleType} from "../type/RoleType";
+import {RemoteThing, Thing} from "./Thing";
+import {Stream} from "../../../common/util/Stream";
 
 export interface Relation extends Thing {
 

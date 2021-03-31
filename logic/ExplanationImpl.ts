@@ -17,12 +17,12 @@
  * under the License.
  */
 
+import {ConceptMap} from "../api/answer/ConceptMap";
 import {Explanation} from "../api/logic/Explanation";
 import {Rule} from "../api/logic/Rule";
-import {ConceptMap} from "../api/answer/ConceptMap";
-import {Explanation as ExplanationProto} from "grakn-protocol/common/logic_pb";
 import {RuleImpl} from "./RuleImpl";
 import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
+import {Explanation as ExplanationProto} from "grakn-protocol/common/logic_pb";
 
 export class ExplanationImpl implements Explanation {
 

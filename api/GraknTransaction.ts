@@ -18,12 +18,12 @@
  */
 
 
-import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {GraknOptions} from "./GraknOptions";
-import {Stream} from "../common/util/Stream";
+import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {ConceptManager} from "./concept/ConceptManager";
 import {LogicManager} from "./logic/LogicManager";
 import {QueryManager} from "./query/QueryManager";
+import {Stream} from "../common/util/Stream";
 
 export interface GraknTransaction {
 
@@ -56,7 +56,7 @@ export interface TransactionType {
 
 export namespace TransactionType {
 
-    class Impl implements TransactionType {
+    class TransactionTypeImpl implements TransactionType {
 
         private _type: Transaction.Type;
 
@@ -78,8 +78,8 @@ export namespace TransactionType {
 
     }
 
-    export const READ = new Impl(Transaction.Type.READ);
-    export const WRITE = new Impl(Transaction.Type.WRITE);
+    export const READ = new TransactionTypeImpl(Transaction.Type.READ);
+    export const WRITE = new TransactionTypeImpl(Transaction.Type.WRITE);
 }
 
 export namespace GraknTransaction {
