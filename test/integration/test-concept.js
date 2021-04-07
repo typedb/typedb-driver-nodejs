@@ -299,7 +299,7 @@ async function run() {
         for (let i = 0; i < 10; i++)  stoneLion.asRemote(tx).create();
         const lions = await lion.asRemote(tx).getInstances().collect();
         const firstLion = lions[0];
-        const isInferred = await firstLion.asRemote(tx).isInferred();
+        const isInferred = firstLion.isInferred();
         const lionType = await firstLion.asRemote(tx).getType();
         const age42 = await age.asRemote(tx).put(42);
         await firstLion.asRemote(tx).setHas(age42);

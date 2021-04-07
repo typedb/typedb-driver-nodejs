@@ -542,13 +542,6 @@ export namespace RequestBuilder {
             return new ThingProto().setIid(Bytes.hexStringToBytes(iid));
         }
 
-
-        export function isInferredReq(iid: string) {
-            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingIsInferredReq(
-                new ThingProto.IsInferred.Req()
-            ));
-        }
-
         export function getHasReq(iid: string, onlyKey: boolean) {
             return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetHasReq(
                 new ThingProto.GetHas.Req().setKeysOnly(onlyKey)
