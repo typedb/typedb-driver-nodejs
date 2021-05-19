@@ -48,15 +48,15 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
     }
 
     async contains(name: string): Promise<boolean> {
-        return this.failsafeTask(name, ((stub, dbMgr) => dbMgr.contains(name)));
+        return await this.failsafeTask(name, ((stub, dbMgr) => dbMgr.contains(name)));
     }
 
     async create(name: string): Promise<void> {
-        return this.failsafeTask(name, ((stub, dbMgr) => dbMgr.create(name)));
+        return await this.failsafeTask(name, ((stub, dbMgr) => dbMgr.create(name)));
     }
 
     async get(name: string): Promise<Database.Cluster> {
-        return this.failsafeTask(name, (async (stub, dbMgr) => {
+        return await this.failsafeTask(name, (async (stub, dbMgr) => {
             if (await this.contains(name)) {
                 const res: ClusterDatabaseManagerProto.Get.Res = await new Promise((resolve, reject) => {
                     stub.databases_get(RequestBuilder.Cluster.DatabaseManager.getReq(name), (err, res) => {
@@ -96,13 +96,13 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         return this._client;
     }
 
-    private failsafeTask<T>(name: string, task: (stub: TypeDBClusterStub, dbMgr: DatabaseManager) => Promise<T>): Promise<T> {
+    private async failsafeTask<T>(name: string, task: (stub: TypeDBClusterStub, dbMgr: DatabaseManager) => Promise<T>): Promise<T> {
         const failsafeTask = new DatabaseManagerFailsafeTask(this._client, name, task);
         try {
-            return failsafeTask.runAnyReplica();
+            return await failsafeTask.runAnyReplica();
         } catch (e) {
             if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.errorMessage()) {
-                return failsafeTask.runPrimaryReplica();
+                return await failsafeTask.runPrimaryReplica();
             } else throw e;
         }
     }
