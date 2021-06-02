@@ -26,13 +26,16 @@ import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
+import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 
 export class CoreDatabaseManager implements DatabaseManager {
 
     private readonly _rpcClient: TypeDBClient;
+    private readonly _stub: TypeDBStub;
 
     constructor(client: TypeDBClient) {
         this._rpcClient = client;
+        this._stub;
     }
 
     public async get(name: string): Promise<Database> {
@@ -43,12 +46,7 @@ export class CoreDatabaseManager implements DatabaseManager {
     public create(name: string): Promise<void> {
         if (!name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME);
         const req = RequestBuilder.Core.DatabaseManager.createReq(name);
-        return new Promise((resolve, reject) => {
-            this._rpcClient.databases_create(req, (err) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve();
-            });
-        });
+        return this._stub.databasesCreate(req);
     }
 
     public contains(name: string): Promise<boolean> {
