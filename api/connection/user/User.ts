@@ -19,35 +19,10 @@
  * under the License.
  */
 
+export interface User {
 
-import {TypeDBOptions} from "./TypeDBOptions";
-import {TypeDBSession, SessionType} from "./TypeDBSession";
-import {DatabaseManager} from "./database/DatabaseManager";
-import {UserManager} from "./user/UserManager";
+    name(): string;
 
-export interface TypeDBClient {
+    delete(): void;
 
-    isOpen(): boolean;
-
-    databases(): DatabaseManager;
-
-    session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSession>;
-
-    isCluster(): boolean;
-
-    asCluster(): TypeDBClient.Cluster;
-
-    close(): void;
-
-}
-
-export namespace TypeDBClient {
-
-    export interface Cluster extends TypeDBClient {
-
-        users(): UserManager;
-
-        databases(): DatabaseManager.Cluster;
-
-    }
 }
