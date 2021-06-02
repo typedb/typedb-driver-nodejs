@@ -20,18 +20,18 @@
  */
 
 
-import {TypeDBSession, SessionType} from "../api/TypeDBSession";
-import {TypeDBOptions} from "../api/TypeDBOptions";
-import {Database} from "../api/database/Database";
-import {TypeDBTransaction, TransactionType} from "../api/TypeDBTransaction";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {Session} from "typedb-protocol/common/session_pb";
 import {CoreClient} from "./CoreClient";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {CoreTransaction} from "./CoreTransaction";
+import {TypeDBTransaction, TransactionType} from "../../api/connection/TypeDBTransaction";
+import {TypeDBSession, SessionType} from "../../api/connection/TypeDBSession";
+import {TypeDBOptions} from "../../api/connection/TypeDBOptions";
+import {Database} from "../../api/connection/database/Database";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {RequestTransmitter} from "../../stream/RequestTransmitter";
+import {Session} from "typedb-protocol/common/session_pb";
 import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
-import {RequestTransmitter} from "../stream/RequestTransmitter";
 import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 
 export class CoreSession implements TypeDBSession {

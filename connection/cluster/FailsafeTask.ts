@@ -20,12 +20,12 @@
  */
 
 
-import {Database} from "../api/database/Database";
 import {ClusterClient} from "./ClusterClient";
 import {ClusterDatabase, DatabaseReplica} from "./ClusterDatabase";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {Database} from "../../api/connection/database/Database";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;

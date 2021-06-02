@@ -20,16 +20,16 @@
  */
 
 
-import {TypeDBClient} from "../api/TypeDBClient";
-import {TypeDBSession, SessionType} from "../api/TypeDBSession";
-import {TypeDBOptions} from "../api/TypeDBOptions";
-import {CoreDatabaseManager} from "./CoreDatabaseManager";
 import {CoreSession} from "./CoreSession";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {CoreDatabaseManager} from "./CoreDatabaseManager";
+import {TypeDBClient} from "../../api/connection/TypeDBClient";
+import {TypeDBOptions} from "../../api/connection/TypeDBOptions";
+import {TypeDBSession, SessionType} from "../../api/connection/TypeDBSession";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {RequestTransmitter} from "../../stream/RequestTransmitter";
 import {TypeDBClient as TypeDBStub} from "typedb-protocol/core/core_service_grpc_pb";
 import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
-import {RequestTransmitter} from "../stream/RequestTransmitter";
 import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 

@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import {Database} from "../api/database/Database";
-import {CoreDatabase} from "../core/CoreDatabase";
-import {ClusterDatabase as ClusterDatabaseProto} from "typedb-protocol/cluster/cluster_database_pb";
 import { ClusterClient } from "./ClusterClient";
 import { FailsafeTask } from "./FailsafeTask";
+import {CoreDatabase} from "../core/CoreDatabase";
+import {Database} from "../../api/connection/database/Database";
+import {ClusterDatabase as ClusterDatabaseProto} from "typedb-protocol/cluster/cluster_database_pb";
 
 export class ClusterDatabase implements Database.Cluster {
 

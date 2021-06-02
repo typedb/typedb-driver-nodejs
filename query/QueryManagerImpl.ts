@@ -20,12 +20,12 @@
  */
 
 import {QueryManager} from "../api/query/QueryManager";
-import {TypeDBOptions} from "../api/TypeDBOptions";
+import {TypeDBOptions} from "../api/connection/TypeDBOptions";
 import {ConceptMap} from "../api/answer/ConceptMap";
 import {Numeric} from "../api/answer/Numeric";
 import {ConceptMapGroup} from "../api/answer/ConceptMapGroup";
 import {NumericGroup} from "../api/answer/NumericGroup";
-import {TypeDBTransaction} from "../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
 import {Explanation} from "../api/logic/Explanation";
 import {ExplanationImpl} from "../logic/ExplanationImpl";
 import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";

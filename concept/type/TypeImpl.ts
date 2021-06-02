@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {Concept} from "../../api/concept/Concept";
 import {RemoteType, Type} from "../../api/concept/type/Type";
 import {Label} from "../../common/Label";

@@ -19,14 +19,14 @@
  * under the License.
  */
 
-import {Database} from "../api/database/Database";
-import {DatabaseManager} from "../api/database/DatabaseManager";
 import {ClusterDatabase} from "./ClusterDatabase";
 import {ClusterClient} from "./ClusterClient";
+import {Database} from "../../api/connection/database/Database";
+import {DatabaseManager} from "../../api/connection/database/DatabaseManager";
 import {CoreDatabaseManager} from "../core/CoreDatabaseManager";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "typedb-protocol/cluster/cluster_database_pb";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import { FailsafeTask } from "./FailsafeTask";

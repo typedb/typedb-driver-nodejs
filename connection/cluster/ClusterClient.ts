@@ -20,18 +20,18 @@
  */
 
 
-import {TypeDBClient} from "../api/TypeDBClient";
-import {TypeDBClusterOptions, TypeDBOptions} from "../api/TypeDBOptions";
-import {Database} from "../api/database/Database";
-import {SessionType} from "../api/TypeDBSession";
-import {CoreClient} from "../core/CoreClient";
-import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
-import {ClusterDatabase} from "./ClusterDatabase";
-import {ClusterSession} from "./ClusterSession";
 import {FailsafeTask} from "./FailsafeTask";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {ClusterSession} from "./ClusterSession";
+import {ClusterDatabase} from "./ClusterDatabase";
+import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
+import {CoreClient} from "../core/CoreClient";
+import {TypeDBClient} from "../../api/connection/TypeDBClient";
+import {TypeDBClusterOptions, TypeDBOptions} from "../../api/connection/TypeDBOptions";
+import {Database} from "../../api/connection/database/Database";
+import {SessionType} from "../../api/connection/TypeDBSession";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
 import {ServerManager} from "typedb-protocol/cluster/cluster_server_pb";
 import {ChannelCredentials} from "@grpc/grpc-js";

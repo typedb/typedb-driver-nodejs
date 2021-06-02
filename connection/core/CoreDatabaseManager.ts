@@ -19,12 +19,12 @@
  * under the License.
  */
 
-import {DatabaseManager} from "../api/database/DatabaseManager";
-import {Database} from "../api/database/Database";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {CoreDatabase} from "./CoreDatabase";
+import {DatabaseManager} from "../../api/connection/database/DatabaseManager";
+import {Database} from "../../api/connection/database/Database";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 
 export class CoreDatabaseManager implements DatabaseManager {

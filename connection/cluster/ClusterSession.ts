@@ -19,13 +19,13 @@
  * under the License.
  */
 
-import {TypeDBClient} from "../api/TypeDBClient";
-import {TypeDBClusterOptions, TypeDBOptions} from "../api/TypeDBOptions";
-import {Database} from "../api/database/Database";
-import {TypeDBSession, SessionType} from "../api/TypeDBSession";
-import {TypeDBTransaction, TransactionType} from "../api/TypeDBTransaction";
-import {ClusterClient} from "./ClusterClient";
 import {FailsafeTask} from "./FailsafeTask";
+import {ClusterClient} from "./ClusterClient";
+import {TypeDBClient} from "../../api/connection/TypeDBClient";
+import {TypeDBClusterOptions, TypeDBOptions} from "../../api/connection/TypeDBOptions";
+import {Database} from "../../api/connection/database/Database";
+import {TypeDBSession, SessionType} from "../../api/connection/TypeDBSession";
+import {TypeDBTransaction, TransactionType} from "../../api/connection/TypeDBTransaction";
 
 export class ClusterSession implements TypeDBSession {
 

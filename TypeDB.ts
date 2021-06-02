@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import {TypeDBClient as TypeDBClient} from "./api/TypeDBClient";
-import {CoreClient} from "./core/CoreClient";
-import {ClusterClient} from "./cluster/ClusterClient";
+import {TypeDBClient as TypeDBClient} from "./api/connection/TypeDBClient";
+import {CoreClient} from "./connection/core/CoreClient";
+import {ClusterClient} from "./connection/cluster/ClusterClient";
 
 export namespace TypeDB {
 
