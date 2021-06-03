@@ -21,13 +21,14 @@
 
 import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
-import {ChannelCredentials} from "@grpc/grpc-js";
+import {Metadata, credentials, CallCredentials, ChannelCredentials} from "@grpc/grpc-js";
 import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
 import {ServerManager} from "typedb-protocol/cluster/cluster_server_pb";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ClusterUser, ClusterUserManager} from "typedb-protocol/cluster/cluster_user_pb";
 import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
+import * as fs from "fs";
 
 export class ClusterServerStub extends TypeDBStub {
 
@@ -105,12 +106,29 @@ export class ClusterServerStub extends TypeDBStub {
 export namespace ClusterServerStub {
 
     export function create(address: string, credential: TypeDBCredential) {
+        const metaCallback = (_params: any, callback: any) => {
+            const meta = new Metadata();
+            meta.add('username', credential.username());
+            meta.add('password', credential.password());
+            callback(null, meta);
+        }
+        const callCreds = CallCredentials.createFromMetadataGenerator(metaCallback);
 
-        // TODO include credential in stub and cluster stub
+        let stubCredentials;
+        if (credential.tlsEnabled()) {
+            if (credential.tlsRootCAPath() != null) {
+                const rootCert = fs.readFileSync(credential.tlsRootCAPath());
+                stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(rootCert), callCreds);
+            } else {
+                stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(), callCreds);
+            }
+        } else {
+            stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createInsecure(), callCreds);
+        }
 
         return new ClusterServerStub(
-            new TypeDBClient(address, ChannelCredentials.createInsecure()),
-            new TypeDBClusterClient(address, ChannelCredentials.createInsecure())
+            new TypeDBClient(address, stubCredentials),
+            new TypeDBClusterClient(address, stubCredentials)
         )
     }
 
