@@ -119,12 +119,7 @@ export abstract class FailsafeTask<TResult> {
         for (const serverAddress of this._client.clusterMembers()) {
             try {
                 console.info(`Fetching replica info from ${serverAddress}`);
-                const res: ClusterDatabaseManager.Get.Res = await new Promise((resolve, reject) => {
-                    this._client.typeDBClusterRPC(serverAddress).databases_get(RequestBuilder.Cluster.DatabaseManager.getReq(this._database), (err, res) => {
-                        if (err) reject(new TypeDBClientError(err));
-                        else resolve(res);
-                    });
-                });
+                const res: ClusterDatabaseManager.Get.Res = await this._client.stub(serverAddress).databasesClusterGet(RequestBuilder.Cluster.DatabaseManager.getReq(this._database));
                 const databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), this._client);
                 this._client.clusterDatabases()[this._database] = databaseClusterRPC;
                 return databaseClusterRPC;

@@ -29,18 +29,18 @@ import {TypeDBClient} from "../../api/connection/TypeDBClient";
 import {TypeDBClusterOptions, TypeDBOptions} from "../../api/connection/TypeDBOptions";
 import {Database} from "../../api/connection/database/Database";
 import {SessionType} from "../../api/connection/TypeDBSession";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
 import {ServerManager} from "typedb-protocol/cluster/cluster_server_pb";
 import {ChannelCredentials} from "@grpc/grpc-js";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import {ClusterServerStub} from "./ClusterServerStub";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 
 export class ClusterClient implements TypeDBClient.Cluster {
 
     private _coreClients: { [serverAddress: string]: CoreClient };
-    private _typeDBClusterRPCs: { [serverAddress: string]: TypeDBClusterClient };
+    private _clusterStubs: { [serverAddress: string]: ClusterServerStub };
     private _databaseManagers: ClusterDatabaseManager;
     private _clusterDatabases: { [db: string]: ClusterDatabase };
     private _isOpen: boolean;
@@ -51,9 +51,9 @@ export class ClusterClient implements TypeDBClient.Cluster {
         serverAddresses.forEach((addr) => {
             this._coreClients[addr] = new CoreClient(addr);
         });
-        this._typeDBClusterRPCs = {};
+        this._clusterStubs = {};
         serverAddresses.forEach((addr) => {
-            this._typeDBClusterRPCs[addr] = new TypeDBClusterClient(addr, ChannelCredentials.createInsecure());
+            this._clusterStubs[addr] = new TypeDBClusterClient(addr, ChannelCredentials.createInsecure());
         });
 
         this._databaseManagers = new ClusterDatabaseManager(this);
@@ -113,8 +113,8 @@ export class ClusterClient implements TypeDBClient.Cluster {
         return this._coreClients;
     }
 
-    typeDBClusterRPC(address: string): TypeDBClusterClient {
-        return this._typeDBClusterRPCs[address];
+    stub(address: string): ClusterServerStub {
+        return this._clusterStubs[address];
     }
 
     private async fetchClusterServers(addresses: string[]): Promise<string[]> {
@@ -122,13 +122,8 @@ export class ClusterClient implements TypeDBClient.Cluster {
             const client = new CoreClient(address);
             try {
                 console.info(`Fetching list of cluster servers from ${address}...`);
-                const grpcClusterClient = new TypeDBClusterClient(address, ChannelCredentials.createInsecure());
-                const res = await new Promise<ServerManager.All.Res>((resolve, reject) => {
-                    grpcClusterClient.servers_all(RequestBuilder.Cluster.ServerManager.allReq(), (err, res) => {
-                        if (err) reject(new TypeDBClientError(err));
-                        else resolve(res);
-                    });
-                });
+                const clusterStub = ClusterServerStub.create(address, credential);
+                const res = await clusterStub.serversAll(RequestBuilder.Cluster.ServerManager.allReq());
                 const members = res.getServersList().map(x => x.getAddress());
                 console.info(`The cluster servers are ${members}`);
                 return members;
@@ -144,6 +139,7 @@ export class ClusterClient implements TypeDBClient.Cluster {
     asCluster(): TypeDBClient.Cluster {
         return this;
     }
+
 }
 
 class OpenSessionFailsafeTask extends FailsafeTask<ClusterSession> {

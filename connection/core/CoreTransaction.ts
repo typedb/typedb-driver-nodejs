@@ -51,7 +51,7 @@ export class CoreTransaction implements TypeDBTransaction.Extended {
         this._sessionId = _sessionId;
         this._type = type;
         this._options = options;
-        const rpcClient = this._session.rpc();
+        const rpcClient = this._session.stub();
         this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter());
         this._conceptManager = new ConceptManagerImpl(this);
         this._logicManager = new LogicManagerImpl(this);

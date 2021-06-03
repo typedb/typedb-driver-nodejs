@@ -37,7 +37,7 @@ export class ClusterDatabase implements Database.Cluster {
         const clusterDbMgr = client.databases();
         for (const address of Object.keys(clusterDbMgr.databaseManagers())) {
             const databaseManager = clusterDbMgr.databaseManagers()[address];
-            this._databases[address] = new CoreDatabase(database, databaseManager.rpcClient());
+            this._databases[address] = new CoreDatabase(database, databaseManager.stub());
         }
         this._name = database;
         this._client = client;

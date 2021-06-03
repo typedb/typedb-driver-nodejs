@@ -23,41 +23,32 @@ import {Database} from "../../api/connection/database/Database";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
+import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 
 export class CoreDatabase implements Database {
 
     private readonly _name: string;
-    private readonly _rpcClient: TypeDBClient;
+    private readonly _stub: TypeDBStub;
 
-    constructor(name: string, rpcClient: TypeDBClient) {
+    constructor(name: string, typeDBStub: TypeDBStub) {
         this._name = name;
-        this._rpcClient = rpcClient;
-    }
-
-    delete(): Promise<void> {
-        if (!this._name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
-        const req = RequestBuilder.Core.Database.deleteReq(this._name);
-        return new Promise((resolve, reject) => {
-            this._rpcClient.database_delete(req, (err) => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
+        this._stub = typeDBStub;
     }
 
     name(): string {
         return this._name;
     }
 
+    delete(): Promise<void> {
+        if (!this._name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
+        const req = RequestBuilder.Core.Database.deleteReq(this._name);
+        return this._stub.databaseDelete(req);
+
+    }
+
     async schema(): Promise<string> {
-        const schema: Promise<string> = new Promise((resolve, reject) => {
-            return this._rpcClient.database_schema(RequestBuilder.Core.Database.schemaReq(this.name()), (err, res) => {
-                if (err) reject(err);
-                else resolve(res.getSchema());
-            });
-        });
-        return schema;
+        const req = RequestBuilder.Core.Database.schemaReq(this.name());
+        return this._stub.databaseSchema(req);
     }
 
     toString(): string {

@@ -30,9 +30,9 @@ import {TypeDBTransaction, TransactionType} from "../../api/connection/TypeDBTra
 export class ClusterSession implements TypeDBSession {
 
     private readonly _clusterClient: ClusterClient;
-    private _coreClient: TypeDBClient;
-    private _coreSession: TypeDBSession;
-    private _options: TypeDBClusterOptions;
+    private readonly _coreClient: TypeDBClient;
+    private readonly _coreSession: TypeDBSession;
+    private readonly _options: TypeDBClusterOptions;
 
     constructor(clusterClient: ClusterClient, serverAddress: string) {
         this._clusterClient = clusterClient;

@@ -33,6 +33,7 @@ import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import ResponseQueue = ResponseCollector.ResponseQueue;
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
 
 
 export class BidirectionalStream {
@@ -43,11 +44,11 @@ export class BidirectionalStream {
     private readonly _responsePartCollector: ResponseCollector<Transaction.ResPart>;
     private _isOpen: boolean;
 
-    constructor(rpcClient: TypeDBClient, requestTransmitter: RequestTransmitter) {
+    constructor(stub: TypeDBStub, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
         this._responseCollector = new ResponseCollector();
         this._responsePartCollector = new ResponseCollector();
-        const transactionStream = rpcClient.transaction();
+        const transactionStream = stub.transaction();
         this.registerObserver(transactionStream);
         this._dispatcher = requestTransmitter.dispatcher(transactionStream);
         this._isOpen = true;

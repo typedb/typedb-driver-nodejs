@@ -28,10 +28,9 @@ import {TypeDBOptions} from "../../api/connection/TypeDBOptions";
 import {Database} from "../../api/connection/database/Database";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {RequestTransmitter} from "../../stream/RequestTransmitter";
-import {Session} from "typedb-protocol/common/session_pb";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 
 export class CoreSession implements TypeDBSession {
@@ -60,14 +59,8 @@ export class CoreSession implements TypeDBSession {
         const openReq = RequestBuilder.Session.openReq(this._databaseName, this._type.proto(), this._options.proto())
         this._database = await this._client.databases().get(this._databaseName);
         const start = (new Date()).getMilliseconds();
-        let end = 0;
-        const res = await new Promise<Session.Open.Res>((resolve, reject) => {
-            end = (new Date()).getMilliseconds();
-            this._client.rpc().session_open(openReq, (err, res) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve(res);
-            });
-        });
+        const res = await this._client.stub().sessionOpen(openReq);
+        let end = (new Date()).getMilliseconds(); // TODO will this work?
         this._sessionId = res.getSessionId_asB64();
         this._networkLatencyMillis = (end - start) - res.getServerDurationMillis();
         this._isOpen = true;
@@ -81,11 +74,7 @@ export class CoreSession implements TypeDBSession {
             this._client.closedSession(this);
             clearTimeout(this._pulse);
             const req = RequestBuilder.Session.closeReq(this._sessionId);
-            await new Promise<void>(resolve => {
-                this._client.rpc().session_close(req, () => {
-                    resolve();
-                });
-            });
+            await this._client.stub().sessionClose(req);
         }
     }
 
@@ -121,14 +110,14 @@ export class CoreSession implements TypeDBSession {
     private pulse(): void {
         if (!this._isOpen) return;
         const pulse = RequestBuilder.Session.pulseReq(this._sessionId);
-        this._client.rpc().session_pulse(pulse, (err, res) => {
+        this._client.stub().sessionPulse(pulse, (err, res) => {
             if (err || !res.getAlive()) this._isOpen = false;
             else this._pulse = setTimeout(() => this.pulse(), 5000);
         });
     }
 
-    public rpc(): TypeDBClient {
-        return this._client.rpc();
+    public stub(): TypeDBStub {
+        return this._client.stub();
     }
 
     public requestTransmitter(): RequestTransmitter {

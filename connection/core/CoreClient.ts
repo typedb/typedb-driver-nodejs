@@ -20,30 +20,30 @@
  */
 
 
+import {CoreStub} from "./CoreStub";
 import {CoreSession} from "./CoreSession";
 import {CoreDatabaseManager} from "./CoreDatabaseManager";
 import {TypeDBClient} from "../../api/connection/TypeDBClient";
 import {TypeDBOptions} from "../../api/connection/TypeDBOptions";
 import {TypeDBSession, SessionType} from "../../api/connection/TypeDBSession";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {RequestTransmitter} from "../../stream/RequestTransmitter";
-import {TypeDBClient as TypeDBStub} from "typedb-protocol/core/core_service_grpc_pb";
-import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
 import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 
 export class CoreClient implements TypeDBClient {
 
-    private readonly _rpcClient: TypeDBStub;
+    private readonly _stub: TypeDBStub;
     private readonly _databases : CoreDatabaseManager;
     private readonly _requestTransmitter: RequestTransmitter;
     private readonly _sessions: {[id: string]: CoreSession};
     private _isOpen : boolean;
 
     constructor(address : string) {
-        this._rpcClient = new TypeDBStub(address, ChannelCredentials.createInsecure());
-        this._databases = new CoreDatabaseManager(this._rpcClient);
+        this._stub = CoreStub.create(address);
+        this._databases = new CoreDatabaseManager(this._stub);
         this._requestTransmitter = new RequestTransmitter();
         this._sessions = {};
         this._isOpen = true;
@@ -67,7 +67,7 @@ export class CoreClient implements TypeDBClient {
             this._isOpen = false;
             Object.values(this._sessions).forEach(s => s.close());
             this._requestTransmitter.close();
-            closeClient(this._rpcClient);
+            this._stub.closeClient();
         }
     }
 
@@ -83,8 +83,8 @@ export class CoreClient implements TypeDBClient {
         throw new TypeDBClientError(ILLEGAL_CAST.message(this.constructor.toString(), "ClusterClient"));
     }
 
-    rpc() : TypeDBStub {
-        return this._rpcClient;
+    stub() : TypeDBStub {
+        return this._stub;
     }
 
     transmitter(): RequestTransmitter {

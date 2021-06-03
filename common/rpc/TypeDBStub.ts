@@ -21,9 +21,15 @@
 
 
 import {TypeDBClientError} from "../errors/TypeDBClientError";
-import {CoreDatabaseManager} from "typedb-protocol/core/core_database_pb";
+import {CoreDatabaseManager as CoreDatabaseMgrProto, CoreDatabase as CoreDatabaseProto} from "typedb-protocol/core/core_database_pb";
 import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
+import {CoreDatabase} from "../../connection/core/CoreDatabase";
+import {Session} from "typedb-protocol/common/session_pb";
+import {closeClient, ServiceError} from "@grpc/grpc-js";
 
+/*
+TODO implement ResilientCall
+ */
 export abstract class TypeDBStub {
 
     private _stub: TypeDBClient;
@@ -32,7 +38,7 @@ export abstract class TypeDBStub {
         this._stub = stub;
     }
 
-    databasesCreate(req: CoreDatabaseManager.Create.Req): Promise<void> {
+    databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
         return new Promise((resolve, reject) => {
             this._stub.databases_create(req, (err) => {
                 if (err) reject(new TypeDBClientError(err));
@@ -41,50 +47,69 @@ export abstract class TypeDBStub {
         });
     }
 
+    databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this._stub.databases_contains(req, (err, res) => {
+                if (err) reject(new TypeDBClientError(err));
+                else resolve(res.getContains());
+            });
+        });
+    }
 
+    databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<CoreDatabase[]> {
+        return new Promise((resolve, reject) => {
+            this._stub.databases_all(req, (err, res) => {
+                if (err) reject(new TypeDBClientError(err));
+                else resolve(res.getNamesList().map(name => new CoreDatabase(name, this)));
+            })
+        })
+    }
 
-//     public  databasesContains(req: CoreDatabaseManager.Contains): Promise<CoreDatabaseManager.Contains.Res> {
-//     return this.resilientCall(() -> this._stub.databasesContains(request));
-// }
-//
-// public CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseManager.Create.Req request) {
-//     return this.resilientCall(() -> this._stub.databasesCreate(request));
-// }
-//
-// public CoreDatabaseManager.All.Res databasesAll(CoreDatabaseManager.All.Req request) {
-//     return this.resilientCall(() -> this._stub.databasesAll(request));
-// }
-//
-// public CoreDatabase.Schema.Res databaseSchema(CoreDatabase.Schema.Req request) {
-//     return this.resilientCall(() -> this._stub.databaseSchema(request));
-// }
-//
-// public CoreDatabase.Delete.Res databaseDelete(CoreDatabase.Delete.Req request) {
-//     return this.resilientCall(() -> this._stub.databaseDelete(request));
-// }
-//
-// public Session.Open.Res sessionOpen(Session.Open.Req request) {
-//     return this.resilientCall(() -> this._stub.sessionOpen(request));
-// }
-//
-// public Session.Close.Res sessionClose(Session.Close.Req request) {
-//     return this.resilientCall(() -> this._stub.sessionClose(request));
-// }
-//
-// public Session.Pulse.Res sessionPulse(Session.Pulse.Req request) {
-//     return this.resilientCall(() -> this._stub.sessionPulse(request));
-// }
-//
-// public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver) {
-//     return this.resilientCall(() -> asyncStub.transaction(responseObserver));
-// }
+    databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this._stub.database_delete(req, (err) => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+    }
 
-private resilientCall<T>(fn: () => Promise<T>): Promise<T> {
-        try {
-            // TODO actually implement forced gRPC to reconnected rapidly, which provides resilience
-            return fn();
-        } catch (e) {
-            throw new TypeDBClientError(e);
-        }
+    databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string> {
+        return new Promise((resolve, reject) => {
+            return this._stub.database_schema(req, (err, res) => {
+                if (err) reject(err);
+                else resolve(res.getSchema());
+            });
+        });
+    }
+
+    sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res> {
+        return new Promise<Session.Open.Res>((resolve, reject) => {
+            this._stub.session_open(openReq, (err, res) => {
+                if (err) reject(new TypeDBClientError(err));
+                else resolve(res);
+            });
+        });
+    }
+
+    sessionClose(req: Session.Close.Req): Promise<void> {
+        return new Promise<void>(resolve => {
+            this._stub.session_close(req, () => {
+                resolve();
+            });
+        });
+    }
+
+    // TODO should this not be a promise?
+    sessionPulse(pulse: Session.Pulse.Req, callback: (err: ServiceError, res: Session.Pulse.Res) => void) {
+        this._stub.session_pulse(pulse, callback);
+    }
+
+    transaction() {
+        return this._stub.transaction()
+    }
+
+    closeClient() {
+        closeClient(this._stub);
     }
 }

@@ -30,9 +30,9 @@ import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "typedb-protocol/cluster/cluster_database_pb";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import { FailsafeTask } from "./FailsafeTask";
-import { TypeDBClusterClient as TypeDBClusterStub } from "typedb-protocol/cluster/cluster_service_grpc_pb";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import DB_DOES_NOT_EXIST = ErrorMessage.Client.DB_DOES_NOT_EXIST;
+import {ClusterServerStub} from "./ClusterServerStub";
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
@@ -58,12 +58,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
     async get(name: string): Promise<Database.Cluster> {
         return await this.failsafeTask(name, (async (stub, dbMgr) => {
             if (await this.contains(name)) {
-                const res: ClusterDatabaseManagerProto.Get.Res = await new Promise((resolve, reject) => {
-                    stub.databases_get(RequestBuilder.Cluster.DatabaseManager.getReq(name), (err, res) => {
-                        if (err) reject(new TypeDBClientError(err));
-                        else resolve(res);
-                    });
-                });
+                const res: ClusterDatabaseManagerProto.Get.Res = await stub.databasesClusterGet(RequestBuilder.Cluster.DatabaseManager.getReq(name));
                 return ClusterDatabase.of(res.getDatabase(), this._client);
             }
             throw new TypeDBClientError(DB_DOES_NOT_EXIST.message(name));
@@ -74,12 +69,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         let errors = "";
         for (const address of Object.keys(this._databaseManagers)) {
             try {
-                const res: ClusterDatabaseManagerProto.All.Res = await new Promise((resolve, reject) => {
-                    this._client.typeDBClusterRPC(address).databases_all(RequestBuilder.Cluster.DatabaseManager.allReq(), (err, res) => {
-                        if (err) reject(new TypeDBClientError(err));
-                        else resolve(res);
-                    });
-                });
+                const res: ClusterDatabaseManagerProto.All.Res = await this._client.stub(address).databasesClusterAll(RequestBuilder.Cluster.DatabaseManager.allReq());
                 return res.getDatabasesList().map(db => ClusterDatabase.of(db, this._client));
             } catch (e) {
                 errors += `- ${address}: ${e}\n`;
@@ -96,7 +86,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         return this._client;
     }
 
-    private async failsafeTask<T>(name: string, task: (stub: TypeDBClusterStub, dbMgr: DatabaseManager) => Promise<T>): Promise<T> {
+    private async failsafeTask<T>(name: string, task: (stub: ClusterServerStub, dbMgr: DatabaseManager) => Promise<T>): Promise<T> {
         const failsafeTask = new DatabaseManagerFailsafeTask(this._client, name, task);
         try {
             return await failsafeTask.runAnyReplica();
@@ -110,14 +100,14 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
 class DatabaseManagerFailsafeTask<T> extends FailsafeTask<T> {
 
-    private readonly _task: (stub: TypeDBClusterStub, dbMgr: DatabaseManager) => Promise<T>;
+    private readonly _task: (stub: ClusterServerStub, dbMgr: DatabaseManager) => Promise<T>;
 
-    constructor(client: ClusterClient, database: string, task: (stub: TypeDBClusterStub, dbMgr: DatabaseManager) => Promise<T>) {
+    constructor(client: ClusterClient, database: string, task: (stub: ClusterServerStub, dbMgr: DatabaseManager) => Promise<T>) {
         super(client, database);
         this._task = task;
     }
 
     async run(replica: Database.Replica): Promise<T> {
-        return this._task(this.client.typeDBClusterRPC(replica.address()), this.client.coreClient(replica.address()).databases());
+        return this._task(this.client.stub(replica.address()), this.client.coreClient(replica.address()).databases());
     }
 }
