@@ -19,15 +19,15 @@
  * under the License.
  */
 
-import {CoreDatabase} from "./CoreDatabase";
-import {DatabaseManager} from "../../api/connection/database/DatabaseManager";
-import {Database} from "../../api/connection/database/Database";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {TypeDBStub} from "../../common/rpc/TypeDBStub";
+import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
+import {DatabaseManager} from "../api/connection/database/DatabaseManager";
+import {Database} from "../api/connection/database/Database";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
 
-export class CoreDatabaseManager implements DatabaseManager {
+export class TypeDBDatabaseManagerImpl implements DatabaseManager {
 
     private readonly _stub: TypeDBStub;
 
@@ -36,7 +36,7 @@ export class CoreDatabaseManager implements DatabaseManager {
     }
 
     public async get(name: string): Promise<Database> {
-        if (await this.contains(name)) return new CoreDatabase(name, this._stub);
+        if (await this.contains(name)) return new TypeDBDatabaseImpl(name, this._stub);
         else throw new TypeDBClientError(ErrorMessage.Client.DB_DOES_NOT_EXIST);
     }
 

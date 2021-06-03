@@ -19,29 +19,29 @@
  * under the License.
  */
 
-import {ClusterDatabase} from "./ClusterDatabase";
+import {FailsafeTask} from "./FailsafeTask";
 import {ClusterClient} from "./ClusterClient";
+import {ClusterDatabase} from "./ClusterDatabase";
+import {ClusterServerStub} from "./ClusterServerStub";
+import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
 import {Database} from "../../api/connection/database/Database";
 import {DatabaseManager} from "../../api/connection/database/DatabaseManager";
-import {CoreDatabaseManager} from "../core/CoreDatabaseManager";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "typedb-protocol/cluster/cluster_database_pb";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
-import { FailsafeTask } from "./FailsafeTask";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import DB_DOES_NOT_EXIST = ErrorMessage.Client.DB_DOES_NOT_EXIST;
-import {ClusterServerStub} from "./ClusterServerStub";
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
-    private readonly _databaseManagers: { [serverAddress: string]: CoreDatabaseManager };
+    private readonly _databaseManagers: { [serverAddress: string]: TypeDBDatabaseManagerImpl };
     private readonly _client: ClusterClient;
 
     constructor(client: ClusterClient) {
         this._client = client;
-        this._databaseManagers = Object.entries(this._client.coreClients()).reduce((obj: { [address: string]: CoreDatabaseManager }, [addr, client]) => {
+        this._databaseManagers = Object.entries(this._client.clusterServerClients()).reduce((obj: { [address: string]: TypeDBDatabaseManagerImpl }, [addr, client]) => {
             obj[addr] = client.databases();
             return obj;
         }, {});
@@ -78,7 +78,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
     }
 
-    databaseManagers(): { [address: string]: CoreDatabaseManager } {
+    databaseManagers(): { [address: string]: TypeDBDatabaseManagerImpl } {
         return this._databaseManagers;
     }
 
@@ -108,6 +108,6 @@ class DatabaseManagerFailsafeTask<T> extends FailsafeTask<T> {
     }
 
     async run(replica: Database.Replica): Promise<T> {
-        return this._task(this.client.stub(replica.address()), this.client.coreClient(replica.address()).databases());
+        return this._task(this.client.stub(replica.address()), this.client.clusterServerClient(replica.address()).databases());
     }
 }

@@ -19,25 +19,25 @@
  * under the License.
  */
 
-import {CoreSession} from "./CoreSession";
-import {TypeDBTransaction, TransactionType} from "../../api/connection/TypeDBTransaction";
-import {TypeDBOptions} from "../../api/connection/TypeDBOptions";
-import {ConceptManager} from "../../api/concept/ConceptManager";
-import {LogicManager} from "../../api/logic/LogicManager";
-import {QueryManager} from "../../api/query/QueryManager";
-import {ConceptManagerImpl} from "../../concept/ConceptManagerImpl";
-import {LogicManagerImpl} from "../../logic/LogicManagerImpl";
-import {QueryManagerImpl} from "../../query/QueryManagerImpl";
-import {Stream} from "../../common/util/Stream";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {BidirectionalStream} from "../../stream/BidirectionalStream";
+import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
+import {TypeDBTransaction, TransactionType} from "../api/connection/TypeDBTransaction";
+import {TypeDBOptions} from "../api/connection/TypeDBOptions";
+import {ConceptManager} from "../api/concept/ConceptManager";
+import {LogicManager} from "../api/logic/LogicManager";
+import {QueryManager} from "../api/query/QueryManager";
+import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
+import {LogicManagerImpl} from "../logic/LogicManagerImpl";
+import {QueryManagerImpl} from "../query/QueryManagerImpl";
+import {Stream} from "../common/util/Stream";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {BidirectionalStream} from "../stream/BidirectionalStream";
 import {Transaction} from "typedb-protocol/common/transaction_pb";
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 
-export class CoreTransaction implements TypeDBTransaction.Extended {
-    private readonly _session: CoreSession;
+export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
+    private readonly _session: TypeDBSessionImpl;
     private readonly _sessionId: string;
     private readonly _type: TransactionType;
     private readonly _options: TypeDBOptions;
@@ -46,7 +46,7 @@ export class CoreTransaction implements TypeDBTransaction.Extended {
     private _logicManager: LogicManager;
     private _queryManager: QueryManager;
 
-    constructor(session: CoreSession, _sessionId: string, type: TransactionType, options: TypeDBOptions) {
+    constructor(session: TypeDBSessionImpl, _sessionId: string, type: TransactionType, options: TypeDBOptions) {
         this._session = session;
         this._sessionId = _sessionId;
         this._type = type;

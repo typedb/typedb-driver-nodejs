@@ -23,7 +23,7 @@
 import {TypeDBClientError} from "../errors/TypeDBClientError";
 import {CoreDatabaseManager as CoreDatabaseMgrProto, CoreDatabase as CoreDatabaseProto} from "typedb-protocol/core/core_database_pb";
 import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
-import {CoreDatabase} from "../../connection/core/CoreDatabase";
+import {TypeDBDatabaseImpl} from "../../connection/TypeDBDatabaseImpl";
 import {Session} from "typedb-protocol/common/session_pb";
 import {closeClient, ServiceError} from "@grpc/grpc-js";
 
@@ -56,11 +56,11 @@ export abstract class TypeDBStub {
         });
     }
 
-    databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<CoreDatabase[]> {
+    databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]> {
         return new Promise((resolve, reject) => {
             this._stub.databases_all(req, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
-                else resolve(res.getNamesList().map(name => new CoreDatabase(name, this)));
+                else resolve(res.getNamesList().map(name => new TypeDBDatabaseImpl(name, this)));
             })
         })
     }

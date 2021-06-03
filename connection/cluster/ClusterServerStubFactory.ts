@@ -19,26 +19,22 @@
  * under the License.
  */
 
-import {TypeDBStub} from "../../common/rpc/TypeDBStub";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
-import {ChannelCredentials} from "@grpc/grpc-js";
+import {TypeDBStubFactory} from "../TypeDBStubFactory";
+import {ClusterServerStub} from "./ClusterServerStub";
 import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
-import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
 
-export class CoreStub extends TypeDBStub {
+export class ClusterServerStubFactory extends TypeDBStubFactory {
 
-    constructor(stub: TypeDBClient) {
-        super(stub);
+    private _credential: TypeDBCredential;
+
+    constructor(credential: TypeDBCredential) {
+        super();
+        this._credential = credential;
+    }
+
+    newTypeDBStub(address: string): ClusterServerStub {
+        return ClusterServerStub.create(address, this._credential);
     }
 
 }
 
-export namespace CoreStub {
-
-    export function create(address: string) {
-        return new CoreStub(
-            new TypeDBClient(address, ChannelCredentials.createInsecure()),
-        );
-    }
-
-}

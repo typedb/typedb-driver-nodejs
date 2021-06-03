@@ -19,13 +19,13 @@
  * under the License.
  */
 
-import {Database} from "../../api/connection/database/Database";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {TypeDBStub} from "../../common/rpc/TypeDBStub";
+import {Database} from "../api/connection/database/Database";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
 
-export class CoreDatabase implements Database {
+export class TypeDBDatabaseImpl implements Database {
 
     private readonly _name: string;
     private readonly _stub: TypeDBStub;
@@ -43,7 +43,6 @@ export class CoreDatabase implements Database {
         if (!this._name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
         const req = RequestBuilder.Core.Database.deleteReq(this._name);
         return this._stub.databaseDelete(req);
-
     }
 
     async schema(): Promise<string> {

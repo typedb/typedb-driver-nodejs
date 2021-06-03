@@ -20,20 +20,20 @@
  */
 
 
-import {CoreClient} from "./CoreClient";
-import {CoreTransaction} from "./CoreTransaction";
-import {TypeDBTransaction, TransactionType} from "../../api/connection/TypeDBTransaction";
-import {TypeDBSession, SessionType} from "../../api/connection/TypeDBSession";
-import {TypeDBOptions} from "../../api/connection/TypeDBOptions";
-import {Database} from "../../api/connection/database/Database";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {TypeDBStub} from "../../common/rpc/TypeDBStub";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {RequestTransmitter} from "../../stream/RequestTransmitter";
+import {CoreClient} from "./core/CoreClient";
+import {TypeDBTransactionImpl} from "./TypeDBTransactionImpl";
+import {TypeDBTransaction, TransactionType} from "../api/connection/TypeDBTransaction";
+import {TypeDBSession, SessionType} from "../api/connection/TypeDBSession";
+import {TypeDBOptions} from "../api/connection/TypeDBOptions";
+import {Database} from "../api/connection/database/Database";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {RequestTransmitter} from "../stream/RequestTransmitter";
 import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 
-export class CoreSession implements TypeDBSession {
+export class TypeDBSessionImpl implements TypeDBSession {
 
     private readonly _databaseName: string;
     private readonly _type: SessionType;
@@ -81,7 +81,7 @@ export class CoreSession implements TypeDBSession {
     public async transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction> {
         if (!this.isOpen()) throw new TypeDBClientError(SESSION_CLOSED);
         if (!options) options = TypeDBOptions.core();
-        const transaction = new CoreTransaction(this, this._sessionId, type, options);
+        const transaction = new TypeDBTransactionImpl(this, this._sessionId, type, options);
         await transaction.open();
         this._transactions.add(transaction);
         return transaction;
