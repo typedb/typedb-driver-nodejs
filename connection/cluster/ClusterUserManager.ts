@@ -19,6 +19,8 @@
  * under the License.
  */
 
+import {ClusterClient} from "./ClusterClient";
+import {ClusterUser, FailsafeTask} from "../../dependencies_internal";
 import {User} from "../../api/connection/user/User";
 import {Database} from "../../api/connection/database/Database";
 import {UserManager} from "../../api/connection/user/UserManager";
@@ -26,14 +28,11 @@ import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import CLUSTER_USER_DOES_NOT_EXIST = ErrorMessage.Client.CLUSTER_USER_DOES_NOT_EXIST;
-import {ClusterClient} from "./ClusterClient";
-import {ClusterUser} from "./ClusterUser";
-import {FailsafeTask} from "./FailsafeTask";
 
 export class ClusterUserManager implements UserManager {
 
     private readonly _client: ClusterClient;
-    static _SYSTEM_DB: string = "_system";
+    static _SYSTEM_DB = "_system";
 
     constructor(client: ClusterClient) {
         this._client = client;

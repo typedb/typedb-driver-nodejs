@@ -69,7 +69,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         let errors = "";
         for (const address of Object.keys(this._databaseManagers)) {
             try {
-                const res: ClusterDatabaseManagerProto.All.Res = await this._client.stub(address).databasesClusterAll(RequestBuilder.Cluster.DatabaseManager.allReq());
+                const res = await this._client.stub(address).databasesClusterAll(RequestBuilder.Cluster.DatabaseManager.allReq());
                 return res.getDatabasesList().map(db => ClusterDatabase.of(db, this._client));
             } catch (e) {
                 errors += `- ${address}: ${e}\n`;
