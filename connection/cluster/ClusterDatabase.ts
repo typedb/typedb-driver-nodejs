@@ -21,7 +21,8 @@
 
 import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
 import {ClusterClient} from "./ClusterClient";
-import {FailsafeTask} from "./FailsafeTask";
+// import {FailsafeTask} from "./FailsafeTask"
+ import {FailsafeTask} from "../../dependencies_internal";
 import {Database} from "../../api/connection/database/Database";
 import {ClusterDatabase as ClusterDatabaseProto} from "typedb-protocol/cluster/cluster_database_pb";
 

@@ -45,6 +45,7 @@ export * from "./concept/type/RelationTypeImpl";
 export * from "./concept/type/RoleTypeImpl";
 
 /* cluster components */
+export * from "./connection/cluster/FailsafeTask";
+export * from "./connection/cluster/ClusterDatabase";
 // export * from "./connection/cluster/ClusterClient";
-// export * from "./connection/cluster/ClusterDatabase";
 //
