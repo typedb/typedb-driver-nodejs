@@ -115,15 +115,12 @@ export namespace ClusterServerStub {
         const callCreds = CallCredentials.createFromMetadataGenerator(metaCallback);
 
         let stubCredentials;
-        if (credential.tlsEnabled()) {
-            if (credential.tlsRootCAPath() != null) {
-                const rootCert = fs.readFileSync(credential.tlsRootCAPath());
-                stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(rootCert), callCreds);
-            } else {
-                stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(), callCreds);
-            }
+        if (credential.tlsRootCAPath() != null) {
+            const rootCert = fs.readFileSync(credential.tlsRootCAPath());
+            console.log(rootCert);
+            stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(rootCert), callCreds);
         } else {
-            stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createInsecure(), callCreds);
+            stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(), callCreds);
         }
 
         return new ClusterServerStub(

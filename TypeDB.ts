@@ -26,7 +26,7 @@ import {TypeDBClient as TypeDBClient} from "./api/connection/TypeDBClient";
 
 export namespace TypeDB {
 
-    export const DEFAULT_ADDRESS = "localhost:1729";
+    export const DEFAULT_ADDRESS = "127.0.0.1:1729";
 
     export function coreClient(address: string = DEFAULT_ADDRESS): TypeDBClient {
         return new CoreClient(address);

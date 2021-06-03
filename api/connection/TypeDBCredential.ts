@@ -21,7 +21,6 @@
 
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import CLUSTER_TLS_DISABLED_WITH_ROOT_CA = ErrorMessage.Client.CLUSTER_TLS_DISABLED_WITH_CA;
 import CLUSTER_INVALID_ROOT_CA_PATH = ErrorMessage.Client.CLUSTER_INVALID_ROOT_CA_PATH;
 import * as fs from "fs";
 
@@ -29,18 +28,11 @@ export class TypeDBCredential {
 
     private _username: string;
     private _password: string;
-    private _tlsEnabled: boolean;
     private _tlsRootCAPath: string;
 
-    constructor(username: string, password: string, tlsEnabled: boolean, tlsRootCAPath?: string) {
+    constructor(username: string, password: string, tlsRootCAPath?: string) {
         this._username = username;
         this._password = password;
-
-        if (!tlsEnabled && tlsRootCAPath != null) {
-            throw new TypeDBClientError(CLUSTER_TLS_DISABLED_WITH_ROOT_CA);
-        }
-
-        this._tlsEnabled = tlsEnabled;
 
         if (tlsRootCAPath != null && !fs.existsSync(tlsRootCAPath)) {
             throw new TypeDBClientError(CLUSTER_INVALID_ROOT_CA_PATH.message(tlsRootCAPath));
@@ -54,10 +46,6 @@ export class TypeDBCredential {
 
     public password(): string {
         return this._password;
-    }
-
-    public tlsEnabled(): boolean {
-        return this._tlsEnabled;
     }
 
     public tlsRootCAPath(): string {

@@ -49,7 +49,10 @@ mkdir ./typedb_distribution/"$DIRECTORY"/typedb_test
 if [[ $PRODUCT == "Core" ]]; then
   ./typedb_distribution/"$DIRECTORY"/typedb server --data typedb_test &
 else
-  ./typedb_distribution/"$DIRECTORY"/typedb server --address "127.0.0.1:1729:1730:1731" &
+  ./typedb_distribution/"$DIRECTORY"/typedb server --address "127.0.0.1:1729:1730:1731" --encryption-enabled=true &
+  ls ./typedb_distribution/"$DIRECTORY"/server/conf
+  ROOT_CA=`realpath ./typedb_distribution/"$DIRECTORY"/server/conf/encryption/rpc-root-ca.pem`
+  export ROOT_CA
 fi
 echo Unarchiving client.
 tar -xf client-nodejs.tar.gz
@@ -67,7 +70,7 @@ RETRY_NUM=0
 while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   RETRY_NUM=$(($RETRY_NUM + 1))
   if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-    echo Waiting for TypeDB $PRODUCT server to start \($(($RETRY_NUM / 2))s\)...
+    echo Waiting for TypeDB $PRODUCT server to start \($(($RETRY_NUM / 2))s\)..TypeDBStub.
   fi
   lsof -i :1729 && STARTED=1 || STARTED=0
   if [[ $STARTED -eq 1 ]]; then
@@ -80,6 +83,7 @@ if [[ $STARTED -eq 0 ]]; then
   exit 1
 fi
 echo TypeDB $PRODUCT database server started
+export PRODUCT
 node ./node_modules/.bin/cucumber-js ./external/vaticle_typedb_behaviour/**/*.feature --require './**/*.js' --tags 'not @ignore and not @ignore-client-nodejs' --format @cucumber/pretty-formatter && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
