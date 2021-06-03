@@ -19,10 +19,8 @@
  * under the License.
  */
 
-import {FailsafeTask} from "./FailsafeTask";
-import {ClusterClient} from "./ClusterClient";
-import {ClusterDatabase} from "./ClusterDatabase";
 import {ClusterServerStub} from "./ClusterServerStub";
+import {ClusterDatabase} from "./ClusterDatabase";
 import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
 import {Database} from "../../api/connection/database/Database";
 import {DatabaseManager} from "../../api/connection/database/DatabaseManager";
@@ -33,6 +31,8 @@ import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "typedb-prot
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import DB_DOES_NOT_EXIST = ErrorMessage.Client.DB_DOES_NOT_EXIST;
+import {ClusterClient} from "./ClusterClient";
+import {FailsafeTask} from "./FailsafeTask";
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 

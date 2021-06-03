@@ -19,16 +19,16 @@
  * under the License.
  */
 
-import {UserManager} from "../../api/connection/user/UserManager";
 import {User} from "../../api/connection/user/User";
-import {FailsafeTask} from "./FailsafeTask";
-import {Database} from "../../dist/api/database/Database";
-import {ClusterClient} from "./ClusterClient";
+import {Database} from "../../api/connection/database/Database";
+import {UserManager} from "../../api/connection/user/UserManager";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {ClusterUser} from "./ClusterUser";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import CLUSTER_USER_DOES_NOT_EXIST = ErrorMessage.Client.CLUSTER_USER_DOES_NOT_EXIST;
+import {ClusterClient} from "./ClusterClient";
+import {ClusterUser} from "./ClusterUser";
+import {FailsafeTask} from "./FailsafeTask";
 
 export class ClusterUserManager implements UserManager {
 

@@ -20,16 +20,11 @@
  */
 
 
-import {FailsafeTask} from "./FailsafeTask";
 import {ClusterSession} from "./ClusterSession";
-import {ClusterDatabase} from "./ClusterDatabase";
-import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
 import {ClusterServerStub} from "./ClusterServerStub";
-import {ClusterUserManager} from "./ClusterUserManager";
 import {ClusterServerClient} from "./ClusterServerClient";
-import {CoreClient} from "../core/CoreClient";
 import {TypeDBClient} from "../../api/connection/TypeDBClient";
-import {Database} from "../../api/connection/database/Database";
+import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
 import {SessionType} from "../../api/connection/TypeDBSession";
 import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
 import {TypeDBClusterOptions, TypeDBOptions} from "../../api/connection/TypeDBOptions";
@@ -37,8 +32,11 @@ import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import {Database} from "../../api/connection/database/Database";
+import {ClusterUserManager} from "./ClusterUserManager";
+import {FailsafeTask} from "./FailsafeTask";
 
-export class ClusterClient implements TypeDBClient.Cluster{
+export class ClusterClient implements TypeDBClient.Cluster {
 
     private readonly _addresses: string[];
     private readonly _credential: TypeDBCredential;
@@ -46,7 +44,7 @@ export class ClusterClient implements TypeDBClient.Cluster{
     private _serverClients: { [serverAddress: string]: ClusterServerClient };
     private _clusterStubs: { [serverAddress: string]: ClusterServerStub };
     private _databaseManagers: ClusterDatabaseManager;
-    private _clusterDatabases: { [db: string]: ClusterDatabase };
+    private _clusterDatabases: { [db: string]: Database.Cluster };
     private _userManager: ClusterUserManager;
     private _isOpen: boolean;
 
@@ -82,11 +80,13 @@ export class ClusterClient implements TypeDBClient.Cluster{
     }
 
     private sessionPrimaryReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
+        // return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
+        return null;
     }
 
     private sessionAnyReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
+        // return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
+        return null;
     }
 
     databases(): ClusterDatabaseManager {
@@ -112,7 +112,7 @@ export class ClusterClient implements TypeDBClient.Cluster{
         return true;
     }
 
-    clusterDatabases(): { [db: string]: ClusterDatabase } {
+    clusterDatabases(): { [db: string]: Database.Cluster } {
         return this._clusterDatabases;
     }
 
@@ -134,7 +134,6 @@ export class ClusterClient implements TypeDBClient.Cluster{
 
     private async fetchClusterServers(): Promise<string[]> {
         for (const address of this._addresses) {
-            const client = new CoreClient(address);
             try {
                 console.info(`Fetching list of cluster servers from ${address}...`);
                 const clusterStub = ClusterServerStub.create(address, this._credential);
@@ -144,8 +143,6 @@ export class ClusterClient implements TypeDBClient.Cluster{
                 return members;
             } catch (e) {
                 console.error(`Fetching cluster servers from ${address} failed.`, e);
-            } finally {
-                client.close();
             }
         }
         throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(this._addresses.join(",")));

@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import { ClusterClient } from "./ClusterClient";
-import { FailsafeTask } from "./FailsafeTask";
 import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
+import {ClusterClient} from "./ClusterClient";
+import {FailsafeTask} from "./FailsafeTask";
 import {Database} from "../../api/connection/database/Database";
 import {ClusterDatabase as ClusterDatabaseProto} from "typedb-protocol/cluster/cluster_database_pb";
 
@@ -164,9 +164,9 @@ class ReplicaId {
 
 class DeleteDatabaseFailsafeTask extends FailsafeTask<void> {
 
-    private readonly _databases: {[key: string]: TypeDBDatabaseImpl};
+    private readonly _databases: { [key: string]: TypeDBDatabaseImpl };
 
-    constructor(client: ClusterClient, database: string, databases: {[key: string]: TypeDBDatabaseImpl}) {
+    constructor(client: ClusterClient, database: string, databases: { [key: string]: TypeDBDatabaseImpl }) {
         super(client, database);
         this._databases = databases;
     }

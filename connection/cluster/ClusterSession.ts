@@ -19,8 +19,7 @@
  * under the License.
  */
 
-import {FailsafeTask} from "./FailsafeTask";
-import {ClusterClient} from "./ClusterClient";
+import {ClusterClient, FailsafeTask} from "../../dependencies_internal";
 import {TypeDBClusterOptions, TypeDBOptions} from "../../api/connection/TypeDBOptions";
 import {Database} from "../../api/connection/database/Database";
 import {SessionType, TypeDBSession} from "../../api/connection/TypeDBSession";

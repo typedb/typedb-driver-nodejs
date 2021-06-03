@@ -19,12 +19,11 @@
  * under the License.
  */
 
-import {User} from "../../api/connection/user/User";
-import {ClusterClient} from "./ClusterClient";
-import {FailsafeTask} from "./FailsafeTask";
-import {Database} from "../../dist/api/database/Database";
-import {ClusterUserManager} from "./ClusterUserManager";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {User} from "../../api/connection/user/User";
+import {Database} from "../../api/connection/database/Database";
+import {FailsafeTask} from "./FailsafeTask";
+import {ClusterClient} from "./ClusterClient";
 
 export class ClusterUser implements User {
 
@@ -48,12 +47,14 @@ export class ClusterUser implements User {
     }
 }
 
+const _SYSTEM_DB = "_system";
+
 class ClusterUserFailsafeTask<T> extends FailsafeTask<T> {
 
     private readonly _task: (replica: Database.Replica) => Promise<T>;
 
     constructor(client: ClusterClient, task: (replica: Database.Replica) => Promise<T>) {
-        super(client, ClusterUserManager._SYSTEM_DB);
+        super(client, _SYSTEM_DB);
         this._task = task;
     }
 

@@ -43,3 +43,8 @@ export * from "./concept/type/AttributeTypeImpl";
 export * from "./concept/type/EntityTypeImpl";
 export * from "./concept/type/RelationTypeImpl";
 export * from "./concept/type/RoleTypeImpl";
+
+/* cluster components */
+// export * from "./connection/cluster/ClusterClient";
+// export * from "./connection/cluster/ClusterDatabase";
+//
