@@ -88,7 +88,7 @@ export class ClusterServerStub extends TypeDBStub {
         return new Promise<ClusterDatabaseManager.Get.Res>((resolve, reject) => {
             this._clusterStub.databases_get(req, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
-                else resolve();
+                else resolve(res);
             })
         });
     }
@@ -97,7 +97,7 @@ export class ClusterServerStub extends TypeDBStub {
         return new Promise<ClusterDatabaseManager.All.Res>((resolve, reject) => {
             this._clusterStub.databases_all(req, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
-                else resolve();
+                else resolve(res);
             })
         });
     }

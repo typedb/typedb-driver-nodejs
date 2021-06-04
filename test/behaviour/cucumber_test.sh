@@ -50,7 +50,6 @@ if [[ $PRODUCT == "Core" ]]; then
   ./typedb_distribution/"$DIRECTORY"/typedb server --data typedb_test &
 else
   ./typedb_distribution/"$DIRECTORY"/typedb server --address "127.0.0.1:1729:1730:1731" --encryption-enabled=true &
-  ls ./typedb_distribution/"$DIRECTORY"/server/conf
   ROOT_CA=`realpath ./typedb_distribution/"$DIRECTORY"/server/conf/encryption/rpc-root-ca.pem`
   export ROOT_CA
 fi
@@ -83,7 +82,6 @@ if [[ $STARTED -eq 0 ]]; then
   exit 1
 fi
 echo TypeDB $PRODUCT database server started
-export PRODUCT
 node ./node_modules/.bin/cucumber-js ./external/vaticle_typedb_behaviour/**/*.feature --require './**/*.js' --tags 'not @ignore and not @ignore-client-nodejs' --format @cucumber/pretty-formatter && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
