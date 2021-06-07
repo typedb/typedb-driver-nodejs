@@ -97,8 +97,8 @@ export namespace RoleTypeImpl {
         }
 
         async isDeleted(): Promise<boolean> {
-            return !this.getRelationType() ||
-                (!(await this.getRelationType()).asRemote(this._transaction).getRelates(this.getLabel().name()))
+            let relationType = await this.getRelationType();
+            return !(relationType) || (!(await relationType.asRemote(this._transaction).getRelates(this.getLabel().name())));
         }
     }
 

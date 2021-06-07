@@ -35,11 +35,11 @@ export class ClusterUser implements User {
         this._name = name;
     }
 
-    delete(): void {
+    async delete(): Promise<void> {
         const failsafeTask = new ClusterUserFailsafeTask(this._client, (replica) => {
             return this._client.stub(replica.address()).userDelete(RequestBuilder.Cluster.User.deleteReq(this.name()));
         });
-        failsafeTask.runPrimaryReplica();
+        await failsafeTask.runPrimaryReplica();
     }
 
     name(): string {

@@ -124,7 +124,7 @@ export class QueryManagerImpl implements QueryManager {
     }
 
     private query(req: TransactionProto.Req): Promise<QueryProto.Res> {
-        return this._transaction.rpcExecute(req).then((res) => res.getQueryManagerRes());
+        return this._transaction.rpcExecute(req, false).then((res) => res.getQueryManagerRes());
     }
 
     private stream(req: TransactionProto.Req): Stream<QueryProto.ResPart> {

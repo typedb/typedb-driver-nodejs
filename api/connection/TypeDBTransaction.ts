@@ -90,7 +90,7 @@ export namespace TypeDBTransaction {
 
     export interface Extended extends TypeDBTransaction {
 
-        rpcExecute(request: Transaction.Req): Promise<Transaction.Res>;
+        rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res>;
 
         rpcStream(request: Transaction.Req): Stream<Transaction.ResPart>;
 

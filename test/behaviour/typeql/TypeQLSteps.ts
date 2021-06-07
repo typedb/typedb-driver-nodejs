@@ -54,8 +54,8 @@ Then("the integrity is validated", async () => {
     // TODO
 });
 
-When("typeql define", (query: string) => {
-    tx().query().define(query);
+When("typeql define", async (query: string) => {
+    await tx().query().define(query);
 });
 
 Then("typeql define; throws exception containing {string}", async (exceptionString: string, query: string) => {
@@ -66,8 +66,8 @@ Then("typeql define; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().define(query));
 });
 
-When("typeql undefine", (query: string) => {
-    tx().query().undefine(query);
+When("typeql undefine", async (query: string) => {
+    await tx().query().undefine(query);
 });
 
 Then("typeql undefine; throws exception containing {string}", async (exceptionString: string, query: string) => {
@@ -78,8 +78,8 @@ Then("typeql undefine; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().undefine(query));
 });
 
-When("typeql insert", (query: string) => {
-    tx().query().insert(query);
+When("typeql insert", async (query: string) => {
+    await tx().query().insert(query).collect();
 });
 
 Then("typeql insert; throws exception containing {string}", async (exceptionString: string, query: string) => {
@@ -90,8 +90,8 @@ Then("typeql insert; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().insert(query).first());
 });
 
-When("typeql delete", (query: string) => {
-    tx().query().delete(query);
+When("typeql delete", async (query: string) => {
+    await tx().query().delete(query);
 });
 
 Then("typeql delete; throws exception containing {string}", async (exceptionString: string, query: string) => {
@@ -102,8 +102,8 @@ Then("typeql delete; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().delete(query));
 });
 
-When("typeql update", (query: string) => {
-    tx().query().update(query);
+When("typeql update", async (query: string) => {
+    await tx().query().update(query).collect();
 });
 
 Then("typeql update; throws exception containing {string}", async (exceptionString: string, query: string) => {

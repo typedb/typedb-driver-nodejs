@@ -112,7 +112,7 @@ export class ConceptManagerImpl implements ConceptManager {
     }
 
     private execute(request: TransactionProto.Req): Promise<ConceptProto.Res> {
-        return this._transaction.rpcExecute(request).then((res) => res.getConceptManagerRes());
+        return this._transaction.rpcExecute(request, false).then((res) => res.getConceptManagerRes());
     }
 
 }

@@ -70,7 +70,7 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     public async commit(): Promise<void> {
         const commitReq = RequestBuilder.Transaction.commitReq();
         try {
-            await this.rpcExecute(commitReq);
+            await this.rpcExecute(commitReq, false);
         } finally {
             await this.close();
         }
@@ -78,7 +78,7 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
 
     public async rollback(): Promise<void> {
         const rollbackReq = RequestBuilder.Transaction.rollbackReq();
-        await this.rpcExecute(rollbackReq);
+        await this.rpcExecute(rollbackReq, false);
     }
 
     public concepts(): ConceptManager {

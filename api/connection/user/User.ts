@@ -23,6 +23,6 @@ export interface User {
 
     name(): string;
 
-    delete(): void;
+    delete(): Promise<void>;
 
 }

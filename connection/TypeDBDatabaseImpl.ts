@@ -45,7 +45,7 @@ export class TypeDBDatabaseImpl implements Database {
         return this._stub.databaseDelete(req);
     }
 
-    async schema(): Promise<string> {
+    schema(): Promise<string> {
         const req = RequestBuilder.Core.Database.schemaReq(this.name());
         return this._stub.databaseSchema(req);
     }

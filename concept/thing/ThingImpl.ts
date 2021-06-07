@@ -160,7 +160,7 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
     }
 
     protected async execute(request: TransactionProto.Req): Promise<ThingProto.Res> {
-        return (await this._transaction.rpcExecute(request)).getThingRes();
+        return (await this._transaction.rpcExecute(request, false)).getThingRes();
     }
 
     protected stream(request: TransactionProto.Req): Stream<ThingProto.ResPart> {

@@ -47,14 +47,18 @@ export class BatchDispatcher {
         this._bufferedRequests = [];
     }
 
-    private sendScheduledBatch(first: boolean): void {
+    private sendScheduledBatch(): void {
         if (this._isRunning) return;
         this._isRunning = true;
+        this.setSchedule(true);
+    }
+
+    private setSchedule(first: boolean) {
         const wait = first ? BatchDispatcher.BATCH_WINDOW_SMALL_MILLIS : BatchDispatcher.BATCH_WINDOW_LARGE_MILLIS;
         setTimeout(() => {
             if (this._bufferedRequests.length > 0) {
                 this.sendNow();
-                this.sendScheduledBatch(false);
+                this.setSchedule(false);
             } else {
                 this._isRunning = false;
             }
@@ -63,12 +67,12 @@ export class BatchDispatcher {
 
     public dispatch(req: TransactionProto.Req): void {
         this._bufferedRequests.push(req);
-        this.sendNow();
+        this.sendScheduledBatch();
     }
 
     public dispatchNow(req: TransactionProto.Req): void {
         this._bufferedRequests.push(req);
-        this.sendScheduledBatch(true);
+        this.sendNow();
     }
 
     public close(): void {

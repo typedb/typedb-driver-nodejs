@@ -156,7 +156,7 @@ export namespace TypeImpl {
         }
 
         protected async execute(request: TransactionProto.Req): Promise<TypeProto.Res> {
-            return (await this._transaction.rpcExecute(request)).getTypeRes();
+            return (await this._transaction.rpcExecute(request, false)).getTypeRes();
         }
 
         protected stream(request: TransactionProto.Req): Stream<TypeProto.ResPart> {
