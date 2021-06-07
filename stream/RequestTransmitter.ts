@@ -42,6 +42,7 @@ export class BatchDispatcher {
     }
 
     private sendNow(): void {
+        console.log("sending all in buffer: ", this._bufferedRequests);
         const clientRequest = RequestBuilder.Transaction.clientReq(this._bufferedRequests);
         this._transactionStream.write(clientRequest);
         this._bufferedRequests = [];
@@ -67,6 +68,7 @@ export class BatchDispatcher {
 
     public dispatch(req: TransactionProto.Req): void {
         this._bufferedRequests.push(req);
+        console.log("queueing: " + req);
         this.sendScheduledBatch();
     }
 

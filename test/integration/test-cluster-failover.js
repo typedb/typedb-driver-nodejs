@@ -20,8 +20,8 @@
  */
 
 const { TypeDB} = require("../../dist/TypeDB");
-const {TypeDBSession, SessionType} = require("../../dist/api/connection/TypeDBSession")
-const {TypeDBTransaction, TransactionType} = require("../../dist/api/connection/TypeDBTransaction")
+const {SessionType} = require("../../dist/api/connection/TypeDBSession")
+const {TransactionType} = require("../../dist/api/connection/TypeDBTransaction")
 const assert = require("assert");
 const { spawn, spawnSync } = require("child_process");
 

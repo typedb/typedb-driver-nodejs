@@ -97,8 +97,9 @@ export class BidirectionalStream {
 
     registerObserver(transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>): void {
         transactionStream.on("data", (res: Transaction.Server) => {
+            console.log("received: ", res);
             if (!this.isOpen()) {
-                return
+                return;
             }
 
             switch (res.getServerCase()) {
