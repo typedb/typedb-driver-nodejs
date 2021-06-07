@@ -117,7 +117,6 @@ export namespace ClusterServerStub {
         let stubCredentials;
         if (credential.tlsRootCAPath() != null) {
             const rootCert = fs.readFileSync(credential.tlsRootCAPath());
-            console.log(rootCert);
             stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(rootCert), callCreds);
         } else {
             stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(), callCreds);

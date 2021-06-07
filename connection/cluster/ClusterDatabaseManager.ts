@@ -28,11 +28,11 @@ import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "typedb-protocol/cluster/cluster_database_pb";
+import {ClusterClient} from "./ClusterClient";
+import {FailsafeTask} from "./FailsafeTask";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import DB_DOES_NOT_EXIST = ErrorMessage.Client.DB_DOES_NOT_EXIST;
-import {ClusterClient} from "./ClusterClient";
-import {FailsafeTask} from "./FailsafeTask";
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
@@ -69,15 +69,8 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         let errors = "";
         for (const address of Object.keys(this._databaseManagers)) {
             try {
-                console.log("Getting dbs from addresss: " + address)
-                console.log("client stub for address is: ")
-                console.log(this._client.stub(address))
                 const res = await this._client.stub(address).databasesClusterAll(RequestBuilder.Cluster.DatabaseManager.allReq());
-                console.log("RES ", res)
-                let clusterDatabases = res.getDatabasesList().map(db => ClusterDatabase.of(db, this._client));
-                console.log("DATABASES ");
-                console.log(clusterDatabases);
-                return clusterDatabases;
+                return res.getDatabasesList().map(db => ClusterDatabase.of(db, this._client));
             } catch (e) {
                 errors += `- ${address}: ${e}\n`;
             }

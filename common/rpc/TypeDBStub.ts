@@ -100,7 +100,6 @@ export abstract class TypeDBStub {
         });
     }
 
-    // TODO should this not be a promise?
     sessionPulse(pulse: Session.Pulse.Req, callback: (err: ServiceError, res: Session.Pulse.Res) => void) {
         this._stub.session_pulse(pulse, callback);
     }

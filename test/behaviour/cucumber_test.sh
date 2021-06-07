@@ -85,9 +85,5 @@ echo TypeDB $PRODUCT database server started
 node ./node_modules/.bin/cucumber-js ./external/vaticle_typedb_behaviour/**/*.feature --require './**/*.js' --tags 'not @ignore and not @ignore-client-nodejs' --format @cucumber/pretty-formatter && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
-if [[ $PRODUCT == "Core" ]]; then
-  kill $(jps | awk '/TypeDBServer/ {print $1}')
-else
-  kill $(jps | awk '/TypeDBNode/ {print $1}')
-fi
+kill $(lsof -i :1729 | awk '/java/ {print $2}')
 exit $RESULT

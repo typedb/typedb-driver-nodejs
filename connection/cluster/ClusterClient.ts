@@ -80,13 +80,11 @@ export class ClusterClient implements TypeDBClient.Cluster {
     }
 
     private sessionPrimaryReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        // return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
-        return null;
+        return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
     }
 
     private sessionAnyReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        // return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
-        return null;
+        return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
     }
 
     databases(): ClusterDatabaseManager {

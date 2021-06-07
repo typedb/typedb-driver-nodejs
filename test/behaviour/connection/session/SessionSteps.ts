@@ -22,11 +22,11 @@
 import {Then, When} from "@cucumber/cucumber";
 import {client, sessions} from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {TypeDBSession, SessionType} from "../../../../dist/api/connection/TypeDBSession";
+import {SessionType, TypeDBSession} from "../../../../dist/api/connection/TypeDBSession";
 import assert = require("assert");
 
 When("connection open(s) schema session for database: {word}", async (name: string) => {
-    sessions.push(await client.session(name, SessionType.SCHEMA))
+    sessions.push(await client.session(name, SessionType.SCHEMA));
 });
 
 When("connection open(s) (data )session for database: {word}", async (name: string) => {
