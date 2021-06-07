@@ -26,14 +26,12 @@ import {Stream} from "../common/util/Stream";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {Transaction} from "typedb-protocol/common/transaction_pb";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 import {ClientDuplexStream} from "@grpc/grpc-js";
 import * as uuid from "uuid";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import ResponseQueue = ResponseCollector.ResponseQueue;
-import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
-import {TypeDBStub} from "../common/rpc/TypeDBStub";
 
 
 export class BidirectionalStream {
@@ -81,7 +79,6 @@ export class BidirectionalStream {
         this._responseCollector.close(error);
         this._responsePartCollector.close(error);
         this._dispatcher.close();
-
     }
 
     private collectRes(res: Transaction.Res): void {
@@ -100,7 +97,9 @@ export class BidirectionalStream {
 
     registerObserver(transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>): void {
         transactionStream.on("data", (res: Transaction.Server) => {
-            if (!this.isOpen()) throw new TypeDBClientError(TRANSACTION_CLOSED);
+            if (!this.isOpen()) {
+                return
+            }
 
             switch (res.getServerCase()) {
                 case Transaction.Server.ServerCase.RES:
