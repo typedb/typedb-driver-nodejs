@@ -23,7 +23,7 @@
     "compile-tests": "tsc --build test/tsconfig.json"
   },
   "dependencies": {
-    "@grpc/grpc-js": "1.2.1",
+    "@grpc/grpc-js": "1.3.0",
     "google-protobuf": "3.14.0",
     "typedb-protocol": "https://repo.vaticle.com/repository/npm-snapshot/typedb-protocol/-/typedb-protocol-0.0.0-ee6b48a453b529e3e49f6a07efc2f121fab84d56.tgz",
     "uuid": "8.3.2"
