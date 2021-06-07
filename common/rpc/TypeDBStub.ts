@@ -109,6 +109,6 @@ export abstract class TypeDBStub {
     }
 
     closeClient() {
-        closeClient(this._stub);
+        this._stub.close();
     }
 }
