@@ -25,7 +25,6 @@ import { TypeDBCredential} from "../../../dist/api/connection/TypeDBCredential";
 import { setClient } from "./ConnectionStepsBase";
 
 
-
 BeforeAll(async () => {
     setClient(await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential("admin", "password", process.env.ROOT_CA)));
 });

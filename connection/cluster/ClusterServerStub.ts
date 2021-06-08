@@ -19,15 +19,15 @@
  * under the License.
  */
 
-import {TypeDBStub} from "../../common/rpc/TypeDBStub";
-import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
-import {Metadata, credentials, CallCredentials, ChannelCredentials} from "@grpc/grpc-js";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
-import {ServerManager} from "typedb-protocol/cluster/cluster_server_pb";
+import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
+import {ServerManager} from "typedb-protocol/cluster/cluster_server_pb";
+import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
 import {ClusterUser, ClusterUserManager} from "typedb-protocol/cluster/cluster_user_pb";
 import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
+import {Metadata, credentials, CallCredentials, ChannelCredentials} from "@grpc/grpc-js";
 import * as fs from "fs";
 
 export class ClusterServerStub extends TypeDBStub {

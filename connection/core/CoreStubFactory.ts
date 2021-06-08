@@ -19,9 +19,9 @@
  * under the License.
  */
 
+import {CoreStub} from "./CoreStub";
 import {TypeDBStubFactory} from "../TypeDBStubFactory";
 import {TypeDBStub} from "../../common/rpc/TypeDBStub";
-import {CoreStub} from "./CoreStub";
 
 export class CoreStubFactory extends TypeDBStubFactory {
 
@@ -30,4 +30,3 @@ export class CoreStubFactory extends TypeDBStubFactory {
     }
 
 }
-

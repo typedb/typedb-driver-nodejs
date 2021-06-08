@@ -26,7 +26,7 @@ import {SessionType, TypeDBSession} from "../../../../dist/api/connection/TypeDB
 import assert = require("assert");
 
 When("connection open(s) schema session for database: {word}", async (name: string) => {
-    sessions.push(await client.session(name, SessionType.SCHEMA));
+    sessions.push(await client.session(name, SessionType.SCHEMA))
 });
 
 When("connection open(s) (data )session for database: {word}", async (name: string) => {

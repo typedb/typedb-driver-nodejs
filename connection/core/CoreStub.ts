@@ -22,8 +22,6 @@
 import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 import {ChannelCredentials} from "@grpc/grpc-js";
-import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
-import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
 
 export class CoreStub extends TypeDBStub {
 

@@ -37,4 +37,3 @@ export class ClusterServerStubFactory extends TypeDBStubFactory {
     }
 
 }
-

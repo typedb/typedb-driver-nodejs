@@ -20,11 +20,14 @@
  */
 
 
+import {FailsafeTask} from "./FailsafeTask";
 import {ClusterSession} from "./ClusterSession";
 import {ClusterServerStub} from "./ClusterServerStub";
 import {ClusterServerClient} from "./ClusterServerClient";
-import {TypeDBClient} from "../../api/connection/TypeDBClient";
+import {ClusterUserManager} from "./ClusterUserManager";
 import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
+import {Database} from "../../api/connection/database/Database";
+import {TypeDBClient} from "../../api/connection/TypeDBClient";
 import {SessionType} from "../../api/connection/TypeDBSession";
 import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
 import {TypeDBClusterOptions, TypeDBOptions} from "../../api/connection/TypeDBOptions";
@@ -32,9 +35,6 @@ import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-import {Database} from "../../api/connection/database/Database";
-import {ClusterUserManager} from "./ClusterUserManager";
-import {FailsafeTask} from "./FailsafeTask";
 
 export class ClusterClient implements TypeDBClient.Cluster {
 

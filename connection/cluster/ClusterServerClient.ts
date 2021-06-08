@@ -19,9 +19,9 @@
  * under the License.
  */
 
+import {ClusterServerStubFactory} from "./ClusterServerStubFactory";
 import {TypeDBClientImpl} from "../TypeDBClientImpl";
 import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
-import {ClusterServerStubFactory} from "./ClusterServerStubFactory";
 
 export class ClusterServerClient extends TypeDBClientImpl {
 

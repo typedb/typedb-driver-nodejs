@@ -36,14 +36,12 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
     private readonly _requestId: string;
     private readonly _dispatcher: BatchDispatcher;
     private readonly _responseCollector: ResponseCollector.ResponseQueue<Transaction.ResPart>;
-    private _next: Transaction.ResPart;
 
     constructor(requestId: string, responseCollector: ResponseCollector.ResponseQueue<Transaction.ResPart>,
                 dispatcher: BatchDispatcher) {
         this._requestId = requestId;
         this._dispatcher = dispatcher;
         this._responseCollector = responseCollector;
-        this._next = null;
     }
 
     async* [Symbol.asyncIterator](): AsyncIterator<Transaction.ResPart, any, undefined> {
@@ -56,6 +54,7 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
 
     async next(): Promise<Transaction.ResPart> {
         const res = await this._responseCollector.take();
+        console.log("stream res case: " , res.getResCase());
         switch (res.getResCase()) {
             case ResCase.RES_NOT_SET:
                 throw new TypeDBClientError(MISSING_RESPONSE.message(this._requestId));
