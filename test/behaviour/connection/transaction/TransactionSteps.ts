@@ -33,7 +33,7 @@ async function forEachSessionOpenTransactionsOfType(transactionTypes: Transactio
     for (const session of sessions) {
         const transactions: TypeDBTransaction[] = []
         for (const transactionType of transactionTypes) {
-            const transaction = await session.transaction(transactionType, TypeDBOptions.core({infer: true, prefetchSize: 0}));
+            const transaction = await session.transaction(transactionType, TypeDBOptions.core({infer: true}));
             transactions.push(transaction);
         }
         sessionsToTransactions.set(session, transactions);
