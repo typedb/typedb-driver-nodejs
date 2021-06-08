@@ -55,6 +55,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         npm install
         ./test/common/start-core-server.sh
+        sleep 10
         npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-core-server.sh
         exit $TEST_SUCCESS
