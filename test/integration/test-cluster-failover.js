@@ -88,7 +88,7 @@ async function run() {
             const idx = primaryReplica.address()[10];
             spawn(`./${idx}/typedb`, ["server", "--data", "server/data", "--address", `127.0.0.1:${idx}1729:${idx}1730:${idx}1731`,
                 "--peer", "127.0.0.1:11729:11730:11731", "--peer", "127.0.0.1:21729:21730:21731", "--peer", "127.0.0.1:31729:31730:31731", "--encryption-enabled=true"]);
-            await new Promise(resolve => setTimeout(resolve, 11000));
+            await new Promise(resolve => setTimeout(resolve, 15000));
             const spawned = getServerPID(1729);
             if (spawned === undefined) throw new Error("Failed to spawn/wait for start of server at port: " + 1729);
         }
