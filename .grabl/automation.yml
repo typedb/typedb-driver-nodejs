@@ -106,6 +106,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        sleep 10000
         .grabl/test-core.sh //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1
         .grabl/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1
     test-behaviour-match-cluster:
