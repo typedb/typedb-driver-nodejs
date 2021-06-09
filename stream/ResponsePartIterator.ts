@@ -54,7 +54,6 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
 
     async next(): Promise<Transaction.ResPart> {
         const res = await this._responseCollector.take();
-        console.log("stream res case: " , res.getResCase());
         switch (res.getResCase()) {
             case ResCase.RES_NOT_SET:
                 throw new TypeDBClientError(MISSING_RESPONSE.message(this._requestId));

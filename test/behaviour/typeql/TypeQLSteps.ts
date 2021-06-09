@@ -246,9 +246,9 @@ class ThingKeyMatcher extends AttributeMatcher {
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isThing()) return false;
 
-        const keys = (concept as Thing).asRemote(tx()).getHas(true);
+        const keys = await (concept as Thing).asRemote(tx()).getHas(true).collect();
 
-        for await (const key of keys) {
+        for (const key of keys) {
             if (key.getType().getLabel().scopedName() === this.typeLabel) {
                 return this.check(key);
             }
@@ -303,7 +303,7 @@ Then("order of answer concepts is", async (answerIdentifiersTable: DataTable) =>
         `The number of answers [${answers.length}] should match the number of answer identifiers [${answerIdentifiers.length}`);
     for (let i = 0; i < answers.length; i++) {
         const [answer, answerIdentifier] = [answers[i], answerIdentifiers[i]];
-        assert(answerConceptsMatch(answerIdentifier, answer),
+        assert(await answerConceptsMatch(answerIdentifier, answer),
             `The answer at index [${i}] does not match the identifier [${JSON.stringify(answerIdentifier)}].`);
     }
 });

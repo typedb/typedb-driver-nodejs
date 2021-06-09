@@ -25,13 +25,13 @@ import {ResponsePartIterator} from "./ResponsePartIterator";
 import {Stream} from "../common/util/Stream";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {Transaction} from "typedb-protocol/common/transaction_pb";
+import ResponseQueue = ResponseCollector.ResponseQueue;
 import {ClientDuplexStream} from "@grpc/grpc-js";
 import * as uuid from "uuid";
-import {TypeDBStub} from "../common/rpc/TypeDBStub";
-import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
-import ResponseQueue = ResponseCollector.ResponseQueue;
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
+import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 
 
 export class BidirectionalStream {
