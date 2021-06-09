@@ -19,11 +19,10 @@
  * under the License.
  */
 
-import {TypeDBCredential} from "../../dist/api/connection/TypeDBCredential";
-
 const { TypeDB} = require("../../dist/TypeDB");
 const {SessionType} = require("../../dist/api/connection/TypeDBSession")
 const {TransactionType} = require("../../dist/api/connection/TypeDBTransaction")
+const {TypeDBCredential} = require("../../dist/api/connection/TypeDBCredential")
 const { spawn, spawnSync } = require("child_process");
 const assert = require("assert");
 
@@ -41,8 +40,9 @@ async function seekPrimaryReplica(databases) {
 }
 
 async function run() {
+    console.log("root ca path: ", process.env.ROOT_CA)
     const client = await TypeDB.clusterClient(
-        ["localhost:11729", "localhost:21729", "localhost:31729"],
+        ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"],
         new TypeDBCredential("admin", "password", process.env.ROOT_CA)
     );
     try {
