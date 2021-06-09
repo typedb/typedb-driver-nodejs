@@ -39,6 +39,14 @@ async function seekPrimaryReplica(databases) {
     throw "Retry limit exceeded while seeking a primary replica.";
 }
 
+function getServerPID(port) {
+    const lsof = spawnSync("lsof", ["-i", `:${port}`], { stdio: "pipe", encoding: "utf-8" });
+    const serverPID = lsof.stdout.split("\n").filter(s => s.includes("LISTEN")).map(s => s.split(/\s+/)[1]);
+    if (serverPID.length === 1) return serverPID[0];
+    else if (serverPID.length === 0) return undefined;
+    else throw new Error("Found multiple PIDs: '" + serverPID + " for port: '" + port + "'");
+}
+
 async function run() {
     console.log("root ca path: ", process.env.ROOT_CA)
     const client = await TypeDB.clusterClient(
@@ -67,8 +75,7 @@ async function run() {
             primaryReplica = await seekPrimaryReplica(client.databases());
             console.info(`Stopping primary replica (test ${iteration}/10)...`);
             const port = primaryReplica.address().substring(10,15);
-            const lsof = spawnSync("lsof", ["-i", `:${port}`], { stdio: "pipe", encoding: "utf-8" });
-            const primaryReplicaServerPID = lsof.stdout.split("\n").filter(s => s.includes("LISTEN")).map(s => s.split(/\s+/)[1])[0];
+            const primaryReplicaServerPID = getServerPID(port);
             console.info(`Primary replica is hosted by server with PID ${primaryReplicaServerPID}`);
             spawnSync("kill", ["-9", primaryReplicaServerPID]);
             console.info("Primary replica stopped successfully.");
@@ -80,8 +87,10 @@ async function run() {
             assert(person.getLabel().scopedName() === "person");
             const idx = primaryReplica.address()[10];
             spawn(`./${idx}/typedb`, ["server", "--data", "server/data", "--address", `127.0.0.1:${idx}1729:${idx}1730:${idx}1731`,
-                "--peer", "127.0.0.1:11729:11730:11731", "--peer", "127.0.0.1:21729:21730:21731", "--peer", "127.0.0.1:31729:31730:31731 --encryption-enabled=true"]);
+                "--peer", "127.0.0.1:11729:11730:11731", "--peer", "127.0.0.1:21729:21730:21731", "--peer", "127.0.0.1:31729:31730:31731", "--encryption-enabled=true"]);
             await new Promise(resolve => setTimeout(resolve, 11000));
+            const spawned = getServerPID(1729);
+            if (spawned === undefined) throw new Error("Failed to spawn/wait for start of server at port: " + 1729);
         }
         console.info("SUCCESS - completed 10 iterations");
         client.close();
