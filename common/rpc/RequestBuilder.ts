@@ -104,6 +104,10 @@ export namespace RequestBuilder {
         }
 
         export namespace User {
+            export function passwordReq(password: string): ClusterUserProto.Password.Req {
+                return new ClusterUserProto.Password.Req().setName(password);
+            }
+
             export function deleteReq(name: string): ClusterUserProto.Delete.Req {
                 return new ClusterUserProto.Delete.Req().setName(name);
             }
