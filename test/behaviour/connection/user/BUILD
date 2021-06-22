@@ -20,7 +20,7 @@
 #
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "typedb_behaviour_node_test")
+load("//test/behaviour:rules.bzl", "node_cucumber_test")
 
 exports_files(["UserSteps.ts"])
 
@@ -30,14 +30,12 @@ checkstyle_test(
     license_type = "apache",
 )
 
-typedb_behaviour_node_test(
-    name = "test",
+node_cucumber_test(
+    name = "test-cluster",
+    steps = "//test/behaviour:steps-cluster-targz",
+    native_typedb_artifact = "//test:native-typedb-cluster-artifact",
     features = ["@vaticle_typedb_behaviour//connection:user.feature"],
     node_modules = "//:node_modules",
     package_json = "//:package.json",
-    native_typedb_artifact_core = "//test:native-typedb-artifact",
-    native_typedb_artifact_cluster = "//test:native-typedb-cluster-artifact",
     client = "//:client-nodejs-targz",
-    steps_core = "//test/behaviour:steps-core-targz",
-    steps_cluster = "//test/behaviour:steps-cluster-targz",
 )
