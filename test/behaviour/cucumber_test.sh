@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Copyright (C) 2021 Vaticle
 #
@@ -49,7 +50,7 @@ mkdir ./typedb_distribution/"$DIRECTORY"/typedb_test
 if [[ $PRODUCT == "Core" ]]; then
   ./typedb_distribution/"$DIRECTORY"/typedb server --data typedb_test &
 else
-  ./typedb_distribution/"$DIRECTORY"/typedb server --address "127.0.0.1:1729:1730:1731" --encryption-enabled=true &
+  ./typedb_distribution/"$DIRECTORY"/typedb cluster --address "127.0.0.1:1729:1730:1731" --encryption-enabled=true &
   ROOT_CA=`realpath ./typedb_distribution/"$DIRECTORY"/server/conf/encryption/rpc-root-ca.pem`
   export ROOT_CA
 fi
