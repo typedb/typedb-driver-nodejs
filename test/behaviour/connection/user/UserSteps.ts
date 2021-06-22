@@ -21,23 +21,31 @@
 
 import {Given, Then, When} from "@cucumber/cucumber";
 import {client, THREAD_POOL_SIZE} from "../ConnectionStepsBase";
+import {TypeDBClient} from "../../../../dist/api/connection/TypeDBClient";
+
+import assert = require("assert");
 
 Given("users contains: {word}", async (name: string) => {
-    await client.users().all();
+    (await getClient().users().all()).map(user => user.name()).includes(name);
 });
 
 Then("users not contains: {word}", async (name: string) => {
-    await client.users().all();
+    !(await getClient().users().all()).map(user => user.name()).includes(name);
 });
 
 Then("users create: {word}, {word}", async(name: string, password: string) => {
-    await client.users().create(name, password);
+    await getClient().users().create(name, password);
 });
 
 Then("user password: {word}, {word}", async(name: string, password: string) => {
-    await client.users().get(name).password(password);
+    await (await getClient().users().get(name)).password(password);
 });
 
 Then("user delete: {word}", async(name: string) => {
-    await client.users().delete(name);
+    await (await getClient().users().get(name)).delete();
 });
+
+function getClient(): TypeDBClient.Cluster {
+    assert(client.isCluster());
+    return client as TypeDBClient.Cluster;
+}
