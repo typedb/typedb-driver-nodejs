@@ -20,5 +20,7 @@
 # under the License.
 #
 
+set -e
+
 bazel run //test:typedb-extractor -- typedb-all-linux
 ./typedb-all-linux/typedb server &

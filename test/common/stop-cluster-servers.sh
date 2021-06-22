@@ -20,8 +20,12 @@
 # under the License.
 #
 
+set -e
+
 procs=$(jps | awk '/TypeDBClusterServer/ {print $1}' | paste -sd " " -)
 echo $procs
 if [ -n "$procs" ]; then
     kill $procs
 fi
+
+rm -rf 1 2 3 typedb_distribution

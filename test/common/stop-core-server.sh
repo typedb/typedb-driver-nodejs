@@ -20,4 +20,6 @@
 # under the License.
 #
 
+set -e
+
 kill $(jps | awk '/TypeDBServer/ {print $1}')

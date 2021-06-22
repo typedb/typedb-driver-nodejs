@@ -20,6 +20,8 @@
 # under the License.
 #
 
+set -e
+
 bazel run //test:typedb-cluster-extractor -- typedb_distribution
 echo Successfully unarchived TypeDB distribution. Creating 3 copies.
 cp -r typedb_distribution/$TYPEDB/ 1 && cp -r typedb_distribution/$TYPEDB/ 2 && cp -r typedb_distribution/$TYPEDB/ 3
