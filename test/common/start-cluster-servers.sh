@@ -22,6 +22,8 @@
 
 set -e
 
+rm -rf 1 2 3 typedb-cluster-all
+
 bazel run //test:typedb-cluster-extractor -- typedb-cluster-all
 echo Successfully unarchived TypeDB distribution. Creating 3 copies.
 cp -r typedb-cluster-all/$TYPEDB/ 1 && cp -r typedb-cluster-all/$TYPEDB/ 2 && cp -r typedb-cluster-all/$TYPEDB/ 3

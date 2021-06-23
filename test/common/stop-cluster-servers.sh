@@ -27,5 +27,3 @@ echo $procs
 if [ -n "$procs" ]; then
     kill $procs
 fi
-
-rm -rf 1 2 3 typedb-cluster-all

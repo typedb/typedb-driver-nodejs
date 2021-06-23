@@ -23,5 +23,3 @@
 set -e
 
 kill $(jps | awk '/TypeDBServer/ {print $1}')
-
-rm -rf typedb-all
