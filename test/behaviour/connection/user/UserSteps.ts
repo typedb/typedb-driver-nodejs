@@ -20,12 +20,11 @@
  */
 
 import {Given, Then, When} from "@cucumber/cucumber";
-import {client, THREAD_POOL_SIZE} from "../ConnectionStepsBase";
+import {client} from "../ConnectionStepsBase";
 import {TypeDB} from "../../../../dist/TypeDB";
 import {TypeDBClient} from "../../../../dist/api/connection/TypeDBClient";
 import {TypeDBCredential} from "../../../../dist/api/connection/TypeDBCredential";
 import {User} from "../../../../dist/api/connection/user/User";
-import {assertThrows} from "../../util/Util";
 import assert = require("assert");
 
 Given("users contains: {word}", async (name: string) => {
