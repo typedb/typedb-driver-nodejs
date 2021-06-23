@@ -22,5 +22,5 @@
 
 set -e
 
-bazel run //test:typedb-extractor -- typedb-all-linux
-./typedb-all-linux/typedb server &
+bazel run //test:typedb-extractor -- typedb-all
+./typedb-all/typedb server &

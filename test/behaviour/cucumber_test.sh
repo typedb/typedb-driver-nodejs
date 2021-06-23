@@ -22,11 +22,11 @@
 
 set -e
 TYPEDB_DISTRO=$1
-if test -d typedb_distribution; then
+if test -d typedb-cluster-all; then
   echo Existing distribution detected. Cleaning.
-  rm -rf typedb_distribution
+  rm -rf typedb-cluster-all
 fi
-mkdir typedb_distribution
+mkdir typedb-cluster-all
 if [[ $TYPEDB_DISTRO == *"cluster"* ]]; then
   PRODUCT=Cluster
 else
@@ -34,24 +34,24 @@ else
 fi
 echo Attempting to unarchive TypeDB $PRODUCT distribution from $TYPEDB_DISTRO
 if [[ ${TYPEDB_DISTRO: -7} == ".tar.gz" ]]; then
-  tar -xf $TYPEDB_DISTRO -C ./typedb_distribution
+  tar -xf $TYPEDB_DISTRO -C ./typedb-cluster-all
 else
   if [[ ${TYPEDB_DISTRO: -4} == ".zip" ]]; then
-    unzip -q $TYPEDB_DISTRO -d ./typedb_distribution
+    unzip -q $TYPEDB_DISTRO -d ./typedb-cluster-all
   else
     echo Supplied artifact file was not in a recognised format. Only .tar.gz and .zip artifacts are acceptable.
     exit 1
   fi
 fi
-DIRECTORY=$(ls ./typedb_distribution)
+DIRECTORY=$(ls ./typedb-cluster-all)
 echo Successfully unarchived TypeDB $PRODUCT distribution.
 echo Starting TypeDB $PRODUCT Server
-mkdir ./typedb_distribution/"$DIRECTORY"/typedb_test
+mkdir ./typedb-cluster-all/"$DIRECTORY"/typedb_test
 if [[ $PRODUCT == "Core" ]]; then
-  ./typedb_distribution/"$DIRECTORY"/typedb server --data typedb_test &
+  ./typedb-cluster-all/"$DIRECTORY"/typedb server --data typedb_test &
 else
-  ./typedb_distribution/"$DIRECTORY"/typedb cluster --address "127.0.0.1:1729:1730:1731" --encryption-enabled=true &
-  ROOT_CA=`realpath ./typedb_distribution/"$DIRECTORY"/server/conf/encryption/rpc-root-ca.pem`
+  ./typedb-cluster-all/"$DIRECTORY"/typedb cluster --address "127.0.0.1:1729:1730:1731" --encryption-enabled=true &
+  ROOT_CA=`realpath ./typedb-cluster-all/"$DIRECTORY"/server/conf/encryption/rpc-root-ca.pem`
   export ROOT_CA
 fi
 echo Unarchiving client.
