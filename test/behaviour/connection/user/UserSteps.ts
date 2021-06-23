@@ -21,16 +21,21 @@
 
 import {Given, Then, When} from "@cucumber/cucumber";
 import {client, THREAD_POOL_SIZE} from "../ConnectionStepsBase";
+import {TypeDB} from "../../../../dist/TypeDB";
 import {TypeDBClient} from "../../../../dist/api/connection/TypeDBClient";
-
+import {TypeDBCredential} from "../../../../dist/api/connection/TypeDBCredential";
+import {User} from "../../../../dist/api/connection/user/User";
+import {assertThrows} from "../../util/Util";
 import assert = require("assert");
 
 Given("users contains: {word}", async (name: string) => {
-    (await getClient().users().all()).map(user => user.name()).includes(name);
+    const users = await getClient().users().all();
+    users.map((user: User) => user.name()).includes(name);
 });
 
 Then("users not contains: {word}", async (name: string) => {
-    !(await getClient().users().all()).map(user => user.name()).includes(name);
+    const users = await getClient().users().all();
+    !users.map((user: User) => user.name()).includes(name);
 });
 
 Then("users create: {word}, {word}", async(name: string, password: string) => {
@@ -38,11 +43,18 @@ Then("users create: {word}, {word}", async(name: string, password: string) => {
 });
 
 Then("user password: {word}, {word}", async(name: string, password: string) => {
-    await (await getClient().users().get(name)).password(password);
+    const user = await getClient().users().get(name);
+    await user.password(password);
 });
 
+Then("user connect: {word}, {word}", async(name: string, password: string) => {
+    const client = await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential(name, password, process.env.ROOT_CA));
+    await client.databases().all()
+})
+
 Then("user delete: {word}", async(name: string) => {
-    await (await getClient().users().get(name)).delete();
+    const user = await getClient().users().get(name);
+    await user.delete();
 });
 
 function getClient(): TypeDBClient.Cluster {
