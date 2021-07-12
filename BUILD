@@ -45,7 +45,6 @@ genrule(
     tools = [
         "//:client-nodejs-ts",
         "//:package.json",
-        "//:package-lock.json",
     ],
     visibility = ["//visibility:public"],
 )
