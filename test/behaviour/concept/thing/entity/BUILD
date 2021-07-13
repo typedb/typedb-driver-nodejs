@@ -37,7 +37,7 @@ typedb_behaviour_node_test(
     package_json = "//:package.json",
     native_typedb_artifact_core = "//test:native-typedb-artifact",
     native_typedb_artifact_cluster = "//test:native-typedb-cluster-artifact",
-    client = "//:client-nodejs-targz",
+    client = "//:assemble-npm",
     steps_core = "//test/behaviour:steps-core-targz",
     steps_cluster = "//test/behaviour:steps-cluster-targz",
 )
