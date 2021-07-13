@@ -45,6 +45,7 @@ build:
         bazel build //... --spawn_strategy=local
         bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
+        sudo chown -R $USER /usr/lib/node_modules
         npm install -g yarn
         yarn
         yarn run lint
@@ -54,6 +55,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        sudo chown -R $USER /usr/lib/node_modules
         npm install -g yarn
         yarn
         ./test/common/start-core-server.sh
@@ -68,6 +70,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        sudo chown -R $USER /usr/lib/node_modules
         npm install -g yarn
         yarn
         source test/common/start-cluster-servers.sh # use source to receive export vars
@@ -185,6 +188,7 @@ build:
         ./test/common/start-core-server.sh
         cd test/deployment/
         echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
+        sudo chown -R $USER /usr/lib/node_modules
         npm install -g yarn
         yarn install https://repo.vaticle.com/repository/npm-snapshot-group/typedb-client/-/typedb-client-$(cat ../../VERSION).tgz
         sudo -H yarn add jest --global
