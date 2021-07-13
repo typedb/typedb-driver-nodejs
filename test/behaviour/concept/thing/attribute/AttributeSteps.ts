@@ -22,10 +22,9 @@
 import {When} from "@cucumber/cucumber";
 import {get, put} from "../ThingSteps";
 import {tx} from "../../../connection/ConnectionStepsBase";
-import {AttributeType} from "../../../../../dist/api/concept/type/AttributeType";
-import {Attribute,} from "../../../../../dist/api/concept/thing/Attribute";
 import {assertThrows} from "../../../util/Util";
 import assert = require("assert");
+import { Attribute, AttributeType } from "../../../../../dist";
 import ValueType = AttributeType.ValueType;
 import ValueClass = AttributeType.ValueClass;
 

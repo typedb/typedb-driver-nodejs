@@ -23,11 +23,9 @@ import {After, When} from "@cucumber/cucumber";
 import {tx} from "../../connection/ConnectionStepsBase";
 import {getThingType} from "../type/thingtype/ThingTypeSteps";
 import {assertThrows} from "../../util/Util";
-import {Thing} from "../../../../dist/api/concept/thing/Thing";
-import {Attribute} from "../../../../dist/api/concept/thing/Attribute";
-import {AttributeType} from "../../../../dist/api/concept/type/AttributeType";
 import {RootLabel, ScopedLabel} from "../../config/Parameters";
 import assert = require("assert");
+import { Attribute, AttributeType, Thing } from "../../../../dist";
 import ValueClass = AttributeType.ValueClass;
 
 export const things: Map<string, Thing> = new Map<string, Thing>();

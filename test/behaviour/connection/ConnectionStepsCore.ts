@@ -20,7 +20,7 @@
  */
 
 import {BeforeAll} from "@cucumber/cucumber";
-import {TypeDB} from "../../../dist/TypeDB";
+import {TypeDB} from "../../../dist";
 import {setClient} from "./ConnectionStepsBase";
 
 BeforeAll(() => {

@@ -20,10 +20,8 @@
  */
 
 import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
-import { TypeDBClient } from "../../../dist/api/connection/TypeDBClient";
-import { TypeDBSession } from "../../../dist/api/connection/TypeDBSession";
-import { TypeDBTransaction } from "../../../dist/api/connection/TypeDBTransaction";
 import assert = require("assert");
+import { TypeDBClient, TypeDBSession, TypeDBTransaction } from "../../../dist";
 
 export const THREAD_POOL_SIZE = 32;
 

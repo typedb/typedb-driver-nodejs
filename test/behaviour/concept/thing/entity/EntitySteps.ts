@@ -22,7 +22,7 @@
 import {When} from "@cucumber/cucumber";
 import {get, put} from "../ThingSteps";
 import {tx} from "../../../connection/ConnectionStepsBase";
-import {AttributeType} from "../../../../../dist/api/concept/type/AttributeType";
+import {AttributeType} from "../../../../../dist";
 
 
 import {assertThrows} from "../../../util/Util";

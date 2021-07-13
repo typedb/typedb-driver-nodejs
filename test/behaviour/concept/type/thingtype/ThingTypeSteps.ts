@@ -25,7 +25,7 @@ import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import assert from "assert";
 import {parseList, RootLabel, ScopedLabel} from "../../../config/Parameters";
 import {assertThrows} from "../../../util/Util";
-import {ThingType} from "../../../../../dist/api/concept/type/ThingType";
+import { ThingType } from "../../../../../dist";
 
 export function getThingType(rootLabel: RootLabel, typeLabel: string): Promise<ThingType> {
     switch (rootLabel) {

@@ -19,12 +19,9 @@
  * under the License.
  */
 
-import {Given, Then, When} from "@cucumber/cucumber";
+import {Given, Then} from "@cucumber/cucumber";
 import {client} from "../ConnectionStepsBase";
-import {TypeDB} from "../../../../dist/TypeDB";
-import {TypeDBClient} from "../../../../dist/api/connection/TypeDBClient";
-import {TypeDBCredential} from "../../../../dist/api/connection/TypeDBCredential";
-import {User} from "../../../../dist/api/connection/user/User";
+import { TypeDB, TypeDBClient, User, TypeDBCredential } from "../../../../dist"
 import assert = require("assert");
 
 Given("users contains: {word}", async (name: string) => {
