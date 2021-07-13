@@ -20,7 +20,7 @@
     "test-query": "node test/integration/test-query.js",
     "test-cluster-failover": "yarn run build && node test/integration/test-cluster-failover.js",
     "lint": "eslint . --ext .ts",
-    "compile-tests": "tsc --build test/behaviour/tsconfig.json"
+    "compile-tests": "tsc --build test/tsconfig.json"
   },
   "dependencies": {
     "@grpc/grpc-js": "1.3.2",

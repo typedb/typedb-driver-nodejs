@@ -27,7 +27,6 @@ exports_files([
     "VERSION",
 ])
 
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm", "nodejs_binary")
 load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
@@ -39,21 +38,16 @@ load("//:deployment.bzl", github_deployment = "deployment")
 
 load("@npm//@bazel/typescript:index.bzl", "ts_project")
 
-#genrule(
-#    name = "client-nodejs-targz",
-#    outs = ["client-nodejs.tar.gz"],
-#    cmd = "ls $(rootpath //:client-nodejs); tar -cf $(@D)/client-nodejs.tar.gz $(rootpath //:client-nodejs)",
-#    srcs = [
-#        "//:client-nodejs",
-#    ],
-#    visibility = ["//visibility:public"],
-#)
-
-#pkg_tar(
-#    name = "client-nodejs-targz",
-#    deps = ["//:client-nodejs"],
-#    extension = ".tar.gz",
-#)
+genrule(
+    name = "client-nodejs-targz",
+    outs = ["client-nodejs.tar.gz"],
+    cmd = "npx tsc; tar -cf $(@D)/client-nodejs.tar.gz dist;",
+    tools = [
+        "//:client-nodejs-ts",
+        "//:package.json",
+    ],
+    visibility = ["//visibility:public"],
+)
 
 filegroup(
     name = "client-nodejs-ts",
@@ -86,7 +80,7 @@ behaviour_steps_common = [
     "//test/behaviour/connection/transaction:TransactionSteps.ts",
     "//test/behaviour/typeql:TypeQLSteps.ts",
     "//test/behaviour/util:Util.ts",
-    "//test/behaviour:tsconfig.json"
+    "//test:tsconfig.json"
 ] + glob(["node_modules/**"])
 
 filegroup(
@@ -148,7 +142,6 @@ pkg_npm(
 assemble_npm(
     name = "assemble-npm",
     target = ":client-nodejs-npm-package",
-    visibility = ["//visibility:public"],
 )
 
 deploy_npm(

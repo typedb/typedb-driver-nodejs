@@ -25,45 +25,13 @@ exports_files([
     "cucumber_test.sh",
 ])
 
-ts_project(
-    name = "steps-core",
-    srcs = glob([
-        "connection:ConnectionStepsBase.ts",
-        "connection:ConnectionStepsCore.ts",
-        "concept/thing:ThingSteps.ts",
-        "concept/thing/attribute:AttributeSteps.ts",
-        "concept/thing/entity:EntitySteps.ts",
-        "concept/thing/relation:RelationSteps.ts",
-        "concept/type/attributetype:AttributeTypeSteps.ts",
-        "concept/type/relationtype:RelationTypeSteps.ts",
-        "concept/type/thingtype:ThingTypeSteps.ts",
-        "config:Parameters.ts",
-        "connection/database:DatabaseSteps.ts",
-        "connection/session:SessionSteps.ts",
-        "connection/transaction:TransactionSteps.ts",
-        "typeql:TypeQLSteps.ts",
-        "util:Util.ts",
-        "tsconfig.json"
-    ]),
-    tsconfig = "tsconfig.json",
-    declaration = True,
-    deps = [
-        "@npm//@grpc/grpc-js",
-        "@npm//@types/node",
-        "@npm//@types/uuid",
-        "@npm//typedb-protocol",
-        "@npm//typescript",
-        "@npm//uuid",
-    ],
-)
-
 genrule(
     name = "steps-core-targz",
     outs = ["behaviour-steps-core.tar.gz"],
-    cmd = "tar -xf $(location //:assemble-npm); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behaviour-steps-core.tar.gz dist-test;",
+    cmd = "tar -xf $(location //:client-nodejs-targz); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behaviour-steps-core.tar.gz dist-test;",
     tools = [
-        ":steps-core",
-        "//:assemble-npm",
+        "//:behaviour-steps-core",
+        "//:client-nodejs-targz",
         "//:package.json",
     ],
     visibility = ["//visibility:public"],
@@ -72,10 +40,10 @@ genrule(
 genrule(
     name = "steps-cluster-targz",
     outs = ["behaviour-steps-cluster.tar.gz"],
-    cmd = "tar -xf $(location //:assemble-npm); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behaviour-steps-cluster.tar.gz dist-test;",
+    cmd = "tar -xf $(location //:client-nodejs-targz); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behaviour-steps-cluster.tar.gz dist-test;",
     tools = [
         "//:behaviour-steps-cluster",
-        "//:assemble-npm",
+        "//:client-nodejs-targz",
         "//:package.json",
     ],
     visibility = ["//visibility:public"],

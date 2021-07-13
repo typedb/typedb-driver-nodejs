@@ -37,5 +37,5 @@ node_cucumber_test(
     features = ["@vaticle_typedb_behaviour//connection:user.feature"],
     node_modules = "//:node_modules",
     package_json = "//:package.json",
-    client = "//:assemble-npm",
+    client = "//:client-nodejs-targz",
 )
