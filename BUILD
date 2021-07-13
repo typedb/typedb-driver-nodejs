@@ -206,6 +206,7 @@ checkstyle_test(
     exclude = glob([
         "dist/**/*.*",
         "*.json",
+        "yarn.lock",
         ".eslintrc",
     ]),
     license_type = "apache",
