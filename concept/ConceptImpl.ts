@@ -37,9 +37,6 @@ import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
 export abstract class ConceptImpl implements Concept {
 
-    protected constructor() {
-    }
-
     protected abstract get className(): string;
 
     abstract asRemote(transaction: TypeDBTransaction): Concept.Remote;
