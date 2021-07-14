@@ -21,13 +21,22 @@
 
 
 import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {Concept, RemoteConcept} from "../Concept";
+import {Concept} from "../Concept";
 import {Label} from "../../../common/Label";
 import {Stream} from "../../../common/util/Stream";
 import {ErrorMessage} from "../../../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
 import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
+import { ThingType } from "./ThingType";
+import { EntityType } from "./EntityType";
+import { AttributeType } from "./AttributeType";
+import { RelationType } from "./RelationType";
+import { RoleType } from "./RoleType";
+import { Entity } from "../thing/Entity";
+import { Attribute } from "../thing/Attribute";
+import { Relation } from "../thing/Relation";
+import { Thing } from "../thing/Thing";
 
 export interface Type extends Concept {
 
@@ -35,27 +44,45 @@ export interface Type extends Concept {
 
     isRoot(): boolean;
 
-    asRemote(transaction: TypeDBTransaction): RemoteType;
-
-}
-
-export interface RemoteType extends Type, RemoteConcept {
-
-    asRemote(transaction: TypeDBTransaction): RemoteType;
-
-    setLabel(label: string): Promise<void>;
-
-    isAbstract(): Promise<boolean>;
-
-    getSupertype(): Promise<Type>;
-
-    getSupertypes(): Stream<Type>;
-
-    getSubtypes(): Stream<Type>;
-
+    asRemote(transaction: TypeDBTransaction): Type.Remote;
 }
 
 export namespace Type {
+
+    export interface Remote extends Type, Concept.Remote {
+
+        asRemote(transaction: TypeDBTransaction): Type.Remote;
+
+        asType(): Type.Remote;
+
+        asThingType(): ThingType.Remote;
+
+        asEntityType(): EntityType.Remote;
+
+        asAttributeType(): AttributeType.Remote;
+
+        asRelationType(): RelationType.Remote;
+
+        asRoleType(): RoleType.Remote;
+
+        asThing(): Thing.Remote;
+
+        asEntity(): Entity.Remote;
+
+        asAttribute(): Attribute.Remote;
+
+        asRelation(): Relation.Remote;
+
+        setLabel(label: string): Promise<void>;
+
+        isAbstract(): Promise<boolean>;
+
+        getSupertype(): Promise<Type>;
+
+        getSupertypes(): Stream<Type>;
+
+        getSubtypes(): Stream<Type>;
+    }
 
     export function encoding(type: Type): TypeProto.Encoding {
         if (type.isEntityType()) {

@@ -23,8 +23,8 @@ import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {RoleType} from "../../api/concept/type/RoleType";
 import {RelationType} from "../../api/concept/type/RelationType";
 import {Thing} from "../../api/concept/thing/Thing";
-import {Relation, RemoteRelation} from "../../api/concept/thing/Relation";
-import {RelationTypeImpl, RemoteThingImpl, RoleTypeImpl, ThingImpl} from "../../dependencies_internal";
+import {Relation} from "../../api/concept/thing/Relation";
+import {RelationTypeImpl, RoleTypeImpl, ThingImpl} from "../../dependencies_internal";
 import {Bytes} from "../../common/util/Bytes";
 import {Stream} from "../../common/util/Stream";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
@@ -39,8 +39,12 @@ export class RelationImpl extends ThingImpl implements Relation {
         this._type = type;
     }
 
-    asRemote(transaction: TypeDBTransaction): RemoteRelation {
-        return new RelationImpl.RemoteImpl((transaction as TypeDBTransaction.Extended), this.getIID(), this.isInferred(), this.getType());
+    protected get className(): string {
+        return "Relation";
+    }
+
+    asRemote(transaction: TypeDBTransaction): Relation.Remote {
+        return new RelationImpl.Remote((transaction as TypeDBTransaction.Extended), this.getIID(), this.isInferred(), this.getType());
     }
 
     getType(): RelationType {
@@ -51,8 +55,10 @@ export class RelationImpl extends ThingImpl implements Relation {
         return true;
     }
 
+    asRelation(): Relation {
+        return this;
+    }
 }
-
 
 export namespace RelationImpl {
 
@@ -62,7 +68,7 @@ export namespace RelationImpl {
         return new RelationImpl(iid, thingProto.getInferred(), RelationTypeImpl.of(thingProto.getType()));
     }
 
-    export class RemoteImpl extends RemoteThingImpl implements RemoteRelation {
+    export class Remote extends ThingImpl.Remote implements Relation.Remote {
 
         private _type: RelationType;
 
@@ -71,16 +77,24 @@ export namespace RelationImpl {
             this._type = type;
         }
 
-        asRemote(transaction: TypeDBTransaction): RemoteRelation {
-            return this;
+        protected get className(): string {
+            return "Relation";
+        }
+
+        asRemote(transaction: TypeDBTransaction): Relation.Remote {
+            return new RelationImpl.Remote((transaction as TypeDBTransaction.Extended), this.getIID(), this.isInferred(), this.getType());
+        }
+
+        getType(): RelationType {
+            return this._type;
         }
 
         isRelation(): boolean {
             return true;
         }
 
-        getType(): RelationType {
-            return this._type;
+        asRelation(): Relation.Remote {
+            return this;
         }
 
         async addPlayer(roleType: RoleType, player: Thing): Promise<void> {
@@ -139,6 +153,5 @@ export namespace RelationImpl {
                 .flatMap((resPart) => Stream.array(resPart.getRelationGetRelatingResPart().getRoleTypesList()))
                 .map((roleTypeProto) => RoleTypeImpl.of(roleTypeProto));
         }
-
     }
 }

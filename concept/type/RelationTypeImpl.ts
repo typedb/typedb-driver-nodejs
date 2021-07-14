@@ -19,9 +19,8 @@
  * under the License.
  */
 
-
 import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {RelationType, RemoteRelationType} from "../../api/concept/type/RelationType";
+import {RelationType} from "../../api/concept/type/RelationType";
 import {Relation} from "../../api/concept/thing/Relation";
 import {RoleType} from "../../api/concept/type/RoleType";
 import {RelationImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
@@ -36,14 +35,21 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         super(label, isRoot);
     }
 
-    asRemote(transaction: TypeDBTransaction): RemoteRelationType {
-        return new RelationTypeImpl.RemoteImpl(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+    protected get className(): string {
+        return "RelationType";
+    }
+
+    asRemote(transaction: TypeDBTransaction): RelationType.Remote {
+        return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
     }
 
     isRelationType(): boolean {
         return true;
     }
 
+    asRelationType(): RelationType {
+        return this;
+    }
 }
 
 export namespace RelationTypeImpl {
@@ -52,18 +58,26 @@ export namespace RelationTypeImpl {
         return new RelationTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getRoot());
     }
 
-    export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements RemoteRelationType {
+    export class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
         constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: TypeDBTransaction): RemoteRelationType {
-            return this;
+        protected get className(): string {
+            return "RelationType";
+        }
+
+        asRemote(transaction: TypeDBTransaction): RelationType.Remote {
+            return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
         }
 
         isRelationType(): boolean {
             return true;
+        }
+
+        asRelationType(): RelationType.Remote {
+            return this;
         }
 
         async create(): Promise<Relation> {
@@ -116,7 +130,5 @@ export namespace RelationTypeImpl {
             const request = RequestBuilder.Type.RelationType.unsetRelatesReq(this.getLabel(), roleLabel);
             await this.execute(request);
         }
-
     }
-
 }

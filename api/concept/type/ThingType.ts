@@ -21,67 +21,89 @@
 
 
 import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {RemoteType, Type} from "./Type";
+import {Type} from "./Type";
 import {RoleType} from "./RoleType";
 import {AttributeType} from "./AttributeType";
 import {Thing} from "../thing/Thing";
 import {Stream} from "../../../common/util/Stream";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import { EntityType } from "./EntityType";
+import { RelationType } from "./RelationType";
+import { Entity } from "../thing/Entity";
+import { Attribute } from "../thing/Attribute";
+import { Relation } from "../thing/Relation";
 
 export interface ThingType extends Type {
 
-    asRemote(transaction: TypeDBTransaction): RemoteThingType;
-
-}
-
-export interface RemoteThingType extends ThingType, RemoteType {
-
-    asRemote(transaction: TypeDBTransaction): RemoteThingType;
-
-    getSupertype(): Promise<ThingType>;
-
-    getSupertypes(): Stream<ThingType>;
-
-    getSubtypes(): Stream<ThingType>;
-
-    getInstances(): Stream<Thing>;
-
-    setAbstract(): Promise<void>;
-
-    unsetAbstract(): Promise<void>;
-
-    setPlays(role: RoleType): Promise<void>;
-
-    setPlays(role: RoleType, overriddenType: RoleType): Promise<void>;
-
-    setOwns(attributeType: AttributeType): Promise<void>;
-
-    setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
-
-    setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
-
-    setOwns(attributeType: AttributeType, overriddenType: AttributeType, isKey: boolean): Promise<void>;
-
-    getPlays(): Stream<RoleType>;
-
-    getOwns(): Stream<AttributeType>;
-
-    getOwns(valueType: AttributeType.ValueType): Stream<AttributeType>;
-
-    getOwns(keysOnly: boolean): Stream<AttributeType>;
-
-    getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
-
-    unsetPlays(role: RoleType): Promise<void>;
-
-    unsetOwns(attributeType: AttributeType): Promise<void>;
-
+    asRemote(transaction: TypeDBTransaction): ThingType.Remote;
 }
 
 export namespace ThingType {
 
+    export interface Remote extends ThingType, Type.Remote {
+
+        asRemote(transaction: TypeDBTransaction): ThingType.Remote;
+
+        asType(): Type.Remote;
+
+        asThingType(): ThingType.Remote;
+
+        asEntityType(): EntityType.Remote;
+
+        asAttributeType(): AttributeType.Remote;
+
+        asRelationType(): RelationType.Remote;
+
+        asRoleType(): RoleType.Remote;
+
+        asThing(): Thing.Remote;
+
+        asEntity(): Entity.Remote;
+
+        asAttribute(): Attribute.Remote;
+
+        asRelation(): Relation.Remote;
+
+        getSupertype(): Promise<ThingType>;
+
+        getSupertypes(): Stream<ThingType>;
+
+        getSubtypes(): Stream<ThingType>;
+
+        getInstances(): Stream<Thing>;
+
+        setAbstract(): Promise<void>;
+
+        unsetAbstract(): Promise<void>;
+
+        setPlays(role: RoleType): Promise<void>;
+
+        setPlays(role: RoleType, overriddenType: RoleType): Promise<void>;
+
+        setOwns(attributeType: AttributeType): Promise<void>;
+
+        setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
+
+        setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
+
+        setOwns(attributeType: AttributeType, overriddenType: AttributeType, isKey: boolean): Promise<void>;
+
+        getPlays(): Stream<RoleType>;
+
+        getOwns(): Stream<AttributeType>;
+
+        getOwns(valueType: AttributeType.ValueType): Stream<AttributeType>;
+
+        getOwns(keysOnly: boolean): Stream<AttributeType>;
+
+        getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
+
+        unsetPlays(role: RoleType): Promise<void>;
+
+        unsetOwns(attributeType: AttributeType): Promise<void>;
+    }
+
     export function proto(thingType: ThingType) {
         return RequestBuilder.Type.ThingType.protoThingType(thingType.getLabel(), Type.encoding(thingType));
     }
-
 }

@@ -21,7 +21,7 @@
 
 import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {Concept} from "../../api/concept/Concept";
-import {RemoteType, Type} from "../../api/concept/type/Type";
+import {Type} from "../../api/concept/type/Type";
 import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
@@ -39,36 +39,38 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
     protected constructor(label: Label, isRoot: boolean) {
         super();
-        if (!label) throw new TypeDBClientError(MISSING_LABEL.message());
+        if (!label) throw new TypeDBClientError(MISSING_LABEL);
         this._label = label;
         this._isRoot = isRoot;
     }
 
-    abstract asRemote(transaction: TypeDBTransaction): RemoteType;
+    abstract asRemote(transaction: TypeDBTransaction): Type.Remote;
 
     isRoot(): boolean {
         return this._isRoot;
-    }
-
-    isType(): boolean {
-        return true;
     }
 
     getLabel(): Label {
         return this._label;
     }
 
+    isType(): boolean {
+        return true;
+    }
+
+    asType(): Type {
+        return this;
+    }
+
     equals(concept: Concept): boolean {
         if (!concept.isType()) return false;
-        return (concept as Type).getLabel().equals(this.getLabel());
+        return concept.asType().getLabel().equals(this.getLabel());
     }
 
     toString(): string {
-        return `${this.constructor.name}[label:${this._label}]`;
+        return `${this.className}[label:${this._label}]`;
     }
-
 }
-
 
 export namespace TypeImpl {
     export function of(typeProto: TypeProto) {
@@ -80,36 +82,34 @@ export namespace TypeImpl {
         }
     }
 
-
-    export abstract class RemoteImpl extends ConceptImpl.Remote implements RemoteType {
+    export abstract class Remote extends ConceptImpl.Remote implements Type.Remote {
 
         private _label: Label;
-        private _isRoot: boolean;
-        protected _transaction: TypeDBTransaction.Extended;
+        private readonly _isRoot: boolean;
 
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-            super();
-            if (!transaction) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
-            if (!label) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_LABEL.message());
-            this._transaction = transaction;
+        protected constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
+            super(transaction);
+            if (!label) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_LABEL);
             this._label = label;
             this._isRoot = isRoot;
         }
 
-        asRemote(transaction: TypeDBTransaction): RemoteType {
-            return this;
-        }
+        abstract asRemote(transaction: TypeDBTransaction): Type.Remote;
 
-        isType(): boolean {
-            return true;
+        isRoot(): boolean {
+            return this._isRoot;
         }
 
         getLabel(): Label {
             return this._label;
         }
 
-        isRoot(): boolean {
-            return this._isRoot;
+        isType(): boolean {
+            return true;
+        }
+
+        asType(): Type.Remote {
+            return this;
         }
 
         equals(concept: Concept): boolean {
@@ -118,7 +118,7 @@ export namespace TypeImpl {
         }
 
         toString(): string {
-            return `${this.constructor.name}[label:${this._label}]`;
+            return `${this.className}[label:${this._label}]`;
         }
 
         async delete(): Promise<void> {
@@ -156,13 +156,12 @@ export namespace TypeImpl {
         }
 
         protected async execute(request: TransactionProto.Req): Promise<TypeProto.Res> {
-            return (await this._transaction.rpcExecute(request, false)).getTypeRes();
+            return (await this.transaction.rpcExecute(request, false)).getTypeRes();
         }
 
         protected stream(request: TransactionProto.Req): Stream<TypeProto.ResPart> {
-            const resPartStream = this._transaction.rpcStream(request);
+            const resPartStream = this.transaction.rpcStream(request);
             return resPartStream.map((res) => res.getTypeResPart());
         }
-
     }
 }

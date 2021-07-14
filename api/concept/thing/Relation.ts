@@ -19,35 +19,62 @@
  * under the License.
  */
 
-
 import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
 import {RelationType} from "../type/RelationType";
 import {RoleType} from "../type/RoleType";
-import {RemoteThing, Thing} from "./Thing";
+import {Thing} from "./Thing";
 import {Stream} from "../../../common/util/Stream";
+import { Type } from "../type/Type";
+import { ThingType } from "../type/ThingType";
+import { EntityType } from "../type/EntityType";
+import { AttributeType } from "../type/AttributeType";
+import { Entity } from "./Entity";
+import { Attribute } from "./Attribute";
 
 export interface Relation extends Thing {
 
-    asRemote(transaction: TypeDBTransaction): RemoteRelation;
+    asRemote(transaction: TypeDBTransaction): Relation.Remote;
 
     getType(): RelationType;
-
 }
 
-export interface RemoteRelation extends Relation, RemoteThing {
+export namespace Relation {
 
-    asRemote(transaction: TypeDBTransaction): RemoteRelation;
+    export interface Remote extends Relation, Thing.Remote {
 
-    getType(): RelationType;
+        asRemote(transaction: TypeDBTransaction): Relation.Remote;
 
-    addPlayer(roleType: RoleType, player: Thing): Promise<void>;
+        getType(): RelationType;
 
-    removePlayer(roleType: RoleType, player: Thing): Promise<void>;
+        asType(): Type.Remote;
 
-    getPlayers(roleTypes?: RoleType[]): Stream<Thing>;
+        asThingType(): ThingType.Remote;
 
-    getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>>;
+        asEntityType(): EntityType.Remote;
 
-    getRelating(): Stream<RoleType>;
+        asAttributeType(): AttributeType.Remote;
 
+        asRelationType(): RelationType.Remote;
+
+        asRoleType(): RoleType.Remote;
+
+        asThing(): Thing.Remote;
+
+        asEntity(): Entity.Remote;
+
+        asAttribute(): Attribute.Remote;
+
+        asRelation(): Relation.Remote;
+
+        addPlayer(roleType: RoleType, player: Thing): Promise<void>;
+
+        removePlayer(roleType: RoleType, player: Thing): Promise<void>;
+
+        getPlayers(roleTypes?: RoleType[]): Stream<Thing>;
+
+        getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>>;
+
+        getRelating(): Stream<RoleType>;
+    }
 }
+

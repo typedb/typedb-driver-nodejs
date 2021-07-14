@@ -23,15 +23,8 @@ import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {Thing} from "../../api/concept/thing/Thing";
 import {RoleType} from "../../api/concept/type/RoleType";
 import {AttributeType} from "../../api/concept/type/AttributeType";
-import {RemoteThingType, ThingType} from "../../api/concept/type/ThingType";
-import {
-    AttributeTypeImpl,
-    EntityTypeImpl,
-    RelationTypeImpl,
-    RoleTypeImpl,
-    ThingImpl,
-    TypeImpl
-} from "../../dependencies_internal";
+import {ThingType} from "../../api/concept/type/ThingType";
+import { AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, RoleTypeImpl, ThingImpl, TypeImpl } from "../../dependencies_internal";
 import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
@@ -46,14 +39,21 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
         super(Label.of(name), isRoot);
     }
 
-    asRemote(transaction: TypeDBTransaction): RemoteThingType {
-        return new ThingTypeImpl.RemoteImpl((transaction as TypeDBTransaction.Extended), this.getLabel(), this.isRoot());
+    protected get className(): string {
+        return "ThingType";
+    }
+
+    asRemote(transaction: TypeDBTransaction): ThingType.Remote {
+        return new ThingTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
     }
 
     isThingType(): boolean {
         return true;
     }
 
+    asThingType(): ThingType {
+        return this;
+    }
 }
 
 export namespace ThingTypeImpl {
@@ -74,18 +74,26 @@ export namespace ThingTypeImpl {
         }
     }
 
-    export class RemoteImpl extends TypeImpl.RemoteImpl implements RemoteThingType {
+    export class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
         constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: TypeDBTransaction): RemoteThingType {
-            return this;
+        protected get className(): string {
+            return "ThingType";
+        }
+
+        asRemote(transaction: TypeDBTransaction): ThingType.Remote {
+            return new ThingTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
         }
 
         isThingType(): boolean {
             return true;
+        }
+
+        asThingType(): ThingType.Remote {
+            return this;
         }
 
         getSubtypes(): Stream<ThingType> {
@@ -191,14 +199,12 @@ export namespace ThingTypeImpl {
         }
 
         async isDeleted(): Promise<boolean> {
-            return (await this._transaction.concepts().getThingType(this.getLabel().name())) != null;
+            return (await this.transaction.concepts().getThingType(this.getLabel().name())) != null;
         }
 
         protected async setSupertype(thingType: ThingType): Promise<void> {
             const request = RequestBuilder.Type.ThingType.setSupertypeReq(this.getLabel(), ThingType.proto(thingType));
             await this.execute(request);
         }
-
     }
-
 }

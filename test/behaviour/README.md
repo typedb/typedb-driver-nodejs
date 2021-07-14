@@ -4,7 +4,8 @@ To develop the tests, simply run:
 ```
 tsc
 ```
-- If you don't have `tsc` available globally, install it using `npm install -g typescript`.
+- If the `tsc` command isn't found, install it using `npm install -g typescript`.
+- If there are compiler errors, you may have a mismatched TypeScript version. Try `npm uninstall -g typescript; npm install -g typescript@{version}` where `{version}` is the version specified in root `package.json`.
 
 Running `tsc` will create the `dist` directory on your local machine, where all the BDD step implementations import typedb-client symbols from. This allows your IDE to provide IntelliSense.
 

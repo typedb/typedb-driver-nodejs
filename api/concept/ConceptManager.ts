@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import {Thing} from "./thing/Thing";
 import {ThingType} from "./type/ThingType";
 import {EntityType} from "./type/EntityType";

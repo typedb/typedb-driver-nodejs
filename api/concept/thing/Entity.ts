@@ -20,21 +20,50 @@
  */
 
 import {EntityType} from "../type/EntityType";
-import {RemoteThing, Thing} from "./Thing";
+import {Thing} from "./Thing";
 import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import { Type } from "../type/Type";
+import { ThingType } from "../type/ThingType";
+import { AttributeType } from "../type/AttributeType";
+import { RelationType } from "../type/RelationType";
+import { RoleType } from "../type/RoleType";
+import { Attribute } from "./Attribute";
+import { Relation } from "./Relation";
 
 export interface Entity extends Thing {
 
-    asRemote(transaction: TypeDBTransaction): RemoteEntity;
+    asRemote(transaction: TypeDBTransaction): Entity.Remote;
 
     getType(): EntityType;
 
 }
 
-export interface RemoteEntity extends RemoteThing {
+export namespace Entity {
 
-    asRemote(transaction: TypeDBTransaction): RemoteEntity;
+    export interface Remote extends Entity, Thing.Remote {
 
-    getType(): EntityType;
+        asRemote(transaction: TypeDBTransaction): Entity.Remote;
 
+        getType(): EntityType;
+
+        asType(): Type.Remote;
+
+        asThingType(): ThingType.Remote;
+
+        asEntityType(): EntityType.Remote;
+
+        asAttributeType(): AttributeType.Remote;
+
+        asRelationType(): RelationType.Remote;
+
+        asRoleType(): RoleType.Remote;
+
+        asThing(): Thing.Remote;
+
+        asEntity(): Entity.Remote;
+
+        asAttribute(): Attribute.Remote;
+
+        asRelation(): Relation.Remote;
+    }
 }
