@@ -26,22 +26,21 @@ import {assertThrows} from "../../../util/Util";
 import assert = require("assert");
 import { Attribute, AttributeType } from "../../../../../dist";
 import ValueType = AttributeType.ValueType;
-import ValueClass = AttributeType.ValueClass;
 
 When("attribute\\({type_label}) get instances contain: {var}", async (typeLabel: string, var0: string) => {
     assert(await (await tx().concepts().getAttributeType(typeLabel)).asRemote(tx()).getInstances().some(x => x.equals(get(var0))));
 });
 
 When("attribute {var} get owners contain: {var}", async (var1: string, var2: string) => {
-    assert(await (get(var1) as Attribute<ValueClass>).asRemote(tx()).getOwners().some(x => x.equals(get(var2))));
+    assert(await (get(var1) as Attribute).asRemote(tx()).getOwners().some(x => x.equals(get(var2))));
 });
 
 When("attribute {var} get owners do not contain: {var}", async (var1: string, var2: string) => {
-    assert(!(await (get(var1) as Attribute<ValueClass>).asRemote(tx()).getOwners().some(x => x.equals(get(var2)))));
+    assert(!(await (get(var1) as Attribute).asRemote(tx()).getOwners().some(x => x.equals(get(var2)))));
 });
 
 When("attribute {var} has value type: {value_type}", async (var0: string, valueType: ValueType) => {
-    assert.strictEqual(valueType, (get(var0) as Attribute<ValueClass>).getType().getValueType());
+    assert.strictEqual(valueType, (get(var0) as Attribute).getType().getValueType());
 });
 
 When("{var} = attribute\\({type_label}) as\\(boolean) put: {bool}", async (var0: string, typeLabel: string, value: boolean) => {

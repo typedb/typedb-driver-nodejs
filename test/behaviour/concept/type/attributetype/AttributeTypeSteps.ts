@@ -24,7 +24,7 @@ import {Then, When} from "@cucumber/cucumber";
 import assert from "assert";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {parseList} from "../../../config/Parameters";
-import { AttributeType, TypeDBClientError } from "../../../../../dist";
+import { AttributeType, TypeDBClientError, ErrorMessage } from "../../../../../dist";
 import ValueType = AttributeType.ValueType;
 
 When("put attribute type: {type_label}, with value type: {value_type}", async (typeLabel: string, valueType: ValueType) => {

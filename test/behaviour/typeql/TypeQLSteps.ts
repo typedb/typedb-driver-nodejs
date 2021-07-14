@@ -26,8 +26,7 @@ import {parseBool} from "../config/Parameters";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {fail} from "assert";
 import assert = require("assert");
-import { Attribute, AttributeType, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, RoleType, Thing, Type } from "../../../dist";
-import ValueClass = AttributeType.ValueClass;
+import { Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, RoleType, Thing, Type } from "../../../dist";
 
 let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -205,14 +204,12 @@ abstract class AttributeMatcher implements ConceptMatcher {
         return this._value;
     }
 
-    check(attribute: Attribute<ValueClass>) {
-        if (attribute.isBoolean()) return attribute.getValue() === parseBool(this.value);
-        else if (attribute.isLong()) {
-            return attribute.getValue() === parseInt(this.value);
-        }
-        else if (attribute.isDouble()) return attribute.getValue() === parseFloat(this.value);
-        else if (attribute.isString()) return attribute.getValue() === this.value;
-        else if (attribute.isDateTime()) return (attribute.getValue() as Date).getTime() === new Date(this.value).getTime();
+    check(attribute: Attribute) {
+        if (attribute.isBoolean()) return attribute.asBoolean().getValue() === parseBool(this.value);
+        else if (attribute.isLong()) return attribute.asLong().getValue() === parseInt(this.value);
+        else if (attribute.isDouble()) return attribute.asDouble().getValue() === parseFloat(this.value);
+        else if (attribute.isString()) return attribute.asString().getValue() === this.value;
+        else if (attribute.isDateTime()) return attribute.asDateTime().getValue().getTime() === new Date(this.value).getTime();
         else throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
     }
 
@@ -224,7 +221,7 @@ class AttributeValueMatcher extends AttributeMatcher {
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isAttribute()) return false;
 
-        const attribute = concept as Attribute<ValueClass>;
+        const attribute = concept as Attribute;
 
         if (this.typeLabel !== attribute.getType().getLabel().scopedName()) return false;
 

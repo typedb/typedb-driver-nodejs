@@ -25,8 +25,7 @@ import {getThingType} from "../type/thingtype/ThingTypeSteps";
 import {assertThrows} from "../../util/Util";
 import {RootLabel, ScopedLabel} from "../../config/Parameters";
 import assert = require("assert");
-import { Attribute, AttributeType, Thing } from "../../../../dist";
-import ValueClass = AttributeType.ValueClass;
+import { Attribute, Thing } from "../../../../dist";
 
 export const things: Map<string, Thing> = new Map<string, Thing>();
 export const get: (name: string) => Thing = (name: string) => things.get(name);
@@ -54,15 +53,15 @@ When("delete entity:/attribute:/relation: {var}", async (thingName: string) => {
 });
 
 When("entity/attribute/relation {var} set has: {var}", async (thingName: string, attributeName: string) => {
-    await get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute<ValueClass>);
+    await get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute);
 });
 
 When("entity/attribute/relation {var} set has: {var}; throws exception", async (thingName: string, attributeName: string) => {
-    await assertThrows(async () => get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute<ValueClass>));
+    await assertThrows(async () => get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute));
 });
 
 When("entity/attribute/relation {var} unset has: {var}", async (thingName: string, attributeName: string) => {
-    await get(thingName).asRemote(tx()).unsetHas(get(attributeName) as Attribute<ValueClass>);
+    await get(thingName).asRemote(tx()).unsetHas(get(attributeName) as Attribute);
 });
 
 When("entity/attribute/relation {var} get keys contain: {var}", async (thingName: string, attributeName: string) => {
