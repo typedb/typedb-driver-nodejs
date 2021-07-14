@@ -53,6 +53,8 @@ export abstract class AttributeImpl extends ThingImpl implements Attribute {
         return this._type;
     }
 
+    abstract getValue(): boolean | string | number | Date;
+
     isBoolean(): boolean {
         return false;
     }
@@ -135,6 +137,8 @@ export namespace AttributeImpl {
         getType(): AttributeType {
             return this._type;
         }
+
+        abstract getValue(): boolean | string | number | Date;
 
         getOwners(ownerType?: ThingType): Stream<Thing> {
             let request;

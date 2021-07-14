@@ -37,6 +37,8 @@ export interface Attribute extends Thing {
 
     getType(): AttributeType;
 
+    getValue(): boolean | string | number | Date;
+
     isBoolean(): boolean;
 
     isLong(): boolean;
@@ -116,6 +118,8 @@ export namespace Attribute {
 
             getType(): AttributeType.Boolean;
 
+            getValue(): boolean;
+
             asType(): Type.Remote;
 
             asThingType(): ThingType.Remote;
@@ -164,6 +168,8 @@ export namespace Attribute {
             asRemote(transaction: TypeDBTransaction): Attribute.Long.Remote;
 
             getType(): AttributeType.Long;
+
+            getValue(): number;
 
             asType(): Type.Remote;
 
@@ -214,6 +220,8 @@ export namespace Attribute {
 
             getType(): AttributeType.Double;
 
+            getValue(): number;
+
             asType(): Type.Remote;
 
             asThingType(): ThingType.Remote;
@@ -263,6 +271,8 @@ export namespace Attribute {
 
             getType(): AttributeType.String;
 
+            getValue(): string;
+
             asType(): Type.Remote;
 
             asThingType(): ThingType.Remote;
@@ -311,6 +321,8 @@ export namespace Attribute {
             asRemote(transaction: TypeDBTransaction): Attribute.DateTime.Remote;
 
             getType(): AttributeType.DateTime;
+
+            getValue(): Date;
 
             asType(): Type.Remote;
 
