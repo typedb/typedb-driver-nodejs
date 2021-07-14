@@ -668,7 +668,5 @@ export namespace RequestBuilder {
                 return new AttributeProto.Value().setDateTime(value.getTime());
             }
         }
-
     }
-
 }
