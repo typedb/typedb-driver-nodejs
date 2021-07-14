@@ -19,16 +19,16 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {RoleType} from "../../api/concept/type/RoleType";
-import {RelationType} from "../../api/concept/type/RelationType";
-import {Thing} from "../../api/concept/thing/Thing";
-import {Relation} from "../../api/concept/thing/Relation";
-import {RelationTypeImpl, RoleTypeImpl, ThingImpl} from "../../dependencies_internal";
-import {Bytes} from "../../common/util/Bytes";
-import {Stream} from "../../common/util/Stream";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Thing as ThingProto} from "typedb-protocol/common/concept_pb";
+import { Thing as ThingProto } from "typedb-protocol/common/concept_pb";
+import { Relation } from "../../api/concept/thing/Relation";
+import { Thing } from "../../api/concept/thing/Thing";
+import { RelationType } from "../../api/concept/type/RelationType";
+import { RoleType } from "../../api/concept/type/RoleType";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { Bytes } from "../../common/util/Bytes";
+import { Stream } from "../../common/util/Stream";
+import { RelationTypeImpl, RoleTypeImpl, ThingImpl } from "../../dependencies_internal";
 
 export class RelationImpl extends ThingImpl implements Relation {
 
@@ -129,6 +129,18 @@ export namespace RelationImpl {
             return rolePlayersMap;
         }
 
+        async removePlayer(roleType: RoleType, player: Thing): Promise<void> {
+            const request = RequestBuilder.Thing.Relation.removePlayerReq(this.getIID(), RoleType.proto(roleType), Thing.proto(player));
+            await this.execute(request);
+        }
+
+        getRelating(): Stream<RoleType> {
+            const request = RequestBuilder.Thing.Relation.getRelatingReq(this.getIID());
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getRelationGetRelatingResPart().getRoleTypesList()))
+                .map((roleTypeProto) => RoleTypeImpl.of(roleTypeProto));
+        }
+
         private findRole(map: Map<RoleType, Thing[]>, role: RoleType) {
             const iter = map.keys();
             let next = iter.next();
@@ -140,18 +152,6 @@ export namespace RelationImpl {
                 next = iter.next();
             }
             return null;
-        }
-
-        async removePlayer(roleType: RoleType, player: Thing): Promise<void> {
-            const request = RequestBuilder.Thing.Relation.removePlayerReq(this.getIID(), RoleType.proto(roleType), Thing.proto(player));
-            await this.execute(request);
-        }
-
-        getRelating(): Stream<RoleType> {
-            const request = RequestBuilder.Thing.Relation.getRelatingReq(this.getIID());
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getRelationGetRelatingResPart().getRoleTypesList()))
-                .map((roleTypeProto) => RoleTypeImpl.of(roleTypeProto));
         }
     }
 }

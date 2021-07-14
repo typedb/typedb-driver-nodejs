@@ -19,13 +19,13 @@
  * under the License.
  */
 
-import {After, When} from "@cucumber/cucumber";
-import {tx} from "../../connection/ConnectionStepsBase";
-import {getThingType} from "../type/thingtype/ThingTypeSteps";
-import {assertThrows} from "../../util/Util";
-import {RootLabel, ScopedLabel} from "../../config/Parameters";
-import assert = require("assert");
+import { After, When } from "@cucumber/cucumber";
 import { Attribute, Thing } from "../../../../dist";
+import { RootLabel, ScopedLabel } from "../../config/Parameters";
+import { tx } from "../../connection/ConnectionStepsBase";
+import { assertThrows } from "../../util/Util";
+import { getThingType } from "../type/thingtype/ThingTypeSteps";
+import assert = require("assert");
 
 export const things: Map<string, Thing> = new Map<string, Thing>();
 export const get: (name: string) => Thing = (name: string) => things.get(name);

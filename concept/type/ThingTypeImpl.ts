@@ -19,18 +19,18 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {Thing} from "../../api/concept/thing/Thing";
-import {RoleType} from "../../api/concept/type/RoleType";
-import {AttributeType} from "../../api/concept/type/AttributeType";
-import {ThingType} from "../../api/concept/type/ThingType";
+import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { Thing } from "../../api/concept/thing/Thing";
+import { AttributeType } from "../../api/concept/type/AttributeType";
+import { RoleType } from "../../api/concept/type/RoleType";
+import { ThingType } from "../../api/concept/type/ThingType";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { Label } from "../../common/Label";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { Stream } from "../../common/util/Stream";
 import { AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, RoleTypeImpl, ThingImpl, TypeImpl } from "../../dependencies_internal";
-import {Label} from "../../common/Label";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Stream} from "../../common/util/Stream";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {

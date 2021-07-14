@@ -19,17 +19,17 @@
  * under the License.
  */
 
-import {Thing} from "./Thing";
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {Stream} from "../../../common/util/Stream";
-import {ThingType} from "../type/ThingType";
-import {AttributeType} from "../type/AttributeType";
-import { Type } from "../type/Type";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { AttributeType } from "../type/AttributeType";
 import { EntityType } from "../type/EntityType";
 import { RelationType } from "../type/RelationType";
 import { RoleType } from "../type/RoleType";
+import { ThingType } from "../type/ThingType";
+import { Type } from "../type/Type";
 import { Entity } from "./Entity";
 import { Relation } from "./Relation";
+import { Thing } from "./Thing";
 
 export interface Attribute extends Thing {
 

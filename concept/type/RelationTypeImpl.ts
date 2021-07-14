@@ -19,15 +19,15 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {RelationType} from "../../api/concept/type/RelationType";
-import {Relation} from "../../api/concept/thing/Relation";
-import {RoleType} from "../../api/concept/type/RoleType";
-import {RelationImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
-import {Label} from "../../common/Label";
-import {Stream} from "../../common/util/Stream";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
+import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { Relation } from "../../api/concept/thing/Relation";
+import { RelationType } from "../../api/concept/type/RelationType";
+import { RoleType } from "../../api/concept/type/RoleType";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { Label } from "../../common/Label";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { Stream } from "../../common/util/Stream";
+import { RelationImpl, RoleTypeImpl, ThingTypeImpl } from "../../dependencies_internal";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 

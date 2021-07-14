@@ -20,17 +20,17 @@
  */
 
 
-import {TypeDBTransaction} from "../connection/TypeDBTransaction";
-import { Type } from "./type/Type";
-import { ThingType } from "./type/ThingType";
-import { EntityType } from "./type/EntityType";
+import { TypeDBTransaction } from "../connection/TypeDBTransaction";
+import { Attribute } from "./thing/Attribute";
+import { Entity } from "./thing/Entity";
+import { Relation } from "./thing/Relation";
+import { Thing } from "./thing/Thing";
 import { AttributeType } from "./type/AttributeType";
+import { EntityType } from "./type/EntityType";
 import { RelationType } from "./type/RelationType";
 import { RoleType } from "./type/RoleType";
-import { Thing } from "./thing/Thing";
-import { Entity } from "./thing/Entity";
-import { Attribute } from "./thing/Attribute";
-import { Relation } from "./thing/Relation";
+import { ThingType } from "./type/ThingType";
+import { Type } from "./type/Type";
 
 export interface Concept {
 

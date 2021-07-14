@@ -19,18 +19,18 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {ThingType} from "./ThingType";
-import {Attribute} from "../thing/Attribute";
-import {Stream} from "../../../common/util/Stream";
-import {AttributeType as AttributeTypeProto} from "typedb-protocol/common/concept_pb";
-import { Type } from "./Type";
-import { EntityType } from "./EntityType";
-import { RelationType } from "./RelationType";
-import { RoleType } from "./RoleType";
+import { AttributeType as AttributeTypeProto } from "typedb-protocol/common/concept_pb";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { Attribute } from "../thing/Attribute";
 import { Entity } from "../thing/Entity";
 import { Relation } from "../thing/Relation";
 import { Thing } from "../thing/Thing";
+import { EntityType } from "./EntityType";
+import { RelationType } from "./RelationType";
+import { RoleType } from "./RoleType";
+import { ThingType } from "./ThingType";
+import { Type } from "./Type";
 
 export interface AttributeType extends ThingType {
 

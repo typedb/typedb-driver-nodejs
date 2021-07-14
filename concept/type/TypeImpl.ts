@@ -19,17 +19,17 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {Concept} from "../../api/concept/Concept";
-import {Type} from "../../api/concept/type/Type";
-import {Label} from "../../common/Label";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Stream} from "../../common/util/Stream";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
-import {ConceptImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
+import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
+import { Concept } from "../../api/concept/Concept";
+import { Type } from "../../api/concept/type/Type";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { Label } from "../../common/Label";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { Stream } from "../../common/util/Stream";
+import { ConceptImpl, RoleTypeImpl, ThingTypeImpl } from "../../dependencies_internal";
 import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
 
 export abstract class TypeImpl extends ConceptImpl implements Type {
@@ -132,6 +132,7 @@ export namespace TypeImpl {
                 .flatMap((resPart) => Stream.array(resPart.getTypeGetSubtypesResPart().getTypesList()))
                 .map((typeProto) => of(typeProto));
         }
+
         getSupertype(): Promise<Type> {
             const request = RequestBuilder.Type.getSupertypeReq(this._label);
             return this.execute(request).then((res) => of(res.getTypeGetSupertypeRes().getType()));

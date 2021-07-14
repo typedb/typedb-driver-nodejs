@@ -19,12 +19,12 @@
  * under the License.
  */
 
-import {When} from "@cucumber/cucumber";
-import {get, put} from "../ThingSteps";
-import {tx} from "../../../connection/ConnectionStepsBase";
-import {assertThrows} from "../../../util/Util";
-import assert = require("assert");
+import { When } from "@cucumber/cucumber";
 import { Attribute, AttributeType } from "../../../../../dist";
+import { tx } from "../../../connection/ConnectionStepsBase";
+import { assertThrows } from "../../../util/Util";
+import { get, put } from "../ThingSteps";
+import assert = require("assert");
 import ValueType = AttributeType.ValueType;
 
 When("attribute\\({type_label}) get instances contain: {var}", async (typeLabel: string, var0: string) => {

@@ -19,18 +19,18 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {ThingType} from "../../api/concept/type/ThingType";
-import {Attribute} from "../../api/concept/thing/Attribute";
-import {Thing} from "../../api/concept/thing/Thing";
-import {AttributeType} from "../../api/concept/type/AttributeType";
-import {AttributeTypeImpl, ThingImpl} from "../../dependencies_internal";
-import {Bytes} from "../../common/util/Bytes";
-import {Stream} from "../../common/util/Stream";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {AttributeType as AttributeTypeProto, Thing as ThingProto} from "typedb-protocol/common/concept_pb";
+import { AttributeType as AttributeTypeProto, Thing as ThingProto } from "typedb-protocol/common/concept_pb";
+import { Attribute } from "../../api/concept/thing/Attribute";
+import { Thing } from "../../api/concept/thing/Thing";
+import { AttributeType } from "../../api/concept/type/AttributeType";
+import { ThingType } from "../../api/concept/type/ThingType";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { Bytes } from "../../common/util/Bytes";
+import { Stream } from "../../common/util/Stream";
+import { AttributeTypeImpl, ThingImpl } from "../../dependencies_internal";
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 

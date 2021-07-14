@@ -20,18 +20,18 @@
  */
 
 
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {Type} from "./Type";
-import {RoleType} from "./RoleType";
-import {AttributeType} from "./AttributeType";
-import {Thing} from "../thing/Thing";
-import {Stream} from "../../../common/util/Stream";
-import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { Attribute } from "../thing/Attribute";
+import { Entity } from "../thing/Entity";
+import { Relation } from "../thing/Relation";
+import { Thing } from "../thing/Thing";
+import { AttributeType } from "./AttributeType";
 import { EntityType } from "./EntityType";
 import { RelationType } from "./RelationType";
-import { Entity } from "../thing/Entity";
-import { Attribute } from "../thing/Attribute";
-import { Relation } from "../thing/Relation";
+import { RoleType } from "./RoleType";
+import { Type } from "./Type";
 
 export interface ThingType extends Type {
 

@@ -19,21 +19,21 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {Concept} from "../../api/concept/Concept";
-import {ThingType} from "../../api/concept/type/ThingType";
-import {AttributeType} from "../../api/concept/type/AttributeType";
-import {Relation} from "../../api/concept/thing/Relation";
-import {Attribute} from "../../api/concept/thing/Attribute";
-import {Thing} from "../../api/concept/thing/Thing";
-import {RoleType} from "../../api/concept/type/RoleType";
-import {AttributeImpl, ConceptImpl, EntityImpl, RelationImpl, RoleTypeImpl} from "../../dependencies_internal";
-import {Stream} from "../../common/util/Stream";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
-import {Thing as ThingProto, Type as TypeProto} from "typedb-protocol/common/concept_pb";
+import { Thing as ThingProto, Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
+import { Concept } from "../../api/concept/Concept";
+import { Attribute } from "../../api/concept/thing/Attribute";
+import { Relation } from "../../api/concept/thing/Relation";
+import { Thing } from "../../api/concept/thing/Thing";
+import { AttributeType } from "../../api/concept/type/AttributeType";
+import { RoleType } from "../../api/concept/type/RoleType";
+import { ThingType } from "../../api/concept/type/ThingType";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { Stream } from "../../common/util/Stream";
+import { AttributeImpl, ConceptImpl, EntityImpl, RelationImpl, RoleTypeImpl } from "../../dependencies_internal";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 

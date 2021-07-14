@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {defineParameterType} from "@cucumber/cucumber";
+import { defineParameterType } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { AttributeType } from "../../../dist/api/concept/type/AttributeType";
 import { TransactionType } from "../../../dist/api/connection/TypeDBTransaction";
@@ -72,6 +72,11 @@ export class ScopedLabel {
         this._role = role;
     }
 
+    static parse(value: string): ScopedLabel {
+        const split = value.split(":");
+        return new ScopedLabel(split[0], split[1]);
+    }
+
     scope(): string {
         return this._scope;
     }
@@ -82,11 +87,6 @@ export class ScopedLabel {
 
     toString(): string {
         return this._scope + ":" + this._role;
-    }
-
-    static parse(value: string): ScopedLabel {
-        const split = value.split(":");
-        return new ScopedLabel(split[0], split[1]);
     }
 }
 
@@ -100,7 +100,7 @@ defineParameterType({
     name: "value_type",
     regexp: /long|double|string|boolean|datetime/,
     transformer: s => {
-        switch(s) {
+        switch (s) {
             case "long":
                 return AttributeType.ValueType.LONG
             case "double":
@@ -147,6 +147,6 @@ export enum RootLabel {
 
 export function parseList(dataTable: DataTable): string[]
 export function parseList<T>(dataTable: DataTable, parseFn: (value: string) => T): T[]
-export function parseList<T>(dataTable: DataTable, parseFn: (value: string) => string | T = val => val): (string | T)[]{
+export function parseList<T>(dataTable: DataTable, parseFn: (value: string) => string | T = val => val): (string | T)[] {
     return dataTable.raw().map(row => parseFn(row[0]));
 }

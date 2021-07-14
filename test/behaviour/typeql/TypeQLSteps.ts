@@ -19,14 +19,14 @@
  * under the License.
  */
 
-import {Then, When} from "@cucumber/cucumber";
-import {tx} from "../connection/ConnectionStepsBase";
-import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
-import {parseBool} from "../config/Parameters";
+import { Then, When } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {fail} from "assert";
-import assert = require("assert");
+import { fail } from "assert";
 import { Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, RoleType, Thing, Type } from "../../../dist";
+import { parseBool } from "../config/Parameters";
+import { tx } from "../connection/ConnectionStepsBase";
+import { assertThrows, assertThrowsWithMessage, splitString } from "../util/Util";
+import assert = require("assert");
 
 let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -249,10 +249,14 @@ class ThingKeyMatcher extends AttributeMatcher {
 function parseConceptIdentifier(value: string): ConceptMatcher {
     const [identifierType, identifierBody] = splitString(value, ":", 1);
     switch (identifierType) {
-        case "label": return new TypeLabelMatcher(identifierBody);
-        case "key": return new ThingKeyMatcher(identifierBody);
-        case "value": return new AttributeValueMatcher(identifierBody);
-        default: throw new Error(`Failed to parse concept identifier: ${value}`);
+        case "label":
+            return new TypeLabelMatcher(identifierBody);
+        case "key":
+            return new ThingKeyMatcher(identifierBody);
+        case "value":
+            return new AttributeValueMatcher(identifierBody);
+        default:
+            throw new Error(`Failed to parse concept identifier: ${value}`);
     }
 }
 
@@ -328,9 +332,9 @@ class AnswerIdentifierGroup {
     constructor(rawAnswerIdentifiers: AnswerIdentifier[]) {
         this._ownerIdentifier = rawAnswerIdentifiers[0][AnswerIdentifierGroup.GROUP_COLUMN_NAME];
         this._answerIdentifiers = rawAnswerIdentifiers.map(rawAnswerIdentifier => {
-             const answerIdentifier = Object.assign({}, rawAnswerIdentifier);
-             delete answerIdentifier[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
-             return answerIdentifier;
+            const answerIdentifier = Object.assign({}, rawAnswerIdentifier);
+            delete answerIdentifier[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
+            return answerIdentifier;
         });
     }
 

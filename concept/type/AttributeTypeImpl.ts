@@ -20,23 +20,19 @@
  */
 
 
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {AttributeType} from "../../api/concept/type/AttributeType";
-import {Attribute} from "../../api/concept/thing/Attribute";
-import {ThingType} from "../../api/concept/type/ThingType";
-import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
-import {Label} from "../../common/Label";
-import {Stream} from "../../common/util/Stream";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {
-    Attribute as AttributeProto,
-    AttributeType as AttributeTypeProto,
-    Type as TypeProto
-} from "typedb-protocol/common/concept_pb";
-import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import { Attribute as AttributeProto, AttributeType as AttributeTypeProto, Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { Attribute } from "../../api/concept/thing/Attribute";
+import { AttributeType } from "../../api/concept/type/AttributeType";
+import { ThingType } from "../../api/concept/type/ThingType";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { Label } from "../../common/Label";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { Stream } from "../../common/util/Stream";
+import { AttributeImpl, ThingTypeImpl } from "../../dependencies_internal";
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
+import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 

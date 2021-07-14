@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
-import assert = require("assert");
+import { After, Before, Given, setDefaultTimeout } from "@cucumber/cucumber";
 import { TypeDBClient, TypeDBSession, TypeDBTransaction } from "../../../dist";
+import assert = require("assert");
 
 export const THREAD_POOL_SIZE = 32;
 

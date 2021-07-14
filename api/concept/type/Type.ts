@@ -20,23 +20,23 @@
  */
 
 
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {Concept} from "../Concept";
-import {Label} from "../../../common/Label";
-import {Stream} from "../../../common/util/Stream";
-import {ErrorMessage} from "../../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
-import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
-import { ThingType } from "./ThingType";
-import { EntityType } from "./EntityType";
-import { AttributeType } from "./AttributeType";
-import { RelationType } from "./RelationType";
-import { RoleType } from "./RoleType";
-import { Entity } from "../thing/Entity";
+import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { ErrorMessage } from "../../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../../common/errors/TypeDBClientError";
+import { Label } from "../../../common/Label";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { Concept } from "../Concept";
 import { Attribute } from "../thing/Attribute";
+import { Entity } from "../thing/Entity";
 import { Relation } from "../thing/Relation";
 import { Thing } from "../thing/Thing";
+import { AttributeType } from "./AttributeType";
+import { EntityType } from "./EntityType";
+import { RelationType } from "./RelationType";
+import { RoleType } from "./RoleType";
+import { ThingType } from "./ThingType";
+import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export interface Type extends Concept {
 
