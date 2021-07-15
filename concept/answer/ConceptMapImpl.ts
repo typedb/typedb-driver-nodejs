@@ -52,7 +52,6 @@ export class ConceptMapImpl implements ConceptMap {
     get explainables(): ConceptMap.Explainables {
         return this._explainables;
     }
-
 }
 
 /* eslint no-inner-declarations: "off" */

@@ -19,23 +19,20 @@
  * under the License.
  */
 
-const {TypeDB} = require("../../dist/TypeDB");
-const {SessionType} = require("../../dist/api/connection/TypeDBSession")
-const {TransactionType} = require("../../dist/api/connection/TypeDBTransaction")
-const {TypeDBOptions} = require("../../dist/api/connection/TypeDBOptions");
+const { TypeDB, SessionType, TransactionType, TypeDBOptions } = require("../../dist");
 const assert = require("assert");
 
 async function run() {
     const client = TypeDB.coreClient();
     try {
-        const dbs = await client.databases().all();
+        const dbs = await client.databases.all();
         console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
-        const typedb = dbs.find(x => x.name() === "typedb");
+        const typedb = dbs.find(x => x.name === "typedb");
         if (typedb) {
             await typedb.delete();
             console.log(`delete database - SUCCESS - 'typedb' has been deleted`);
         }
-        await client.databases().create("typedb");
+        await client.databases.create("typedb");
         console.log("create database - SUCCESS - 'typedb' has been created");
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
@@ -170,12 +167,12 @@ async function run() {
         await tx.query().insert("insert $x isa lion, has name \"Asuka\", has rank \"Duchess\", has power-level 3;");
         await tx.query().insert("insert $x isa lion, has name \"Sergey\", has rank \"Lowborn\", has power-level 13;");
         await tx.query().insert("insert $x isa lion, has name \"Amélie\", has rank \"Marchioness\", has power-level 20;");
-        let lionType = await tx.concepts().getEntityType("lion");
-        let nameType = await tx.concepts().getAttributeType("name");
+        let lionType = await tx.concepts.getEntityType("lion");
+        let nameType = await tx.concepts.getAttributeType("name");
         let lionNames = [];
         for await (let lion of lionType.asRemote(tx).getInstances()) {
             for await (let lionName of lion.asRemote(tx).getHas(nameType)) {
-                lionNames.push(lionName.getValue());
+                lionNames.push(lionName.value);
             }
         }
         // await tx.commit();

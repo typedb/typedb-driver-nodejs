@@ -19,10 +19,7 @@
  * under the License.
  */
 
-const { TypeDB} = require("../../dist/TypeDB");
-const {SessionType} = require("../../dist/api/connection/TypeDBSession")
-const {TransactionType} = require("../../dist/api/connection/TypeDBTransaction")
-const {TypeDBCredential} = require("../../dist/api/connection/TypeDBCredential")
+const { TypeDB, SessionType, TransactionType, TypeDBCredential } = require("../../dist");
 const { spawn, spawnSync } = require("child_process");
 const assert = require("assert");
 
@@ -54,25 +51,25 @@ async function run() {
         new TypeDBCredential("admin", "password", process.env.ROOT_CA)
     );
     try {
-        if (await client.databases().contains("typedb")) {
-            await (await client.databases().get("typedb")).delete();
+        if (await client.databases.contains("typedb")) {
+            await (await client.databases.get("typedb")).delete();
         }
-        await client.databases().create("typedb");
-        let primaryReplica = await seekPrimaryReplica(client.databases());
+        await client.databases.create("typedb");
+        let primaryReplica = await seekPrimaryReplica(client.databases);
         console.info(`Performing operations against the primary replica ${primaryReplica}`);
 
         let session = await client.session("typedb", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);
-        let person = await tx.concepts().putEntityType("person");
-        console.info(`Put the entity type '${person.getLabel().scopedName()}'.`);
+        let person = await tx.concepts.putEntityType("person");
+        console.info(`Put the entity type '${person.label.scopedName}'.`);
         await tx.commit();
         tx = await session.transaction(TransactionType.READ);
-        person = await tx.concepts().getEntityType("person");
-        console.info(`Retrieved entity type with label '${person.getLabel().scopedName()}' from primary replica.`);
+        person = await tx.concepts.getEntityType("person");
+        console.info(`Retrieved entity type with label '${person.label.scopedName}' from primary replica.`);
         await session.close();
 
         for (let iteration = 1; iteration <= 10; iteration++) {
-            primaryReplica = await seekPrimaryReplica(client.databases());
+            primaryReplica = await seekPrimaryReplica(client.databases);
             console.info(`Stopping primary replica (test ${iteration}/10)...`);
             const port = primaryReplica.address().substring(10,15);
             const primaryReplicaServerPID = getServerPID(port);
@@ -82,9 +79,9 @@ async function run() {
             await new Promise(resolve => setTimeout(resolve, 1000));
             session = await client.session("typedb", SessionType.SCHEMA);
             tx = await session.transaction(TransactionType.READ);
-            person = await tx.concepts().putEntityType("person");
-            console.info(`Retrieved entity type with label '${person.getLabel().scopedName()}' from new primary replica`);
-            assert(person.getLabel().scopedName() === "person");
+            person = await tx.concepts.putEntityType("person");
+            console.info(`Retrieved entity type with label '${person.label.scopedName}' from new primary replica`);
+            assert(person.label.scopedName === "person");
             const idx = primaryReplica.address()[10];
             spawn(`./${idx}/typedb`, ["cluster", "--data", "server/data", "--address", `127.0.0.1:${idx}1729:${idx}1730:${idx}1731`,
                 "--peer", "127.0.0.1:11729:11730:11731", "--peer", "127.0.0.1:21729:21730:21731", "--peer", "127.0.0.1:31729:31730:31731", "--encryption-enabled=true"]);
