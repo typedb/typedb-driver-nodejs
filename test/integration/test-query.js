@@ -53,10 +53,10 @@ async function run() {
     }
 
     try {
-        await tx.query().define("define name sub attribute, value string;")
-        await tx.query().define("define rank sub attribute, value string;")
-        await tx.query().define("define inferred-age sub attribute, value long;")
-        await tx.query().define("define power-level sub attribute, value double;")
+        await tx.query.define("define name sub attribute, value string;")
+        await tx.query.define("define rank sub attribute, value string;")
+        await tx.query.define("define inferred-age sub attribute, value long;")
+        await tx.query.define("define power-level sub attribute, value double;")
         console.log("define attributes query - SUCCESS");
     } catch (err) {
         console.error(`define attributes query - ERROR: ${err.stack || err}`);
@@ -84,7 +84,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        await tx.query().define("define lionfight sub relation, relates victor, relates loser;")
+        await tx.query.define("define lionfight sub relation, relates victor, relates loser;")
         await tx.commit();
         await tx.close();
         console.log("define relationship query - SUCCESS");
@@ -96,7 +96,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        await tx.query().define("define lion sub entity, owns name, owns rank, owns power-level, owns inferred-age, plays lionfight:victor, plays lionfight:loser;")
+        await tx.query.define("define lion sub entity, owns name, owns rank, owns power-level, owns inferred-age, plays lionfight:victor, plays lionfight:loser;")
         await tx.commit();
         await tx.close();
         console.log("define entity query - SUCCESS");
@@ -108,7 +108,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        await tx.query().define("define rule lions-have-age: when { $x isa lion;} then { $x has inferred-age 10; };");
+        await tx.query.define("define rule lions-have-age: when { $x isa lion;} then { $x has inferred-age 10; };");
         await tx.commit();
         await tx.close();
         console.log("define rule query - SUCCESS");
@@ -120,8 +120,8 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        await tx.query().define("define giraffe sub entity, owns name, plays lionfight:victor;")
-        await tx.query().undefine("undefine giraffe plays lionfight:victor;")
+        await tx.query.define("define giraffe sub entity, owns name, plays lionfight:victor;")
+        await tx.query.undefine("undefine giraffe plays lionfight:victor;")
         await tx.commit();
         await tx.close();
         console.log("define/undefine entity query - SUCCESS");
@@ -160,13 +160,13 @@ async function run() {
     }
 
     try {
-        let firstLionStream = await tx.query().insert("insert $x isa lion, has name \"Steve\", has rank \"Duke\", has power-level 12;");
+        let firstLionStream = await tx.query.insert("insert $x isa lion, has name \"Steve\", has rank \"Duke\", has power-level 12;");
         let lionCollection = await firstLionStream.collect()
         assert(lionCollection.length === 1);
-        await tx.query().insert("insert $x isa lion, has name \"Chandra\", has rank \"Baron\", has power-level 7;");
-        await tx.query().insert("insert $x isa lion, has name \"Asuka\", has rank \"Duchess\", has power-level 3;");
-        await tx.query().insert("insert $x isa lion, has name \"Sergey\", has rank \"Lowborn\", has power-level 13;");
-        await tx.query().insert("insert $x isa lion, has name \"Amélie\", has rank \"Marchioness\", has power-level 20;");
+        await tx.query.insert("insert $x isa lion, has name \"Chandra\", has rank \"Baron\", has power-level 7;");
+        await tx.query.insert("insert $x isa lion, has name \"Asuka\", has rank \"Duchess\", has power-level 3;");
+        await tx.query.insert("insert $x isa lion, has name \"Sergey\", has rank \"Lowborn\", has power-level 13;");
+        await tx.query.insert("insert $x isa lion, has name \"Amélie\", has rank \"Marchioness\", has power-level 20;");
         let lionType = await tx.concepts.getEntityType("lion");
         let nameType = await tx.concepts.getAttributeType("name");
         let lionNames = [];
@@ -178,7 +178,7 @@ async function run() {
         // await tx.commit();
         // await tx.close();
         // tx = await session.transaction(TransactionType.WRITE);
-        // const matchresult = await tx.query().match("match $x isa lion, has name $y, has rank $z;");
+        // const matchresult = await tx.query.match("match $x isa lion, has name $y, has rank $z;");
         // for await (const match of matchresult) {
         //     console.log(match);
         // }
@@ -201,12 +201,12 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.READ, TypeDBOptions.core({infer: true, explain: true}));
-        const answers = await tx.query().match("match $x has inferred-age $a;").collect();
+        const answers = await tx.query.match("match $x has inferred-age $a;").collect();
         const ans = answers[0];
-        assert(ans.explainables().ownerships().size > 0);
-        const firstExplanations = await tx.query().explain(ans.explainables().ownerships().values().next().value).collect();
+        assert(ans.explainables.ownerships.size > 0);
+        const firstExplanations = await tx.query.explain(ans.explainables.ownerships.values().next().value).collect();
         assert(firstExplanations.length === 1);
-        const exactExplanations = await tx.query().explain(ans.explainables().ownership("x", "a")).collect();
+        const exactExplanations = await tx.query.explain(ans.explainables.ownership("x", "a")).collect();
         assert(exactExplanations.length === 1);
         console.log("open data read transaction - SUCCESS");
     } catch (err) {
