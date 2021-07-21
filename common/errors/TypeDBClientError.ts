@@ -40,14 +40,14 @@ export class TypeDBClientError extends Error {
         }
         // TODO: clean this up once we have our own error protocol
         else if ("code" in error) {
-            if (error.code === Status.INTERNAL) super(error.details);
-            else if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
+            if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
                 super(UNABLE_TO_CONNECT.message());
                 this._messageTemplate = UNABLE_TO_CONNECT;
             } else if (isReplicaNotPrimaryError(error)) {
                 super(CLUSTER_REPLICA_NOT_PRIMARY.message());
                 this._messageTemplate = CLUSTER_REPLICA_NOT_PRIMARY;
-            } else super(error.toString());
+            } else if (error.code === Status.INTERNAL) super(error.details)
+            else super(error.toString());
         }
         else super(error.toString());
 
