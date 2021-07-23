@@ -39,7 +39,7 @@ export class TypeDBClientError extends Error {
             this._messageTemplate = error;
         }
         // TODO: clean this up once we have our own error protocol
-        else if ("code" in error) {
+        else if ("code" in error) { // check for gRPC ServiceError
             if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
                 super(UNABLE_TO_CONNECT.message());
                 this._messageTemplate = UNABLE_TO_CONNECT;
