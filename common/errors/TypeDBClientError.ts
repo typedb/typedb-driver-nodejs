@@ -29,6 +29,10 @@ function isReplicaNotPrimaryError(e: ServiceError): boolean {
     return e.message.includes("[RPL01]");
 }
 
+function isServiceError(e: Error | ServiceError): e is ServiceError {
+    return "code" in e;
+}
+
 export class TypeDBClientError extends Error {
     private readonly _messageTemplate: ErrorMessage;
 
@@ -39,7 +43,7 @@ export class TypeDBClientError extends Error {
             this._messageTemplate = error;
         }
         // TODO: clean this up once we have our own error protocol
-        else if ("code" in error) { // check for gRPC ServiceError
+        else if (isServiceError(error)) {
             if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
                 super(UNABLE_TO_CONNECT.message());
                 this._messageTemplate = UNABLE_TO_CONNECT;
