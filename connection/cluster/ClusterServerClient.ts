@@ -19,13 +19,26 @@
  * under the License.
  */
 
-import { TypeDBCredential } from "../../api/connection/TypeDBCredential";
-import { TypeDBClientImpl } from "../TypeDBClientImpl";
-import { ClusterServerStubFactory } from "./ClusterServerStubFactory";
+import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
+import {TypeDBClientImpl} from "../TypeDBClientImpl";
+import {TypeDBStub} from "../../common/rpc/TypeDBStub";
+import {ClusterServerStub} from "./ClusterServerStub";
 
 export class ClusterServerClient extends TypeDBClientImpl {
 
+    private readonly _stub: TypeDBStub;
+
     constructor(address: string, credential: TypeDBCredential) {
-        super(address, new ClusterServerStubFactory(credential));
+        super();
+        this._stub = new ClusterServerStub(address, credential);
+    }
+
+    stub(): TypeDBStub {
+        return this._stub;
+    }
+
+    close() {
+        super.close();
+        this._stub.closeClient()
     }
 }
