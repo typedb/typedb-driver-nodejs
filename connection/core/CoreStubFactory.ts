@@ -26,6 +26,6 @@ import { CoreStub } from "./CoreStub";
 export class CoreStubFactory extends TypeDBStubFactory {
 
     newTypeDBStub(address: string): TypeDBStub {
-        return CoreStub.create(address);
+        return new CoreStub(address);
     }
 }

@@ -33,6 +33,6 @@ export class ClusterServerStubFactory extends TypeDBStubFactory {
     }
 
     newTypeDBStub(address: string): ClusterServerStub {
-        return ClusterServerStub.create(address, this._credential);
+        return new ClusterServerStub(address, this._credential);
     }
 }
