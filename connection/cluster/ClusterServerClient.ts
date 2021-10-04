@@ -35,6 +35,10 @@ export class ClusterServerClient extends TypeDBClientImpl {
         this._databases = new TypeDBDatabaseManagerImpl(this._stub);
     }
 
+    async open(): Promise<void> {
+        await this._stub.open();
+    }
+
     stub(): ClusterServerStub {
         return this._stub;
     }

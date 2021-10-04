@@ -54,10 +54,11 @@ export class ClusterClient implements TypeDBClient.Cluster {
     async open(): Promise<this> {
         const serverAddresses = await this.fetchClusterServers();
         this._serverClients = {}
-        serverAddresses.forEach((addr) => {
-            this._serverClients[addr] = new ClusterServerClient(addr, this._credential);
-        });
-
+        for (const addr in serverAddresses) {
+            const serverClient = new ClusterServerClient(addr, this._credential);
+            await serverClient.open();
+            this._serverClients[addr] = serverClient;
+        }
         this._userManager = new ClusterUserManager(this);
         this._databaseManagers = new ClusterDatabaseManager(this);
         this._databases = {};
@@ -133,6 +134,7 @@ export class ClusterClient implements TypeDBClient.Cluster {
             try {
                 console.info(`Fetching list of cluster servers from ${address}...`);
                 const clusterStub = new ClusterServerStub(address, this._credential);
+                await clusterStub.open();
                 const res = await clusterStub.serversAll(RequestBuilder.Cluster.ServerManager.allReq());
                 const members = res.getServersList().map(x => x.getAddress());
                 console.info(`The cluster servers are ${members}`);
