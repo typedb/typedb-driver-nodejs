@@ -20,7 +20,6 @@
  */
 
 import { TypeDBClientImpl } from "../TypeDBClientImpl";
-import { CoreStubFactory } from "./CoreStubFactory";
 import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {CoreStub} from "./CoreStub";
 import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
