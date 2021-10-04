@@ -34,12 +34,10 @@ import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 export abstract class TypeDBClientImpl implements TypeDBClient {
 
     private readonly _requestTransmitter: RequestTransmitter;
-    private readonly _databases: TypeDBDatabaseManagerImpl;
     private readonly _sessions: { [id: string]: TypeDBSessionImpl };
     private _isOpen: boolean;
 
     protected constructor() {
-        this._databases = new TypeDBDatabaseManagerImpl(this.stub());
         this._requestTransmitter = new RequestTransmitter();
         this._sessions = {};
         this._isOpen = true;
@@ -58,9 +56,7 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
         return session;
     }
 
-    get databases(): TypeDBDatabaseManagerImpl {
-        return this._databases;
-    }
+    abstract get databases(): TypeDBDatabaseManagerImpl;
 
     abstract stub(): TypeDBStub;
 
