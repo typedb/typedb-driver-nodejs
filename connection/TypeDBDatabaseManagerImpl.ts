@@ -32,7 +32,6 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
     private readonly _stub: TypeDBStub;
 
     constructor(client: TypeDBStub) {
-        console.info("HEHEHEHEHEHHE: " + client);
         this._stub = client;
     }
 
