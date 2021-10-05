@@ -21,13 +21,12 @@
 
 import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
 import {TypeDBClientImpl} from "../TypeDBClientImpl";
-import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {ClusterServerStub} from "./ClusterServerStub";
 import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
 
 export class ClusterServerClient extends TypeDBClientImpl {
 
-    private readonly _stub: TypeDBStub;
+    private readonly _stub: ClusterServerStub;
     private readonly _databases: TypeDBDatabaseManagerImpl;
 
     constructor(address: string, credential: TypeDBCredential) {
@@ -36,7 +35,7 @@ export class ClusterServerClient extends TypeDBClientImpl {
         this._databases = new TypeDBDatabaseManagerImpl(this._stub);
     }
 
-    stub(): TypeDBStub {
+    stub(): ClusterServerStub {
         return this._stub;
     }
 

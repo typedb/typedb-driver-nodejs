@@ -41,9 +41,8 @@ export class ClusterClient implements TypeDBClient.Cluster {
     private readonly _credential: TypeDBCredential;
 
     private _serverClients: { [serverAddress: string]: ClusterServerClient };
-    private _clusterStubs: { [serverAddress: string]: ClusterServerStub };
     private _databaseManagers: ClusterDatabaseManager;
-    private _clusterDatabases: { [db: string]: Database.Cluster };
+    private _databases: { [db: string]: Database.Cluster };
     private _userManager: ClusterUserManager;
     private _isOpen: boolean;
 
@@ -58,14 +57,10 @@ export class ClusterClient implements TypeDBClient.Cluster {
         serverAddresses.forEach((addr) => {
             this._serverClients[addr] = new ClusterServerClient(addr, this._credential);
         });
-        this._clusterStubs = {};
-        serverAddresses.forEach((addr) => {
-            this._clusterStubs[addr] = new ClusterServerStub(addr, this._credential);
-        });
 
         this._userManager = new ClusterUserManager(this);
         this._databaseManagers = new ClusterDatabaseManager(this);
-        this._clusterDatabases = {};
+        this._databases = {};
         this._isOpen = true;
         return this;
     }
@@ -102,7 +97,7 @@ export class ClusterClient implements TypeDBClient.Cluster {
     }
 
     clusterDatabases(): { [db: string]: Database.Cluster } {
-        return this._clusterDatabases;
+        return this._databases;
     }
 
     clusterMembers(): string[] {
@@ -118,7 +113,7 @@ export class ClusterClient implements TypeDBClient.Cluster {
     }
 
     stub(address: string): ClusterServerStub {
-        return this._clusterStubs[address];
+        return this._serverClients[address].stub();
     }
 
     asCluster(): TypeDBClient.Cluster {
