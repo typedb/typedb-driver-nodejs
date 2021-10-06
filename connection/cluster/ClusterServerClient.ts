@@ -49,6 +49,6 @@ export class ClusterServerClient extends TypeDBClientImpl {
 
     close() {
         super.close();
-        this._stub.closeClient()
+        this._stub.close();
     }
 }

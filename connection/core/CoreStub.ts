@@ -36,7 +36,7 @@ export class CoreStub extends TypeDBStub {
         return this._stub;
     }
 
-    closeClient(): void {
+    close(): void {
         this._stub.close();
     }
 }

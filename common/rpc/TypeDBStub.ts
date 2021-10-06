@@ -104,5 +104,5 @@ export abstract class TypeDBStub {
 
     abstract stub(): TypeDBClient;
 
-    abstract closeClient(): void;
+    abstract close(): void;
 }

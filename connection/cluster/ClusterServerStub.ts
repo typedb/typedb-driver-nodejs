@@ -208,7 +208,7 @@ export class ClusterServerStub extends TypeDBStub {
         return this._stub;
     }
 
-    closeClient(): void {
+    close(): void {
         this._stub.close();
         this._clusterStub.close();
     }
