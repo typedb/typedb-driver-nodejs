@@ -20,89 +20,33 @@
  */
 
 
-import { ServiceError } from "@grpc/grpc-js";
+import {ClientDuplexStream, ServiceError} from "@grpc/grpc-js";
 import { Session } from "typedb-protocol/common/session_pb";
 import { CoreDatabase as CoreDatabaseProto, CoreDatabaseManager as CoreDatabaseMgrProto } from "typedb-protocol/core/core_database_pb";
 import { TypeDBClient } from "typedb-protocol/core/core_service_grpc_pb";
 import { TypeDBDatabaseImpl } from "../../connection/TypeDBDatabaseImpl";
-import { TypeDBClientError } from "../errors/TypeDBClientError";
+import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
 
 /*
 TODO implement ResilientCall
  */
 export abstract class TypeDBStub {
 
-    databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.stub().databases_create(req, (err) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve();
-            })
-        });
-    }
+    abstract databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void>;
 
-    databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this.stub().databases_contains(req, (err, res) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve(res.getContains());
-            });
-        });
-    }
+    abstract databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean>;
 
-    databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]> {
-        return new Promise((resolve, reject) => {
-            this.stub().databases_all(req, (err, res) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve(res.getNamesList().map(name => new TypeDBDatabaseImpl(name, this)));
-            })
-        })
-    }
+    abstract databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]>;
 
-    databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.stub().database_delete(req, (err) => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
-    }
+    abstract databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void>;
 
-    databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string> {
-        return new Promise((resolve, reject) => {
-            return this.stub().database_schema(req, (err, res) => {
-                if (err) reject(err);
-                else resolve(res.getSchema());
-            });
-        });
-    }
+    abstract databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string>;
 
-    sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res> {
-        return new Promise<Session.Open.Res>((resolve, reject) => {
-            this.stub().session_open(openReq, (err, res) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve(res);
-            });
-        });
-    }
+    abstract sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res>;
 
-    sessionClose(req: Session.Close.Req): Promise<void> {
-        return new Promise<void>(resolve => {
-            this.stub().session_close(req, () => {
-                resolve();
-            });
-        });
-    }
+    abstract sessionClose(req: Session.Close.Req): Promise<void>;
 
-    sessionPulse(pulse: Session.Pulse.Req, callback: (err: ServiceError, res: Session.Pulse.Res) => void) {
-        this.stub().session_pulse(pulse, callback);
-    }
+    abstract sessionPulse(pulse: Session.Pulse.Req): Promise<boolean>;
 
-    transaction() {
-        return this.stub().transaction();
-    }
-
-    abstract stub(): TypeDBClient;
-
-    abstract close(): void;
+    abstract transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>>;
 }

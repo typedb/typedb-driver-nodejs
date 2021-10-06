@@ -122,9 +122,13 @@ export class TypeDBSessionImpl implements TypeDBSession {
     private pulse(): void {
         if (!this._isOpen) return;
         const pulse = RequestBuilder.Session.pulseReq(this._id);
-        this._client.stub().sessionPulse(pulse, (err, res) => {
-            if (err || !res.getAlive()) this._isOpen = false;
-            else this._pulse = setTimeout(() => this.pulse(), 5000);
-        });
+        this._client.stub().sessionPulse(pulse)
+            .then((isAlive) => {
+                if (!isAlive) this._isOpen = false;
+                else this._pulse = setTimeout(() => this.pulse(), 5000);
+            })
+            .catch((err) => {
+                this._isOpen = false;
+            })
     }
 }

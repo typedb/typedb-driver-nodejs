@@ -19,7 +19,14 @@
  * under the License.
  */
 
-import {CallCredentials, ChannelCredentials, credentials, Metadata, ServiceError} from "@grpc/grpc-js";
+import {
+    CallCredentials,
+    ChannelCredentials,
+    ClientDuplexStream,
+    credentials,
+    Metadata,
+    ServiceError
+} from "@grpc/grpc-js";
 import * as fs from "fs";
 import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
 import {ServerManager} from "typedb-protocol/cluster/cluster_server_pb";
@@ -33,6 +40,13 @@ import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ClusterUserToken} from "typedb-protocol/cluster/cluster_user_token_pb";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
+import {
+    CoreDatabase as CoreDatabaseProto,
+    CoreDatabaseManager as CoreDatabaseMgrProto
+} from "typedb-protocol/core/core_database_pb";
+import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
+import {Session} from "typedb-protocol/common/session_pb";
+import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
 
 function isServiceError(e: Error | ServiceError): e is ServiceError {
     return "code" in e;
@@ -76,7 +90,6 @@ export class ClusterServerStub extends TypeDBStub {
     private createCallCredentials(): CallCredentials {
         const metaCallback = (_params: any, callback: any) => {
             const metadata = new Metadata();
-            console.info("token = " + this._token);
             metadata.add('username', this._credential.username);
             if (this._token == null) {
                 metadata.add('password', this._credential.password);
@@ -173,6 +186,109 @@ export class ClusterServerStub extends TypeDBStub {
                     else resolve(res);
                 })
             })
+        );
+    }
+
+    databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
+        return this.mayRefreshToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().databases_create(req, (err) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve();
+                })
+            })
+        );
+    }
+
+    databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean> {
+        return this.mayRefreshToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().databases_contains(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res.getContains());
+                });
+            })
+        );
+    }
+
+    databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]> {
+        return this.mayRefreshToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().databases_all(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res.getNamesList().map(name => new TypeDBDatabaseImpl(name, this)));
+                })
+            })
+        );
+    }
+
+    databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void> {
+        return this.mayRefreshToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().database_delete(req, (err) => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            })
+        );
+    }
+
+    databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string> {
+        return this.mayRefreshToken(() =>
+            new Promise((resolve, reject) => {
+                return this.stub().database_schema(req, (err, res) => {
+                    if (err) reject(err);
+                    else resolve(res.getSchema());
+                });
+            })
+        );
+    }
+
+    sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res> {
+        return this.mayRefreshToken(() =>
+            new Promise<Session.Open.Res>((resolve, reject) => {
+                this.stub().session_open(openReq, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res);
+                });
+            })
+        );
+    }
+
+    sessionClose(req: Session.Close.Req): Promise<void> {
+        return this.mayRefreshToken(() =>
+            new Promise<void>((resolve, reject) => {
+                this.stub().session_close(req, (err, res) => {
+                if (err) {}
+                else resolve();
+            });
+            })
+        );
+    }
+
+    sessionPulse(pulse: Session.Pulse.Req): Promise<boolean> {
+        return this.mayRefreshToken(() =>
+            new Promise<boolean>((resolve, reject) => {
+                this.stub().session_pulse(pulse, (err, res) => {
+                    if (err) reject(err);
+                    else {
+                        resolve(res.getAlive());
+                    }
+                });
+            })
+        );
+    }
+
+    transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>> {
+        return this.mayRefreshToken(() =>
+            new Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>>(
+                (resolve, reject) => {
+                    try {
+                        resolve(this.stub().transaction());
+                    } catch (e) {
+                        reject(e);
+                    }
+                })
         );
     }
 

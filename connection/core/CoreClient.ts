@@ -26,7 +26,7 @@ import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
 
 export class CoreClient extends TypeDBClientImpl {
 
-    private readonly _stub: TypeDBStub;
+    private readonly _stub: CoreStub;
     private readonly _databases: TypeDBDatabaseManagerImpl;
 
     constructor(address: string) {
