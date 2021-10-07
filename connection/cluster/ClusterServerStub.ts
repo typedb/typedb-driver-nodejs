@@ -70,8 +70,10 @@ export class ClusterServerStub extends TypeDBStub {
 
     public async open(): Promise<void> {
         try {
+            console.log(`token '${this._token}' expired. renewing...`);
             const req = RequestBuilder.Cluster.UserToken.renewReq(this._credential.username);
             this._token = await this.userTokenRenew(req);
+            console.log(`token renewed to '${this._token}'`);
         } catch (e) {
             if (!isServiceError(e)) throw e;
         }
@@ -102,7 +104,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     serversAll(req: ServerManager.All.Req): Promise<ServerManager.All.Res> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<ServerManager.All.Res>((resolve, reject) => {
                 this._clusterStub.servers_all(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -113,7 +115,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     usersAll(req: ClusterUserManager.All.Req): Promise<ClusterUserManager.All.Res> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<ClusterUserManager.All.Res>((resolve, reject) => {
                 this._clusterStub.users_all(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -124,7 +126,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     usersContains(req: ClusterUserManager.Contains.Req): Promise<boolean> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<boolean>((resolve, reject) => {
                 this._clusterStub.users_contains(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -135,7 +137,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     userCreate(req: ClusterUserManager.Create.Req): Promise<void> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this._clusterStub.users_create(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -146,7 +148,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     userPassword(req: ClusterUser.Password.Req): Promise<void> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this._clusterStub.user_password(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -157,7 +159,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     userDelete(req: ClusterUser.Delete.Req): Promise<void> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this._clusterStub.user_delete(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -168,7 +170,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     databasesClusterGet(req: ClusterDatabaseManager.Get.Req): Promise<ClusterDatabaseManager.Get.Res> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<ClusterDatabaseManager.Get.Res>((resolve, reject) => {
                 this._clusterStub.databases_get(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -179,7 +181,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     databasesClusterAll(req: ClusterDatabaseManager.All.Req): Promise<ClusterDatabaseManager.All.Res> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<ClusterDatabaseManager.All.Res>((resolve, reject) => {
                 this._clusterStub.databases_all(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -190,7 +192,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 this.stub().databases_create(req, (err) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -201,7 +203,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 this.stub().databases_contains(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -212,7 +214,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 this.stub().databases_all(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -223,7 +225,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 this.stub().database_delete(req, (err) => {
                     if (err) reject(err);
@@ -234,7 +236,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 return this.stub().database_schema(req, (err, res) => {
                     if (err) reject(err);
@@ -245,7 +247,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<Session.Open.Res>((resolve, reject) => {
                 this.stub().session_open(openReq, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
@@ -256,7 +258,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     sessionClose(req: Session.Close.Req): Promise<void> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this.stub().session_close(req, (err, res) => {
                 if (err) {}
@@ -267,7 +269,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     sessionPulse(pulse: Session.Pulse.Req): Promise<boolean> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<boolean>((resolve, reject) => {
                 this.stub().session_pulse(pulse, (err, res) => {
                     if (err) reject(err);
@@ -280,7 +282,7 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>> {
-        return this.mayRefreshToken(() =>
+        return this.mayRenewToken(() =>
             new Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>>(
                 (resolve, reject) => {
                     try {
@@ -292,14 +294,16 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    private async mayRefreshToken<RES>(fn: () => Promise<RES>): Promise<RES> {
+    private async mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES> {
         try {
             return await fn();
         } catch (e) {
             if (e instanceof TypeDBClientError && CLUSTER_TOKEN_CREDENTIAL_INVALID === e.messageTemplate) {
+                console.log(`token '${this._token}' expired. renewing...`);
                 this._token = null;
                 const req = RequestBuilder.Cluster.UserToken.renewReq(this._credential.username);
                 this._token = await this.userTokenRenew(req);
+                console.log(`token renewed to '${this._token}'`);
                 try {
                     return await fn();
                 } catch (e2) {
