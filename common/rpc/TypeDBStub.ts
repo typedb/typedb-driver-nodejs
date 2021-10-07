@@ -26,27 +26,99 @@ import { CoreDatabase as CoreDatabaseProto, CoreDatabaseManager as CoreDatabaseM
 import { TypeDBClient } from "typedb-protocol/core/core_service_grpc_pb";
 import { TypeDBDatabaseImpl } from "../../connection/TypeDBDatabaseImpl";
 import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
+import {TypeDBClientError} from "../errors/TypeDBClientError";
 
 /*
 TODO implement ResilientCall
  */
 export abstract class TypeDBStub {
 
-    abstract databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void>;
+    databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.stub().databases_create(req, (err) => {
+                if (err) reject(new TypeDBClientError(err));
+                else resolve();
+            })
+        });
+    }
 
-    abstract databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean>;
+    databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.stub().databases_contains(req, (err, res) => {
+                if (err) reject(new TypeDBClientError(err));
+                else resolve(res.getContains());
+            });
+        });
+    }
 
-    abstract databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]>;
+    databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]> {
+        return new Promise((resolve, reject) => {
+            this.stub().databases_all(req, (err, res) => {
+                if (err) reject(new TypeDBClientError(err));
+                else resolve(res.getNamesList().map(name => new TypeDBDatabaseImpl(name, this)));
+            })
+        })
+    }
 
-    abstract databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void>;
+    databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.stub().database_delete(req, (err) => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+    }
 
-    abstract databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string>;
+    databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string> {
+        return new Promise((resolve, reject) => {
+            return this.stub().database_schema(req, (err, res) => {
+                if (err) reject(err);
+                else resolve(res.getSchema());
+            });
+        });
+    }
 
-    abstract sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res>;
+    sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res> {
+        return new Promise<Session.Open.Res>((resolve, reject) => {
+            this.stub().session_open(openReq, (err, res) => {
+                if (err) reject(new TypeDBClientError(err));
+                else resolve(res);
+            });
+        });
+    }
 
-    abstract sessionClose(req: Session.Close.Req): Promise<void>;
+    sessionClose(req: Session.Close.Req): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this.stub().session_close(req, (err, res) => {
+                if (err) {
+                    console.warn("An error has occurred when issuing session close request: %o", err)
+                }
+                resolve();
+            });
+        });
+    }
 
-    abstract sessionPulse(pulse: Session.Pulse.Req): Promise<boolean>;
+    sessionPulse(pulse: Session.Pulse.Req): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.stub().session_pulse(pulse, (err, res) => {
+                if (err) reject(err);
+                else {
+                    resolve(res.getAlive());
+                }
+            });
+        });
+    }
 
-    abstract transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>>;
+    transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>> {
+        return new Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>>(
+            (resolve, reject) => {
+                try {
+                    resolve(this.stub().transaction());
+                } catch (e) {
+                    reject(e);
+                }
+            });
+    }
+
+    abstract stub(): TypeDBClient;
 }

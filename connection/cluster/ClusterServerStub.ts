@@ -192,108 +192,39 @@ export class ClusterServerStub extends TypeDBStub {
     }
 
     databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
-        return this.mayRenewToken(() =>
-            new Promise((resolve, reject) => {
-                this.stub().databases_create(req, (err) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve();
-                })
-            })
-        );
+        return this.mayRenewToken(() => super.databasesCreate(req));
     }
 
     databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean> {
-        return this.mayRenewToken(() =>
-            new Promise((resolve, reject) => {
-                this.stub().databases_contains(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve(res.getContains());
-                });
-            })
-        );
+        return this.mayRenewToken(() => super.databasesContains(req));
     }
 
     databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]> {
-        return this.mayRenewToken(() =>
-            new Promise((resolve, reject) => {
-                this.stub().databases_all(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve(res.getNamesList().map(name => new TypeDBDatabaseImpl(name, this)));
-                })
-            })
-        );
+        return this.mayRenewToken(() => super.databasesAll(req));
     }
 
     databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void> {
-        return this.mayRenewToken(() =>
-            new Promise((resolve, reject) => {
-                this.stub().database_delete(req, (err) => {
-                    if (err) reject(err);
-                    else resolve();
-                });
-            })
-        );
+        return this.mayRenewToken(() => super.databaseDelete(req));
     }
 
     databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string> {
-        return this.mayRenewToken(() =>
-            new Promise((resolve, reject) => {
-                return this.stub().database_schema(req, (err, res) => {
-                    if (err) reject(err);
-                    else resolve(res.getSchema());
-                });
-            })
-        );
+        return this.mayRenewToken(() => super.databaseSchema(req));
     }
 
-    sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res> {
-        return this.mayRenewToken(() =>
-            new Promise<Session.Open.Res>((resolve, reject) => {
-                this.stub().session_open(openReq, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve(res);
-                });
-            })
-        );
+    sessionOpen(req: Session.Open.Req): Promise<Session.Open.Res> {
+        return this.mayRenewToken(() => super.sessionOpen(req));
     }
 
     sessionClose(req: Session.Close.Req): Promise<void> {
-        return this.mayRenewToken(() =>
-            new Promise<void>((resolve, reject) => {
-                this.stub().session_close(req, (err, res) => {
-                    if (err) {
-                        console.warn("An error has occurred when issuing session close request: %o", err)
-                    }
-                    resolve();
-                });
-            })
-        );
+        return this.mayRenewToken(() => super.sessionClose(req));
     }
 
-    sessionPulse(pulse: Session.Pulse.Req): Promise<boolean> {
-        return this.mayRenewToken(() =>
-            new Promise<boolean>((resolve, reject) => {
-                this.stub().session_pulse(pulse, (err, res) => {
-                    if (err) reject(err);
-                    else {
-                        resolve(res.getAlive());
-                    }
-                });
-            })
-        );
+    sessionPulse(req: Session.Pulse.Req): Promise<boolean> {
+        return this.mayRenewToken(() => super.sessionPulse(req));
     }
 
     transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>> {
-        return this.mayRenewToken(() =>
-            new Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>>(
-                (resolve, reject) => {
-                    try {
-                        resolve(this.stub().transaction());
-                    } catch (e) {
-                        reject(e);
-                    }
-                })
-        );
+        return this.mayRenewToken(() => super.transaction());
     }
 
     private async mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES> {
