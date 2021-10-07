@@ -35,12 +35,12 @@ export class CoreClient extends TypeDBClientImpl {
         this._databases = new TypeDBDatabaseManagerImpl(this._stub);
     }
 
-    stub(): TypeDBStub {
-        return this._stub;
-    }
-
     get databases(): TypeDBDatabaseManagerImpl {
         return this._databases;
+    }
+
+    stub(): TypeDBStub {
+        return this._stub;
     }
 
     close() {

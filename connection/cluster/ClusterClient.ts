@@ -41,9 +41,9 @@ export class ClusterClient implements TypeDBClient.Cluster {
     private readonly _credential: TypeDBCredential;
 
     private _serverClients: { [serverAddress: string]: ClusterServerClient };
+    private _userManager: ClusterUserManager;
     private _databaseManagers: ClusterDatabaseManager;
     private _databases: { [db: string]: Database.Cluster };
-    private _userManager: ClusterUserManager;
     private _isOpen: boolean;
 
     constructor(addresses: string[], credential: TypeDBCredential) {
@@ -66,6 +66,22 @@ export class ClusterClient implements TypeDBClient.Cluster {
         return this;
     }
 
+    isOpen(): boolean {
+        return this._isOpen;
+    }
+
+    get users(): ClusterUserManager {
+        return this._userManager;
+    }
+
+    get databases(): ClusterDatabaseManager {
+        return this._databaseManagers;
+    }
+
+    clusterDatabases(): { [db: string]: Database.Cluster } {
+        return this._databases;
+    }
+
     session(database: string, type: SessionType, options: TypeDBClusterOptions = TypeDBOptions.cluster()): Promise<ClusterSession> {
         if (options.readAnyReplica) {
             return this.sessionAnyReplica(database, type, options);
@@ -74,16 +90,36 @@ export class ClusterClient implements TypeDBClient.Cluster {
         }
     }
 
-    get databases(): ClusterDatabaseManager {
-        return this._databaseManagers;
+    private sessionPrimaryReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
+        return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
     }
 
-    get users(): ClusterUserManager {
-        return this._userManager;
+    private sessionAnyReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
+        return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
     }
 
-    isOpen(): boolean {
-        return this._isOpen;
+    clusterServerClients() {
+        return this._serverClients;
+    }
+
+    clusterServerClient(address: string): ClusterServerClient {
+        return this._serverClients[address];
+    }
+
+    clusterServerAddresses(): string[] {
+        return Object.keys(this._serverClients);
+    }
+
+    stub(address: string): ClusterServerStub {
+        return this._serverClients[address].stub();
+    }
+
+    isCluster(): boolean {
+        return true;
+    }
+
+    asCluster(): TypeDBClient.Cluster {
+        return this;
     }
 
     close(): void {
@@ -91,42 +127,6 @@ export class ClusterClient implements TypeDBClient.Cluster {
             this._isOpen = false;
             Object.values(this._serverClients).forEach(client => client.close());
         }
-    }
-
-    isCluster(): boolean {
-        return true;
-    }
-
-    clusterDatabases(): { [db: string]: Database.Cluster } {
-        return this._databases;
-    }
-
-    clusterMembers(): string[] {
-        return Object.keys(this._serverClients);
-    }
-
-    clusterServerClient(address: string): ClusterServerClient {
-        return this._serverClients[address];
-    }
-
-    clusterServerClients() {
-        return this._serverClients;
-    }
-
-    stub(address: string): ClusterServerStub {
-        return this._serverClients[address].stub();
-    }
-
-    asCluster(): TypeDBClient.Cluster {
-        return this;
-    }
-
-    private sessionPrimaryReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
-    }
-
-    private sessionAnyReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
     }
 
     private async fetchClusterServers(): Promise<string[]> {
