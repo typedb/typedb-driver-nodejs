@@ -261,9 +261,11 @@ export class ClusterServerStub extends TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this.stub().session_close(req, (err, res) => {
-                if (err) {}
-                else resolve();
-            });
+                    if (err) {
+                        console.warn("An error has occurred when issuing session close request: %o", err)
+                    }
+                    resolve();
+                });
             })
         );
     }
