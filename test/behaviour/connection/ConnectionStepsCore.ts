@@ -19,10 +19,19 @@
  * under the License.
  */
 
-import { BeforeAll } from "@cucumber/cucumber";
-import { TypeDB } from "../../../dist";
-import { setClient } from "./ConnectionStepsBase";
+import {After, Before, BeforeAll} from "@cucumber/cucumber";
+import {TypeDB} from "../../../dist";
+import {after, before, setClient, setSessionOptions, setTransactionOptions} from "./ConnectionStepsBase";
+import {TypeDBOptions} from "../../../api/connection/TypeDBOptions";
 
 BeforeAll(() => {
     setClient(TypeDB.coreClient());
 });
+
+Before(async () => {
+    before();
+    setSessionOptions(TypeDBOptions.core({"infer": true}));
+    setTransactionOptions(TypeDBOptions.core({"infer": true}));
+});
+
+After(async () => after());

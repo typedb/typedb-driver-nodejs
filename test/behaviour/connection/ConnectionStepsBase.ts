@@ -19,15 +19,28 @@
  * under the License.
  */
 
-import { After, Before, Given, setDefaultTimeout } from "@cucumber/cucumber";
-import { TypeDBClient, TypeDBSession, TypeDBTransaction } from "../../../dist";
+import {Given, setDefaultTimeout, Then} from "@cucumber/cucumber";
+import {TypeDBClient, TypeDBSession, TypeDBTransaction} from "../../../dist";
+import {TypeDBOptions} from "../../../api/connection/TypeDBOptions";
 import assert = require("assert");
+
+interface OptionSetters {
+    [index: string] : (options: TypeDBOptions, value: string) => void
+}
 
 export const THREAD_POOL_SIZE = 32;
 
 export let client: TypeDBClient;
 export const sessions: TypeDBSession[] = [];
 export const sessionsToTransactions: Map<TypeDBSession, TypeDBTransaction[]> = new Map<TypeDBSession, TypeDBTransaction[]>();
+export let sessionOptions: TypeDBOptions;
+export let transactionOptions: TypeDBOptions;
+export const optionSetters: OptionSetters = {
+    'session-idle-timeout-millis': (options: TypeDBOptions, value: string) => options.setSessionIdleTimeoutMillis(value),
+    'transaction-timeout-millis': (options: TypeDBOptions, value: string) => options.setTransactionTimeoutMillis(value)
+};
+
+
 
 setDefaultTimeout(20000); // Some steps may take longer than the default limit of 5s, eg create parallel dbs
 
@@ -39,11 +52,15 @@ export function setClient(value: TypeDBClient) {
     client = value;
 }
 
-Given("connection has been opened", () => {
-    assert(client);
-});
+export function setSessionOptions(options: TypeDBOptions) {
+    sessionOptions = options;
+}
 
-Before(async () => {
+export function setTransactionOptions(options: TypeDBOptions) {
+    transactionOptions = options;
+}
+
+export async function before() {
     for (const session of sessions) {
         await session.close()
     }
@@ -53,13 +70,21 @@ Before(async () => {
     }
     sessions.length = 0;
     sessionsToTransactions.clear();
-});
+}
 
-After(async () => {
+export async function after() {
     for (const session of sessions) {
         await session.close()
     }
     for (const db of await client.databases.all()) {
         await db.delete();
     }
+}
+
+Given('connection has been opened', () => {
+    assert(client);
+});
+
+Then('sleep {int} seconds', async function (seconds: number) {
+    await new Promise(f => setTimeout(f, seconds * 1000));
 });
