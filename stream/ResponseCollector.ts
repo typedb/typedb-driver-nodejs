@@ -46,6 +46,14 @@ export class ResponseCollector<T> {
         for (const requestId in this._collectors) delete this._collectors[requestId];
     }
 
+    drainErrors(): Error[] {
+        const errors = [];
+        for (const requestId in this._collectors) {
+            errors.push(this._collectors[requestId].drainErrors())
+        }
+        return errors;
+    }
+
 }
 
 export namespace ResponseCollector {
@@ -53,7 +61,6 @@ export namespace ResponseCollector {
     import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 
     export class ResponseQueue<T> {
-
         private readonly _queue: BlockingQueue<QueueElement>;
 
         constructor() {
@@ -78,6 +85,11 @@ export namespace ResponseCollector {
 
         close(error?: Error | string): void {
             this._queue.add(new Done(error));
+        }
+
+        drainErrors(): any {
+            const errors = []
+
         }
 
     }

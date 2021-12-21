@@ -35,6 +35,8 @@ import { QueryManagerImpl } from "../query/QueryManagerImpl";
 import { BidirectionalStream } from "../stream/BidirectionalStream";
 import { TypeDBSessionImpl } from "./TypeDBSessionImpl";
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
+import assert = require("assert");
+import TRANSACTION_CLOSED_WITH_ERRORS = ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
 
 export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     private readonly _session: TypeDBSessionImpl;
@@ -105,13 +107,20 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     }
 
     public async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
-        if (!this.isOpen()) throw new TypeDBClientError(TRANSACTION_CLOSED);
+        if (!this.isOpen()) this.throwTransactionClosed()
         const useBatch = batch !== false;
         return this._bidirectionalStream.single(request, useBatch);
     }
 
     public rpcStream(request: Transaction.Req): Stream<Transaction.ResPart> {
-        if (!this.isOpen()) throw new TypeDBClientError(TRANSACTION_CLOSED);
+        if (!this.isOpen()) this.throwTransactionClosed();
         return this._bidirectionalStream.stream(request);
+    }
+
+    private throwTransactionClosed(): void {
+        assert(!this.isOpen());
+        const errors = this._bidirectionalStream.drainErrors();
+        if (errors.length == 0) throw new TypeDBClientError(TRANSACTION_CLOSED);
+        else throw new TypeDBClientError(TRANSACTION_CLOSED_WITH_ERRORS.message(errors));
     }
 }
