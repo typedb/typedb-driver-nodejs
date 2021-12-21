@@ -35,8 +35,8 @@ export const sessionsToTransactions: Map<TypeDBSession, TypeDBTransaction[]> = n
 export let sessionOptions: TypeDBOptions;
 export let transactionOptions: TypeDBOptions;
 export const optionSetters: OptionSetters = {
-    'session-idle-timeout-millis': (options: TypeDBOptions, value: string) => options.setSessionIdleTimeoutMillis(value),
-    'transaction-timeout-millis': (options: TypeDBOptions, value: string) => options.setTransactionTimeoutMillis(value)
+    'session-idle-timeout-millis': (options: TypeDBOptions, value: string) => options.sessionIdleTimeoutMillis = Number(value),
+    'transaction-timeout-millis': (options: TypeDBOptions, value: string) => options.transactionTimeoutMillis = Number(value)
 };
 
 

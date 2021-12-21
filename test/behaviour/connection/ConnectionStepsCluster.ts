@@ -20,9 +20,8 @@
  */
 
 import {After, Before, BeforeAll} from "@cucumber/cucumber";
-import { TypeDB, TypeDBCredential } from "../../../dist";
+import { TypeDB, TypeDBCredential, TypeDBOptions } from "../../../dist";
 import {after, before, setClient, setSessionOptions, setTransactionOptions} from "./ConnectionStepsBase";
-import {TypeDBOptions} from "../../../api/connection/TypeDBOptions";
 
 BeforeAll(async () => {
     setClient(await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential("admin", "password", process.env.ROOT_CA)));
