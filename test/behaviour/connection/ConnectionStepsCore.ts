@@ -20,9 +20,8 @@
  */
 
 import {After, Before, BeforeAll} from "@cucumber/cucumber";
-import {TypeDB} from "../../../dist";
+import {TypeDB, TypeDBOptions} from "../../../dist";
 import {after, before, setClient, setSessionOptions, setTransactionOptions} from "./ConnectionStepsBase";
-import {TypeDBOptions} from "../../../api/connection/TypeDBOptions";
 
 BeforeAll(() => {
     setClient(TypeDB.coreClient());

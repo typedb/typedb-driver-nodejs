@@ -20,8 +20,7 @@
  */
 
 import {Given, setDefaultTimeout, Then} from "@cucumber/cucumber";
-import {TypeDBClient, TypeDBSession, TypeDBTransaction} from "../../../dist";
-import {TypeDBOptions} from "../../../api/connection/TypeDBOptions";
+import {TypeDBClient, TypeDBSession, TypeDBTransaction, TypeDBOptions} from "../../../dist";
 import assert = require("assert");
 
 interface OptionSetters {
