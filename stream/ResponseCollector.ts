@@ -46,7 +46,7 @@ export class ResponseCollector<T> {
     }
 
     getErrors(): (Error | string)[] {
-        let errors: (Error | string)[] = [];
+        const errors: (Error | string)[] = [];
         for (const requestId in this._collectors) {
             const error = this._collectors[requestId].getError();
             if (error) errors.push(error);
