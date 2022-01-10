@@ -90,10 +90,10 @@ When("sessions( in parallel) have/has databases:", (names: DataTable) => {
 });
 
 Given('set session option {word} to: {word}', async function (option: string, value: string) {
-    if (option in optionSetters) {
-        optionSetters[option](sessionOptions, value);
-    } else {
+    if (!(option in optionSetters)) {
         throw ("Unrecognised option: " + option);
+    } else {
+        optionSetters[option](sessionOptions, value);
     }
 });
 

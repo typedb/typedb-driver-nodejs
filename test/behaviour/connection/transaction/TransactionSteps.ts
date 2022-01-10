@@ -21,7 +21,7 @@
 
 import {Given, Then} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { TransactionType, TypeDBOptions, TypeDBSession, TypeDBTransaction } from "../../../../dist";
+import { TransactionType, TypeDBSession, TypeDBTransaction } from "../../../../dist";
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
 import {optionSetters, sessions, sessionsToTransactions, transactionOptions} from "../ConnectionStepsBase";
 import assert = require("assert");
@@ -30,7 +30,7 @@ async function forEachSessionOpenTransactionsOfType(transactionTypes: Transactio
     for (const session of sessions) {
         const transactions: TypeDBTransaction[] = []
         for (const transactionType of transactionTypes) {
-            const transaction = await session.transaction(transactionType, TypeDBOptions.core({ infer: true }));
+            const transaction = await session.transaction(transactionType, transactionOptions);
             transactions.push(transaction);
         }
         sessionsToTransactions.set(session, transactions);
@@ -148,10 +148,10 @@ Then('(for each )session(,) open transaction(s) in parallel of type:', async fun
 
 
 Given('set transaction option {word} to: {word}', async function (option: string, value: string) {
-    if (option in optionSetters) {
-        optionSetters[option](transactionOptions, value);
-    } else {
+    if (!(option in optionSetters)) {
         throw ("Unrecognised option: " + option);
+    } else {
+        optionSetters[option](transactionOptions, value);
     }
 });
 

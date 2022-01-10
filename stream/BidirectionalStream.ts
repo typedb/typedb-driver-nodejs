@@ -128,7 +128,7 @@ export class BidirectionalStream {
         queue.put(res);
     }
 
-    drainErrors(): Error[] {
-        return this._responseCollector.drainErrors().concat(this._responsePartCollector.drainErrors());
+    getErrors(): (Error|string)[] {
+        return (this._responseCollector.getErrors()).concat(this._responsePartCollector.getErrors());
     }
 }

@@ -40,7 +40,6 @@ export const optionSetters: OptionSetters = {
 };
 
 
-
 setDefaultTimeout(20000); // Some steps may take longer than the default limit of 5s, eg create parallel dbs
 
 export function tx(): TypeDBTransaction {
@@ -84,6 +83,6 @@ Given('connection has been opened', () => {
     assert(client);
 });
 
-Then('sleep {int} seconds', async function (seconds: number) {
+Then('wait {int} seconds', async function (seconds: number) {
     await new Promise(f => setTimeout(f, seconds * 1000));
 });

@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { BlockingQueue } from "../common/util/BlockingQueue";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {BlockingQueue} from "../common/util/BlockingQueue";
 
 export class ResponseCollector<T> {
 
@@ -43,25 +43,27 @@ export class ResponseCollector<T> {
 
     close(error?: Error | string) {
         Object.values(this._collectors).forEach(collector => collector.close(error));
-        for (const requestId in this._collectors) delete this._collectors[requestId];
     }
 
-    drainErrors(): Error[] {
-        const errors = [];
+    getErrors(): (Error | string)[] {
+        let errors: (Error | string)[] = [];
         for (const requestId in this._collectors) {
-            errors.push(this._collectors[requestId].drainErrors())
+            const error = this._collectors[requestId].getError();
+            if (error) errors.push(error);
+            delete this._collectors[requestId];
         }
         return errors;
     }
-
 }
 
 export namespace ResponseCollector {
 
     import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
+    import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
 
     export class ResponseQueue<T> {
         private readonly _queue: BlockingQueue<QueueElement>;
+        private _error: string | Error = null;
 
         constructor() {
             this._queue = new BlockingQueue<QueueElement>()
@@ -70,13 +72,9 @@ export namespace ResponseCollector {
         async take(): Promise<T> {
             const element = await this._queue.take();
             if (element.isResponse()) return (element as Response<T>).value;
-            else {
-                if ((element as Done).hasError()) {
-                    throw new TypeDBClientError((element as Done).error);
-                } else {
-                    throw new TypeDBClientError(TRANSACTION_CLOSED);
-                }
-            }
+            else if (element.isDone() && !this._error) throw new TypeDBClientError(TRANSACTION_CLOSED);
+            else if (element.isDone() && this._error) throw new TypeDBClientError(this._error);
+            else throw new TypeDBClientError(ILLEGAL_STATE);
         }
 
         put(element: T): void {
@@ -84,14 +82,13 @@ export namespace ResponseCollector {
         }
 
         close(error?: Error | string): void {
-            this._queue.add(new Done(error));
+            this._error = error;
+            this._queue.add(new Done());
         }
 
-        drainErrors(): any {
-            const errors = []
-
+        getError(): string | Error {
+            return this._error;
         }
-
     }
 
     class QueueElement {
@@ -125,19 +122,9 @@ export namespace ResponseCollector {
     }
 
     class Done extends QueueElement {
-        private readonly _error?: Error | string;
 
-        constructor(error?: Error | string) {
+        constructor() {
             super();
-            this._error = error;
-        }
-
-        hasError(): boolean {
-            return this._error != null;
-        }
-
-        get error(): Error | string {
-            return this._error;
         }
 
         isDone(): boolean {

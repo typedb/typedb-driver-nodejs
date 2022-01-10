@@ -19,23 +19,23 @@
  * under the License.
  */
 
-import { Transaction } from "typedb-protocol/common/transaction_pb";
-import { ConceptManager } from "../api/concept/ConceptManager";
-import { TypeDBOptions } from "../api/connection/TypeDBOptions";
-import { TransactionType, TypeDBTransaction } from "../api/connection/TypeDBTransaction";
-import { LogicManager } from "../api/logic/LogicManager";
-import { QueryManager } from "../api/query/QueryManager";
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
-import { Stream } from "../common/util/Stream";
-import { ConceptManagerImpl } from "../concept/ConceptManagerImpl";
-import { LogicManagerImpl } from "../logic/LogicManagerImpl";
-import { QueryManagerImpl } from "../query/QueryManagerImpl";
-import { BidirectionalStream } from "../stream/BidirectionalStream";
-import { TypeDBSessionImpl } from "./TypeDBSessionImpl";
-import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
+import {Transaction} from "typedb-protocol/common/transaction_pb";
+import {ConceptManager} from "../api/concept/ConceptManager";
+import {TypeDBOptions} from "../api/connection/TypeDBOptions";
+import {TransactionType, TypeDBTransaction} from "../api/connection/TypeDBTransaction";
+import {LogicManager} from "../api/logic/LogicManager";
+import {QueryManager} from "../api/query/QueryManager";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {Stream} from "../common/util/Stream";
+import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
+import {LogicManagerImpl} from "../logic/LogicManagerImpl";
+import {QueryManagerImpl} from "../query/QueryManagerImpl";
+import {BidirectionalStream} from "../stream/BidirectionalStream";
+import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
 import assert = require("assert");
+import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 import TRANSACTION_CLOSED_WITH_ERRORS = ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
 
 export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
@@ -119,7 +119,7 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
 
     private throwTransactionClosed(): void {
         assert(!this.isOpen());
-        const errors = this._bidirectionalStream.drainErrors();
+        const errors = this._bidirectionalStream.getErrors();
         if (errors.length == 0) throw new TypeDBClientError(TRANSACTION_CLOSED);
         else throw new TypeDBClientError(TRANSACTION_CLOSED_WITH_ERRORS.message(errors));
     }
