@@ -60,6 +60,7 @@ export namespace ResponseCollector {
 
     import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
     import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
+    import TRANSACTION_CLOSED_WITH_ERRORS = ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
 
     export class ResponseQueue<T> {
         private readonly _queue: BlockingQueue<QueueElement>;
@@ -73,7 +74,7 @@ export namespace ResponseCollector {
             const element = await this._queue.take();
             if (element.isResponse()) return (element as Response<T>).value;
             else if (element.isDone() && !this._error) throw new TypeDBClientError(TRANSACTION_CLOSED);
-            else if (element.isDone() && this._error) throw new TypeDBClientError(this._error);
+            else if (element.isDone() && this._error) throw new TypeDBClientError(TRANSACTION_CLOSED_WITH_ERRORS.message(this._error));
             else throw new TypeDBClientError(ILLEGAL_STATE);
         }
 

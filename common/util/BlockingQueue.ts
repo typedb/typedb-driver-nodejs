@@ -40,14 +40,6 @@ export class BlockingQueue<T> {
         return this._promises.shift();
     }
 
-    drain(): Promise<T>[] {
-        const values = [];
-        for (let i = 0; i < this._promises.length; i++) {
-            values.push(this._promises.shift());
-        }
-        return values;
-    }
-
     private addPromise(): void {
         this._promises.push(new Promise(resolve => {
             this._resolvers.push(resolve);
