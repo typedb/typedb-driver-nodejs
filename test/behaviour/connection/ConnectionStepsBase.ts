@@ -60,7 +60,7 @@ export function setTransactionOptions(options: TypeDBOptions) {
 
 export async function before() {
     for (const session of sessions) {
-        await session.close()
+        assert(!session.isOpen());
     }
     const databases = await client.databases.all();
     for (const db of databases) {
@@ -81,4 +81,5 @@ export async function after() {
 
 Given('connection has been opened', () => {
     assert(client);
+    assert(client.isOpen());
 });
