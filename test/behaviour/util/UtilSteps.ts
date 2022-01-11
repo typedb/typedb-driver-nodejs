@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import {Then} from "@cucumber/cucumber";
 
 Then('wait {int} seconds', async function (seconds: number) {
