@@ -21,16 +21,16 @@
 
 import {After, Before, BeforeAll} from "@cucumber/cucumber";
 import {TypeDB, TypeDBOptions} from "../../../dist";
-import {after, before, setClient, setSessionOptions, setTransactionOptions} from "./ConnectionStepsBase";
+import {afterBase, beforeBase, setClient, setSessionOptions, setTransactionOptions} from "./ConnectionStepsBase";
 
 BeforeAll(() => {
     setClient(TypeDB.coreClient());
 });
 
 Before(async () => {
-    before();
+    beforeBase();
     setSessionOptions(TypeDBOptions.core({"infer": true}));
     setTransactionOptions(TypeDBOptions.core({"infer": true}));
 });
 
-After(async () => after());
+After(async () => afterBase());

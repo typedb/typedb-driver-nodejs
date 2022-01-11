@@ -58,7 +58,7 @@ export function setTransactionOptions(options: TypeDBOptions) {
     transactionOptions = options;
 }
 
-export async function before() {
+export async function beforeBase() {
     for (const session of sessions) {
         assert(!session.isOpen());
     }
@@ -70,7 +70,7 @@ export async function before() {
     sessionsToTransactions.clear();
 }
 
-export async function after() {
+export async function afterBase() {
     for (const session of sessions) {
         await session.close()
     }

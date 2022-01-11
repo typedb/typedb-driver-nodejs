@@ -21,16 +21,16 @@
 
 import {After, Before, BeforeAll} from "@cucumber/cucumber";
 import { TypeDB, TypeDBCredential, TypeDBOptions } from "../../../dist";
-import {after, before, setClient, setSessionOptions, setTransactionOptions} from "./ConnectionStepsBase";
+import {afterBase, beforeBase, setClient, setSessionOptions, setTransactionOptions} from "./ConnectionStepsBase";
 
 BeforeAll(async () => {
     setClient(await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential("admin", "password", process.env.ROOT_CA)));
 });
 
 Before(async () => {
-    before();
+    beforeBase();
     setSessionOptions(TypeDBOptions.cluster({"infer": true}));
     setTransactionOptions(TypeDBOptions.cluster({"infer": true}));
 });
 
-After(async () => after());
+After(async () => afterBase());

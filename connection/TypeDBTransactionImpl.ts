@@ -37,6 +37,7 @@ import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
 import assert = require("assert");
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 import TRANSACTION_CLOSED_WITH_ERRORS = ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
+import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
 
 export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     private readonly _session: TypeDBSessionImpl;
@@ -118,7 +119,7 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     }
 
     private throwTransactionClosed(): void {
-        assert(!this.isOpen());
+        if (this.isOpen()) throw new TypeDBClientError(ILLEGAL_STATE);
         const errors = this._bidirectionalStream.getErrors();
         if (errors.length == 0) throw new TypeDBClientError(TRANSACTION_CLOSED);
         else throw new TypeDBClientError(TRANSACTION_CLOSED_WITH_ERRORS.message(errors));
