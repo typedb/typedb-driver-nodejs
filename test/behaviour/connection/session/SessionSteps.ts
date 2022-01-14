@@ -68,7 +68,6 @@ Then("session(s)( in parallel) is/are null: {bool}", function (isNull: boolean) 
     for (const session of sessions) {
         assert.ok(!session === isNull);
     }
-
 });
 
 Then('session(s)( in parallel) is/are open: {bool}', function (isOpen: boolean) {

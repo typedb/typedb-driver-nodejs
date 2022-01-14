@@ -57,7 +57,9 @@ export class TypeDBSessionImpl implements TypeDBSession {
 
     async open(): Promise<void> {
         const openReq = RequestBuilder.Session.openReq(this._databaseName, this._type.proto(), this._options.proto())
+        console.error("----> Opening session by doing databases.get()");
         this._database = await this._client.databases.get(this._databaseName);
+        console.error("---------> databases.get() succeeded");
         const start = (new Date()).getMilliseconds();
         const res = await this._client.stub().sessionOpen(openReq);
         const end = (new Date()).getMilliseconds(); // TODO will this work?
