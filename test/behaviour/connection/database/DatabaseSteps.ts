@@ -27,9 +27,6 @@ import * as assert from "assert";
 
 When("connection create database: {word}", async (name: string) => {
     await client.databases.create(name);
-    const exists = await client.databases.contains(name);
-    console.error("Created database exists: " + exists);
-    assert.ok(exists);
 });
 
 When("connection create database(s):", async (names: DataTable) => {
