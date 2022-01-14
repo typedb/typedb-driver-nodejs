@@ -42,6 +42,8 @@ export class TypeDBDatabaseImpl implements Database {
     delete(): Promise<void> {
         if (!this._name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
         const req = RequestBuilder.Core.Database.deleteReq(this._name);
+        console.error("---- DELETING DATABASE START INIT PROMISE");
+        console.trace();
         return this._stub.databaseDelete(req);
     }
 
