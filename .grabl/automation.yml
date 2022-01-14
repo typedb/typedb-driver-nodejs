@@ -106,10 +106,10 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .grabl/test-core.sh //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1 --sandbox_debug
-#        .grabl/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1 --sandbox_debug
         sleep 6000
+#        .grabl/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1 --sandbox_debug
 #    test-behaviour-match-cluster:
 #      image: vaticle-ubuntu-21.04
 #      command: |
