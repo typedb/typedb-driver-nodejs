@@ -37,7 +37,10 @@ export abstract class TypeDBStub {
         return new Promise((resolve, reject) => {
             this.stub().databases_create(req, (err) => {
                 if (err) reject(new TypeDBClientError(err));
-                else resolve();
+                else {
+                    resolve();
+                    console.log("Databases create finished: '" + req.getName() + "'");
+                }
             })
         });
     }
@@ -46,7 +49,10 @@ export abstract class TypeDBStub {
         return new Promise((resolve, reject) => {
             this.stub().databases_contains(req, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
-                else resolve(res.getContains());
+                else {
+                    resolve(res.getContains());
+                    console.log("Databases contains finished: '" + req.getName() + "' is: '" + res.getContains() + "'");
+                }
             });
         });
     }
