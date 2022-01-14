@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import { Database } from "../api/connection/database/Database";
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
-import { TypeDBStub } from "../common/rpc/TypeDBStub";
+import {Database} from "../api/connection/database/Database";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
 
 export class TypeDBDatabaseImpl implements Database {
 
@@ -42,8 +42,6 @@ export class TypeDBDatabaseImpl implements Database {
     delete(): Promise<void> {
         if (!this._name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
         const req = RequestBuilder.Core.Database.deleteReq(this._name);
-        console.error("---- DELETING DATABASE START INIT PROMISE");
-        console.trace();
         return this._stub.databaseDelete(req);
     }
 

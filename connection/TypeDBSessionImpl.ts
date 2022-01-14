@@ -19,19 +19,18 @@
  * under the License.
  */
 
-import { Database } from "../api/connection/database/Database";
-import { TypeDBOptions } from "../api/connection/TypeDBOptions";
-import { SessionType, TypeDBSession } from "../api/connection/TypeDBSession";
-import { TransactionType, TypeDBTransaction } from "../api/connection/TypeDBTransaction";
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
-import { TypeDBStub } from "../common/rpc/TypeDBStub";
-import { RequestTransmitter } from "../stream/RequestTransmitter";
-import { CoreClient } from "./core/CoreClient";
-import { TypeDBTransactionImpl } from "./TypeDBTransactionImpl";
-import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
+import {Database} from "../api/connection/database/Database";
+import {TypeDBOptions} from "../api/connection/TypeDBOptions";
+import {SessionType, TypeDBSession} from "../api/connection/TypeDBSession";
+import {TransactionType, TypeDBTransaction} from "../api/connection/TypeDBTransaction";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import {RequestTransmitter} from "../stream/RequestTransmitter";
+import {TypeDBTransactionImpl} from "./TypeDBTransactionImpl";
 import {TypeDBClientImpl} from "./TypeDBClientImpl";
+import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 
 export class TypeDBSessionImpl implements TypeDBSession {
 
@@ -57,9 +56,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
 
     async open(): Promise<void> {
         const openReq = RequestBuilder.Session.openReq(this._databaseName, this._type.proto(), this._options.proto())
-        console.error("----> Opening session by doing databases.get()");
         this._database = await this._client.databases.get(this._databaseName);
-        console.error("---------> databases.get() succeeded");
         const start = (new Date()).getMilliseconds();
         const res = await this._client.stub().sessionOpen(openReq);
         const end = (new Date()).getMilliseconds(); // TODO will this work?

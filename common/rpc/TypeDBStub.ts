@@ -20,11 +20,14 @@
  */
 
 
-import {ClientDuplexStream, ServiceError} from "@grpc/grpc-js";
-import { Session } from "typedb-protocol/common/session_pb";
-import { CoreDatabase as CoreDatabaseProto, CoreDatabaseManager as CoreDatabaseMgrProto } from "typedb-protocol/core/core_database_pb";
-import { TypeDBClient } from "typedb-protocol/core/core_service_grpc_pb";
-import { TypeDBDatabaseImpl } from "../../connection/TypeDBDatabaseImpl";
+import {ClientDuplexStream} from "@grpc/grpc-js";
+import {Session} from "typedb-protocol/common/session_pb";
+import {
+    CoreDatabase as CoreDatabaseProto,
+    CoreDatabaseManager as CoreDatabaseMgrProto
+} from "typedb-protocol/core/core_database_pb";
+import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
+import {TypeDBDatabaseImpl} from "../../connection/TypeDBDatabaseImpl";
 import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
 import {TypeDBClientError} from "../errors/TypeDBClientError";
 
@@ -37,10 +40,7 @@ export abstract class TypeDBStub {
         return new Promise((resolve, reject) => {
             this.stub().databases_create(req, (err) => {
                 if (err) reject(new TypeDBClientError(err));
-                else {
-                    resolve();
-                    console.error("Databases create finished: '" + req.getName() + "'");
-                }
+                else resolve();
             })
         });
     }
@@ -49,15 +49,7 @@ export abstract class TypeDBStub {
         return new Promise((resolve, reject) => {
             this.stub().databases_contains(req, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
-                else {
-                    try {
-                        resolve(res.getContains());
-                    } catch {
-                        console.log("ERROR in databases contains");
-                    } finally  {
-                        console.error("Databases contains finished: '" + req.getName() + "' is: '" + res.getContains() + "'");
-                    }
-                }
+                else resolve(res.getContains());
             });
         });
     }
@@ -66,10 +58,7 @@ export abstract class TypeDBStub {
         return new Promise((resolve, reject) => {
             this.stub().databases_all(req, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
-                else {
-                    resolve(res.getNamesList().map(name => new TypeDBDatabaseImpl(name, this)));
-                    console.error("Databases all finished: " + res.getNamesList());
-                }
+                else resolve(res.getNamesList().map(name => new TypeDBDatabaseImpl(name, this)));
             })
         })
     }
