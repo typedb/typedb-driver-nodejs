@@ -19,13 +19,22 @@
  * under the License.
  */
 
-import {After, Before, BeforeAll} from "@cucumber/cucumber";
+import {After, AfterAll, Before, BeforeAll} from "@cucumber/cucumber";
 import { TypeDB, TypeDBCredential, TypeDBOptions } from "../../../dist";
-import {afterBase, beforeBase, setClient, setSessionOptions, setTransactionOptions} from "./ConnectionStepsBase";
+import {
+    afterAllBase,
+    afterBase,
+    beforeBase,
+    setClient,
+    setSessionOptions,
+    setTransactionOptions
+} from "./ConnectionStepsBase";
 
 BeforeAll(async () => {
     setClient(await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential("admin", "password", process.env.ROOT_CA)));
 });
+
+AfterAll(async () => afterAllBase());
 
 Before(async () => {
     beforeBase();

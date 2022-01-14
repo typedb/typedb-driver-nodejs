@@ -58,6 +58,10 @@ export function setTransactionOptions(options: TypeDBOptions) {
     transactionOptions = options;
 }
 
+export async function afterAllBase() {
+    await client.close();
+}
+
 export async function beforeBase() {
     for (const session of sessions) {
         assert(!session.isOpen());

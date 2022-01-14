@@ -70,7 +70,9 @@ export class TypeDBSessionImpl implements TypeDBSession {
     async close(): Promise<void> {
         if (this._isOpen) {
             this._isOpen = false;
-            this._transactions.forEach(tx => tx.close());
+            for (const tx of this._transactions) {
+                await tx.close();
+            }
             this._client.closeSession(this);
             clearTimeout(this._pulse);
             const req = RequestBuilder.Session.closeReq(this._id);
