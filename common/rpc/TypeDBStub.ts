@@ -50,8 +50,13 @@ export abstract class TypeDBStub {
             this.stub().databases_contains(req, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
                 else {
-                    resolve(res.getContains());
-                    console.error("Databases contains finished: '" + req.getName() + "' is: '" + res.getContains() + "'");
+                    try {
+                        resolve(res.getContains());
+                    } catch {
+                        console.log("ERROR in databases contains");
+                    } finally  {
+                        console.error("Databases contains finished: '" + req.getName() + "' is: '" + res.getContains() + "'");
+                    }
                 }
             });
         });
