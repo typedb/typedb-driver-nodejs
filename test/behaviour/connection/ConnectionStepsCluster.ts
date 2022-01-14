@@ -20,7 +20,7 @@
  */
 
 import {After, AfterAll, Before, BeforeAll} from "@cucumber/cucumber";
-import { TypeDB, TypeDBCredential, TypeDBOptions } from "../../../dist";
+import {TypeDB, TypeDBCredential, TypeDBOptions} from "../../../dist";
 import {
     afterAllBase,
     afterBase,
@@ -34,12 +34,16 @@ BeforeAll(async () => {
     setClient(await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential("admin", "password", process.env.ROOT_CA)));
 });
 
-AfterAll(async () => afterAllBase());
+AfterAll(async () => {
+    await afterAllBase()
+});
 
 Before(async () => {
-    beforeBase();
+    await beforeBase();
     setSessionOptions(TypeDBOptions.cluster({"infer": true}));
     setTransactionOptions(TypeDBOptions.cluster({"infer": true}));
 });
 
-After(async () => afterBase());
+After(async() => {
+    await afterBase()
+});

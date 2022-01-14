@@ -46,60 +46,58 @@ build:
         bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
         npm run lint
-#    test-integration:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        bazel build //...
-#        ./test/common/start-core-server.sh
-#        sleep 10
-#        npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        ./test/common/stop-core-server.sh
-#        exit $TEST_SUCCESS
-#    test-cluster-failover:
-#      machine: 4-core-8-gb
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        bazel build //...
-#        source test/common/start-cluster-servers.sh # use source to receive export vars
-#        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        ./test/common/stop-cluster-servers.sh
-#        exit $TEST_SUCCESS
-#    test-behaviour-connection-core:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-core.sh //test/behaviour/connection/... --test_output=errors --jobs=1 --sandbox_debug
-#        sleep 600
-#    test-behaviour-connection-cluster:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-cluster.sh //test/behaviour/connection/... --test_output=errors --jobs=1
-#    test-behaviour-concept-core:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-core.sh //test/behaviour/concept/... --test_output=errors --jobs=1 --sandbox_debug
-#        sleep 600
-#    test-behaviour-concept-cluster:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-cluster.sh //test/behaviour/concept/... --test_output=errors --jobs=1
+    test-integration:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        ./test/common/start-core-server.sh
+        sleep 10
+        npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-core-server.sh
+        exit $TEST_SUCCESS
+    test-cluster-failover:
+      machine: 4-core-8-gb
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
+    test-behaviour-connection-core:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-core.sh //test/behaviour/connection/... --test_output=errors --jobs=1
+    test-behaviour-connection-cluster:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/connection/... --test_output=errors --jobs=1
+    test-behaviour-concept-core:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-core.sh //test/behaviour/concept/... --test_output=errors --jobs=1
+    test-behaviour-concept-cluster:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/concept/... --test_output=errors --jobs=1
     # TODO: Delete --jobs=1 once tests are parallelisable
     test-behaviour-match-core:
       image: vaticle-ubuntu-21.04
@@ -107,90 +105,87 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .grabl/test-core.sh //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1 --sandbox_debug
-        sleep 6000
-#        .grabl/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1 --sandbox_debug
-#    test-behaviour-match-cluster:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-cluster.sh //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1
-#        .grabl/test-cluster.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1
-#    test-behaviour-writable-core:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-core.sh //test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1 --sandbox_debug
-#        .grabl/test-core.sh //test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1 --sandbox_debug
-#        .grabl/test-core.sh //test/behaviour/typeql/language/update/... --test_output=errors --jobs=1 --sandbox_debug
-#        sleep 600
-#    test-behaviour-writable-cluster:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-cluster.sh //test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1
-#        .grabl/test-cluster.sh //test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1
-#        .grabl/test-cluster.sh //test/behaviour/typeql/language/update/... --test_output=errors --jobs=1
-#    test-behaviour-definable-core:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-core.sh //test/behaviour/typeql/language/define/... --test_output=errors --jobs=1 --sandbox_debug
-#        .grabl/test-core.sh //test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1 --sandbox_debug
-#        sleep 600
-#    test-behaviour-definable-cluster:
-#      image: vaticle-ubuntu-21.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-cluster.sh //test/behaviour/typeql/language/define/... --test_output=errors --jobs=1
-#        .grabl/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1
-#    deploy-npm-snapshot:
-#      filter:
-#        owner: vaticle
-#        branch: master
-#      image: vaticle-ubuntu-21.04
-#      dependencies: [
-#        build, test-integration,
-#        test-behaviour-connection-core, test-behaviour-connection-cluster,
-#        test-behaviour-concept-core, test-behaviour-concept-cluster,
-#        test-behaviour-match-core, test-behaviour-match-cluster,
-#        test-behaviour-writable-core, test-behaviour-writable-cluster,
-#        test-behaviour-definable-core, test-behaviour-definable-cluster
-#      ]
-#      command: |
-#        curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
-#        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-#        sudo apt update -y
-#        sudo apt install -y expect
-#        export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
-#        export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
-#        export DEPLOY_NPM_EMAIL=$REPO_VATICLE_EMAIL
-#        bazel run --define version=$(git rev-parse HEAD) --spawn_strategy=local //:deploy-npm -- snapshot
-#    test-deployment-npm:
-#      filter:
-#        owner: vaticle
-#        branch: master
-#      image: vaticle-ubuntu-21.04
-#      dependencies: [deploy-npm-snapshot]
-#      command: |
-#        ./test/common/start-core-server.sh
-#        cd test/deployment/
-#        echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
-#        npm install https://repo.vaticle.com/repository/npm-snapshot-group/typedb-client/-/typedb-client-$(cat ../../VERSION).tgz
-#        sudo -H npm install jest --global
-#        jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        ../common/stop-core-server.sh
-#        exit $TEST_SUCCESS
+        .grabl/test-core.sh //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1
+    test-behaviour-match-cluster:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1
+    test-behaviour-writable-core:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-core.sh //test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/typeql/language/update/... --test_output=errors --jobs=1
+    test-behaviour-writable-cluster:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/update/... --test_output=errors --jobs=1
+    test-behaviour-definable-core:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-core.sh //test/behaviour/typeql/language/define/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1
+    test-behaviour-definable-cluster:
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/define/... --test_output=errors --jobs=1
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1
+    deploy-npm-snapshot:
+      filter:
+        owner: vaticle
+        branch: master
+      image: vaticle-ubuntu-21.04
+      dependencies: [
+        build, test-integration,
+        test-behaviour-connection-core, test-behaviour-connection-cluster,
+        test-behaviour-concept-core, test-behaviour-concept-cluster,
+        test-behaviour-match-core, test-behaviour-match-cluster,
+        test-behaviour-writable-core, test-behaviour-writable-cluster,
+        test-behaviour-definable-core, test-behaviour-definable-cluster
+      ]
+      command: |
+        curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo apt update -y
+        sudo apt install -y expect
+        export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
+        export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
+        export DEPLOY_NPM_EMAIL=$REPO_VATICLE_EMAIL
+        bazel run --define version=$(git rev-parse HEAD) --spawn_strategy=local //:deploy-npm -- snapshot
+    test-deployment-npm:
+      filter:
+        owner: vaticle
+        branch: master
+      image: vaticle-ubuntu-21.04
+      dependencies: [deploy-npm-snapshot]
+      command: |
+        ./test/common/start-core-server.sh
+        cd test/deployment/
+        echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
+        npm install https://repo.vaticle.com/repository/npm-snapshot-group/typedb-client/-/typedb-client-$(cat ../../VERSION).tgz
+        sudo -H npm install jest --global
+        jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ../common/stop-core-server.sh
+        exit $TEST_SUCCESS
 
 release:
   filter:

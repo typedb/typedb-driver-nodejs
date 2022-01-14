@@ -34,12 +34,16 @@ BeforeAll(() => {
     setClient(TypeDB.coreClient());
 });
 
-AfterAll(async () => afterAllBase());
+AfterAll(async () => {
+    await afterAllBase()
+});
 
 Before(async () => {
-    beforeBase();
+    await beforeBase();
     setSessionOptions(TypeDBOptions.core({"infer": true}));
     setTransactionOptions(TypeDBOptions.core({"infer": true}));
 });
 
-After(async () => afterBase());
+After(async () => {
+    await afterBase()
+});
