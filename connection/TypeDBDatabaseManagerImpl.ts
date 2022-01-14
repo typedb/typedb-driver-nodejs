@@ -37,7 +37,7 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
 
     public async get(name: string): Promise<Database> {
         if (await this.contains(name)) return new TypeDBDatabaseImpl(name, this._stub);
-        else throw new TypeDBClientError(ErrorMessage.Client.DB_DOES_NOT_EXIST);
+        else throw new TypeDBClientError(ErrorMessage.Client.DB_DOES_NOT_EXIST.message(name));
     }
 
     public create(name: string): Promise<void> {
