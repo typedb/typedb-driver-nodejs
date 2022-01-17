@@ -70,6 +70,90 @@ build:
         npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
+    test-cluster-failover-2:
+      machine: 4-core-8-gb
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
+    test-cluster-failover-3:
+      machine: 4-core-8-gb
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
+    test-cluster-failover-4:
+      machine: 4-core-8-gb
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
+    test-cluster-failover-5:
+      machine: 4-core-8-gb
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
+    test-cluster-failover-6:
+      machine: 4-core-8-gb
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
+    test-cluster-failover-7:
+      machine: 4-core-8-gb
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
+    test-cluster-failover-8:
+      machine: 4-core-8-gb
+      image: vaticle-ubuntu-21.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
     test-behaviour-connection-core:
       image: vaticle-ubuntu-21.04
       command: |
