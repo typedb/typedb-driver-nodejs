@@ -49,11 +49,6 @@ kt_register_toolchains()
 load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 
-# Load //builder/nodejs
-load("@vaticle_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
-nodejs_deps()
-load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
-
 # Load //tool/checkstyle
 load("@vaticle_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
 checkstyle_deps()
@@ -62,18 +57,17 @@ checkstyle_deps()
 # Load npm modules #
 ####################
 
+load("@vaticle_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
+nodejs_deps()
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
 
 # Load package.json
-node_repositories(
-    package_json = ["//:package.json"]
-)
+node_repositories(package_json = ["//:package.json"])
 yarn_install(
     name = "npm",
     package_json = "//:package.json",
     yarn_lock = "//:yarn.lock",
 )
-load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
-install_bazel_dependencies()
 
 # Load //builder/grpc
 load("@vaticle_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
