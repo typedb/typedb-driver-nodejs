@@ -62,16 +62,22 @@ export class BidirectionalStream {
         const responseQueue = this._responseCollector.queue(requestId);
         if (batch) this._dispatcher.dispatch(request);
         else this._dispatcher.dispatchNow(request);
-        return (await responseQueue.take() as Transaction.Res);
+        const res = await responseQueue.take() as Transaction.Res;
+        this._responseCollector.remove(requestId);
+        return res;
     }
 
     stream(request: Transaction.Req): Stream<Transaction.ResPart> {
         const requestId = uuid.v4();
         request.setReqId(uuid.parse(requestId) as Uint8Array);
         const responseQueue = this._responsePartCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
-        const responseIterator = new ResponsePartIterator(requestId, responseQueue, this._dispatcher);
+        const responseIterator = new ResponsePartIterator(requestId, responseQueue, this);
         this._dispatcher.dispatch(request);
         return Stream.iterable(responseIterator);
+    }
+
+    iteratorDone(requestId: string) {
+        this._responsePartCollector.remove(requestId);
     }
 
     isOpen(): boolean {
@@ -126,6 +132,10 @@ export class BidirectionalStream {
         const queue = this._responsePartCollector.get(uuid.stringify(requestId as Uint8Array));
         if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
+    }
+
+    dispatcher(): BatchDispatcher{
+        return this._dispatcher;
     }
 
     getErrors(): (Error|string)[] {

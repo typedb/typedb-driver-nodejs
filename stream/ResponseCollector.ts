@@ -41,6 +41,10 @@ export class ResponseCollector<T> {
         return this._response_queues[uuid];
     }
 
+    remove(requestId: string) {
+        delete this._response_queues[requestId];
+    }
+
     close(error?: Error | string) {
         Object.values(this._response_queues).forEach(collector => collector.close(error));
     }
@@ -50,7 +54,7 @@ export class ResponseCollector<T> {
         for (const requestId in this._response_queues) {
             const error = this._response_queues[requestId].getError();
             if (error) errors.push(error);
-            delete this._response_queues[requestId];
+            this.remove(requestId);
         }
         return errors;
     }
