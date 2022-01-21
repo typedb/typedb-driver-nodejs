@@ -52,6 +52,7 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
     }
 
     async next(): Promise<Transaction.ResPart> {
+        if (this._stream.getError()) throw this._stream.getError();
         const res = await this._responseCollector.take();
         switch (res.getResCase()) {
             case ResCase.RES_NOT_SET:

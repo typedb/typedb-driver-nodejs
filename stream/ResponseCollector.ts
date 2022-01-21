@@ -48,16 +48,6 @@ export class ResponseCollector<T> {
     close(error?: Error | string) {
         Object.values(this._response_queues).forEach(collector => collector.close(error));
     }
-
-    getErrors(): (Error | string)[] {
-        const errors: (Error | string)[] = [];
-        for (const requestId in this._response_queues) {
-            const error = this._response_queues[requestId].getError();
-            if (error) errors.push(error);
-            this.remove(requestId);
-        }
-        return errors;
-    }
 }
 
 export namespace ResponseCollector {
@@ -89,10 +79,6 @@ export namespace ResponseCollector {
         close(error?: Error | string): void {
             this._error = error;
             this._queue.add(new Done());
-        }
-
-        getError(): string | Error {
-            return this._error;
         }
     }
 
