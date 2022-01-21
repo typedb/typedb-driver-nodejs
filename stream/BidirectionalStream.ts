@@ -63,9 +63,11 @@ export class BidirectionalStream {
         const responseQueue = this._responseCollector.queue(requestId);
         if (batch) this._dispatcher.dispatch(request);
         else this._dispatcher.dispatchNow(request);
-        const value = await responseQueue.take() as Transaction.Res;
-        this._responseCollector.remove(requestId);
-        return value;
+        try {
+            return await responseQueue.take() as Transaction.Res;
+        } finally {    
+            this._responseCollector.remove(requestId);
+        }
     }
 
     stream(request: Transaction.Req): Stream<Transaction.ResPart> {
