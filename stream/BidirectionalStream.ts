@@ -19,16 +19,16 @@
  * under the License.
  */
 
-import { ClientDuplexStream } from "@grpc/grpc-js";
-import { Transaction } from "typedb-protocol/common/transaction_pb";
+import {ClientDuplexStream} from "@grpc/grpc-js";
+import {Transaction} from "typedb-protocol/common/transaction_pb";
 import * as uuid from "uuid";
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { TypeDBStub } from "../common/rpc/TypeDBStub";
-import { Stream } from "../common/util/Stream";
-import { BatchDispatcher, RequestTransmitter } from "./RequestTransmitter";
-import { ResponseCollector } from "./ResponseCollector";
-import { ResponsePartIterator } from "./ResponsePartIterator";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import {Stream} from "../common/util/Stream";
+import {BatchDispatcher, RequestTransmitter} from "./RequestTransmitter";
+import {ResponseCollector} from "./ResponseCollector";
+import {ResponsePartIterator} from "./ResponsePartIterator";
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import ResponseQueue = ResponseCollector.ResponseQueue;
@@ -41,6 +41,7 @@ export class BidirectionalStream {
     private readonly _responsePartCollector: ResponseCollector<Transaction.ResPart>;
     private _stub: TypeDBStub;
     private _isOpen: boolean;
+    private _error: Error | string;
 
     constructor(stub: TypeDBStub, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
@@ -62,9 +63,9 @@ export class BidirectionalStream {
         const responseQueue = this._responseCollector.queue(requestId);
         if (batch) this._dispatcher.dispatch(request);
         else this._dispatcher.dispatchNow(request);
-        const res = await responseQueue.take() as Transaction.Res;
+        const value = await responseQueue.take() as Transaction.Res;
         this._responseCollector.remove(requestId);
-        return res;
+        return value;
     }
 
     stream(request: Transaction.Req): Stream<Transaction.ResPart> {
@@ -86,6 +87,7 @@ export class BidirectionalStream {
 
     async close(error?: Error | string): Promise<void> {
         this._isOpen = false;
+        this._error = error;
         this._responseCollector.close(error);
         this._responsePartCollector.close(error);
         this._dispatcher.close();
@@ -134,11 +136,11 @@ export class BidirectionalStream {
         queue.put(res);
     }
 
-    dispatcher(): BatchDispatcher{
+    dispatcher(): BatchDispatcher {
         return this._dispatcher;
     }
 
-    getErrors(): (Error|string)[] {
-        return (this._responseCollector.getErrors()).concat(this._responsePartCollector.getErrors());
+    getError(): Error | string {
+        return this._error;
     }
 }
