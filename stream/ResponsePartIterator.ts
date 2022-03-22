@@ -34,13 +34,13 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
 
     private readonly _requestId: string;
     private readonly _responseCollector: ResponseCollector.ResponseQueue<Transaction.ResPart>;
-    private readonly _stream: BidirectionalStream;
+    private readonly _dispatcher: BatchDispatcher;
 
     constructor(requestId: string, responseCollector: ResponseCollector.ResponseQueue<Transaction.ResPart>,
-                stream: BidirectionalStream) {
+                dispatcher: BatchDispatcher) {
         this._requestId = requestId;
         this._responseCollector = responseCollector;
-        this._stream = stream;
+        this._dispatcher = dispatcher;
     }
 
     async* [Symbol.asyncIterator](): AsyncIterator<Transaction.ResPart, any, undefined> {
@@ -52,7 +52,6 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
     }
 
     async next(): Promise<Transaction.ResPart> {
-        if (this._stream.getError()) throw this._stream.getError();
         const res = await this._responseCollector.take();
         switch (res.getResCase()) {
             case ResCase.RES_NOT_SET:
@@ -62,7 +61,7 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
                     case Transaction.Stream.State.DONE:
                         return null;
                     case Transaction.Stream.State.CONTINUE:
-                        this._stream.dispatcher().dispatch(RequestBuilder.Transaction.streamReq(this._requestId))
+                        this._dispatcher.dispatch(RequestBuilder.Transaction.streamReq(this._requestId))
                         return this.next();
                     default:
                         throw new TypeDBClientError(UNKNOWN_STREAM_STATE.message(res.getStreamResPart()));
