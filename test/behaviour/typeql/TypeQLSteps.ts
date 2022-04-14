@@ -444,6 +444,6 @@ Then("each answer satisfies", async (template: string) => {
 Then("templated typeql match; throws exception", async (template: string) => {
     for (const answer of answers) {
         const query = applyQueryTemplate(template, answer);
-        assert.strictEqual((await tx().query.match(query).collect()).length, 0);
+        await assertThrows(async () => await tx().query.match(query).collect());
     }
 });
