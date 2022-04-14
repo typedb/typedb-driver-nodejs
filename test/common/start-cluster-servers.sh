@@ -24,7 +24,7 @@ set -e
 
 function server_start() {
   ./${1}/typedb cluster \
-    --storage.data=server/data
+    --storage.data=server/data \
     --server.address=127.0.0.1:${1}1729 \
     --server.internal-address.zeromq=127.0.0.1:${1}1730 \
     --server.internal-address.grpc=127.0.0.1:${1}1731 \
@@ -50,7 +50,7 @@ server_start 1 &
 server_start 2 &
 server_start 3 &
 
-ROOT_CA=`realpath typedb-cluster-all/$TYPEDB/server/conf/encryption/rpc-root-ca.pem`
+ROOT_CA=`realpath typedb-cluster-all/$TYPEDB/server/conf/encryption/ext-root-ca.pem`
 export ROOT_CA
 
 POLL_INTERVAL_SECS=0.5
