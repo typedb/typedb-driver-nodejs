@@ -66,11 +66,10 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //...
-        sleep 3000
-#        source test/common/start-cluster-servers.sh # use source to receive export vars
-#        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        ./test/common/stop-cluster-servers.sh
-#        exit $TEST_SUCCESS
+        source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
 #    test-behaviour-connection-core:
 #      image: vaticle-ubuntu-21.04
 #      command: |
