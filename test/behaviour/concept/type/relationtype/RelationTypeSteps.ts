@@ -138,13 +138,11 @@ async function getActualSubtypesForRelatedRole(relationLabel: string, roleLabel:
 
 Then("relation\\({type_label}) get role\\({type_label}) get subtypes contain:", async (relationLabel: string, roleLabel: string, subLabelsTable: DataTable) => {
     const subLabels = parseList(subLabelsTable);
-    console.log("========SUBLABELS=========")
-    console.log(subLabels)
-    console.log("========SUBLABELS=========")
+    console.log("========SUBLABELS" + subLabels);
+
     const actuals = await getActualSubtypesForRelatedRole(relationLabel, roleLabel);
-    console.log("=========ACTUALS==========")
-    console.log(actuals)
-    console.log("=========ACTUALS==========")
+    console.log("=========ACTUALS: " + actuals);
+
     await actuals.every(rl => assert(subLabels.includes(rl)));
 });
 
