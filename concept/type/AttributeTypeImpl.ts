@@ -237,6 +237,13 @@ export namespace AttributeTypeImpl {
                 .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));
         }
 
+        getOwnersExplicit(onlyKey?: boolean): Stream<ThingType> {
+            const request = RequestBuilder.Type.AttributeType.getOwnersExplicitReq(this.label, !!onlyKey);
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersExplicitResPart().getThingTypesList()))
+                .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));
+        }
+
         protected getImpl(valueProto: AttributeProto.Value): Promise<Attribute> {
             const request = RequestBuilder.Type.AttributeType.getReq(this.label, valueProto);
             return this.execute(request)

@@ -550,6 +550,11 @@ export namespace RequestBuilder {
                     new AttributeTypeProto.GetOwners.Req().setOnlyKey(onlyKey)));
             }
 
+            export function getOwnersExplicitReq(label: Label, onlyKey: boolean) {
+                return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersExplicitReq(
+                    new AttributeTypeProto.GetOwnersExplicit.Req().setOnlyKey(onlyKey)));
+            }
+
             export function putReq(label: Label, value: AttributeProto.Value) {
                 return typeReq(newReqBuilder(label).setAttributeTypePutReq(
                     new AttributeTypeProto.Put.Req().setValue(value)
