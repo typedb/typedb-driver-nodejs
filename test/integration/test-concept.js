@@ -207,6 +207,8 @@ async function run() {
         age = await tx.concepts.putAttributeType("age", AttributeType.ValueType.LONG);
         await person.asRemote(tx).setAbstract();
         await person.asRemote(tx).setOwns(email, true);
+        man = await tx.concepts.getEntityType("man");
+        await man.asRemote(tx).setSupertype(tx.concepts.getRootEntityType());
         await person.asRemote(tx).setOwns(age, false);
         await lion.asRemote(tx).setOwns(age);
         customer = await tx.concepts.putEntityType("customer");
@@ -217,7 +219,7 @@ async function run() {
         const ownedDateTimes = await customer.asRemote(tx).getOwns(AttributeType.ValueType.DATETIME, false).collect();
         await tx.commit();
         await tx.close();
-        assert(ownedAttributes.length === 2);
+        assert(ownedAttributes.length === 1);
         assert(ownedKeys.length === 1);
         assert(ownedDateTimes.length === 0);
         console.log(`get/set owns, overriding a super-attribute - SUCCESS - 'customer' owns [${ownedAttributes.map(x => x.label.scopedName)}], ` +
