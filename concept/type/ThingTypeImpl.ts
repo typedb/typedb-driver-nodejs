@@ -172,6 +172,12 @@ export namespace ThingTypeImpl {
                 .map((roleProto) => RoleTypeImpl.of(roleProto));
         }
 
+        async getPlaysOverridden(role: RoleType): Promise<RoleType> {
+            const request = RequestBuilder.Type.ThingType.getPlaysOverriddenReq(this.label);
+            return this.execute(request)
+                .then((res) => RoleTypeImpl.of(res.getThingTypeGetPlaysOverriddenRes().getRoleType()));
+        }
+
         async setPlays(role: RoleType): Promise<void>;
         async setPlays(role: RoleType, overriddenType?: RoleType): Promise<void> {
             let request;

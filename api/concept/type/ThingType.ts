@@ -90,6 +90,8 @@ export namespace ThingType {
 
         getPlays(): Stream<RoleType>;
 
+        getPlaysOverridden(role: RoleType): Promise<RoleType>;
+
         getOwns(): Stream<AttributeType>;
 
         getOwns(valueType: AttributeType.ValueType): Stream<AttributeType>;
