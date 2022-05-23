@@ -168,7 +168,7 @@ export namespace ThingTypeImpl {
         getPlays(): Stream<RoleType> {
             const request = RequestBuilder.Type.ThingType.getPlaysReq(this.label);
             return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetPlaysResPart().getRolesList()))
+                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetPlaysResPart().getRoleTypesList()))
                 .map((roleProto) => RoleTypeImpl.of(roleProto));
         }
 

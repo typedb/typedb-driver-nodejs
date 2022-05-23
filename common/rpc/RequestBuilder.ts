@@ -410,20 +410,20 @@ export namespace RequestBuilder {
 
             export function setPlaysReq(label: Label, roleType: TypeProto) {
                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                    new ThingTypeProto.SetPlays.Req().setRole(roleType)
+                    new ThingTypeProto.SetPlays.Req().setRoleType(roleType)
                 ));
             }
 
             export function setPlaysOverriddenReq(label: Label, roleType: TypeProto, overriddenRoleType: TypeProto) {
                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                    new ThingTypeProto.SetPlays.Req().setRole(roleType)
-                        .setOverriddenRole(overriddenRoleType)
+                    new ThingTypeProto.SetPlays.Req().setRoleType(roleType)
+                        .setOverriddenType(overriddenRoleType)
                 ));
             }
 
             export function unsetPlaysReq(label: Label, roleType: TypeProto) {
                 return typeReq(newReqBuilder(label).setThingTypeUnsetPlaysReq(
-                    new ThingTypeProto.UnsetPlays.Req().setRole(roleType)
+                    new ThingTypeProto.UnsetPlays.Req().setRoleType(roleType)
                 ));
             }
 
@@ -493,9 +493,21 @@ export namespace RequestBuilder {
                 ));
             }
 
+            export function getRelatesExplicitReq(label: Label) {
+                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesExplicitReq(
+                    new RelationTypeProto.GetRelatesExplicit.Req()
+                ));
+            }
+
             export function getRelatesByRoleReq(label: Label, roleLabel: string) {
                 return typeReq(newReqBuilder(label).setRelationTypeGetRelatesForRoleLabelReq(
                     new RelationTypeProto.GetRelatesForRoleLabel.Req().setLabel(roleLabel)
+                ));
+            }
+
+            export function getRelatesOverridden(label: Label, roleLabel: string) {
+                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesOverriddenReq(
+                    new RelationTypeProto.GetRelatesOverridden.Req().setLabel(roleLabel)
                 ));
             }
 
