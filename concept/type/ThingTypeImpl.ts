@@ -165,7 +165,7 @@ export namespace ThingTypeImpl {
         }
 
         async getOwnsOverridden(attributeType: AttributeType): Promise<AttributeType> {
-            let req = RequestBuilder.Type.ThingType.getOwnsOverriddenReq(this.label, ThingType.proto(attributeType));
+            const req = RequestBuilder.Type.ThingType.getOwnsOverriddenReq(this.label, ThingType.proto(attributeType));
             return this.execute(req)
                 .then((res) => AttributeTypeImpl.of(res.getThingTypeGetOwnsOverriddenRes().getAttributeType()));
         }
