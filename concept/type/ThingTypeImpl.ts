@@ -139,6 +139,37 @@ export namespace ThingTypeImpl {
                 .map((attributeTypeProto) => AttributeTypeImpl.of(attributeTypeProto));
         }
 
+
+        getOwnsExplicit(): Stream<AttributeType>;
+        getOwnsExplicit(valueType: AttributeType.ValueType): Stream<AttributeType>;
+        getOwnsExplicit(keysOnly: boolean): Stream<AttributeType>;
+        getOwnsExplicit(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
+        getOwnsExplicit(valueTypeOrKeysOnly?: AttributeType.ValueType | boolean, keysOnly?: boolean): Stream<AttributeType> {
+            let request;
+            if (!valueTypeOrKeysOnly) {
+                request = RequestBuilder.Type.ThingType.getOwnsExplicitReq(this.label, false);
+            } else if (typeof valueTypeOrKeysOnly === "boolean") {
+                request = RequestBuilder.Type.ThingType.getOwnsExplicitReq(this.label, valueTypeOrKeysOnly as boolean)
+            } else if (!keysOnly) {
+                request = RequestBuilder.Type.ThingType.getOwnsExplicitByTypeReq(
+                    this.label, (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), false
+                );
+            } else {
+                request = RequestBuilder.Type.ThingType.getOwnsExplicitByTypeReq(
+                    this.label, (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), keysOnly
+                );
+            }
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetOwnsExplicitResPart().getAttributeTypesList()))
+                .map((attributeTypeProto) => AttributeTypeImpl.of(attributeTypeProto));
+        }
+
+        async getOwnsOverridden(attributeType: AttributeType): Promise<AttributeType> {
+            let req = RequestBuilder.Type.ThingType.getOwnsOverriddenReq(this.label, ThingType.proto(attributeType));
+            return this.execute(req)
+                .then((res) => AttributeTypeImpl.of(res.getThingTypeGetOwnsOverriddenRes().getAttributeType()));
+        }
+
         async setOwns(attributeType: AttributeType): Promise<void>;
         async setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
         async setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;

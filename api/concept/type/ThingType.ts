@@ -102,6 +102,16 @@ export namespace ThingType {
 
         getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
 
+        getOwnsExplicit(): Stream<AttributeType>;
+
+        getOwnsExplicit(valueType: AttributeType.ValueType): Stream<AttributeType>;
+
+        getOwnsExplicit(keysOnly: boolean): Stream<AttributeType>;
+
+        getOwnsExplicit(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
+
+        getOwnsOverridden(attributeType: AttributeType): Promise<AttributeType>;
+
         unsetPlays(role: RoleType): Promise<void>;
 
         unsetOwns(attributeType: AttributeType): Promise<void>;

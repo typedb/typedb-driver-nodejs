@@ -452,6 +452,19 @@ export namespace RequestBuilder {
                 ));
             }
 
+            export function getOwnsExplicitReq(label: Label, keysOnly: boolean) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
+                    new ThingTypeProto.GetOwnsExplicit.Req().setKeysOnly(keysOnly)
+                ));
+            }
+
+            export function getOwnsExplicitByTypeReq(label: Label, valueType: AttributeTypeProto.ValueType, keysOnly: boolean) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
+                    new ThingTypeProto.GetOwnsExplicit.Req().setKeysOnly(keysOnly)
+                        .setValueType(valueType)
+                ));
+            }
+
             export function setOwnsReq(label: Label, attributeType: TypeProto, isKey: boolean) {
                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
                     new ThingTypeProto.SetOwns.Req()
@@ -478,6 +491,12 @@ export namespace RequestBuilder {
             export function getInstancesReq(label: Label) {
                 return typeReq(newReqBuilder(label).setThingTypeGetInstancesReq(
                     new ThingTypeProto.GetInstances.Req()
+                ));
+            }
+
+            export function getOwnsOverriddenReq(label: Label, attributeType: TypeProto) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsOverriddenReq(
+                    new ThingTypeProto.GetOwnsOverridden.Req().setAttributeType(attributeType)
                 ));
             }
         }
