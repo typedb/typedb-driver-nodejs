@@ -408,6 +408,12 @@ export namespace RequestBuilder {
                 ));
             }
 
+            export function getPlaysExplicitReq(label: Label) {
+                return typeReq(newReqBuilder(label).setThingTypeGetPlaysExplicitReq(
+                    new ThingTypeProto.GetPlaysExplicit.Req()
+                ));
+            }
+
             export function getPlaysOverriddenReq(label: Label) {
                 return typeReq(newReqBuilder(label).setThingTypeGetPlaysOverriddenReq(
                     new ThingTypeProto.GetPlaysOverridden.Req()
