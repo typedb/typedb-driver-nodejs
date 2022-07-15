@@ -79,7 +79,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
         }
     }
 
-    async closed(transaction: TypeDBTransaction.Extended): Promise<void> {
+    closed(transaction: TypeDBTransaction.Extended): void {
         this._transactions.delete(transaction);
     }
 
