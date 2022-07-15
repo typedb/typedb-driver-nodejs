@@ -79,6 +79,10 @@ export class TypeDBSessionImpl implements TypeDBSession {
         }
     }
 
+    async closed(transaction: TypeDBTransaction.Extended): Promise<void> {
+        this._transactions.delete(transaction);
+    }
+
     async transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction> {
         if (!this.isOpen()) throw new TypeDBClientError(SESSION_CLOSED);
         if (!options) options = TypeDBOptions.core();
