@@ -141,7 +141,7 @@ Then("relation\\({type_label}) get role\\({type_label}) get supertypes do not co
 
 async function getActualPlayersForRelatedRole(relationLabel: string, roleLabel: string) {
     const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    return await roleType.asRemote(tx()).getPlayers().map(tt => tt.label.scopedName).collect();
+    return await roleType.asRemote(tx()).getPlayerTypes().map(tt => tt.label.scopedName).collect();
 }
 
 Then("relation\\({type_label}) get role\\({type_label}) get players contain:", async (relationLabel: string, roleLabel: string, playerLabelsTable: DataTable) => {

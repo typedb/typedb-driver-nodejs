@@ -185,7 +185,7 @@ async function run() {
         father = await fathership.asRemote(tx).getRelates("father");
         await man.asRemote(tx).setPlays(father, parent);
         const playingRoles = (await man.asRemote(tx).getPlays().collect()).map(role => role.label.scopedName);
-        const roleplayers = (await father.asRemote(tx).getPlayers().collect()).map(player => player.label.scopedName);
+        const roleplayers = (await father.asRemote(tx).getPlayerTypes().collect()).map(player => player.label.scopedName);
         await tx.commit();
         await tx.close();
         assert(playingRoles.includes("fathership:father"));
