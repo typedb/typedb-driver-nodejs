@@ -81,7 +81,7 @@ Then("relation\\({type_label}) get overridden role\\({type_label}) get label: {t
 
 When("relation\\({type_label}) get role\\({type_label}) is abstract: {bool}", async (relationLabel: string, roleLabel: string, isAbstract: boolean) => {
     const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    assert.strictEqual(await roleType.asRemote(tx()).isAbstract(), isAbstract);
+    assert.strictEqual(roleType.abstract, isAbstract);
 });
 
 async function getActualRelatedRoles(relationLabel: string) {
