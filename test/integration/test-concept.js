@@ -152,13 +152,15 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        const whale = await tx.concepts.putEntityType("whale");
+        let whale = await tx.concepts.putEntityType("whale");
         await whale.asRemote(tx).setAbstract();
-        const isAbstractAfterSet = await whale.asRemote(tx).isAbstract();
+        whale = await tx.concepts.getEntityType("whale");
+        const isAbstractAfterSet = whale.abstract;
         assert(isAbstractAfterSet);
         console.log(`set abstract - SUCCESS - 'whale' ${isAbstractAfterSet ? "is" : "is not"} abstract.`);
         await whale.asRemote(tx).unsetAbstract();
-        const isAbstractAfterUnset = await whale.asRemote(tx).isAbstract();
+        whale = await tx.concepts.getEntityType("whale");
+        const isAbstractAfterUnset = whale.abstract;
         assert(!isAbstractAfterUnset);
         await tx.rollback();
         await tx.close();
