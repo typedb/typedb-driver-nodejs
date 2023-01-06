@@ -55,7 +55,7 @@ export namespace EntityTypeImpl {
 
     export function of(entityTypeProto: TypeProto) {
         if (!entityTypeProto) return null;
-        return new EntityTypeImpl(entityTypeProto.getLabel(), entityTypeProto.getIsroot(), entityTypeProto.getIsabstract());
+        return new EntityTypeImpl(entityTypeProto.getLabel(), entityTypeProto.getIsRoot(), entityTypeProto.getIsAbstract());
     }
 
     export class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {

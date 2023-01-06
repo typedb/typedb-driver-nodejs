@@ -58,7 +58,7 @@ export namespace RoleTypeImpl {
 
     export function of(typeProto: TypeProto) {
         if (!typeProto) return null;
-        return new RoleTypeImpl(typeProto.getScope(), typeProto.getLabel(), typeProto.getIsroot(), typeProto.getIsabstract());
+        return new RoleTypeImpl(typeProto.getScope(), typeProto.getLabel(), typeProto.getIsRoot(), typeProto.getIsAbstract());
     }
 
     export class Remote extends TypeImpl.Remote implements RoleType.Remote {

@@ -56,7 +56,7 @@ export namespace RelationTypeImpl {
 
     export function of(relationTypeProto: TypeProto) {
         if (!relationTypeProto) return null;
-        return new RelationTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getIsroot(), relationTypeProto.getIsabstract());
+        return new RelationTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getIsRoot(), relationTypeProto.getIsAbstract());
     }
 
     export class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {

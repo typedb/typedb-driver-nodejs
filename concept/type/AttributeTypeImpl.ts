@@ -122,17 +122,17 @@ export namespace AttributeTypeImpl {
         if (!attributeTypeProto) return null;
         switch (attributeTypeProto.getValueType()) {
             case AttributeTypeProto.ValueType.BOOLEAN:
-                return new AttributeTypeImpl.Boolean(attributeTypeProto.getLabel(), attributeTypeProto.getIsroot(), attributeTypeProto.getIsabstract());
+                return new AttributeTypeImpl.Boolean(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
             case AttributeTypeProto.ValueType.LONG:
-                return new AttributeTypeImpl.Long(attributeTypeProto.getLabel(), attributeTypeProto.getIsroot(), attributeTypeProto.getIsabstract());
+                return new AttributeTypeImpl.Long(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
             case AttributeTypeProto.ValueType.DOUBLE:
-                return new AttributeTypeImpl.Double(attributeTypeProto.getLabel(), attributeTypeProto.getIsroot(), attributeTypeProto.getIsabstract());
+                return new AttributeTypeImpl.Double(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
             case AttributeTypeProto.ValueType.STRING:
-                return new AttributeTypeImpl.String(attributeTypeProto.getLabel(), attributeTypeProto.getIsroot(), attributeTypeProto.getIsabstract());
+                return new AttributeTypeImpl.String(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
             case AttributeTypeProto.ValueType.DATETIME:
-                return new AttributeTypeImpl.DateTime(attributeTypeProto.getLabel(), attributeTypeProto.getIsroot(), attributeTypeProto.getIsabstract());
+                return new AttributeTypeImpl.DateTime(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
             case AttributeTypeProto.ValueType.OBJECT:
-                return new AttributeTypeImpl(attributeTypeProto.getLabel(), attributeTypeProto.getIsroot(), attributeTypeProto.getIsabstract());
+                return new AttributeTypeImpl(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
             default:
                 throw new TypeDBClientError(BAD_VALUE_TYPE.message(attributeTypeProto.getValueType()));
         }

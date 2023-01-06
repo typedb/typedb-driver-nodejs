@@ -68,7 +68,7 @@ export namespace ThingTypeImpl {
             case TypeProto.Encoding.ATTRIBUTE_TYPE:
                 return AttributeTypeImpl.of(thingTypeProto);
             case TypeProto.Encoding.THING_TYPE:
-                return new ThingTypeImpl(thingTypeProto.getLabel(), thingTypeProto.getIsroot(), thingTypeProto.getIsabstract());
+                return new ThingTypeImpl(thingTypeProto.getLabel(), thingTypeProto.getIsRoot(), thingTypeProto.getIsAbstract());
             default:
                 throw new TypeDBClientError(BAD_ENCODING.message(thingTypeProto.getEncoding()));
         }
