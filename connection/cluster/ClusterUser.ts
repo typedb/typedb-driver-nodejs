@@ -19,6 +19,7 @@
  * under the License.
  */
 
+import { ClusterUser as ClusterUserProto } from "typedb-protocol/cluster/cluster_user_pb";
 import { Database } from "../../api/connection/database/Database";
 import { User } from "../../api/connection/user/User";
 import { RequestBuilder } from "../../common/rpc/RequestBuilder";
@@ -29,10 +30,19 @@ export class ClusterUser implements User {
 
     private readonly _client: ClusterClient;
     private readonly _username: string;
+    private readonly _passwordExpiryDays: number;
 
-    constructor(client: ClusterClient, username: string) {
+    constructor(client: ClusterClient, username: string, passwordExpiryDays: number) {
         this._client = client;
         this._username = username;
+        this._passwordExpiryDays = passwordExpiryDays;
+    }
+
+    static of(user: ClusterUserProto, client: ClusterClient): ClusterUser {
+        switch (user.getPasswordExpiryCase()) {
+            case ClusterUserProto.PasswordExpiryCase.PASSWORDEXPIRY_NOT_SET: return new ClusterUser(client, user.getUsername(), null);
+            case ClusterUserProto.PasswordExpiryCase.PASSWORD_EXPIRY_DAYS: return new ClusterUser(client, user.getUsername(), user.getPasswordExpiryDays());
+        }
     }
 
     async password(password: string): Promise<void> {

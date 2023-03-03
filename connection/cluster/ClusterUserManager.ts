@@ -62,9 +62,25 @@ export class ClusterUserManager implements UserManager {
         return failsafeTask.runPrimaryReplica();
     }
 
+    delete(username: string): Promise<void> {
+        const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
+            return this._client.stub(replica.address).userDelete(RequestBuilder.Cluster.UserManager.deleteReq(username))
+        })
+        return failsafeTask.runPrimaryReplica();
+    }
+
     async get(username: string): Promise<User> {
-        if (await this.contains(username)) return new ClusterUser(this._client, username);
-        else throw new TypeDBClientError(CLUSTER_USER_DOES_NOT_EXIST.message(username));
+        const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
+            return ClusterUser.of(this._client.stub(replica.address).userGet(RequestBuilder.Cluster.UserManager.getReq(username)), this._client)
+        })
+        return failsafeTask.runPrimaryReplica();
+    }
+
+    passwordSet(username: string, password: string): Promise<void> {
+        const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
+            return this._client.stub(replica.address).userPasswordSet(RequestBuilder.Cluster.UserManager.passwordSetReq(username, password))
+        })
+        return failsafeTask.runPrimaryReplica();
     }
 }
 
