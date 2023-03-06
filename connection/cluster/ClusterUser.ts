@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { ClusterUser as ClusterUserProto } from "typedb-protocol/cluster/cluster_user_pb";
+import { User as UserProto } from "typedb-protocol/cluster/cluster_user_pb";
 import { Database } from "../../api/connection/database/Database";
 import { User } from "../../api/connection/user/User";
 import { RequestBuilder } from "../../common/rpc/RequestBuilder";
@@ -38,23 +38,20 @@ export class ClusterUser implements User {
         this._passwordExpiryDays = passwordExpiryDays;
     }
 
-    static of(user: ClusterUserProto, client: ClusterClient): ClusterUser {
+    static of(user: UserProto, client: ClusterClient): ClusterUser {
         switch (user.getPasswordExpiryCase()) {
-            case ClusterUserProto.PasswordExpiryCase.PASSWORDEXPIRY_NOT_SET: return new ClusterUser(client, user.getUsername(), null);
-            case ClusterUserProto.PasswordExpiryCase.PASSWORD_EXPIRY_DAYS: return new ClusterUser(client, user.getUsername(), user.getPasswordExpiryDays());
+            case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_NOT_SET: return new ClusterUser(client, user.getUsername(), null);
+            case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_DAYS: return new ClusterUser(client, user.getUsername(), user.getPasswordExpiryDays());
         }
     }
 
-    async password(password: string): Promise<void> {
-        const failsafeTask = new ClusterUserFailsafeTask(this._client, (replica) => {
-            return this._client.stub(replica.address).userPassword(RequestBuilder.Cluster.User.passwordReq(this.username, password));
-        });
-        await failsafeTask.runPrimaryReplica();
+    get passwordExpiryDays(): number {
+        return this._passwordExpiryDays;
     }
 
-    async delete(): Promise<void> {
+    async passwordUpdate(oldPassword: string, newPassword: string): Promise<void> {
         const failsafeTask = new ClusterUserFailsafeTask(this._client, (replica) => {
-            return this._client.stub(replica.address).userDelete(RequestBuilder.Cluster.User.deleteReq(this.username));
+            return this._client.stub(replica.address).userPasswordUpdate(RequestBuilder.Cluster.User.passwordUpdateReq(this.username, oldPassword, newPassword));
         });
         await failsafeTask.runPrimaryReplica();
     }

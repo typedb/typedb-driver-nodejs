@@ -22,12 +22,9 @@
 import { Database } from "../../api/connection/database/Database";
 import { User } from "../../api/connection/user/User";
 import { UserManager } from "../../api/connection/user/UserManager";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
 import { RequestBuilder } from "../../common/rpc/RequestBuilder";
 import { ClusterUser, FailsafeTask } from "../../dependencies_internal";
 import { ClusterClient } from "./ClusterClient";
-import CLUSTER_USER_DOES_NOT_EXIST = ErrorMessage.Client.CLUSTER_USER_DOES_NOT_EXIST;
 
 export class ClusterUserManager implements UserManager {
 
@@ -42,7 +39,7 @@ export class ClusterUserManager implements UserManager {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
             return this._client.stub(replica.address).usersAll(RequestBuilder.Cluster.UserManager.allReq())
                 .then((res) => {
-                    return res.getNamesList().map(name => new ClusterUser(this._client, name));
+                    return res.getUsersList().map(user => ClusterUser.of(user, this._client));
                 });
         });
         return failsafeTask.runPrimaryReplica();
@@ -69,11 +66,11 @@ export class ClusterUserManager implements UserManager {
         return failsafeTask.runPrimaryReplica();
     }
 
-    async get(username: string): Promise<User> {
+    async get(username: string): Promise<ClusterUser> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return ClusterUser.of(this._client.stub(replica.address).userGet(RequestBuilder.Cluster.UserManager.getReq(username)), this._client)
+            return this._client.stub(replica.address).userGet(RequestBuilder.Cluster.UserManager.getReq(username))
         })
-        return failsafeTask.runPrimaryReplica();
+        return ClusterUser.of((await failsafeTask.runPrimaryReplica()).getUser(), this._client);
     }
 
     passwordSet(username: string, password: string): Promise<void> {
