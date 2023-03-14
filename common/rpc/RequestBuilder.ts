@@ -102,8 +102,8 @@ export namespace RequestBuilder {
         }
 
         export namespace User {
-            export function passwordUpdateReq(name: string, password_old: string, password_new: string): ClusterUserProto.PasswordUpdate.Req {
-                return new ClusterUserProto.PasswordUpdate.Req().setUsername(name).setPasswordOld(password_old).setPasswordNew(password_new);
+            export function passwordUpdateReq(name: string, passwordOld: string, passwordNew: string): ClusterUserProto.PasswordUpdate.Req {
+                return new ClusterUserProto.PasswordUpdate.Req().setUsername(name).setPasswordOld(passwordOld).setPasswordNew(passwordNew);
             }
 
             export function tokenReq(username: string) {
