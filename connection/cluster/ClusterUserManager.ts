@@ -54,28 +54,28 @@ export class ClusterUserManager implements UserManager {
 
     create(username: string, password: string): Promise<void> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address).userCreate(RequestBuilder.Cluster.UserManager.createReq(username, password))
+            return this._client.stub(replica.address).usersCreate(RequestBuilder.Cluster.UserManager.createReq(username, password))
         })
         return failsafeTask.runPrimaryReplica();
     }
 
     delete(username: string): Promise<void> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address).userDelete(RequestBuilder.Cluster.UserManager.deleteReq(username))
+            return this._client.stub(replica.address).usersDelete(RequestBuilder.Cluster.UserManager.deleteReq(username))
         })
         return failsafeTask.runPrimaryReplica();
     }
 
     async get(username: string): Promise<ClusterUser> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address).userGet(RequestBuilder.Cluster.UserManager.getReq(username))
+            return this._client.stub(replica.address).usersGet(RequestBuilder.Cluster.UserManager.getReq(username))
         })
         return ClusterUser.of((await failsafeTask.runPrimaryReplica()).getUser(), this._client);
     }
 
     passwordSet(username: string, password: string): Promise<void> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address).userPasswordSet(RequestBuilder.Cluster.UserManager.passwordSetReq(username, password))
+            return this._client.stub(replica.address).usersPasswordSet(RequestBuilder.Cluster.UserManager.passwordSetReq(username, password))
         })
         return failsafeTask.runPrimaryReplica();
     }

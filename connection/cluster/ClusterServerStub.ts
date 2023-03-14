@@ -135,7 +135,7 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    userCreate(req: ClusterUserManager.Create.Req): Promise<void> {
+    usersCreate(req: ClusterUserManager.Create.Req): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this._clusterStub.users_create(req, (err, res) => {
@@ -146,7 +146,7 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    userDelete(req: ClusterUserManager.Delete.Req): Promise<void> {
+    usersDelete(req: ClusterUserManager.Delete.Req): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this._clusterStub.users_delete(req, (err, res) => {
@@ -157,7 +157,7 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    userPasswordSet(req: ClusterUserManager.PasswordSet.Req): Promise<void> {
+    usersPasswordSet(req: ClusterUserManager.PasswordSet.Req): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this._clusterStub.users_password_set(req, (err, res) => {
@@ -168,7 +168,7 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    userGet(req: ClusterUserManager.Get.Req): Promise<ClusterUserManager.Get.Res> {
+    usersGet(req: ClusterUserManager.Get.Req): Promise<ClusterUserManager.Get.Res> {
         return this.mayRenewToken(() =>
             new Promise<ClusterUserManager.Get.Res>((resolve, reject) => {
                 this._clusterStub.users_get(req, (err, res) => {
