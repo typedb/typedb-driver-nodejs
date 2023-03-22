@@ -55,7 +55,7 @@ export class ConceptMapImpl implements ConceptMap {
 
     jsonDict(): Map<string, Map<string, boolean | string | number | Date>> {
         const dict = new Map<string, Map<string, boolean | string | number | Date>>();
-        for (const key in this._concepts.keys()) {
+        for (const key of this._concepts.keys()) {
             dict.set(key, this._concepts.get(key).jsonDict());
         }
         return dict;
