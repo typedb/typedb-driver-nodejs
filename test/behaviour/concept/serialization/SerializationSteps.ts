@@ -33,11 +33,11 @@ Then("JSON of answer concepts matches", async (expectedJSON: string) => {
 function assertUnorderedDeepStrictEqual<T>(actual: unknown[], expected: T[]): asserts actual is T[] {
     assert.strictEqual(actual.length, expected.length,
         `The number of answers (${actual.length}) should match the number of expected answers (${expected.length})`);
-    const matches = [];
+    const matches: number[] = [];
     for (const item of actual) {
         let foundMatch = false;
         for (let index = 0; index < expected.length; index++) {
-            if (index in matches) continue;
+            if (matches.includes(index)) continue;
             if (isDeepStrictEqual(item, expected[index])) {
                 foundMatch = true;
                 matches.push(index);
