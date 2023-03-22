@@ -25,15 +25,15 @@ import assert = require("assert");
 import {isDeepStrictEqual} from "util";
 
 Then("JSON of answer concepts matches", async (expectedJSON: string) => {
-    let expected = JSON.parse(expectedJSON);
-    let actual = answers.map((conceptMap) => conceptMap.json());
+    const expected = JSON.parse(expectedJSON);
+    const actual = answers.map((conceptMap) => conceptMap.json());
     assertUnorderedDeepStrictEqual(actual, expected);
 });
 
 function assertUnorderedDeepStrictEqual<T>(actual: unknown[], expected: T[]): asserts actual is T[] {
     assert.strictEqual(actual.length, expected.length,
         `The number of answers (${actual.length}) should match the number of expected answers (${expected.length})`);
-    let matches = [];
+    const matches = [];
     for (const item of actual) {
         let foundMatch = false;
         for (let index = 0; index < expected.length; index++) {
