@@ -525,7 +525,7 @@ export namespace AttributeImpl {
         }
 
         jsonDict(): Map<string, boolean | string | number | Date> {
-            let ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
+            const ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
             return new Map<string, boolean | string | number | Date>()
                 .set("type", this.type.label.name)
                 .set("value_type", this.type.valueType.name())
@@ -568,7 +568,7 @@ export namespace AttributeImpl {
             }
 
             jsonDict(): Map<string, boolean | string | number | Date> {
-                let ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
+                const ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
                 return new Map<string, boolean | string | number | Date>()
                     .set("type", this.type.label.name)
                     .set("value_type", this.type.valueType.name())
