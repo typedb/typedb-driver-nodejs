@@ -79,6 +79,8 @@ export interface Concept {
     asRelation(): Relation;
 
     equals(concept: Concept): boolean;
+
+    jsonDict(): Map<string, boolean | string | number | Date>;
 }
 
 export namespace Concept {

@@ -79,6 +79,13 @@ export abstract class AttributeImpl extends ThingImpl implements Attribute {
         return this;
     }
 
+    jsonDict(): Map<string, boolean | string | number | Date> {
+        return new Map<string, boolean | string | number | Date>()
+            .set("type", this.type.label.name)
+            .set("value_type", this.type.valueType.name())
+            .set("value", this.value);
+    }
+
     asBoolean(): Attribute.Boolean {
         throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Attribute.Boolean"));
     }
@@ -178,6 +185,13 @@ export namespace AttributeImpl {
 
         asAttribute(): Attribute.Remote {
             return this;
+        }
+
+        jsonDict(): Map<string, boolean | string | number | Date> {
+            return new Map<string, boolean | string | number | Date>()
+                .set("type", this.type.label.name)
+                .set("value_type", this.type.valueType.name())
+                .set("value", this.value);
         }
 
         asBoolean(): Attribute.Boolean.Remote {

@@ -30,6 +30,10 @@ export interface ConceptMap {
     get(variable: string): Concept;
 
     readonly explainables: ConceptMap.Explainables;
+
+    jsonDict(): Map<string, Object>;
+
+    json(): string;
 }
 
 export namespace ConceptMap {

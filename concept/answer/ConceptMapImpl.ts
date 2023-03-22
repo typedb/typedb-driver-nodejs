@@ -52,6 +52,18 @@ export class ConceptMapImpl implements ConceptMap {
     get explainables(): ConceptMap.Explainables {
         return this._explainables;
     }
+
+    jsonDict(): Map<string, Map<string, boolean | string | number | Date>> {
+        let dict = new Map<string, Map<string, boolean | string | number | Date>>();
+        for (let key in this._concepts) {
+            dict.set(key, this._concepts.get(key).jsonDict());
+        }
+        return dict;
+    }
+
+    json(): string {
+        return JSON.stringify(this.jsonDict())
+    }
 }
 
 /* eslint no-inner-declarations: "off" */
