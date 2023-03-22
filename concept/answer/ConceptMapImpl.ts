@@ -62,7 +62,11 @@ export class ConceptMapImpl implements ConceptMap {
     }
 
     json(): string {
-        return JSON.stringify(this.jsonDict())
+        let obj = Object.create(null);
+        for (let [k,v] of this.jsonDict()) {
+            obj[k] = v;
+        }
+        return JSON.stringify(obj);
     }
 }
 
