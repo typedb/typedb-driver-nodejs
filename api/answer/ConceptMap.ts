@@ -31,8 +31,6 @@ export interface ConceptMap {
 
     readonly explainables: ConceptMap.Explainables;
 
-    jsonDict(): Map<string, Map<string, boolean | string | number | Date>>;
-
     json(): string;
 }
 
