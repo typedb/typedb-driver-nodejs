@@ -126,6 +126,8 @@ export abstract class ConceptImpl implements Concept {
     }
 
     abstract equals(concept: Concept): boolean;
+
+    abstract jsonDict(): Map<string, boolean | string | number | Date>;
 }
 
 export namespace ConceptImpl {
