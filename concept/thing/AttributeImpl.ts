@@ -523,6 +523,14 @@ export namespace AttributeImpl {
         asDateTime(): Attribute.DateTime {
             return this;
         }
+
+        jsonDict(): Map<string, boolean | string | number | Date> {
+            let ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
+            return new Map<string, boolean | string | number | Date>()
+                .set("type", this.type.label.name)
+                .set("value_type", this.type.valueType.name())
+                .set("value", ISO8601LocalDateTime);
+        }
     }
 
     export namespace DateTime {
@@ -557,6 +565,14 @@ export namespace AttributeImpl {
 
             asDateTime(): Attribute.DateTime.Remote {
                 return this;
+            }
+
+            jsonDict(): Map<string, boolean | string | number | Date> {
+                let ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
+                return new Map<string, boolean | string | number | Date>()
+                    .set("type", this.type.label.name)
+                    .set("value_type", this.type.valueType.name())
+                    .set("value", ISO8601LocalDateTime);
             }
         }
     }
