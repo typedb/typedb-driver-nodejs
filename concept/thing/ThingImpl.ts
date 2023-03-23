@@ -77,8 +77,8 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         return this;
     }
 
-    JSON(): Object {
-        return {"type": this.type.label.name};
+    JSON(): Record<string, boolean | string | number> {
+        return {type: this.type.label.name};
     }
 }
 
@@ -125,8 +125,8 @@ export namespace ThingImpl {
             return this;
         }
 
-        JSON(): Object {
-            return {"type": this.type.label.name};
+        JSON(): Record<string, boolean | string | number> {
+            return {type: this.type.label.name};
         }
 
         async delete(): Promise<void> {

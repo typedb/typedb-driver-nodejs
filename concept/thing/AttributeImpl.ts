@@ -79,11 +79,14 @@ export abstract class AttributeImpl extends ThingImpl implements Attribute {
         return this;
     }
 
-    JSON(): Object {
+    JSON(): Record<string, boolean | string | number> {
+        let value;
+        if (this.value instanceof Date) value = this.value.toISOString().slice(0, -1);
+        else value = this.value;
         return {
-            "type": this.type.label.name,
-            "value_type": this.type.valueType.name(),
-            "value": this.value
+            type: this.type.label.name,
+            value_type: this.type.valueType.name(),
+            value: value
         };
     }
 
@@ -188,11 +191,14 @@ export namespace AttributeImpl {
             return this;
         }
 
-        JSON(): Object {
+        JSON(): Record<string, boolean | string | number> {
+            let value;
+            if (this.value instanceof Date) value = this.value.toISOString().slice(0, -1);
+            else value = this.value;
             return {
-                "type": this.type.label.name,
-                "value_type": this.type.valueType.name(),
-                "value": this.value
+                type: this.type.label.name,
+                value_type: this.type.valueType.name(),
+                value: value
             };
         }
 
@@ -525,15 +531,6 @@ export namespace AttributeImpl {
         asDateTime(): Attribute.DateTime {
             return this;
         }
-
-        JSON(): Object {
-            const ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
-            return {
-                "type": this.type.label.name,
-                "value_type": this.type.valueType.name(),
-                "value": ISO8601LocalDateTime
-            };
-        }
     }
 
     export namespace DateTime {
@@ -568,15 +565,6 @@ export namespace AttributeImpl {
 
             asDateTime(): Attribute.DateTime.Remote {
                 return this;
-            }
-
-            JSON(): Object {
-                const ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
-                return {
-                    "type": this.type.label.name,
-                    "value_type": this.type.valueType.name(),
-                    "value": ISO8601LocalDateTime
-                };
             }
         }
     }

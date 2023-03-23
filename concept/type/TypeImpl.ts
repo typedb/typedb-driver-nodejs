@@ -68,8 +68,8 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
         return this;
     }
 
-    JSON(): Object {
-        return {"label": this.label.scopedName};
+    JSON(): Record<string, string> {
+        return {label: this.label.scopedName};
     }
 
     equals(concept: Concept): boolean {
@@ -129,8 +129,8 @@ export namespace TypeImpl {
             return this;
         }
 
-        JSON(): Object {
-            return {"label": this.label.scopedName};
+        JSON(): Record<string, string> {
+            return {label: this.label.scopedName};
         }
 
         equals(concept: Concept): boolean {
