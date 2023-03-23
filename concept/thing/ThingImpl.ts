@@ -77,8 +77,8 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         return this;
     }
 
-    jsonDict(): Map<string, boolean | string | number | Date> {
-        return new Map<string, string>().set("type", this.type.label.name);
+    JSON(): Object {
+        return {"type": this.type.label.name};
     }
 }
 
@@ -125,8 +125,8 @@ export namespace ThingImpl {
             return this;
         }
 
-        jsonDict(): Map<string, boolean | string | number | Date> {
-            return new Map<string, string>().set("type", this.type.label.name);
+        JSON(): Object {
+            return {"type": this.type.label.name};
         }
 
         async delete(): Promise<void> {

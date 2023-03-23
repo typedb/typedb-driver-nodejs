@@ -68,8 +68,8 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
         return this;
     }
 
-    jsonDict(): Map<string, boolean | string | number | Date> {
-        return new Map<string, string>().set("label", this.label.scopedName);
+    JSON(): Object {
+        return {"label": this.label.scopedName};
     }
 
     equals(concept: Concept): boolean {
@@ -129,8 +129,8 @@ export namespace TypeImpl {
             return this;
         }
 
-        jsonDict(): Map<string, boolean | string | number | Date> {
-            return new Map<string, string>().set("label", this.label.scopedName);
+        JSON(): Object {
+            return {"label": this.label.scopedName};
         }
 
         equals(concept: Concept): boolean {

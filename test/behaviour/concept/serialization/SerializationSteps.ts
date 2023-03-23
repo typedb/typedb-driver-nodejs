@@ -26,7 +26,7 @@ import {isDeepStrictEqual} from "util";
 
 Then("JSON of answer concepts matches", async (expectedJSON: string) => {
     const expected = JSON.parse(expectedJSON);
-    const actual = answers.map((conceptMap) => JSON.parse(conceptMap.json()));
+    const actual = answers.map((conceptMap) => conceptMap.JSON());
     assertUnorderedDeepStrictEqual(actual, expected);
 });
 

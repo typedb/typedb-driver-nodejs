@@ -80,7 +80,7 @@ export interface Concept {
 
     equals(concept: Concept): boolean;
 
-    jsonDict(): Map<string, boolean | string | number | Date>;
+    JSON(): Object;
 }
 
 export namespace Concept {

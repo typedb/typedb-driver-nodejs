@@ -53,16 +53,12 @@ export class ConceptMapImpl implements ConceptMap {
         return this._explainables;
     }
 
-    json(): string {
+    JSON(): Object {
         const object = Object.create(null);
         for (const key of this._concepts.keys()) {
-            const conceptObject = Object.create(null);
-            for (const [k, v] of this._concepts.get(key).jsonDict()) {
-                conceptObject[k] = v;
-            }
-            object[key] = conceptObject;
+            object[key] = this._concepts.get(key).JSON();
         }
-        return JSON.stringify(object);
+        return object;
     }
 }
 

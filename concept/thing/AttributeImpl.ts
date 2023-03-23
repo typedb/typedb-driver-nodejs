@@ -79,11 +79,12 @@ export abstract class AttributeImpl extends ThingImpl implements Attribute {
         return this;
     }
 
-    jsonDict(): Map<string, boolean | string | number | Date> {
-        return new Map<string, boolean | string | number | Date>()
-            .set("type", this.type.label.name)
-            .set("value_type", this.type.valueType.name())
-            .set("value", this.value);
+    JSON(): Object {
+        return {
+            "type": this.type.label.name,
+            "value_type": this.type.valueType.name(),
+            "value": this.value
+        };
     }
 
     asBoolean(): Attribute.Boolean {
@@ -187,11 +188,12 @@ export namespace AttributeImpl {
             return this;
         }
 
-        jsonDict(): Map<string, boolean | string | number | Date> {
-            return new Map<string, boolean | string | number | Date>()
-                .set("type", this.type.label.name)
-                .set("value_type", this.type.valueType.name())
-                .set("value", this.value);
+        JSON(): Object {
+            return {
+                "type": this.type.label.name,
+                "value_type": this.type.valueType.name(),
+                "value": this.value
+            };
         }
 
         asBoolean(): Attribute.Boolean.Remote {
@@ -524,12 +526,13 @@ export namespace AttributeImpl {
             return this;
         }
 
-        jsonDict(): Map<string, boolean | string | number | Date> {
+        JSON(): Object {
             const ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
-            return new Map<string, boolean | string | number | Date>()
-                .set("type", this.type.label.name)
-                .set("value_type", this.type.valueType.name())
-                .set("value", ISO8601LocalDateTime);
+            return {
+                "type": this.type.label.name,
+                "value_type": this.type.valueType.name(),
+                "value": ISO8601LocalDateTime
+            };
         }
     }
 
@@ -567,12 +570,13 @@ export namespace AttributeImpl {
                 return this;
             }
 
-            jsonDict(): Map<string, boolean | string | number | Date> {
+            JSON(): Object {
                 const ISO8601LocalDateTime = this.value.toISOString().slice(0, -1);
-                return new Map<string, boolean | string | number | Date>()
-                    .set("type", this.type.label.name)
-                    .set("value_type", this.type.valueType.name())
-                    .set("value", ISO8601LocalDateTime);
+                return {
+                    "type": this.type.label.name,
+                    "value_type": this.type.valueType.name(),
+                    "value": ISO8601LocalDateTime
+                };
             }
         }
     }

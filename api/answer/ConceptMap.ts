@@ -31,7 +31,7 @@ export interface ConceptMap {
 
     readonly explainables: ConceptMap.Explainables;
 
-    json(): string;
+    JSON(): Object;
 }
 
 export namespace ConceptMap {
