@@ -41,7 +41,7 @@ export class ClusterUser implements User {
     static of(user: UserProto, client: ClusterClient): ClusterUser {
         switch (user.getPasswordExpiryCase()) {
             case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_NOT_SET: return new ClusterUser(client, user.getUsername(), null);
-            case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_SECONDS: return new ClusterUser(client, user.getUsername(), user.getpasswordExpirySeconds());
+            case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_SECONDS: return new ClusterUser(client, user.getUsername(), user.getPasswordExpirySeconds());
         }
     }
 
