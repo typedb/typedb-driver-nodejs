@@ -74,10 +74,6 @@ export function setTransactionOptions(options: TypeDBOptions) {
     transactionOptions = options;
 }
 
-export async function afterAllBase(): Promise<void> {
-
-}
-
 export async function beforeBase(): Promise<void> {
     sessions.length = 0;
     sessionsToTransactions.clear();

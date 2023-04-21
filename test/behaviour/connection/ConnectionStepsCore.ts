@@ -39,9 +39,6 @@ BeforeAll(() => {
     setTransactionOptions(TypeDBOptions.core({"infer": true}));
 });
 
-AfterAll(async () => {
-    await afterAllBase()
-});
 
 Before(async () => {
     await beforeBase();

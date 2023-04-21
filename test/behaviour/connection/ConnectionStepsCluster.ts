@@ -42,9 +42,6 @@ BeforeAll(async () => {
     setTransactionOptions(TypeDBOptions.cluster({"infer": true}));
 });
 
-AfterAll(async () => {
-    await afterAllBase()
-});
 
 Before(async () => {
     await beforeBase();
