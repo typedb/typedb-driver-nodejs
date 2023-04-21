@@ -19,13 +19,15 @@
  * under the License.
  */
 
-import {After, AfterAll, Before, BeforeAll} from "@cucumber/cucumber";
-import {TypeDB, TypeDBOptions, TypeDBClient} from "../../../dist";
+import {After, Before, BeforeAll} from "@cucumber/cucumber";
+import {TypeDB, TypeDBClient, TypeDBOptions} from "../../../dist";
 import {
-    afterAllBase,
     afterBase,
-    beforeBase, client, createDefaultClient,
-    setClientFn, setDefaultClientFn,
+    beforeBase,
+    client,
+    createDefaultClient,
+    setClientFn,
+    setDefaultClientFn,
     setSessionOptions,
     setTransactionOptions
 } from "./ConnectionStepsBase";
