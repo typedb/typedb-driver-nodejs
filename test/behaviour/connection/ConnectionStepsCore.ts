@@ -20,7 +20,7 @@
  */
 
 import {After, AfterAll, Before, BeforeAll} from "@cucumber/cucumber";
-import {TypeDB, TypeDBOptions} from "../../../dist";
+import {TypeDB, TypeDBOptions, TypeDBClient} from "../../../dist";
 import {
     afterAllBase,
     afterBase,
@@ -34,7 +34,7 @@ BeforeAll(() => {
     setClientFn((username, password) => {
         throw new Error("Core client does not support authentication");
     });
-    setDefaultClientFn(() => TypeDB.coreClient());
+    setDefaultClientFn(() => new Promise<TypeDBClient>((resolve, reject) => resolve(TypeDB.coreClient())));
     setSessionOptions(TypeDBOptions.core({"infer": true}));
     setTransactionOptions(TypeDBOptions.core({"infer": true}));
 });
