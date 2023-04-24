@@ -67,6 +67,10 @@ Then("users delete: {words}", async (username: string) => {
     await getClient().users.delete(username);
 });
 
+Then("users delete: {words}; throws exception", async (username: string) => {
+    await assertThrows(() => getClient().users.delete(username));
+});
+
 Then("users password set: {words}, {words}", async (username: string, password: string) => {
     await getClient().users.passwordSet(username, password);
 });

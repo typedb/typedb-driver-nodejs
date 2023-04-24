@@ -105,6 +105,10 @@ Given('connection opens with authentication: {words}, {words}', async (username:
     await createClient(username, password);
 })
 
+Given('Connection closes', async () => {
+    if (client && client.isOpen()) await client.close();
+})
+
 Given('connection opens with authentication: {words}, {words}; throws exception', async (username: string, password: string) => {
     await assertThrows(() => createClient(username, password));
 })
