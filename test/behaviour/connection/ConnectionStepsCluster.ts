@@ -34,25 +34,29 @@ import {
 import assert from "assert";
 
 BeforeAll(async () => {
-    setDefaultClientFn(() =>
+    setDefaultClientFn(async () =>
         TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential("admin", "password", process.env.ROOT_CA))
     )
-    setClientFn((username, password) => {
+    setClientFn(async (username, password) => {
         return TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential(username, password, process.env.ROOT_CA))
     });
     setSessionOptions(TypeDBOptions.cluster({"infer": true}));
     setTransactionOptions(TypeDBOptions.cluster({"infer": true}));
 });
 
-
 Before(async () => {
     await beforeBase();
+    await clearDB();
 });
 
-After(async() => {
-    await afterBase()
+After(async () => {
+    await afterBase();
+    await clearDB()
+});
+
+async function clearDB() {
     // TODO: reset the database through the TypeDB runner once it exists
-    createDefaultClient();
+    await createDefaultClient();
     const databases = await client.databases.all();
     for (const db of databases) {
         await db.delete();
@@ -63,4 +67,4 @@ After(async() => {
         await (client as TypeDBClient.Cluster).users.delete(user.username);
     }
     await client.close();
-});
+}

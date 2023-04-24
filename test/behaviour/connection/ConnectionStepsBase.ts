@@ -58,7 +58,7 @@ export function setDefaultClientFn(constructor: () => Promise<TypeDBClient>) {
     defaultClientFn = constructor;
 }
 
-export async function createDefaultClient() {
+export async function createDefaultClient(): Promise<void> {
     client = await defaultClientFn();
 }
 

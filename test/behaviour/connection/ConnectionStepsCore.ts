@@ -31,12 +31,13 @@ import {
     setSessionOptions,
     setTransactionOptions
 } from "./ConnectionStepsBase";
+import assert from "assert";
 
 BeforeAll(() => {
-    setClientFn((username, password) => {
+    setClientFn(async (username, password) => {
         throw new Error("Core client does not support authentication");
     });
-    setDefaultClientFn(() => new Promise<TypeDBClient>((resolve, reject) => resolve(TypeDB.coreClient())));
+    setDefaultClientFn(async () => new Promise<TypeDBClient>((resolve, reject) => resolve(TypeDB.coreClient())));
     setSessionOptions(TypeDBOptions.core({"infer": true}));
     setTransactionOptions(TypeDBOptions.core({"infer": true}));
 });
@@ -44,15 +45,20 @@ BeforeAll(() => {
 
 Before(async () => {
     await beforeBase();
+    await clearDB();
 });
 
 After(async () => {
-    await afterBase()
+    await afterBase();
+    await clearDB()
+});
+
+async function clearDB() {
     // TODO: reset the database through the TypeDB runner once it exists
-    createDefaultClient();
+    await createDefaultClient();
     const databases = await client.databases.all();
     for (const db of databases) {
         await db.delete();
     }
     await client.close();
-});
+}
