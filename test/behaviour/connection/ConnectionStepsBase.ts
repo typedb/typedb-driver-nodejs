@@ -105,7 +105,7 @@ Given('connection opens with authentication: {words}, {words}', async (username:
     await createClient(username, password);
 })
 
-Given('Connection closes', async () => {
+Given('connection closes', async () => {
     if (client && client.isOpen()) await client.close();
 })
 
