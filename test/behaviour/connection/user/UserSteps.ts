@@ -25,7 +25,7 @@ import {client} from "../ConnectionStepsBase";
 import assert = require("assert");
 import {assertThrows} from "../../util/Util";
 
-Then("user get self", async () => {
+Then("get connected user", async () => {
     await getClient().user();
 });
 
