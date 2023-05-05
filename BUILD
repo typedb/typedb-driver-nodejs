@@ -23,7 +23,7 @@ exports_files([
     "node_modules",
     "package.json",
     "package-lock.json",
-    "RELEASE_TEMPLATE.md",
+    "LATEST_RELEASE_NOTES.md",
     "VERSION",
 ])
 
@@ -155,7 +155,7 @@ deploy_npm(
 
 deploy_github(
     name = "deploy-github",
-    release_description = "//:RELEASE_TEMPLATE.md",
+    release_description = "//:LATEST_RELEASE_NOTES.md",
     title = "TypeDB Client Node.js",
     title_append_version = True,
     organisation = github_deployment["github.organisation"],
