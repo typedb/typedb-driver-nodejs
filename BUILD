@@ -23,7 +23,6 @@ exports_files([
     "node_modules",
     "package.json",
     "package-lock.json",
-    "LATEST_RELEASE_NOTES.md",
     "VERSION",
 ])
 
