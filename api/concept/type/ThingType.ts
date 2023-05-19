@@ -44,7 +44,6 @@ export interface ThingType extends Type {
 
 export namespace ThingType {
 
-
     export class Annotation {
 
         public static KEY = new Annotation("key");

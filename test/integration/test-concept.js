@@ -19,8 +19,9 @@
  * under the License.
  */
 
-const { TypeDB, SessionType, TransactionType, AttributeType, Annotation } = require("../../dist");
+const { TypeDB, SessionType, TransactionType, AttributeType, ThingType  } = require("../../dist");
 const assert = require("assert");
+const Annotation = ThingType.Annotation;
 
 async function run() {
     const client = TypeDB.coreClient();
