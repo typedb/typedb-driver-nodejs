@@ -20,18 +20,21 @@
  */
 
 
-import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Attribute } from "../thing/Attribute";
-import { Entity } from "../thing/Entity";
-import { Relation } from "../thing/Relation";
-import { Thing } from "../thing/Thing";
-import { AttributeType } from "./AttributeType";
-import { EntityType } from "./EntityType";
-import { RelationType } from "./RelationType";
-import { RoleType } from "./RoleType";
-import { Type } from "./Type";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Attribute} from "../thing/Attribute";
+import {Entity} from "../thing/Entity";
+import {Relation} from "../thing/Relation";
+import {Thing} from "../thing/Thing";
+import {AttributeType} from "./AttributeType";
+import {EntityType} from "./EntityType";
+import {RelationType} from "./RelationType";
+import {RoleType} from "./RoleType";
+import {Type} from "./Type";
+import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
+import {ErrorMessage} from "../../../common/errors/ErrorMessage";
+import BAD_ANNOTATION = ErrorMessage.Concept.BAD_ANNOTATION;
 
 export interface ThingType extends Type {
 
@@ -39,6 +42,25 @@ export interface ThingType extends Type {
 }
 
 export namespace ThingType {
+
+
+    export class Annotation {
+
+        public static KEY = new Annotation("key");
+        public static UNIQUE = new Annotation("unique");
+
+        private name: string;
+
+        constructor(name: string) {
+            this.name = name;
+        }
+
+        public static parse(string: string): Annotation {
+            if (string == Annotation.KEY.name) return Annotation.KEY;
+            else if (string == Annotation.UNIQUE.name) return Annotation.KEY;
+            else throw new TypeDBClientError(BAD_ANNOTATION.message(string));
+        }
+    }
 
     export interface Remote extends ThingType, Type.Remote {
 
