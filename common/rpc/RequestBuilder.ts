@@ -658,7 +658,7 @@ export namespace RequestBuilder {
             return new ThingProto().setIid(Bytes.hexStringToBytes(iid));
         }
 
-        export function getHasReq(iid: string, annotations: TypeProto.Annotation[]) {
+        export function getHasReqByAnnotations(iid: string, annotations: TypeProto.Annotation[]) {
             return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetHasReq(
                 new ThingProto.GetHas.Req().setAnnotationsList(annotations)
             ));
