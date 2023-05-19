@@ -95,7 +95,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-core.sh //test/behaviour/concept/... --test_output=errors --jobs=1
+        .factory/test-core.sh //test/behaviour/concept/... --test_output=streamed --jobs=1
     test-behaviour-concept-cluster:
       image: vaticle-ubuntu-22.04
       command: |
