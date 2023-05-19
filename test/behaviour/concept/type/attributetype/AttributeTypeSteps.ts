@@ -145,7 +145,7 @@ Then(
 );
 
 Then(
-    "attribute\\({type_label}) get key owners explicit, with annotations: {annotations}; do not contain:",
+    "attribute\\({type_label}) get owners explicit, with annotations: {annotations}; do not contain:",
     async (typeLabel: string, annotations: Annotation[], ownerLabelsTable: DataTable) => {
         equal(false, await getOwnersExplicitContain(typeLabel, annotations, ownerLabelsTable));
     }

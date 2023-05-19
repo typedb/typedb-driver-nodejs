@@ -146,7 +146,6 @@ defineParameterType({
     name: "annotations",
     regexp: new RegExp("(\\s*([\\w\\-_]+,\\s*)*[\\w\\-_]*\\s*)"),
     transformer: s => {
-        console.log("Parsing annotations: " + s);
         return s.split(',').map(a => Annotation.parse(a.trim()));
     }
 });
