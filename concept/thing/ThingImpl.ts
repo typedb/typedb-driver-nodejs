@@ -156,7 +156,7 @@ export namespace ThingImpl {
             if (typeof annotationOrAttrTypeOrAttrTypes === "undefined") {
                 request = RequestBuilder.Thing.getHasReqByAnnotations(this.iid, []);
             } else if (Array.isArray(annotationOrAttrTypeOrAttrTypes)) {
-                let asArray = annotationOrAttrTypeOrAttrTypes as Array<any>;
+                const asArray = annotationOrAttrTypeOrAttrTypes as Array<any>;
                 if (asArray.length == 0 || asArray[0] instanceof AttributeTypeImpl) {
                     request = RequestBuilder.Thing.getHasByTypeReq(
                         this.iid,

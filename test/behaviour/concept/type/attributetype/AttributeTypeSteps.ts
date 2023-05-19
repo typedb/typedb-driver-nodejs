@@ -103,7 +103,7 @@ async function getOwnersContain(typeLabel: string, annotations: Annotation[], ow
     const attributeType = await tx().concepts.getAttributeType(typeLabel);
     const actuals = await attributeType.asRemote(tx()).getOwners(annotations).map(tt => tt.label.scopedName).collect();
     const ownerLabels = parseList(ownerLabelsTable);
-    for (let ownerLabel of ownerLabels) {
+    for (const ownerLabel of ownerLabels) {
         if (!actuals.includes(ownerLabel)) {
             return false;
         }
@@ -129,7 +129,7 @@ async function getOwnersExplicitContain(typeLabel: string, annotations: Annotati
     const ownerLabels = parseList(ownerLabelsTable);
     const attributeType = await tx().concepts.getAttributeType(typeLabel);
     const actuals = await attributeType.asRemote(tx()).getOwnersExplicit(annotations).map(tt => tt.label.scopedName).collect();
-    for (let ownerLabel of ownerLabels) {
+    for (const ownerLabel of ownerLabels) {
         if (!actuals.includes(ownerLabel)) {
             return false;
         }
