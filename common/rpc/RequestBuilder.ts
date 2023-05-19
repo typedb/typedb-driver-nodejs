@@ -638,11 +638,11 @@ export namespace RequestBuilder {
         export namespace Annotation {
 
             export function annotationKeyProto(): TypeProto.Annotation {
-                return new TypeProto.Annotation.setKey(new TypeProto.Annotation.Key());
+                return new TypeProto.Annotation().setKey(new TypeProto.Annotation.Key());
             }
 
             export function annotationUniqueProto() {
-                return new TypeProto.Annotation.setUnique(new TypeProto.Annotation.Unique());
+                return new TypeProto.Annotation().setUnique(new TypeProto.Annotation.Unique());
             }
         }
 

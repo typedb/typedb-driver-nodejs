@@ -19,7 +19,7 @@
  * under the License.
  */
 
-const { TypeDB, SessionType, TransactionType, AttributeType } = require("../../dist");
+const { TypeDB, SessionType, TransactionType, AttributeType, Annotation } = require("../../dist");
 const assert = require("assert");
 
 async function run() {
@@ -217,7 +217,7 @@ async function run() {
         await customer.asRemote(tx).setSupertype(person);
         await customer.asRemote(tx).setOwns(workEmail, email, true);
         const ownedAttributes = await customer.asRemote(tx).getOwns().collect();
-        const ownedKeys = await customer.asRemote(tx).getOwns(true).collect();
+        const ownedKeys = await customer.asRemote(tx).getOwns([Annotation.KEY]).collect();
         const ownedDateTimes = await customer.asRemote(tx).getOwns(AttributeType.ValueType.DATETIME, false).collect();
         await tx.commit();
         await tx.close();

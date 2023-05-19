@@ -27,7 +27,7 @@ import {
 } from "typedb-protocol/common/concept_pb";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {AttributeType} from "../../api/concept/type/AttributeType";
-import {Annotation, ThingType} from "../../api/concept/type/ThingType";
+import {ThingType} from "../../api/concept/type/ThingType";
 import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
@@ -35,6 +35,7 @@ import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
 import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
+import Annotation = ThingType.Annotation;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
