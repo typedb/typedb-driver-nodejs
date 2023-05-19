@@ -154,26 +154,26 @@ Then(
 Then("attribute\\({type_label}) get owners contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
     const attributeType = await tx().concepts.getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.label.scopedName).collect();
+    const actuals = await attributeType.asRemote(tx()).getOwners().map(tt => tt.label.scopedName).collect();
     await ownerLabels.every(ol => assert(actuals.includes(ol)));
 });
 
 Then("attribute\\({type_label}) get owners do not contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
     const attributeType = await tx().concepts.getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.label.scopedName).collect();
+    const actuals = await attributeType.asRemote(tx()).getOwners().map(tt => tt.label.scopedName).collect();
     await ownerLabels.every(ol => assert(!actuals.includes(ol)));
 });
 Then("attribute\\({type_label}) get owners explicit contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
     const attributeType = await tx().concepts.getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwnersExplicit(false).map(tt => tt.label.scopedName).collect();
+    const actuals = await attributeType.asRemote(tx()).getOwnersExplicit().map(tt => tt.label.scopedName).collect();
     await ownerLabels.every(ol => assert(actuals.includes(ol)));
 });
 
 Then("attribute\\({type_label}) get owners explicit do not contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
     const attributeType = await tx().concepts.getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwnersExplicit(false).map(tt => tt.label.scopedName).collect();
+    const actuals = await attributeType.asRemote(tx()).getOwnersExplicit().map(tt => tt.label.scopedName).collect();
     await ownerLabels.every(ol => assert(!actuals.includes(ol)));
 });

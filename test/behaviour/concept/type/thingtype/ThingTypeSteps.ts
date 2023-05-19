@@ -19,13 +19,14 @@
  * under the License.
  */
 
-import { Then, When } from "@cucumber/cucumber";
+import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import assert from "assert";
-import { ThingType } from "../../../../../dist";
-import { parseList, RootLabel, ScopedLabel } from "../../../config/Parameters";
-import { tx } from "../../../connection/ConnectionStepsBase";
-import { assertThrows } from "../../../util/Util";
+import {ThingType} from "../../../../../dist";
+import {parseList, RootLabel, ScopedLabel} from "../../../config/Parameters";
+import {tx} from "../../../connection/ConnectionStepsBase";
+import {assertThrows} from "../../../util/Util";
+import Annotation = ThingType.Annotation;
 
 export function getThingType(rootLabel: RootLabel, typeLabel: string): Promise<ThingType> {
     switch (rootLabel) {
@@ -190,56 +191,82 @@ Then("{root_label}\\({type_label}) get subtypes do not contain:", async (rootLab
     subLabels.every(sl => assert(!actuals.includes(sl)));
 });
 
-When("{root_label}\\({type_label}) set owns key type: {type_label}", async (rootLabel: RootLabel, typeLabel: string, attTypeLabel: string) => {
-    const attributeType = await tx().concepts.getAttributeType(attTypeLabel);
-    await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).setOwns(attributeType, true);
-});
+When(
+    "{root_label}\\({type_label}) set owns attribute type: {type_label}, with annotations: {annotations}",
+    async (rootLabel: RootLabel, typeLabel: string, attTypeLabel: string, annotations: Annotation[]) => {
+        const attributeType = await tx().concepts.getAttributeType(attTypeLabel);
+        await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).setOwns(attributeType, annotations);
+    }
+);
 
-When("{root_label}\\({type_label}) set owns key type: {type_label} as {type_label}", async (rootLabel: RootLabel, typeLabel: string, attTypeLabel: string, overriddenLabel: string) => {
-    const attributeType = await tx().concepts.getAttributeType(attTypeLabel);
-    const overriddenType = await tx().concepts.getAttributeType(overriddenLabel);
-    await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).setOwns(attributeType, overriddenType, true);
-});
+Then(
+    "{root_label}\\({type_label}) set owns attribute type: {type_label}, with annotations: {annotations}; throws exception",
+    async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string, annotations: Annotation[]) => {
+        const attributeType = await tx().concepts.getAttributeType(attributeLabel);
+        await assertThrows(async () => await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).setOwns(attributeType, annotations));
+    }
+);
 
-Then("{root_label}\\({type_label}) set owns key type: {type_label}; throws exception", async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string) => {
-    const attributeType = await tx().concepts.getAttributeType(attributeLabel);
-    await assertThrows(async () => await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).setOwns(attributeType, true));
-});
+When(
+    "{root_label}\\({type_label}) set owns attribute type: {type_label} as {type_label}, with annotations: {annotations}",
+    async (rootLabel: RootLabel, typeLabel: string, attTypeLabel: string, overriddenLabel: string, annotations: Annotation[]) => {
+        const attributeType = await tx().concepts.getAttributeType(attTypeLabel);
+        const overriddenType = await tx().concepts.getAttributeType(overriddenLabel);
+        await (await getThingType(rootLabel, typeLabel)).asRemote(tx())
+            .setOwns(attributeType, overriddenType, annotations);
+    }
+);
 
-Then("{root_label}\\({type_label}) set owns key type: {type_label} as {type_label}; throws exception", async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string, overriddenLabel: string) => {
-    const attributeType = await tx().concepts.getAttributeType(attributeLabel);
-    const overriddenType = await tx().concepts.getAttributeType(overriddenLabel);
-    await assertThrows(async () => await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).setOwns(attributeType, overriddenType, true));
-});
+Then(
+    "{root_label}\\({type_label}) set owns attribute type: {type_label} as {type_label}, with annotations: {annotations}; throws exception",
+    async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string, overriddenLabel: string, annotations: Annotation[]) => {
+        const attributeType = await tx().concepts.getAttributeType(attributeLabel);
+        const overriddenType = await tx().concepts.getAttributeType(overriddenLabel);
+        await assertThrows(async () => await (await getThingType(rootLabel, typeLabel)).asRemote(tx())
+            .setOwns(attributeType, overriddenType, annotations));
+    }
+);
 
-When("{root_label}\\({type_label}) unset owns key type: {type_label}", async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string) => {
+When("{root_label}\\({type_label}) unset owns attribute type: {type_label}", async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string) => {
     const attributeType = await tx().concepts.getAttributeType(attributeLabel);
     await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).unsetOwns(attributeType);
 });
 
-Then("{root_label}\\({type_label}) get owns key types contain:", async (rootLabel: RootLabel, typeLabel: string, attributeLabelsTable: DataTable) => {
-    const attributeLabels = parseList(attributeLabelsTable);
-    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwns(true).map(tt => tt.label.scopedName).collect();
-    attributeLabels.every(al => assert(actuals.includes(al)));
-});
+Then(
+    "{root_label}\\({type_label}) get owns attribute types, with annotations: {annotations}; contain:",
+    async (rootLabel: RootLabel, typeLabel: string, annotations: Annotation[], attributeLabelsTable: DataTable) => {
+        const attributeLabels = parseList(attributeLabelsTable);
+        const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwns(annotations).map(tt => tt.label.scopedName).collect();
+        attributeLabels.every(al => assert(actuals.includes(al)));
+    }
+);
 
-Then("{root_label}\\({type_label}) get owns key types do not contain:", async (rootLabel: RootLabel, typeLabel: string, attributeLabelsTable: DataTable) => {
-    const attributeLabels = parseList(attributeLabelsTable);
-    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwns(true).map(tt => tt.label.scopedName).collect();
-    attributeLabels.every(al => assert(!actuals.includes(al)));
-});
+Then(
+    "{root_label}\\({type_label}) get owns attribute types, with annotations: {annotations}; do not contain:",
+    async (rootLabel: RootLabel, typeLabel: string, annotations: Annotation[], attributeLabelsTable: DataTable) => {
+        const attributeLabels = parseList(attributeLabelsTable);
+        const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwns(annotations).map(tt => tt.label.scopedName).collect();
+        attributeLabels.every(al => assert(!actuals.includes(al)));
+    }
+);
 
-Then("{root_label}\\({type_label}) get owns explicit key types contain:", async (rootLabel: RootLabel, typeLabel: string, attributeLabelsTable: DataTable) => {
-    const attributeLabels = parseList(attributeLabelsTable);
-    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsExplicit(true).map(tt => tt.label.scopedName).collect();
-    attributeLabels.every(al => assert(actuals.includes(al)));
-});
+Then(
+    "{root_label}\\({type_label}) get owns explicit attribute types, with annotations: {annotations}; contain:",
+    async (rootLabel: RootLabel, typeLabel: string, annotations: Annotation[], attributeLabelsTable: DataTable) => {
+        const attributeLabels = parseList(attributeLabelsTable);
+        const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsExplicit(annotations).map(tt => tt.label.scopedName).collect();
+        attributeLabels.every(al => assert(actuals.includes(al)));
+    }
+);
 
-Then("{root_label}\\({type_label}) get owns explicit key types do not contain:", async (rootLabel: RootLabel, typeLabel: string, attributeLabelsTable: DataTable) => {
-    const attributeLabels = parseList(attributeLabelsTable);
-    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsExplicit(true).map(tt => tt.label.scopedName).collect();
-    attributeLabels.every(al => assert(!actuals.includes(al)));
-});
+Then(
+    "{root_label}\\({type_label}) get owns explicit attribute types, with annotations: {annotations}; do not contain:",
+    async (rootLabel: RootLabel, typeLabel: string, annotations: Annotation[], attributeLabelsTable: DataTable) => {
+        const attributeLabels = parseList(attributeLabelsTable);
+        const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsExplicit(annotations).map(tt => tt.label.scopedName).collect();
+        attributeLabels.every(al => assert(!actuals.includes(al)));
+    }
+);
 
 When("{root_label}\\({type_label}) set owns attribute type: {type_label}", async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string) => {
     const attributeType = await tx().concepts.getAttributeType(attributeLabel);
