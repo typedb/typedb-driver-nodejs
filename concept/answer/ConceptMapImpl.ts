@@ -76,7 +76,7 @@ export namespace ConceptMapImpl {
             let concept;
             if (protoConcept.hasThing()) concept = ThingImpl.of(protoConcept.getThing());
             else if (protoConcept.hasType()) concept = TypeImpl.of(protoConcept.getType());
-            else concept = ValueImpl.of(protoConcept.getType());
+            else concept = ValueImpl.of(protoConcept.getValue());
             variableMap.set(resLabel, concept);
         });
         const explainables = proto.hasExplainables() ? ofExplainables(proto.getExplainables()) : emptyExplainables();
