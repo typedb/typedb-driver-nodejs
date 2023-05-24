@@ -241,7 +241,7 @@ export namespace ValueImpl {
         readonly _value: Date;
 
         constructor(value: Date) {
-            super(ValueType.DOUBLE);
+            super(ValueType.DATETIME);
             this._value = value;
         }
 
