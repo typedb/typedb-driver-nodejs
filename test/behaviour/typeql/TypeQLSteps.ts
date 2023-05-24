@@ -22,13 +22,12 @@
 import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {fail} from "assert";
-import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType} from "../../../dist";
+import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType, Value} from "../../../dist";
 import {parseBool} from "../config/Parameters";
 import {tx} from "../connection/ConnectionStepsBase";
 import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
 import assert = require("assert");
 import Annotation = ThingType.Annotation;
-import {Value} from "../../../api/concept/value/Value";
 
 export let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -278,7 +277,7 @@ class ValueMatcher implements ConceptMatcher {
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isValue()) return false;
         const value = concept.asValue();
-        if (this.valueType !== value.valueType) return false;
+        if (this.valueType !== value.valueType.name()) return false;
         return this.check(value);
     }
 }
