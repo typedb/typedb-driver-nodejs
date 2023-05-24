@@ -289,8 +289,10 @@ function parseConceptIdentifier(value: string): ConceptMatcher {
             return new TypeLabelMatcher(identifierBody);
         case "key":
             return new ThingKeyMatcher(identifierBody);
-        case "value":
+        case "attr":
             return new AttributeValueMatcher(identifierBody);
+        case "value":
+            return new ValueMatcher(identifierBody);
         default:
             throw new Error(`Failed to parse concept identifier: ${value}`);
     }
