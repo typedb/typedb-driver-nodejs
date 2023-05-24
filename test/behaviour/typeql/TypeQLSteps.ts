@@ -132,7 +132,6 @@ When("get answer of typeql match aggregate", async (query: string) => {
 When("get answers of typeql match group", async (query: string) => {
     clearAnswers();
     answerGroups = await tx().query.matchGroup(query).collect();
-    console.log("Answer groups: ", answerGroups);
 });
 
 When("typeql match group; throws exception", async (query: string) => {
@@ -142,7 +141,6 @@ When("typeql match group; throws exception", async (query: string) => {
 When("get answers of typeql match group aggregate", async (query: string) => {
     clearAnswers();
     numericAnswerGroups = await tx().query.matchGroupAggregate(query).collect();
-    console.log("Answer groups: ", numericAnswerGroups);
 });
 
 When("typeql match aggregate; throws exception", async (query: string) => {

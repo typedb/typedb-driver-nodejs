@@ -52,7 +52,7 @@ export namespace ConceptMapGroupImpl {
         let owner: Concept;
         if (mapGroupProto.getOwner().hasThing()) owner = ThingImpl.of(mapGroupProto.getOwner().getThing());
         else if (mapGroupProto.getOwner().hasType()) owner = TypeImpl.of(mapGroupProto.getOwner().getType());
-        else ValueImpl.of(mapGroupProto.getOwner().getValue());
+        else owner = ValueImpl.of(mapGroupProto.getOwner().getValue());
         return new ConceptMapGroupImpl(owner, mapGroupProto.getConceptMapsList()
             .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto)));
     }
