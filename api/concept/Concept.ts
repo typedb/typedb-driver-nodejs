@@ -31,7 +31,7 @@ import { RelationType } from "./type/RelationType";
 import { RoleType } from "./type/RoleType";
 import { ThingType } from "./type/ThingType";
 import { Type } from "./type/Type";
-import {AttributeType as ConceptProto} from "typedb-protocol/common/concept_pb";
+import {ValueType as ValueTypeProto} from "typedb-protocol/common/concept_pb";
 import {Value} from "./value/Value";
 
 export interface Concept {
@@ -121,7 +121,7 @@ export namespace Concept {
 
     export interface ValueType {
 
-        proto(): ConceptProto.ValueType;
+        proto(): ValueTypeProto;
 
         name(): string;
     }
@@ -130,15 +130,15 @@ export namespace Concept {
 
         class Impl implements ValueType {
 
-            private readonly _proto: ConceptProto.ValueType;
+            private readonly _proto: ValueTypeProto;
             private readonly _name: string;
 
-            constructor(type: ConceptProto.ValueType, name: string) {
+            constructor(type: ValueTypeProto, name: string) {
                 this._proto = type;
                 this._name = name;
             }
 
-            proto(): ConceptProto.ValueType {
+            proto(): ValueTypeProto {
                 return this._proto;
             }
 
@@ -151,11 +151,11 @@ export namespace Concept {
             }
         }
 
-        export const OBJECT = new Impl(ConceptProto.ValueType.OBJECT, "OBJECT");
-        export const BOOLEAN = new Impl(ConceptProto.ValueType.BOOLEAN, "BOOLEAN");
-        export const LONG = new Impl(ConceptProto.ValueType.LONG, "LONG");
-        export const DOUBLE = new Impl(ConceptProto.ValueType.DOUBLE, "DOUBLE");
-        export const STRING = new Impl(ConceptProto.ValueType.STRING, "STRING");
-        export const DATETIME = new Impl(ConceptProto.ValueType.DATETIME, "DATETIME");
+        export const OBJECT = new Impl(ValueTypeProto.OBJECT, "OBJECT");
+        export const BOOLEAN = new Impl(ValueTypeProto.BOOLEAN, "BOOLEAN");
+        export const LONG = new Impl(ValueTypeProto.LONG, "LONG");
+        export const DOUBLE = new Impl(ValueTypeProto.DOUBLE, "DOUBLE");
+        export const STRING = new Impl(ValueTypeProto.STRING, "STRING");
+        export const DATETIME = new Impl(ValueTypeProto.DATETIME, "DATETIME");
     }
 }
