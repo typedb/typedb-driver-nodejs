@@ -121,7 +121,7 @@ export namespace ValueImpl {
 
     export function of(valueProto: ValueProto): Value {
         if (!valueProto) return null;
-        switch (valueProto.getValuetype()) {
+        switch (valueProto.getValueType()) {
             case ValueTypeProto.BOOLEAN:
                 return new ValueImpl.Boolean(valueProto.getValue().getBoolean());
             case ValueTypeProto.LONG:
@@ -133,7 +133,7 @@ export namespace ValueImpl {
             case ValueTypeProto.DATETIME:
                 return new ValueImpl.DateTime(new Date(valueProto.getValue().getDateTime()));
             default:
-                throw new TypeDBClientError(BAD_VALUE_TYPE.message(valueProto.getValuetype()));
+                throw new TypeDBClientError(BAD_VALUE_TYPE.message(valueProto.getValueType()));
         }
     }
 
