@@ -26,7 +26,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.5.0",
     "google-protobuf": "3.19.3",
-    "typedb-protocol": "https://repo.vaticle.com/repository/npm-snapshot/typedb-protocol/-/typedb-protocol-0.0.0-3b893745265d79a8e0ea737214a8d12daf2b75b5.tgz",
+    "typedb-protocol": "https://repo.vaticle.com/repository/npm-snapshot/typedb-protocol/-/typedb-protocol-0.0.0-5c073e625770e812e4807419392d7f7261a553fb.tgz",
     "uuid": "8.3.2"
   },
   "devDependencies": {
