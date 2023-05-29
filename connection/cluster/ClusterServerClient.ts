@@ -44,8 +44,8 @@ export class ClusterServerClient extends TypeDBClientImpl {
 
     async open(): Promise<ClusterServerClient> {
         await super.open();
-        await this._stub.open();
         this._stub = new ClusterServerStub(this._address, this._credential);
+        await this._stub.open();
         this._databases = new TypeDBDatabaseManagerImpl(this._stub);
         this._isOpen = true;
         return this;

@@ -69,6 +69,7 @@ export class ClusterServerStub extends TypeDBStub {
 
     public async open(): Promise<void> {
         try {
+            await this.connectionOpen(RequestBuilder.Connection.openReq());
             console.log(`token '${this._token}' expired. renewing...`);
             const req = RequestBuilder.Cluster.User.tokenReq(this._credential.username);
             this._token = await this.userToken(req);

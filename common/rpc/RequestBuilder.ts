@@ -45,6 +45,7 @@ import {Options} from "typedb-protocol/common/options_pb";
 import {QueryManager as QueryProto} from "typedb-protocol/common/query_pb";
 import {Session as SessionProto} from "typedb-protocol/common/session_pb";
 import {Connection as ConnectionProto} from "typedb-protocol/common/connection_pb";
+import {Version as VersionProto} from "typedb-protocol/common/version_pb";
 import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
 import {CoreDatabase, CoreDatabaseManager} from "typedb-protocol/core/core_database_pb";
 import * as uuid from "uuid";
@@ -148,7 +149,9 @@ export namespace RequestBuilder {
     export namespace Connection {
 
         export function openReq() {
-            return new ConnectionProto.openReq().setVersion()
+            return new ConnectionProto.Open.Req().setVersion(
+                VersionProto.VERSION
+            )
         }
     }
 

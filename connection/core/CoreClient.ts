@@ -43,6 +43,7 @@ export class CoreClient extends TypeDBClientImpl {
     async open(): Promise<CoreClient> {
         await super.open();
         this._stub = new CoreStub(this._address);
+        await this._stub.open();
         this._databases = new TypeDBDatabaseManagerImpl(this._stub);
         this._isOpen = true;
         return this;
