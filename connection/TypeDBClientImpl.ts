@@ -49,7 +49,7 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
     abstract isOpen(): boolean;
 
     async session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSessionImpl> {
-        if (!this.open()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         if (!options) options = TypeDBOptions.core();
         const session = new TypeDBSessionImpl(database, type, options, this);
         await session.open();

@@ -56,12 +56,12 @@ export class ClusterServerClient extends TypeDBClientImpl {
     }
 
     stub(): ClusterServerStub {
-        if (!this.open()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._stub;
     }
 
     get databases(): TypeDBDatabaseManagerImpl {
-        if (!this.open()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._databases;
     }
 

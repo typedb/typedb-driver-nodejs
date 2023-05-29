@@ -54,12 +54,12 @@ export class CoreClient extends TypeDBClientImpl {
     }
 
     get databases(): TypeDBDatabaseManagerImpl {
-        if (!this.open()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._databases;
     }
 
     stub(): TypeDBStub {
-        if (!this.open()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._stub;
     }
 
