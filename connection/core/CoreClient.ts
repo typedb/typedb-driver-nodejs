@@ -59,7 +59,6 @@ export class CoreClient extends TypeDBClientImpl {
     }
 
     stub(): TypeDBStub {
-        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._stub;
     }
 

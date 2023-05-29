@@ -56,7 +56,6 @@ export class ClusterServerClient extends TypeDBClientImpl {
     }
 
     stub(): ClusterServerStub {
-        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._stub;
     }
 
