@@ -69,11 +69,11 @@ export class ClusterServerStub extends TypeDBStub {
 
     public async open(): Promise<void> {
         try {
-            console.log("Opening stub");
-            await this.connectionOpen(RequestBuilder.Connection.openReq());
             console.log("fetching token");
             const req = RequestBuilder.Cluster.User.tokenReq(this._credential.username);
             this._token = await this.userToken(req);
+            console.log("Opening stub");
+            await this.connectionOpen(RequestBuilder.Connection.openReq());
             console.log("connection stub opened")
         } catch (e) {
             if (!isServiceError(e)) throw e;
