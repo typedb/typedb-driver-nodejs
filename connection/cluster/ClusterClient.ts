@@ -90,6 +90,9 @@ export class ClusterClient implements TypeDBClient.Cluster {
     }
 
     session(database: string, type: SessionType, options: TypeDBClusterOptions = TypeDBOptions.cluster()): Promise<ClusterSession> {
+        if (!this.isOpen()) {
+            throw new
+        }
         if (options.readAnyReplica) {
             return this.sessionAnyReplica(database, type, options);
         } else {
