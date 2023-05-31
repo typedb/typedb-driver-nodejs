@@ -154,7 +154,7 @@ deploy_npm(
 
 deploy_github(
     name = "deploy-github",
-    release_description = "//:LATEST_RELEASE_NOTES.md",
+    release_description = "//:RELEASE_NOTES_LATEST.md",
     title = "TypeDB Client Node.js",
     title_append_version = True,
     organisation = github_deployment["github.organisation"],
@@ -228,5 +228,6 @@ filegroup(
     data = [
         "@vaticle_dependencies//distribution/artifact:create-netrc",
         "@vaticle_dependencies//tool/release/notes:create",
+        "@vaticle_dependencies//tool/release/notes:validate",
     ],
 )
