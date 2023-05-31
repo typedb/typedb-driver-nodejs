@@ -35,6 +35,7 @@ import { ClusterUser } from "./ClusterUser";
 import { ClusterUserManager } from "./ClusterUserManager";
 import { FailsafeTask } from "./FailsafeTask";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
 
 export class ClusterClient implements TypeDBClient.Cluster {
 
@@ -90,9 +91,7 @@ export class ClusterClient implements TypeDBClient.Cluster {
     }
 
     session(database: string, type: SessionType, options: TypeDBClusterOptions = TypeDBOptions.cluster()): Promise<ClusterSession> {
-        if (!this.isOpen()) {
-            throw new
-        }
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         if (options.readAnyReplica) {
             return this.sessionAnyReplica(database, type, options);
         } else {
