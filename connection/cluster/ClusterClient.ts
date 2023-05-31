@@ -55,7 +55,7 @@ export class ClusterClient implements TypeDBClient.Cluster {
     async open(): Promise<this> {
         const serverAddresses = await this.fetchClusterServers();
         this._serverClients = {}
-        const openReqs: Promise<any>[] = []
+        const openReqs: Promise<ClusterServerClient>[] = []
         for (const addr of serverAddresses) {
             const serverClient = new ClusterServerClient(addr, this._credential);
             openReqs.push(serverClient.open());
