@@ -48,6 +48,12 @@ defineParameterType({
 });
 
 defineParameterType({
+    name: "Timezone",
+    regexp: /[A-Za-z]+\/[A-Za-z]+/,
+    transformer: s => s
+});
+
+defineParameterType({
     name: "words",
     regexp: /[\w-_]+/,
     transformer: s => s
