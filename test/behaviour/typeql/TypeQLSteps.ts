@@ -188,9 +188,9 @@ class TypeLabelMatcher implements ConceptMatcher {
 
 //splits a string only at the first count delimiters
 function splitWithTail(str: string,delim: string, count: number){
-  var parts = str.split(delim);
-  var tail = parts.slice(count).join(delim);
-  var result = parts.slice(0,count);
+  const parts = str.split(delim);
+  const tail = parts.slice(count).join(delim);
+  let result = parts.slice(0,count);
   result.push(tail);
   return result;
 }
@@ -222,8 +222,8 @@ abstract class AttributeMatcher implements ConceptMatcher {
         else if (attribute.isString()) return attribute.asString().value === this.value;
         else if (attribute.isDateTime())
         {
-            var date = new Date(this.value)
-            var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+            const date = new Date(this.value)
+            const userTimezoneOffset = date.getTimezoneOffset() * 60000;
             return attribute.asDateTime().value.getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
         }
         else throw new Error(`Unrecognised value type ${attribute.constructor.name}`);

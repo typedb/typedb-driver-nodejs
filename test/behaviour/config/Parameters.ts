@@ -46,8 +46,8 @@ defineParameterType({
     regexp: /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/,
     transformer: s =>
      {
-       var date = new Date(s);
-       var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+       const date = new Date(s);
+       const userTimezoneOffset = date.getTimezoneOffset() * 60000;
        return new Date(date.getTime() - userTimezoneOffset);
      }
 });
