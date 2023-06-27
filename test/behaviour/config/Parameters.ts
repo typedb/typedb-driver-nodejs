@@ -44,7 +44,12 @@ defineParameterType({
 defineParameterType({
     name: "datetime",
     regexp: /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/,
-    transformer: s => new Date(s)
+    transformer: s =>
+     {
+       var date = new Date(s);
+       var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+       return new Date(date.getTime() - userTimezoneOffset);
+     }
 });
 
 defineParameterType({
