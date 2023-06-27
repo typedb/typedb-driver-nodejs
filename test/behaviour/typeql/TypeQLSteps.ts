@@ -190,8 +190,7 @@ class TypeLabelMatcher implements ConceptMatcher {
 function splitWithTail(str: string,delim: string, count: number){
   const parts = str.split(delim);
   const tail = parts.slice(count).join(delim);
-  let result = parts.slice(0,count);
-  result.push(tail);
+  const result = parts.slice(0,count);
   return result;
 }
 
