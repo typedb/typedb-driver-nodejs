@@ -222,8 +222,6 @@ abstract class AttributeMatcher implements ConceptMatcher {
         else if (attribute.isString()) return attribute.asString().value === this.value;
         else if (attribute.isDateTime())
         {
-            console.log("LHS = ", attribute.asDateTime().value);
-            console.log("this = ", attribute);
             var date = new Date(this.value)
             var userTimezoneOffset = date.getTimezoneOffset() * 60000;
             return attribute.asDateTime().value.getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
