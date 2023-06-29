@@ -186,23 +186,12 @@ class TypeLabelMatcher implements ConceptMatcher {
     }
 }
 
-//splits a string only at the first count delimiters
-function splitWithTail(str: string,delim: string, count: number){
-  const parts = str.split(delim);
-  const tail = parts.slice(count).join(delim);
-  const result = parts.slice(0,count);
-  result.push(tail);
-  return result;
-}
-
 abstract class AttributeMatcher implements ConceptMatcher {
     private readonly _typeLabel: string;
     private readonly _value: string;
 
     constructor(typeAndValue: string) {
-       console.log("value before ", typeAndValue);
-        const s = splitWithTail(typeAndValue, ":", 1);
-        console.log("value = ", s);
+        const s = typeAndValue.match(/([\w|-]+):(.+)/).slice(1);
         assert.strictEqual(s.length, 2, `[${typeAndValue}] is not a valid attribute identifier. It should have format "typeLabel:value".`);
         [this._typeLabel, this._value] = s;
     }
@@ -220,8 +209,7 @@ abstract class AttributeMatcher implements ConceptMatcher {
         else if (attribute.isLong()) return attribute.asLong().value === parseInt(this.value);
         else if (attribute.isDouble()) return attribute.asDouble().value === parseFloat(this.value);
         else if (attribute.isString()) return attribute.asString().value === this.value;
-        else if (attribute.isDateTime())
-        {
+        else if (attribute.isDateTime()){
             const date = new Date(this.value)
             const userTimezoneOffset = date.getTimezoneOffset() * 60000;
             return attribute.asDateTime().value.getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
@@ -268,7 +256,7 @@ class ValueMatcher implements ConceptMatcher {
     private readonly _value: string;
 
     constructor(typeAndValue: string) {
-        const s = splitWithTail(typeAndValue, ":", 1);
+        const s = typeAndValue.match(/(\w+):(.+)/).slice(1);
         assert.strictEqual(s.length, 2, `[${typeAndValue}] is not a valid attribute identifier. It should have format "valueType:value".`);
         [this._valueType, this._value] = s;
     }

@@ -25,8 +25,7 @@ import {Given} from "@cucumber/cucumber";
 
 Given('set time-zone is: {Timezone}', async (timezone: string) => {
     process.env.TZ = timezone;
-}
-);
+});
 
 
 Then('wait {int} seconds', async function (seconds: number) {
