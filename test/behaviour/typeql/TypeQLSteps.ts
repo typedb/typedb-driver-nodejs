@@ -307,7 +307,6 @@ type AnswerIdentifier = { [key: string]: string };
 async function answerConceptsMatch(answerIdentifier: AnswerIdentifier, answer: ConceptMap): Promise<boolean> {
     for (const [var0, conceptIdentifier] of Object.entries(answerIdentifier)) {
         const matcher = parseConceptIdentifier(conceptIdentifier);
-        console.log("matcher = ", matcher);
         if (!(await matcher.matches(answer.get(var0)))) return false;
     }
     return true;
