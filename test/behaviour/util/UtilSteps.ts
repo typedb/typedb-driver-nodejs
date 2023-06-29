@@ -27,7 +27,6 @@ Given('set time-zone is: {Timezone}', async (timezone: string) => {
     process.env.TZ = timezone;
 });
 
-
 Then('wait {int} seconds', async function (seconds: number) {
     await new Promise(f => setTimeout(f, seconds * 1000));
 });
