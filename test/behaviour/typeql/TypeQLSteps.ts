@@ -256,7 +256,7 @@ class ValueMatcher implements ConceptMatcher {
     private readonly _value: string;
 
     constructor(typeAndValue: string) {
-        const s = typeAndValue.match(/(\w+):(.+)/).slice(1);
+        const s = typeAndValue.match(/([\w|-]+):(.+)/).slice(1);
         assert.strictEqual(s.length, 2, `[${typeAndValue}] is not a valid attribute identifier. It should have format "valueType:value".`);
         [this._valueType, this._value] = s;
     }
