@@ -317,11 +317,8 @@ Then("uniquely identify answer concepts", async (answerIdentifiersTable: DataTab
     const answerIdentifiers: AnswerIdentifier[] = answerIdentifiersTable.hashes();
     assert.strictEqual(answers.length, answerIdentifiers.length,
         `The number of answers [${answers.length}] should match the number of answer identifiers [${answerIdentifiers.length}`);
-    console.log("indentifier", answerIdentifiers);
     const resultSet: [AnswerIdentifier, ConceptMap[]][] = answerIdentifiers.map(ai => [ai, []]);
-    console.log("resultSet", resultSet);
     for (const answer of answers) {
-        console.log(answer);
         for (const [answerIdentifier, matchedAnswers] of resultSet) {
             if (await answerConceptsMatch(answerIdentifier, answer)) {
                 matchedAnswers.push(answer);
