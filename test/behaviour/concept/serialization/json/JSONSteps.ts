@@ -41,6 +41,7 @@ function assertUnorderedDeepStrictEqual<T>(actual: unknown[], expected: T[]): as
             if (isDeepStrictEqual(item, expected[index])) {
                 foundMatch = true;
                 matches.push(index);
+                matches.push(index);
                 break;
             }
         }

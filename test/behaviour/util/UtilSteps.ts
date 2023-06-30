@@ -20,7 +20,6 @@
  */
 
 import {Then} from "@cucumber/cucumber";
-import {When} from "@cucumber/cucumber";
 import {Given} from "@cucumber/cucumber";
 
 Given('set time-zone is: {Timezone}', async (timezone: string) => {
