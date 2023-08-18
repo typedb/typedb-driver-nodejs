@@ -19,37 +19,32 @@
  * under the License.
  */
 
-import {ChannelCredentials, ClientDuplexStream, ServiceError} from "@grpc/grpc-js";
-import { TypeDBClient } from "typedb-protocol/core/core_service_grpc_pb";
+import {ChannelCredentials} from "@grpc/grpc-js";
+import { TypeDBClient as GRPCStub } from "typedb-protocol/proto/service";
 import { TypeDBStub } from "../../common/rpc/TypeDBStub";
-import {
-    CoreDatabase as CoreDatabaseProto,
-    CoreDatabaseManager as CoreDatabaseMgrProto
-} from "typedb-protocol/core/core_database_pb";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
-import {Session} from "typedb-protocol/common/session_pb";
-import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 
 export class CoreStub extends TypeDBStub {
-
-    private readonly _stub: TypeDBClient;
+    private readonly _stub: GRPCStub;
 
     constructor(address: string) {
         super();
-        this._stub = new TypeDBClient(address, ChannelCredentials.createInsecure());
+        this._stub = new GRPCStub(address, ChannelCredentials.createInsecure());
     }
 
     async open(): Promise<void> {
         await this.connectionOpen(RequestBuilder.Connection.openReq());
     }
 
-    stub(): TypeDBClient {
+    stub(): GRPCStub {
         return this._stub;
     }
 
     close(): void {
         this._stub.close();
+    }
+
+    async mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES> {
+        return await fn();
     }
 }

@@ -21,53 +21,22 @@
 
 import { Stream } from "../../../common/util/Stream";
 import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Attribute } from "../thing/Attribute";
+import { Concept } from "../Concept";
 import { Entity } from "../thing/Entity";
-import { Relation } from "../thing/Relation";
-import { Thing } from "../thing/Thing";
-import { AttributeType } from "./AttributeType";
-import { RelationType } from "./RelationType";
-import { RoleType } from "./RoleType";
 import { ThingType } from "./ThingType";
-import { Type } from "./Type";
+import Transitivity = Concept.Transitivity;
 
 export interface EntityType extends ThingType {
+    create(transaction: TypeDBTransaction): Promise<Entity>;
 
-    asRemote(transaction: TypeDBTransaction): EntityType.Remote;
-}
+    getSupertype(transaction: TypeDBTransaction): Promise<EntityType>;
+    setSupertype(transaction: TypeDBTransaction, superEntityType: EntityType): Promise<void>;
 
-export namespace EntityType {
+    getSupertypes(transaction: TypeDBTransaction): Stream<EntityType>;
 
-    export interface Remote extends EntityType, ThingType.Remote {
+    getSubtypes(transaction: TypeDBTransaction): Stream<EntityType>;
+    getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<EntityType>;
 
-        asRemote(transaction: TypeDBTransaction): EntityType.Remote;
-
-        asType(): Type.Remote;
-
-        asThingType(): ThingType.Remote;
-
-        asEntityType(): EntityType.Remote;
-
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
-
-        create(): Promise<Entity>;
-
-        getInstances(): Stream<Entity>;
-
-        getSubtypes(): Stream<EntityType>;
-
-        setSupertype(superEntityType: EntityType): Promise<void>;
-    }
+    getInstances(transaction: TypeDBTransaction): Stream<Entity>;
+    getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Entity>;
 }

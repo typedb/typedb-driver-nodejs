@@ -25,7 +25,6 @@ import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
 import CLUSTER_INVALID_ROOT_CA_PATH = ErrorMessage.Client.CLUSTER_INVALID_ROOT_CA_PATH;
 
 export class TypeDBCredential {
-
     private readonly _username: string;
     private readonly _password: string;
     private readonly _tlsRootCAPath: string;

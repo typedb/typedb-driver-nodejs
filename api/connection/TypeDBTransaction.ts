@@ -27,7 +27,6 @@ import { QueryManager } from "../query/QueryManager";
 import { TypeDBOptions } from "./TypeDBOptions";
 
 export interface TypeDBTransaction {
-
     isOpen(): boolean;
 
     readonly type: TransactionType;
@@ -48,7 +47,6 @@ export interface TypeDBTransaction {
 }
 
 export interface TransactionType {
-
     proto(): Transaction.Type;
 
     isRead(): boolean;
@@ -57,9 +55,7 @@ export interface TransactionType {
 }
 
 export namespace TransactionType {
-
     class TransactionTypeImpl implements TransactionType {
-
         private readonly _type: Transaction.Type;
 
         constructor(type: Transaction.Type) {
@@ -84,9 +80,7 @@ export namespace TransactionType {
 }
 
 export namespace TypeDBTransaction {
-
     export interface Extended extends TypeDBTransaction {
-
         rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res>;
 
         rpcStream(request: Transaction.Req): Stream<Transaction.ResPart>;

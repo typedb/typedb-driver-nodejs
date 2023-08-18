@@ -19,46 +19,63 @@
  * under the License.
  */
 
-import {Database} from "../api/connection/database/Database";
-import {DatabaseManager} from "../api/connection/database/DatabaseManager";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import { Database } from "../api/connection/database/Database";
+import { DatabaseManager } from "../api/connection/database/DatabaseManager";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import {ServerClient, TypeDBClientImpl} from "./TypeDBClientImpl";
 import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
+import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
+import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+import DB_DOES_NOT_EXIST = ErrorMessage.Client.DATABASE_DOES_NOT_EXIST;
 
 export class TypeDBDatabaseManagerImpl implements DatabaseManager {
+    private readonly _client: TypeDBClientImpl;
 
-    private readonly _stub: TypeDBStub;
-
-    constructor(client: TypeDBStub) {
-        this._stub = client;
+    constructor(client: TypeDBClientImpl) {
+        this._client = client;
     }
 
-    public async get(name: string): Promise<Database> {
-        if (await this.contains(name)) {
-            return new TypeDBDatabaseImpl(name, this._stub);
-        } else throw new TypeDBClientError(ErrorMessage.Client.DB_DOES_NOT_EXIST.message(name));
+    async get(name: string): Promise<Database> {
+        if (!await this.contains(name)) {
+            throw new TypeDBClientError(DB_DOES_NOT_EXIST.message(name));
+        }
+        return await TypeDBDatabaseImpl.get(name, this._client);
     }
 
-    public create(name: string): Promise<void> {
-        if (!name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME);
-        const req = RequestBuilder.Core.DatabaseManager.createReq(name);
-        return this._stub.databasesCreate(req);
+    async contains(name: string): Promise<boolean> {
+        return await this.runFailsafe(name, (client => client.stub.databasesContains(RequestBuilder.DatabaseManager.containsReq(name))));
     }
 
-    public contains(name: string): Promise<boolean> {
-        if (!name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME);
-        const req = RequestBuilder.Core.DatabaseManager.containsReq(name);
-        return this._stub.databasesContains(req);
+    async create(name: string): Promise<void> {
+        return await this.runFailsafe(name, (client => client.stub.databasesCreate(RequestBuilder.DatabaseManager.createReq(name))));
     }
 
-    public all(): Promise<Database[]> {
-        const req = RequestBuilder.Core.DatabaseManager.allReq();
-        return this._stub.databasesAll(req);
+    async all(): Promise<Database[]> {
+        let errors = "";
+        for (const serverClient of this._client.serverClients.values()) {
+            try {
+                const dbs = await serverClient.stub.databasesAll(RequestBuilder.DatabaseManager.allReq());
+                return dbs.databases.map(db => TypeDBDatabaseImpl.of(db, this._client));
+            } catch (e) {
+                errors += `- ${serverClient.address}: ${e}\n`;
+            }
+        }
+        throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
     }
 
-    stub() {
-        return this._stub;
+    private async runFailsafe<T>(name: string, task: (client: ServerClient) => Promise<T>): Promise<T> {
+        let errors = "";
+        for (const serverClient of this._client.serverClients.values()) {
+            try {
+                return await task(serverClient);
+            } catch (e) {
+                if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate) {
+                    return await (await TypeDBDatabaseImpl.get(name, this._client)).runOnPrimaryReplica((_db, client) => task(client));
+                } else errors += `- ${serverClient.address}: ${e}\n`;
+            }
+        }
+        throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
     }
 }

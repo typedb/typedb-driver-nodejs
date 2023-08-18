@@ -20,70 +20,32 @@
  */
 
 
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
-import {ErrorMessage} from "../../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
-import {Label} from "../../../common/Label";
-import {Stream} from "../../../common/util/Stream";
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {Concept} from "../Concept";
-import {Attribute} from "../thing/Attribute";
-import {Entity} from "../thing/Entity";
-import {Relation} from "../thing/Relation";
-import {Thing} from "../thing/Thing";
-import {AttributeType} from "./AttributeType";
-import {EntityType} from "./EntityType";
-import {RelationType} from "./RelationType";
-import {RoleType} from "./RoleType";
-import {ThingType} from "./ThingType";
+import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { ErrorMessage } from "../../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../../common/errors/TypeDBClientError";
+import { Label } from "../../../common/Label";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { Concept } from "../Concept";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export interface Type extends Concept {
-
     readonly label: Label;
 
     readonly root: boolean;
 
     readonly abstract: boolean;
 
-    asRemote(transaction: TypeDBTransaction): Type.Remote;
+    setLabel(transaction: TypeDBTransaction, label: string): Promise<void>;
+
+    getSupertype(transaction: TypeDBTransaction): Promise<Type>;
+
+    getSupertypes(transaction: TypeDBTransaction): Stream<Type>;
+
+    getSubtypes(transaction: TypeDBTransaction): Stream<Type>;
 }
 
 export namespace Type {
-
-    export interface Remote extends Type, Concept.Remote {
-
-        asRemote(transaction: TypeDBTransaction): Type.Remote;
-
-        asType(): Type.Remote;
-
-        asThingType(): ThingType.Remote;
-
-        asEntityType(): EntityType.Remote;
-
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
-
-        setLabel(label: string): Promise<void>;
-
-        getSupertype(): Promise<Type>;
-
-        getSupertypes(): Stream<Type>;
-
-        getSubtypes(): Stream<Type>;
-    }
-
     export function encoding(type: Type): TypeProto.Encoding {
         if (type.isEntityType()) {
             return TypeProto.Encoding.ENTITY_TYPE;

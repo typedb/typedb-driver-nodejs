@@ -38,10 +38,9 @@ BeforeAll(() => {
         throw new Error("Core client does not support authentication");
     });
     setDefaultClientFn(async () => TypeDB.coreClient());
-    setSessionOptions(TypeDBOptions.core({"infer": true}));
-    setTransactionOptions(TypeDBOptions.core({"infer": true}));
+    setSessionOptions(new TypeDBOptions({"infer": true}));
+    setTransactionOptions(new TypeDBOptions({"infer": true}));
 });
-
 
 Before(async () => {
     await beforeBase();

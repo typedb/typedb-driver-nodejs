@@ -24,8 +24,8 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 def vaticle_dependencies():
     git_repository(
         name = "vaticle_dependencies",
-        remote = "https://github.com/vaticle/dependencies",
-        commit = "51fdda8c935d5f9fc34bfdf41b0a6ac1ca77e2ee", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
+        remote = "https://github.com/dmitrii-ubskii/vaticle-dependencies",
+        commit = "b8ff933fc11e366f4eaec789da230c11724277f2", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
     )
 
 #TODO: MOVE NATIVE_TYPEDB_ARTIFACT INTO DEPENDENCIES, THEN REMOVE THIS DEPENDENCY
@@ -40,6 +40,16 @@ def vaticle_typedb_behaviour():
     git_repository(
         name = "vaticle_typedb_behaviour",
         remote = "https://github.com/vaticle/typedb-behaviour",
-        commit = "90b4addcd71a398e9e52e322021c49310e66a47a" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_behaviour
+        commit = "26f4a19a797203c2eeb0682b6f7d25e238b97345" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_behaviour
     )
 
+def vaticle_typedb_protocol():
+#    git_repository(
+#        name = "vaticle_typedb_protocol",
+#        remote = "https://github.com/vaticle/typedb-protocol",
+#        commit = "a3b50decd5f5cd8e35fbe114d39e4fcc206e9fe2" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
+#    )
+    native.local_repository(
+        name = "vaticle_typedb_protocol",
+        path = "../typedb-protocol",
+    )

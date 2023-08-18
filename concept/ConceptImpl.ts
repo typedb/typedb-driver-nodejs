@@ -40,12 +40,6 @@ export abstract class ConceptImpl implements Concept {
 
     protected abstract get className(): string;
 
-    abstract asRemote(transaction: TypeDBTransaction): Concept.Remote;
-
-    isRemote(): boolean {
-        return false;
-    }
-
     isType(): boolean {
         return false;
     }

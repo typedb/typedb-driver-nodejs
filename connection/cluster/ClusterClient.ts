@@ -33,7 +33,7 @@ import { ClusterServerStub } from "./ClusterServerStub";
 import { ClusterSession } from "./ClusterSession";
 import { ClusterUser } from "./ClusterUser";
 import { ClusterUserManager } from "./ClusterUserManager";
-import { FailsafeTask } from "./FailsafeTask";
+import { FailsafeTask } from "../FailsafeTask";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
 

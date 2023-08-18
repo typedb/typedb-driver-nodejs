@@ -28,7 +28,6 @@ import { TypeDBOptions } from "../connection/TypeDBOptions";
 import { Explanation } from "../logic/Explanation";
 
 export interface QueryManager {
-
     match(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
     matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric>;

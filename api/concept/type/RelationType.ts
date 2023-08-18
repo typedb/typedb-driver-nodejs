@@ -21,67 +21,33 @@
 
 import { Stream } from "../../../common/util/Stream";
 import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Attribute } from "../thing/Attribute";
-import { Entity } from "../thing/Entity";
+import { Concept } from "../Concept";
 import { Relation } from "../thing/Relation";
-import { Thing } from "../thing/Thing";
-import { AttributeType } from "./AttributeType";
-import { EntityType } from "./EntityType";
 import { RoleType } from "./RoleType";
 import { ThingType } from "./ThingType";
-import { Type } from "./Type";
+import Transitivity = Concept.Transitivity;
 
 export interface RelationType extends ThingType {
+    create(transaction: TypeDBTransaction): Promise<Relation>;
 
-    asRemote(transaction: TypeDBTransaction): RelationType.Remote;
-}
+    getSupertype(transaction: TypeDBTransaction): Promise<RelationType | null>;
+    setSupertype(transaction: TypeDBTransaction, type: RelationType): Promise<void>;
 
-export namespace RelationType {
+    getSupertypes(transaction: TypeDBTransaction): Stream<RelationType>;
 
-    export interface Remote extends RelationType, ThingType.Remote {
+    getSubtypes(transaction: TypeDBTransaction): Stream<RelationType>;
+    getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<RelationType>;
 
-        asRemote(transaction: TypeDBTransaction): RelationType.Remote;
+    getInstances(transaction: TypeDBTransaction): Stream<Relation>;
+    getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Relation>;
 
-        asType(): Type.Remote;
+    getRelates(transaction: TypeDBTransaction): Stream<RoleType>;
+    getRelates(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<RoleType>;
 
-        asThingType(): ThingType.Remote;
+    getRelates(transaction: TypeDBTransaction, roleLabel: string): Promise<RoleType | null>;
 
-        asEntityType(): EntityType.Remote;
+    getRelatesOverridden(transaction: TypeDBTransaction, roleLabel: string): Promise<RoleType | null>;
 
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
-
-        create(): Promise<Relation>;
-
-        getSubtypes(): Stream<RelationType>;
-
-        setSupertype(relationType: RelationType): Promise<void>;
-
-        getInstances(): Stream<Relation>;
-
-        getRelates(): Stream<RoleType>;
-
-        getRelates(roleLabel: string): Promise<RoleType>;
-
-        getRelates(roleLabel?: string): Promise<RoleType> | Stream<RoleType>;
-
-        getRelatesExplicit(): Stream<RoleType>;
-
-        getRelatesOverridden(roleLabel: string): Promise<RoleType>;
-
-        setRelates(roleLabel: string, overriddenLabel?: string): Promise<void>;
-
-        unsetRelates(roleLabel: string): Promise<void>;
-    }
+    setRelates(transaction: TypeDBTransaction, roleLabel: string, overriddenLabel?: string): Promise<void>;
+    unsetRelates(transaction: TypeDBTransaction, roleLabel: string): Promise<void>;
 }

@@ -20,77 +20,126 @@
  */
 
 
-import {ClientDuplexStream} from "@grpc/grpc-js";
-import {Session} from "typedb-protocol/common/session_pb";
-import {Connection as ConnectionProto} from "typedb-protocol/common/connection_pb";
+import {ConnectionOpenReq} from "typedb-protocol/proto/connection";
 import {
-    CoreDatabase as CoreDatabaseProto,
-    CoreDatabaseManager as CoreDatabaseMgrProto
-} from "typedb-protocol/core/core_database_pb";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
-import {TypeDBDatabaseImpl} from "../../connection/TypeDBDatabaseImpl";
-import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
+    DatabaseDeleteReq,
+    DatabaseManagerAllReq,
+    DatabaseManagerAllRes,
+    DatabaseManagerContainsReq,
+    DatabaseManagerCreateReq,
+    DatabaseManagerGetReq,
+    DatabaseManagerGetRes,
+    DatabaseRuleSchemaReq,
+    DatabaseSchemaReq,
+    DatabaseTypeSchemaReq
+} from "typedb-protocol/proto/database";
+import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/service";
 import {TypeDBClientError} from "../errors/TypeDBClientError";
 
 /*
 TODO implement ResilientCall
  */
 export abstract class TypeDBStub {
-
-    connectionOpen(req: ConnectionProto.Open.Req): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.stub().connection_open(req, (err) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve();
+    connectionOpen(req: ConnectionOpenReq): Promise<void> {
+        return this.mayRenewToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().connection_open(req, (err) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve();
+                })
             })
-        });
+        );
     }
 
-    databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.stub().databases_create(req, (err) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve();
+    databasesCreate(req: DatabaseManagerCreateReq): Promise<void> {
+        return this.mayRenewToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().databases_create(req, (err) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve();
+                })
             })
-        });
+        );
     }
 
-    databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            this.stub().databases_contains(req, (err, res) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve(res.getContains());
-            });
-        });
-    }
-
-    databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]> {
-        return new Promise((resolve, reject) => {
-            this.stub().databases_all(req, (err, res) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve(res.getNamesList().map(name => new TypeDBDatabaseImpl(name, this)));
+    databasesContains(req: DatabaseManagerContainsReq): Promise<boolean> {
+        return this.mayRenewToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().databases_contains(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res.contains);
+                });
             })
-        })
+        );
     }
 
-    databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.stub().database_delete(req, (err) => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
+    databasesGet(req: DatabaseManagerGetReq): Promise<DatabaseManagerGetRes> {
+        return this.mayRenewToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().databases_get(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res);
+                })
+            })
+        );
     }
 
-    databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string> {
-        return new Promise((resolve, reject) => {
-            return this.stub().database_schema(req, (err, res) => {
-                if (err) reject(err);
-                else resolve(res.getSchema());
-            });
-        });
+    databasesAll(req: DatabaseManagerAllReq): Promise<DatabaseManagerAllRes> {
+        return this.mayRenewToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().databases_all(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res);
+                })
+            })
+        );
     }
 
+    databaseDelete(req: DatabaseDeleteReq): Promise<void> {
+        return this.mayRenewToken(() =>
+            new Promise((resolve, reject) => {
+                this.stub().database_delete(req, (err) => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            })
+        );
+    }
+
+    databaseSchema(req: DatabaseSchemaReq): Promise<string> {
+        return this.mayRenewToken(() =>
+            new Promise((resolve, reject) => {
+                return this.stub().database_schema(req, (err, res) => {
+                    if (err) reject(err);
+                    else resolve(res.schema);
+                });
+            })
+        );
+    }
+
+    databaseTypeSchema(req: DatabaseTypeSchemaReq): Promise<string> {
+        return this.mayRenewToken(() =>
+            new Promise((resolve, reject) => {
+                return this.stub().database_type_schema(req, (err, res) => {
+                    if (err) reject(err);
+                    else resolve(res.schema);
+                });
+            })
+        );
+    }
+
+    databaseRuleSchema(req: DatabaseRuleSchemaReq): Promise<string> {
+        return this.mayRenewToken(() =>
+            new Promise((resolve, reject) => {
+                return this.stub().database_rule_schema(req, (err, res) => {
+                    if (err) reject(err);
+                    else resolve(res.schema);
+                });
+            })
+        );
+    }
+
+    /*
     sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res> {
         return new Promise<Session.Open.Res>((resolve, reject) => {
             this.stub().session_open(openReq, (err, res) => {
@@ -132,6 +181,11 @@ export abstract class TypeDBStub {
                 }
             });
     }
+     */
 
-    abstract stub(): TypeDBClient;
+    abstract stub(): GRPCStub;
+
+    abstract close(): void;
+
+    abstract mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES>;
 }

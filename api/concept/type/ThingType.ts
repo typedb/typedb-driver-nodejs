@@ -20,33 +20,66 @@
  */
 
 
-import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
-import {Stream} from "../../../common/util/Stream";
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {Concept} from "../Concept";
-import {Attribute} from "../thing/Attribute";
-import {Entity} from "../thing/Entity";
-import {Relation} from "../thing/Relation";
-import {Thing} from "../thing/Thing";
-import {AttributeType} from "./AttributeType";
-import {EntityType} from "./EntityType";
-import {RelationType} from "./RelationType";
-import {RoleType} from "./RoleType";
-import {Type} from "./Type";
-import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../../../common/errors/ErrorMessage";
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
+import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { Concept } from "../Concept";
+import { Thing } from "../thing/Thing";
+import { AttributeType } from "./AttributeType";
+import { RoleType } from "./RoleType";
+import { Type } from "./Type";
+import { TypeDBClientError } from "../../../common/errors/TypeDBClientError";
+import { ErrorMessage } from "../../../common/errors/ErrorMessage";
+import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
 import BAD_ANNOTATION = ErrorMessage.Concept.BAD_ANNOTATION;
+import Transitivity = Concept.Transitivity;
+import Annotation = ThingType.Annotation;
 
 export interface ThingType extends Type {
+    getSupertype(transaction: TypeDBTransaction): Promise<ThingType>;
 
-    asRemote(transaction: TypeDBTransaction): ThingType.Remote;
+    getSupertypes(transaction: TypeDBTransaction): Stream<ThingType>;
+
+    getSubtypes(transaction: TypeDBTransaction): Stream<ThingType>;
+
+    getInstances(transaction: TypeDBTransaction): Stream<Thing>;
+
+    setAbstract(transaction: TypeDBTransaction): Promise<void>;
+    unsetAbstract(transaction: TypeDBTransaction): Promise<void>;
+
+    getOwns(transaction: TypeDBTransaction): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, valueType: Concept.ValueType): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, valueType: Concept.ValueType, transitivity: Transitivity): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, annotations: Annotation[], transitivity: Transitivity): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, valueType: Concept.ValueType, annotations: Annotation[], transitivity: Transitivity): Stream<AttributeType>;
+
+    getOwnsOverridden(transaction: TypeDBTransaction, attributeType: AttributeType): Promise<AttributeType>;
+
+    setOwns(transaction: TypeDBTransaction, attributeType: AttributeType): Promise<void>;
+    setOwns(transaction: TypeDBTransaction, attributeType: AttributeType, annotations: Annotation[]): Promise<void>;
+    setOwns(transaction: TypeDBTransaction, attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
+    setOwns(transaction: TypeDBTransaction, attributeType: AttributeType, overriddenType: AttributeType, annotations: Annotation[]): Promise<void>;
+
+    unsetOwns(transaction: TypeDBTransaction, attributeType: AttributeType): Promise<void>;
+
+    getPlays(transaction: TypeDBTransaction): Stream<RoleType>;
+    getPlays(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<RoleType>;
+
+    getPlaysOverridden(transaction: TypeDBTransaction, role: RoleType): Promise<RoleType>;
+
+    setPlays(transaction: TypeDBTransaction, role: RoleType): Promise<void>;
+    setPlays(transaction: TypeDBTransaction, role: RoleType, overriddenType: RoleType): Promise<void>;
+
+    unsetPlays(transaction: TypeDBTransaction, role: RoleType): Promise<void>;
+
+    getSyntax(transaction: TypeDBTransaction): Promise<string>;
 }
 
 export namespace ThingType {
-
     export class Annotation {
-
         public static KEY = new Annotation("key");
         public static UNIQUE = new Annotation("unique");
 
@@ -62,14 +95,12 @@ export namespace ThingType {
             else throw new TypeDBClientError(BAD_ANNOTATION.message(string));
         }
 
-
         public toString(): string {
             return "[annotation: " + this.name + "]";
         }
     }
 
     export namespace Annotation {
-
         export function proto(annotation: Annotation): TypeProto.Annotation {
             if (annotation == Annotation.KEY) {
                 return RequestBuilder.Type.Annotation.annotationKeyProto();
@@ -79,85 +110,6 @@ export namespace ThingType {
                 throw new TypeDBClientError((BAD_ANNOTATION.message(annotation)));
             }
         }
-    }
-
-    export interface Remote extends ThingType, Type.Remote {
-
-        asRemote(transaction: TypeDBTransaction): ThingType.Remote;
-
-        asType(): Type.Remote;
-
-        asThingType(): ThingType.Remote;
-
-        asEntityType(): EntityType.Remote;
-
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
-
-        getSupertype(): Promise<ThingType>;
-
-        getSupertypes(): Stream<ThingType>;
-
-        getSubtypes(): Stream<ThingType>;
-
-        getInstances(): Stream<Thing>;
-
-        setAbstract(): Promise<void>;
-
-        unsetAbstract(): Promise<void>;
-
-        setPlays(role: RoleType): Promise<void>;
-
-        setPlays(role: RoleType, overriddenType: RoleType): Promise<void>;
-
-        setOwns(attributeType: AttributeType): Promise<void>;
-
-        setOwns(attributeType: AttributeType, annotations: Annotation[]): Promise<void>;
-
-        setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
-
-        setOwns(attributeType: AttributeType, overriddenType: AttributeType, annotations: Annotation[]): Promise<void>;
-
-        getPlays(): Stream<RoleType>;
-
-        getPlaysExplicit(): Stream<RoleType>;
-
-        getPlaysOverridden(role: RoleType): Promise<RoleType>;
-
-        getOwns(): Stream<AttributeType>;
-
-        getOwns(valueType: Concept.ValueType): Stream<AttributeType>;
-
-        getOwns(annotations: Annotation[]): Stream<AttributeType>;
-
-        getOwns(valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
-
-        getOwnsExplicit(): Stream<AttributeType>;
-
-        getOwnsExplicit(valueType: Concept.ValueType): Stream<AttributeType>;
-
-        getOwnsExplicit(annotations: Annotation[]): Stream<AttributeType>;
-
-        getOwnsExplicit(valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
-
-        getOwnsOverridden(attributeType: AttributeType): Promise<AttributeType>;
-
-        unsetPlays(role: RoleType): Promise<void>;
-
-        unsetOwns(attributeType: AttributeType): Promise<void>;
-
-        getSyntax(): Promise<string>;
     }
 
     export function proto(thingType: ThingType) {

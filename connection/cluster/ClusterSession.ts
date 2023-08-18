@@ -26,7 +26,7 @@ import { TransactionType, TypeDBTransaction } from "../../api/connection/TypeDBT
 import { TypeDBSessionImpl } from "../TypeDBSessionImpl";
 import { ClusterClient } from "./ClusterClient";
 import { ClusterServerClient } from "./ClusterServerClient";
-import { FailsafeTask } from "./FailsafeTask";
+import { FailsafeTask } from "../FailsafeTask";
 
 export class ClusterSession implements TypeDBSession {
 

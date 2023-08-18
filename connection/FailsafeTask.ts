@@ -19,12 +19,12 @@
  * under the License.
  */
 
-import { Database } from "../../api/connection/database/Database";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { ClusterDatabase, DatabaseReplica } from "../../dependencies_internal";
-import { ClusterClient } from "./ClusterClient";
+import { Database } from "../api/connection/database/Database";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { ClusterDatabase, DatabaseReplica } from "../dependencies_internal";
+import { ClusterClient } from "./cluster/ClusterClient";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;

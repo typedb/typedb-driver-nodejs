@@ -22,22 +22,11 @@
 import { Database } from "./Database";
 
 export interface DatabaseManager {
+    get(name: string): Promise<Database>;
+
+    all(): Promise<Database[]>;
 
     contains(name: string): Promise<boolean>;
 
     create(name: string): Promise<void>;
-
-    get(name: string): Promise<Database>;
-
-    all(): Promise<Database[]>;
-}
-
-export namespace DatabaseManager {
-
-    export interface Cluster extends DatabaseManager {
-
-        get(name: string): Promise<Database.Cluster>;
-
-        all(): Promise<Database.Cluster[]>;
-    }
 }

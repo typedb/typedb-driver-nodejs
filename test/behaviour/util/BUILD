@@ -19,9 +19,19 @@
 # under the License.
 #
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-exports_files(["Util.ts", "UtilSteps.ts"])
+ts_project(
+    name = "util",
+    srcs = ["Util.ts"],
+    tsconfig = {},
+    declaration = True,
+    deps = [
+        "//:node_modules/@types/node",
+    ],
+    visibility = ["//visibility:public"],
+)
 
 checkstyle_test(
     name = "checkstyle",

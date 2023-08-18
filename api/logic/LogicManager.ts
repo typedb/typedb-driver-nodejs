@@ -23,7 +23,6 @@ import { Stream } from "../../common/util/Stream";
 import { Rule } from "./Rule";
 
 export interface LogicManager {
-
     getRule(label: string): Promise<Rule | undefined>;
 
     getRules(): Stream<Rule>;

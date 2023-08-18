@@ -22,7 +22,6 @@
 import { TypeDBTransaction } from "../connection/TypeDBTransaction";
 
 export interface Rule {
-
     readonly label: string;
 
     readonly when: string;
@@ -35,7 +34,6 @@ export interface Rule {
 }
 
 export interface RemoteRule extends Rule {
-
     setLabel(label: string): Promise<void>;
 
     delete(): Promise<void>;

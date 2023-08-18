@@ -29,10 +29,10 @@ import { TypeDBDatabaseManagerImpl } from "../TypeDBDatabaseManagerImpl";
 import { ClusterClient } from "./ClusterClient";
 import { ClusterDatabase } from "./ClusterDatabase";
 import { ClusterServerStub } from "./ClusterServerStub";
-import { FailsafeTask } from "./FailsafeTask";
+import { FailsafeTask } from "../FailsafeTask";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import DB_DOES_NOT_EXIST = ErrorMessage.Client.DB_DOES_NOT_EXIST;
+import DB_DOES_NOT_EXIST = ErrorMessage.Client.DATABASE_DOES_NOT_EXIST;
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 

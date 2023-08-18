@@ -43,7 +43,6 @@ import {
 } from "../../dependencies_internal";
 import Annotation = ThingType.Annotation;
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
-import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 export abstract class ThingImpl extends ConceptImpl implements Thing {
     private readonly _iid: string;
@@ -55,8 +54,6 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         this._iid = iid;
         this._inferred = inferred;
     }
-
-    abstract asRemote(transaction: TypeDBTransaction): Thing.Remote;
 
     equals(concept: Concept): boolean {
         if (!concept.isThing()) return false;
@@ -88,144 +85,82 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
     toJSONRecord(): Record<string, boolean | string | number> {
         return {type: this.type.label.name};
     }
+
+    async delete(transaction: TypeDBTransaction): Promise<void> {
+        const request = RequestBuilder.Thing.deleteReq(this.iid);
+        await this.execute(transaction, request);
+    }
+
+    getHas(transaction: TypeDBTransaction): Stream<Attribute>;
+    getHas(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<Attribute>;
+    getHas(transaction: TypeDBTransaction, attributeType: AttributeType): Stream<Attribute>;
+    getHas(transaction: TypeDBTransaction, attributeTypes: AttributeType[]): Stream<Attribute>;
+    getHas(transaction: TypeDBTransaction, annotationOrAttrTypeOrAttrTypes?: Annotation[] | AttributeType | AttributeType[]): Stream<Attribute> {
+        let request;
+        if (typeof annotationOrAttrTypeOrAttrTypes === "undefined") {
+            request = RequestBuilder.Thing.getHasReqByAnnotations(this.iid, []);
+        } else if (Array.isArray(annotationOrAttrTypeOrAttrTypes)) {
+            const asArray = annotationOrAttrTypeOrAttrTypes as Array<any>;
+            if (asArray.length == 0 || asArray[0] instanceof AttributeTypeImpl) {
+                request = RequestBuilder.Thing.getHasByTypeReq(
+                    this.iid,
+                    (annotationOrAttrTypeOrAttrTypes as AttributeType[]).map(attrType => ThingType.proto(attrType)));
+            } else {
+                request = RequestBuilder.Thing.getHasReqByAnnotations(
+                    this.iid,
+                    (annotationOrAttrTypeOrAttrTypes as Annotation[]).map(annotation => Annotation.proto(annotation))
+                );
+            }
+        } else {
+            request = RequestBuilder.Thing.getHasByTypeReq(this.iid, [ThingType.proto(annotationOrAttrTypeOrAttrTypes)]);
+        }
+        return this.stream(transaction, request).flatMap(
+            (resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList())
+        ).map((attrProto) => AttributeImpl.of(attrProto));
+    }
+
+    getPlaying(transaction: TypeDBTransaction): Stream<RoleType> {
+        const request = RequestBuilder.Thing.getPlayingReq(this.iid);
+        return this.stream(transaction, request)
+            .flatMap((resPart) => Stream.array(resPart.getThingGetPlayingResPart().getRoleTypesList()))
+            .map((res) => RoleTypeImpl.of(res));
+    }
+
+    getRelations(transaction: TypeDBTransaction, roleTypes?: RoleType[]): Stream<Relation> {
+        if (!roleTypes) roleTypes = [];
+        const request = RequestBuilder.Thing.getRelationsReq(this.iid, roleTypes.map((roleType) => RoleType.proto(roleType)));
+        return this.stream(transaction, request)
+            .flatMap((resPart) => Stream.array(resPart.getThingGetRelationsResPart().getRelationsList()))
+            .map((res) => RelationImpl.of(res));
+    }
+
+    async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
+        return !(await transaction.concepts.getThing(this.iid));
+    }
+
+    async setHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void> {
+        const request = RequestBuilder.Thing.setHasReq(this.iid, Thing.proto(attribute));
+        await this.execute(transaction, request);
+    }
+
+    async unsetHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void> {
+        const request = RequestBuilder.Thing.unsetHasReq(this.iid, Thing.proto(attribute));
+        await this.execute(transaction, request);
+    }
+
+    protected async execute(transaction: TypeDBTransaction, request: TransactionProto.Req): Promise<ThingProto.Res> {
+        let ext = transaction as TypeDBTransaction.Extended;
+        return (await ext.rpcExecute(request, false)).getThingRes();
+    }
+
+    protected stream(transaction: TypeDBTransaction, request: TransactionProto.Req): Stream<ThingProto.ResPart> {
+        let ext = transaction as TypeDBTransaction.Extended;
+        return ext.rpcStream(request).map((res) => res.getThingResPart());
+    }
 }
 
 export namespace ThingImpl {
-
-    export abstract class Remote extends ConceptImpl.Remote implements Thing.Remote {
-
-        private readonly _iid: string;
-        private readonly _inferred: boolean;
-
-        protected constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, ..._: any) {
-            super(transaction);
-            if (!iid) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_IID);
-            this._iid = iid;
-            this._inferred = inferred;
-        }
-
-        abstract asRemote(transaction: TypeDBTransaction): Thing.Remote;
-
-        equals(concept: Concept): boolean {
-            if (concept.isType()) return false;
-            else return concept.asThing().iid === this._iid;
-        }
-
-        toString(): string {
-            return `${this.className}[iid:${this._iid}]`;
-        }
-
-        get iid(): string {
-            return this._iid;
-        }
-
-        abstract get type(): ThingType;
-
-        get inferred(): boolean {
-            return this._inferred;
-        }
-
-        isThing(): boolean {
-            return true;
-        }
-
-        asThing(): Thing.Remote {
-            return this;
-        }
-
-        toJSONRecord(): Record<string, boolean | string | number> {
-            return {type: this.type.label.name};
-        }
-
-        async delete(): Promise<void> {
-            const request = RequestBuilder.Thing.deleteReq(this.iid);
-            await this.execute(request);
-        }
-
-        getHas(): Stream<Attribute>;
-        getHas(annotations: Annotation[]): Stream<Attribute>;
-        getHas(attributeType: AttributeType.Boolean): Stream<Attribute.Boolean>;
-        getHas(attributeType: AttributeType.Long): Stream<Attribute.Long>;
-        getHas(attributeType: AttributeType.Double): Stream<Attribute.Double>;
-        getHas(attributeType: AttributeType.String): Stream<Attribute.String>;
-        getHas(attributeType: AttributeType.DateTime): Stream<Attribute.DateTime>;
-        getHas(attributeTypes: AttributeType[]): Stream<Attribute>;
-        getHas(annotationOrAttrTypeOrAttrTypes?: Annotation[] | AttributeType | AttributeType[]): Stream<Attribute> {
-            let isSingleAttrType = false;
-            let request;
-            if (typeof annotationOrAttrTypeOrAttrTypes === "undefined") {
-                request = RequestBuilder.Thing.getHasReqByAnnotations(this.iid, []);
-            } else if (Array.isArray(annotationOrAttrTypeOrAttrTypes)) {
-                const asArray = annotationOrAttrTypeOrAttrTypes as Array<any>;
-                if (asArray.length == 0 || asArray[0] instanceof AttributeTypeImpl) {
-                    request = RequestBuilder.Thing.getHasByTypeReq(
-                        this.iid,
-                        (annotationOrAttrTypeOrAttrTypes as AttributeType[]).map(attrType => ThingType.proto(attrType)));
-                } else {
-                    request = RequestBuilder.Thing.getHasReqByAnnotations(
-                        this.iid,
-                        (annotationOrAttrTypeOrAttrTypes as Annotation[]).map(annotation => Annotation.proto(annotation))
-                    );
-                }
-            } else {
-                request = RequestBuilder.Thing.getHasByTypeReq(this.iid, [ThingType.proto(annotationOrAttrTypeOrAttrTypes)]);
-                isSingleAttrType = true;
-            }
-            const attributes = this.stream(request).flatMap(
-                (resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList())
-            ).map((attrProto) => AttributeImpl.of(attrProto));
-            if (isSingleAttrType) {
-                const arg = annotationOrAttrTypeOrAttrTypes as AttributeType;
-                if (arg.isBoolean()) return attributes as Stream<Attribute.Boolean>;
-                else if (arg.isLong()) return attributes as Stream<Attribute.Long>;
-                else if (arg.isDouble()) return attributes as Stream<Attribute.Double>;
-                else if (arg.isString()) return attributes as Stream<Attribute.String>;
-                else if (arg.isDateTime()) return attributes as Stream<Attribute.DateTime>;
-                else throw new TypeDBClientError(BAD_VALUE_TYPE.message(arg));
-            } else {
-                return attributes;
-            }
-        }
-
-        getPlaying(): Stream<RoleType> {
-            const request = RequestBuilder.Thing.getPlayingReq(this.iid);
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingGetPlayingResPart().getRoleTypesList()))
-                .map((res) => RoleTypeImpl.of(res));
-        }
-
-        getRelations(roleTypes?: RoleType[]): Stream<Relation> {
-            if (!roleTypes) roleTypes = [];
-            const request = RequestBuilder.Thing.getRelationsReq(this.iid, roleTypes.map((roleType) => RoleType.proto(roleType)));
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingGetRelationsResPart().getRelationsList()))
-                .map((res) => RelationImpl.of(res));
-        }
-
-        async isDeleted(): Promise<boolean> {
-            return !(await this.transaction.concepts.getThing(this.iid));
-        }
-
-        async setHas(attribute: Attribute): Promise<void> {
-            const request = RequestBuilder.Thing.setHasReq(this.iid, Thing.proto(attribute));
-            await this.execute(request);
-        }
-
-        async unsetHas(attribute: Attribute): Promise<void> {
-            const request = RequestBuilder.Thing.unsetHasReq(this.iid, Thing.proto(attribute));
-            await this.execute(request);
-        }
-
-        protected async execute(request: TransactionProto.Req): Promise<ThingProto.Res> {
-            return (await this.transaction.rpcExecute(request, false)).getThingRes();
-        }
-
-        protected stream(request: TransactionProto.Req): Stream<ThingProto.ResPart> {
-            return this.transaction.rpcStream(request).map((res) => res.getThingResPart());
-        }
-    }
-
-    export function of(thingProto: ThingProto) {
+    export function of(thingProto: ThingProto): Thing {
         switch (thingProto.getType().getEncoding()) {
             case TypeProto.Encoding.ENTITY_TYPE:
                 return EntityImpl.of(thingProto);

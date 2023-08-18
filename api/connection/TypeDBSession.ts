@@ -25,7 +25,6 @@ import { TypeDBOptions } from "./TypeDBOptions";
 import { TransactionType, TypeDBTransaction } from "./TypeDBTransaction";
 
 export interface TypeDBSession {
-
     isOpen(): boolean;
 
     readonly type: SessionType;
@@ -40,7 +39,6 @@ export interface TypeDBSession {
 }
 
 export interface SessionType {
-
     proto(): Session.Type;
 
     isData(): boolean;
@@ -49,9 +47,7 @@ export interface SessionType {
 }
 
 export namespace SessionType {
-
     class SessionTypeImpl implements SessionType {
-
         private readonly _type: Session.Type;
 
         constructor(type: Session.Type) {

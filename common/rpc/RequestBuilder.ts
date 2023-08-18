@@ -19,569 +19,614 @@
  * under the License.
  */
 
-import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
-import {ServerManager as ServerManagerProto} from "typedb-protocol/cluster/cluster_server_pb";
 import {
-    ClusterUser as ClusterUserProto,
-    ClusterUserManager as ClusterUserManagerProto
-} from "typedb-protocol/cluster/cluster_user_pb";
+    AttributeGetOwnersReq,
+    ConceptManagerPutAttributeTypeReq,
+    ConceptManagerPutEntityTypeReq,
+    ConceptManagerPutRelationTypeReq,
+    ConceptManagerReq,
+    RelationGetPlayersByRoleTypeReq,
+    RelationGetRelatingReq,
+    Thing,
+    ThingDeleteReq,
+    ThingGetHasReq,
+    ThingGetPlayingReq,
+    ThingGetRelationsReq,
+    ThingReq,
+    ThingSetHasReq,
+    ThingUnsetHasReq,
+    Type,
+    ValueType
+} from "typedb-protocol/proto/concept";
 import {
-    Attribute as AttributeProto,
-    AttributeType as AttributeTypeProto,
-    ConceptManager as ConceptMgrProto,
-    ConceptValue as ConceptValueProto,
-    ConceptValue,
-    EntityType as EntityTypeProto,
-    Relation as RelationProto,
-    RelationType as RelationTypeProto,
-    RoleType as RoleTypeProto,
-    Thing as ThingProto,
-    ThingType as ThingTypeProto,
-    Type as TypeProto,
-    ValueType as ValueTypeProto
-} from "typedb-protocol/common/concept_pb";
-import {LogicManager as LogicProto, Rule as RuleProto} from "typedb-protocol/common/logic_pb";
-import {Options} from "typedb-protocol/common/options_pb";
-import {QueryManager as QueryProto} from "typedb-protocol/common/query_pb";
-import {Session as SessionProto} from "typedb-protocol/common/session_pb";
-import {Connection as ConnectionProto} from "typedb-protocol/common/connection_pb";
-import {Version as VersionProto} from "typedb-protocol/common/version_pb";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
-import {CoreDatabase, CoreDatabaseManager} from "typedb-protocol/core/core_database_pb";
+    LogicManagerGetRuleReq,
+    LogicManagerGetRulesReq,
+    LogicManagerPutRuleReq,
+    LogicManagerReq,
+    RuleDeleteReq,
+    RuleReq,
+    RuleSetLabelReq
+} from "typedb-protocol/proto/logic";
+import {Options} from "typedb-protocol/proto/options";
+import {
+    QueryManagerDefineReq,
+    QueryManagerDeleteReq,
+    QueryManagerExplainReq,
+    QueryManagerInsertReq,
+    QueryManagerMatchAggregateReq,
+    QueryManagerMatchGroupAggregateReq,
+    QueryManagerMatchGroupReq,
+    QueryManagerMatchReq,
+    QueryManagerReq,
+    QueryManagerUndefineReq,
+    QueryManagerUpdateReq
+} from "typedb-protocol/proto/query";
+import {Version} from "typedb-protocol/proto/version";
 import * as uuid from "uuid";
 import {Label} from "../Label";
 import {Bytes} from "../util/Bytes";
-
+import {
+    UserManagerAllReq,
+    UserManagerContainsReq,
+    UserManagerCreateReq,
+    UserManagerDeleteReq,
+    UserManagerGetReq,
+    UserManagerPasswordSetReq,
+    UserPasswordUpdateReq,
+    UserTokenReq
+} from "typedb-protocol/proto/user";
+import {
+    DatabaseDeleteReq,
+    DatabaseManagerAllReq,
+    DatabaseManagerContainsReq,
+    DatabaseManagerCreateReq,
+    DatabaseManagerGetReq,
+    DatabaseRuleSchemaReq,
+    DatabaseSchemaReq,
+    DatabaseTypeSchemaReq
+} from "typedb-protocol/proto/database";
+import {
+    TransactionClient,
+    TransactionCommitReq,
+    TransactionOpenReq,
+    TransactionReq,
+    TransactionRollbackReq,
+    TransactionStreamReq,
+    TransactionType
+} from "typedb-protocol/proto/transaction";
+import {ServerManagerAllReq} from "typedb-protocol/proto/server";
+import {ConnectionOpenReq} from "typedb-protocol/proto/connection";
+import {SessionCloseReq, SessionOpenReq, SessionPulseReq, SessionType} from "typedb-protocol/proto/session";
 
 /* eslint no-inner-declarations: "off" */
 export namespace RequestBuilder {
-
-    export namespace Core {
-
-        export namespace DatabaseManager {
-
-            export function createReq(name: string) {
-                return new CoreDatabaseManager.Create.Req().setName(name);
-            }
-
-            export function containsReq(name: string) {
-                return new CoreDatabaseManager.Contains.Req().setName(name);
-            }
-
-            export function allReq() {
-                return new CoreDatabaseManager.All.Req();
-            }
-
+    export namespace DatabaseManager {
+        export function getReq(name: string) {
+            return new DatabaseManagerGetReq({ name: name });
         }
 
-        export namespace Database {
+        export function createReq(name: string) {
+            return new DatabaseManagerCreateReq({ name: name });
+        }
 
-            export function schemaReq(name: string) {
-                return new CoreDatabase.Schema.Req().setName(name);
-            }
+        export function containsReq(name: string) {
+            return new DatabaseManagerContainsReq({ name: name });
+        }
 
-
-            export function deleteReq(name: string) {
-                return new CoreDatabase.Delete.Req().setName(name);
-            }
+        export function allReq() {
+            return new DatabaseManagerAllReq();
         }
     }
 
-    export namespace Cluster {
-        export namespace ServerManager {
-
-            export function allReq() {
-                return new ServerManagerProto.All.Req();
-            }
+    export namespace Database {
+        export function schemaReq(name: string) {
+            return new DatabaseSchemaReq({ name: name });
         }
 
-        export namespace UserManager {
-            export function containsReq(name: string): ClusterUserManagerProto.Contains.Req {
-                return new ClusterUserManagerProto.Contains.Req().setUsername(name);
-            }
-
-            export function createReq(name: string, password: string): ClusterUserManagerProto.Create.Req {
-                return new ClusterUserManagerProto.Create.Req().setUsername(name).setPassword(password);
-            }
-
-            export function deleteReq(name: string): ClusterUserManagerProto.Delete.Req {
-                return new ClusterUserManagerProto.Delete.Req().setUsername(name);
-            }
-
-            export function allReq(): ClusterUserManagerProto.All.Req {
-                return new ClusterUserManagerProto.All.Req();
-            }
-
-            export function passwordSetReq(name: string, password: string): ClusterUserManagerProto.PasswordSet.Req {
-                return new ClusterUserManagerProto.PasswordSet.Req().setUsername(name).setPassword(password);
-            }
-
-            export function getReq(name: string): ClusterUserManagerProto.Get.Req {
-                return new ClusterUserManagerProto.Get.Req().setUsername(name);
-            }
+        export function typeSchemaReq(name: string) {
+            return new DatabaseTypeSchemaReq({ name: name });
         }
 
-        export namespace User {
-            export function passwordUpdateReq(name: string, passwordOld: string, passwordNew: string): ClusterUserProto.PasswordUpdate.Req {
-                return new ClusterUserProto.PasswordUpdate.Req().setUsername(name).setPasswordOld(passwordOld).setPasswordNew(passwordNew);
-            }
-
-            export function tokenReq(username: string) {
-                return new ClusterUserProto.Token.Req().setUsername(username);
-            }
+        export function ruleSchemaReq(name: string) {
+            return new DatabaseRuleSchemaReq({ name: name });
         }
 
-        export namespace DatabaseManager {
-            export function getReq(name: string) {
-                return new ClusterDatabaseManager.Get.Req().setName(name);
-            }
-
-            export function allReq() {
-                return new ClusterDatabaseManager.All.Req();
-            }
-        }
-
-        export namespace Database {
-
+        export function deleteReq(name: string) {
+            return new DatabaseDeleteReq({ name: name });
         }
     }
+
+    export namespace ServerManager {
+        export function allReq() {
+            return new ServerManagerAllReq();
+        }
+    }
+
+    /*
+    export namespace UserManager {
+        export function containsReq(name: string): UserManagerContainsReq {
+            return new UserManagerContainsReq({ username: name });
+        }
+
+        export function createReq(name: string, password: string): UserManagerCreateReq {
+            return new UserManagerCreateReq({ username: name, password: password });
+        }
+
+        export function deleteReq(name: string): UserManagerDeleteReq {
+            return new UserManagerDeleteReq({ username: name });
+        }
+
+        export function allReq(): UserManagerAllReq {
+            return new UserManagerAllReq();
+        }
+
+        export function passwordSetReq(name: string, password: string): UserManagerPasswordSetReq {
+            return new UserManagerPasswordSetReq({ username: name, password: password });
+        }
+
+        export function getReq(name: string): UserManagerGetReq {
+            return new UserManagerGetReq({ username: name });
+        }
+    }
+
+    export namespace User {
+        export function passwordUpdateReq(name: string, passwordOld: string, passwordNew: string): UserPasswordUpdateReq {
+            return new UserPasswordUpdateReq({ username: name, password_old: passwordOld, password_new: passwordNew });
+        }
+
+        export function tokenReq(username: string) {
+            return new UserTokenReq({ username: username });
+        }
+    }
+     */
 
     export namespace Connection {
 
         export function openReq() {
-            return new ConnectionProto.Open.Req().setVersion(
-                VersionProto.VERSION
-            )
+            return new ConnectionOpenReq({ version: Version.VERSION })
         }
     }
 
+    /*
     export namespace Session {
 
-        export function openReq(database: string, type: SessionProto.Type, options: Options) {
-            return new SessionProto.Open.Req().setDatabase(database).setType(type).setOptions(options);
+        export function openReq(database: string, type: SessionType, options: Options) {
+            return new SessionOpenReq({ database: database, type: type, options: options });
         }
 
         export function closeReq(id: string) {
-            return new SessionProto.Close.Req().setSessionId(id);
+            return new SessionCloseReq({ session_id: Bytes.hexStringToBytes(id) });
         }
 
         export function pulseReq(id: string) {
-            return new SessionProto.Pulse.Req().setSessionId(id);
+            return new SessionPulseReq({ session_id: Bytes.hexStringToBytes(id) });
         }
 
     }
 
     export namespace Transaction {
 
-        export function clientReq(reqs: TransactionProto.Req[]) {
-            return new TransactionProto.Client().setReqsList(reqs);
+        export function clientReq(reqs: TransactionReq[]) {
+            return new TransactionClient({ reqs: reqs });
         }
 
-        export function openReq(sessionId: string, type: TransactionProto.Type, options: Options, latencyMillis: number) {
-            return new TransactionProto.Req().setOpenReq(
-                new TransactionProto.Open.Req().setSessionId(sessionId).setType(type).setOptions(options).setNetworkLatencyMillis(latencyMillis)
-            );
+        export function openReq(sessionId: string, type: TransactionType, options: Options, latencyMillis: number) {
+            return new TransactionReq({
+                open_req:
+                    new TransactionOpenReq({
+                        session_id: Bytes.hexStringToBytes(sessionId),
+                        type: type,
+                        options: options,
+                        network_latency_millis: latencyMillis
+                    })
+            });
         }
 
         export function commitReq() {
-            return new TransactionProto.Req().setCommitReq(new TransactionProto.Commit.Req());
+            return new TransactionReq({commit_req: new TransactionCommitReq()});
         }
 
         export function rollbackReq() {
-            return new TransactionProto.Req().setRollbackReq(new TransactionProto.Rollback.Req());
+            return new TransactionReq({rollback_req: new TransactionRollbackReq()});
         }
 
         export function streamReq(requestId: string) {
-            return new TransactionProto.Req().setReqId(uuid.parse(requestId) as Uint8Array).setStreamReq(new TransactionProto.Stream.Req());
+            return new TransactionReq({
+                req_id: uuid.parse(requestId) as Uint8Array,
+                stream_req: new TransactionStreamReq()
+            });
         }
 
     }
 
     export namespace LogicManager {
 
-        export function logicManagerReq(logicReq: LogicProto.Req) {
-            return new TransactionProto.Req().setLogicManagerReq(logicReq);
+        export function logicManagerReq(logicReq: LogicManagerReq) {
+            return new TransactionReq({ logic_manager_req: logicReq });
         }
 
         export function putRuleReq(label: string, when: string, then: string) {
-            return logicManagerReq(new LogicProto.Req().setPutRuleReq(
-                new LogicProto.PutRule.Req().setLabel(label).setWhen(when).setThen(then)
-            ));
+            return logicManagerReq(new LogicManagerReq({
+                put_rule_req: new LogicManagerPutRuleReq({
+                    label: label,
+                    when: when,
+                    then: then
+                })
+            }));
         }
 
         export function getRuleReq(label: string) {
-            return logicManagerReq(new LogicProto.Req().setGetRuleReq(
-                new LogicProto.GetRule.Req().setLabel(label)
-            ));
+            return logicManagerReq(new LogicManagerReq({
+                get_rule_req: new LogicManagerGetRuleReq({ label: label })
+            }));
         }
 
         export function getRulesReq() {
-            return logicManagerReq(new LogicProto.Req().setGetRulesReq(new LogicProto.GetRules()));
+            return logicManagerReq(new LogicManagerReq({get_rules_req: new LogicManagerGetRulesReq()}));
         }
     }
 
     export namespace Rule {
 
-        export function ruleReq(request: RuleProto.Req) {
-            return new TransactionProto.Req().setRuleReq(request);
+        export function ruleReq(request: RuleReq) {
+            return new TransactionReq({ rule_req: request });
         }
 
         export function setLabelReq(currentLabel: string, newLabel: string) {
-            return ruleReq(new RuleProto.Req().setLabel(currentLabel).setRuleSetLabelReq(
-                new RuleProto.SetLabel.Req().setLabel(newLabel)
-            ));
+            return ruleReq(new RuleReq({
+                label: currentLabel,
+                rule_set_label_req: new RuleSetLabelReq({label: newLabel})
+            }));
         }
 
         export function deleteReq(label: string) {
-            return ruleReq(new RuleProto.Req().setLabel(label).setRuleDeleteReq(
-                new RuleProto.Delete.Req()
-            ));
+            return ruleReq(new RuleReq({label: label, rule_delete_req: new RuleDeleteReq()}));
         }
     }
 
     export namespace QueryManager {
 
-        function queryManagerReq(queryReq: QueryProto.Req, options: Options) {
-            return new TransactionProto.Req().setQueryManagerReq(queryReq.setOptions(options));
+        function queryManagerReq(queryReq: QueryManagerReq, options: Options) {
+            queryReq.options = options;
+            return new TransactionReq({query_manager_req: queryReq});
         }
 
         export function defineReq(query: string, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setDefineReq(
-                new QueryProto.Define.Req().setQuery(query)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                define_req: new QueryManagerDefineReq({query: query})
+            }), options);
         }
 
         export function undefineReq(query: string, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setUndefineReq(
-                new QueryProto.Undefine.Req().setQuery(query)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                undefine_req: new QueryManagerUndefineReq({query: query})
+            }), options);
         }
 
         export function matchReq(query: string, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setMatchReq(
-                new QueryProto.Match.Req().setQuery(query)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                match_req: new QueryManagerMatchReq({query: query})
+            }), options);
         }
 
         export function matchAggregateReq(query: string, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setMatchAggregateReq(
-                new QueryProto.MatchAggregate.Req().setQuery(query)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                match_aggregate_req: new QueryManagerMatchAggregateReq({query: query})
+            }), options);
         }
 
         export function matchGroupReq(query: string, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setMatchGroupReq(
-                new QueryProto.MatchGroup.Req().setQuery(query)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                match_group_req: new QueryManagerMatchGroupReq({query: query})
+            }), options);
         }
 
         export function matchGroupAggregateReq(query: string, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setMatchGroupAggregateReq(
-                new QueryProto.MatchGroupAggregate.Req().setQuery(query)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                match_group_aggregate_req: new QueryManagerMatchGroupAggregateReq({query: query})
+            }), options);
         }
 
         export function insertReq(query: string, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setInsertReq(
-                new QueryProto.Insert.Req().setQuery(query)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                insert_req: new QueryManagerInsertReq({query: query})
+            }), options);
         }
 
         export function deleteReq(query: string, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setDeleteReq(
-                new QueryProto.Delete.Req().setQuery(query)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                delete_req: new QueryManagerDeleteReq({query: query})
+            }), options);
         }
 
         export function updateReq(query: string, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setUpdateReq(
-                new QueryProto.Update.Req().setQuery(query)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                update_req: new QueryManagerUpdateReq({query: query})
+            }), options);
         }
 
         export function explainReq(id: number, options: Options) {
-            return queryManagerReq(new QueryProto.Req().setExplainReq(
-                new QueryProto.Explain.Req().setExplainableId(id)
-            ), options);
+            return queryManagerReq(new QueryManagerReq({
+                explain_req: new QueryManagerExplainReq({explainable_id: id})
+            }), options);
         }
     }
 
     export namespace ConceptManager {
-
-        function conceptManagerReq(req: ConceptMgrProto.Req): TransactionProto.Req {
-            return new TransactionProto.Req().setConceptManagerReq(req);
+        function conceptManagerReq(req: ConceptManagerReq): TransactionReq {
+            return new TransactionReq({ concept_manager_req: req });
         }
 
         export function putEntityTypeReq(label: string) {
-            return conceptManagerReq(new ConceptMgrProto.Req().setPutEntityTypeReq(
-                new ConceptMgrProto.PutEntityType.Req().setLabel(label))
-            );
+            return conceptManagerReq(new ConceptManagerReq({
+                put_entity_type_req: new ConceptManagerPutEntityTypeReq({label: label})
+            }));
         }
 
         export function putRelationTypeReq(label: string) {
-            return conceptManagerReq(new ConceptMgrProto.Req().setPutRelationTypeReq(
-                new ConceptMgrProto.PutRelationType.Req().setLabel(label))
-            );
+            return conceptManagerReq(new ConceptManagerReq({
+                put_relation_type_req: new ConceptManagerPutRelationTypeReq({ label: label })
+            }));
         }
 
-        export function putAttributeTypeReq(label: string, valueType: ValueTypeProto) {
-            return conceptManagerReq(new ConceptMgrProto.Req().setPutAttributeTypeReq(
-                new ConceptMgrProto.PutAttributeType.Req().setLabel(label).setValueType(valueType)
-            ));
+        export function putAttributeTypeReq(label: string, valueType: ValueType) {
+            return conceptManagerReq(new ConceptManagerReq({
+                put_attribute_type_req: new ConceptManagerPutAttributeTypeReq({ label: label, valueType: valueType })
+            }));
         }
 
         export function getThingTypeReq(label: string) {
-            return conceptManagerReq(new ConceptMgrProto.Req().setGetThingTypeReq(
-                new ConceptMgrProto.GetThingType.Req().setLabel(label)
-            ));
+            return conceptManagerReq(new ConceptManagerReq( {
+                    get_entity_type_req: new ConceptManagerGetThingTypeReq({label: label})
+                } ));
         }
 
         export function getThingReq(iid: string) {
-            return conceptManagerReq(new ConceptMgrProto.Req().setGetThingReq(
-                new ConceptMgrProto.GetThing.Req().setIid(Bytes.hexStringToBytes(iid))
+            return conceptManagerReq(new ConceptManagerReq().setGetThingReq(
+                new ConceptManagerGetThingReq({ iid: Bytes.hexStringToBytes(iid }))
             ));
         }
     }
 
     export namespace Concept {
 
-        export function conceptValueBooleanProto(value: boolean): ConceptValue {
-            return new ConceptValue().setBoolean(value);
+        export function conceptValueBoolean(value: boolean): ConceptValue {
+            return new ConceptValue({ boolean: value });
         }
 
-        export function conceptValueLongProto(value: number): ConceptValueProto {
-            return new ConceptValue().setLong(value);
+        export function conceptValueLong(value: number): ConceptValue {
+            return new ConceptValue({ long: value });
         }
 
-        export function conceptValueDoubleProto(value: number): ConceptValueProto {
-            return new ConceptValue().setDouble(value);
+        export function conceptValueDouble(value: number): ConceptValue {
+            return new ConceptValue({ double: value });
         }
 
-        export function conceptValueStringProto(value: string): ConceptValueProto {
-            return new ConceptValue().setString(value);
+        export function conceptValueString(value: string): ConceptValue {
+            return new ConceptValue({ string: value });
         }
 
-        export function conceptValueDateTimeProto(value: Date): ConceptValueProto {
-            return new ConceptValue().setDateTime(value.getTime());
+        export function conceptValueDateTime(value: Date): ConceptValue {
+            return new ConceptValue({ dateTime: value.getTime( }));
         }
 
     }
 
     export namespace Type {
 
-        function typeReq(req: TypeProto.Req): TransactionProto.Req {
-            return new TransactionProto.Req().setTypeReq(req);
+        function typeReq(req: TypeReq): Transaction.Req {
+            return new TransactionReq({ typeReq: req });
         }
 
         function newReqBuilder(label: Label) {
-            const builder = new TypeProto.Req().setLabel(label.name);
+            const builder = new TypeReq({ label: label.name });
             if (label.scope) builder.setScope(label.scope);
             return builder;
         }
 
         export function setLabelReq(label: Label, newLabel: string) {
             return typeReq(newReqBuilder(label).setTypeSetLabelReq(
-                new TypeProto.SetLabel.Req().setLabel(newLabel)
+                new TypeSetLabelReq({ label: newLabel })
             ));
         }
 
         export function getSupertypesReq(label: Label) {
             return typeReq(newReqBuilder(label).setTypeGetSupertypesReq(
-                new TypeProto.GetSupertypes.Req()
+                new TypeGetSupertypesReq()
             ));
         }
 
         export function getSubtypesReq(label: Label) {
             return typeReq(newReqBuilder(label).setTypeGetSubtypesReq(
-                new TypeProto.GetSubtypes.Req()
+                new TypeGetSubtypesReq()
             ));
         }
 
         export function getSupertypeReq(label: Label) {
             return typeReq(newReqBuilder(label).setTypeGetSupertypeReq(
-                new TypeProto.GetSupertype.Req()
+                new TypeGetSupertypeReq()
             ));
         }
 
         export function deleteReq(label: Label) {
             return typeReq(newReqBuilder(label).setTypeDeleteReq(
-                new TypeProto.Delete.Req()
+                new TypeDeleteReq()
             ));
         }
 
         export namespace RoleType {
 
-            export function protoRoleType(label: Label, encoding: TypeProto.Encoding) {
-                return new TypeProto().setScope(label.scope).setLabel(label.name).setEncoding(encoding);
+            export function protoRoleType(label: Label, encoding: Type.Encoding) {
+                return new Type({ scope: label.scope }).setLabel(label.name).setEncoding(encoding);
             }
 
             export function getRelationTypesReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRoleTypeGetRelationTypesReq(
-                    new RoleTypeProto.GetRelationTypes.Req()
+                    new RoleTypeGetRelationTypesReq()
                 ));
             }
 
             export function getPlayerTypesReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRoleTypeGetPlayerTypesReq(
-                    new RoleTypeProto.GetPlayerTypes.Req()
+                    new RoleTypeGetPlayerTypesReq()
                 ));
             }
 
             export function getPlayerTypesExplicitReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRoleTypeGetPlayerTypesExplicitReq(
-                    new RoleTypeProto.GetPlayerTypesExplicit.Req()
+                    new RoleTypeGetPlayerTypesExplicitReq()
                 ));
             }
 
             export function getRelationInstancesReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRoleTypeGetRelationInstancesReq(
-                    new RoleTypeProto.GetRelationInstances.Req()
+                    new RoleTypeGetRelationInstancesReq()
                 ));
             }
 
             export function getRelationInstancesExplicitReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRoleTypeGetRelationInstancesExplicitReq(
-                    new RoleTypeProto.GetRelationInstancesExplicit.Req()
+                    new RoleTypeGetRelationInstancesExplicitReq()
                 ));
             }
 
             export function getPlayerInstancesReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRoleTypeGetPlayerInstancesReq(
-                    new RoleTypeProto.GetPlayerInstances.Req()
+                    new RoleTypeGetPlayerInstancesReq()
                 ));
             }
 
             export function getPlayerInstancesExplicitReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRoleTypeGetPlayerInstancesExplicitReq(
-                    new RoleTypeProto.GetPlayerInstancesExplicit.Req()
+                    new RoleTypeGetPlayerInstancesExplicitReq()
                 ));
             }
         }
 
         export namespace ThingType {
 
-            export function protoThingType(label: Label, encoding: TypeProto.Encoding) {
-                return new TypeProto().setLabel(label.name).setEncoding(encoding);
+            export function protoThingType(label: Label, encoding: Type.Encoding) {
+                return new Type({ label: label.name }).setEncoding(encoding);
             }
 
             export function setAbstractReq(label: Label) {
                 return typeReq(newReqBuilder(label).setThingTypeSetAbstractReq(
-                    new ThingTypeProto.SetAbstract.Req()
+                    new ThingTypeSetAbstractReq()
                 ));
             }
 
             export function unsetAbstractReq(label: Label) {
                 return typeReq(newReqBuilder(label).setThingTypeUnsetAbstractReq(
-                    new ThingTypeProto.UnsetAbstract.Req()
+                    new ThingTypeUnsetAbstractReq()
                 ));
             }
 
-            export function setSupertypeReq(label: Label, supertype: TypeProto) {
+            export function setSupertypeReq(label: Label, supertype: Type) {
                 return typeReq(newReqBuilder(label).setTypeSetSupertypeReq(
-                    new TypeProto.SetSupertype.Req().setType(supertype)
+                    new TypeSetSupertypeReq({ type: supertype })
                 ));
             }
 
             export function getPlaysReq(label: Label) {
                 return typeReq(newReqBuilder(label).setThingTypeGetPlaysReq(
-                    new ThingTypeProto.GetPlays.Req()
+                    new ThingTypeGetPlaysReq()
                 ));
             }
 
             export function getPlaysExplicitReq(label: Label) {
                 return typeReq(newReqBuilder(label).setThingTypeGetPlaysExplicitReq(
-                    new ThingTypeProto.GetPlaysExplicit.Req()
+                    new ThingTypeGetPlaysExplicitReq()
                 ));
             }
 
             export function getPlaysOverriddenReq(label: Label) {
                 return typeReq(newReqBuilder(label).setThingTypeGetPlaysOverriddenReq(
-                    new ThingTypeProto.GetPlaysOverridden.Req()
+                    new ThingTypeGetPlaysOverriddenReq()
                 ));
             }
 
-            export function setPlaysReq(label: Label, roleType: TypeProto) {
+            export function setPlaysReq(label: Label, roleType: Type) {
                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                    new ThingTypeProto.SetPlays.Req().setRoleType(roleType)
+                    new ThingTypeSetPlaysReq({ roleType: roleType })
                 ));
             }
 
-            export function setPlaysOverriddenReq(label: Label, roleType: TypeProto, overriddenRoleType: TypeProto) {
+            export function setPlaysOverriddenReq(label: Label, roleType: Type, overriddenRoleType: Type) {
                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                    new ThingTypeProto.SetPlays.Req().setRoleType(roleType)
+                    new ThingTypeSetPlaysReq({ roleType: roleType })
                         .setOverriddenType(overriddenRoleType)
                 ));
             }
 
-            export function unsetPlaysReq(label: Label, roleType: TypeProto) {
+            export function unsetPlaysReq(label: Label, roleType: Type) {
                 return typeReq(newReqBuilder(label).setThingTypeUnsetPlaysReq(
-                    new ThingTypeProto.UnsetPlays.Req().setRoleType(roleType)
+                    new ThingTypeUnsetPlaysReq({ roleType: roleType })
                 ));
             }
 
-            export function getOwnsReq(label: Label, annotations: TypeProto.Annotation[]) {
+            export function getOwnsReq(label: Label, annotations: Type.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-                    new ThingTypeProto.GetOwns.Req().setAnnotationsList(annotations)
+                    new ThingTypeGetOwnsReq({ annotations: annotations })
                 ));
             }
 
-            export function getOwnsByTypeReq(label: Label, valueType: ValueTypeProto, annotations: TypeProto.Annotation[]) {
+            export function getOwnsByTypeReq(label: Label, valueType: ValueType, annotations: Type.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-                    new ThingTypeProto.GetOwns.Req().setAnnotationsList(annotations)
+                    new ThingTypeGetOwnsReq({ annotations: annotations })
                         .setValueType(valueType)
                 ));
             }
 
-            export function getOwnsExplicitReq(label: Label, annotations: TypeProto.Annotation[]) {
+            export function getOwnsExplicitReq(label: Label, annotations: Type.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
-                    new ThingTypeProto.GetOwnsExplicit.Req().setAnnotationsList(annotations)
+                    new ThingTypeGetOwnsExplicitReq({ annotations: annotations })
                 ));
             }
 
-            export function getOwnsExplicitByTypeReq(label: Label, valueType: ValueTypeProto, annotations: TypeProto.Annotation[]) {
+            export function getOwnsExplicitByTypeReq(label: Label, valueType: ValueType, annotations: Type.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
-                    new ThingTypeProto.GetOwnsExplicit.Req().setAnnotationsList(annotations)
+                    new ThingTypeGetOwnsExplicitReq({ annotations: annotations })
                         .setValueType(valueType)
                 ));
             }
 
-            export function setOwnsReq(label: Label, attributeType: TypeProto, annotations: TypeProto.Annotation[]) {
+            export function setOwnsReq(label: Label, attributeType: Type, annotations: Type.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
-                    new ThingTypeProto.SetOwns.Req()
+                    new ThingTypeSetOwnsReq()
                         .setAttributeType(attributeType)
-                        .setAnnotationsList(annotations)
+                        .setAnnotations(annotations)
                 ));
             }
 
-            export function setOwnsOverriddenReq(label: Label, attributeType: TypeProto, overriddenType: TypeProto, annotations: TypeProto.Annotation[]) {
+            export function setOwnsOverriddenReq(label: Label, attributeType: Type, overriddenType: Type, annotations: Type.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
-                    new ThingTypeProto.SetOwns.Req()
+                    new ThingTypeSetOwnsReq()
                         .setAttributeType(attributeType)
                         .setOverriddenType(overriddenType)
-                        .setAnnotationsList(annotations)
+                        .setAnnotations(annotations)
                 ));
             }
 
-            export function unsetOwnsReq(label: Label, attributeType: TypeProto) {
+            export function unsetOwnsReq(label: Label, attributeType: Type) {
                 return typeReq(newReqBuilder(label).setThingTypeUnsetOwnsReq(
-                    new ThingTypeProto.UnsetOwns.Req().setAttributeType(attributeType)
+                    new ThingTypeUnsetOwnsReq({ attributeType: attributeType })
                 ));
             }
 
             export function getInstancesReq(label: Label) {
                 return typeReq(newReqBuilder(label).setThingTypeGetInstancesReq(
-                    new ThingTypeProto.GetInstances.Req()
+                    new ThingTypeGetInstancesReq()
                 ));
             }
 
-            export function getOwnsOverriddenReq(label: Label, attributeType: TypeProto) {
+            export function getOwnsOverriddenReq(label: Label, attributeType: Type) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsOverriddenReq(
-                    new ThingTypeProto.GetOwnsOverridden.Req().setAttributeType(attributeType)
+                    new ThingTypeGetOwnsOverriddenReq({ attributeType: attributeType })
                 ));
             }
 
             export function getSyntaxReq(label: Label) {
-                return typeReq(newReqBuilder(label).setThingTypeGetSyntaxReq(new ThingTypeProto.GetSyntax.Req()));
+                return typeReq(newReqBuilder(label).setThingTypeGetSyntaxReq(new ThingTypeGetSyntaxReq()));
             }
         }
 
@@ -589,7 +634,7 @@ export namespace RequestBuilder {
 
             export function createReq(label: Label) {
                 return typeReq(newReqBuilder(label).setEntityTypeCreateReq(
-                    new EntityTypeProto.Create.Req()
+                    new EntityTypeCreateReq()
                 ));
             }
         }
@@ -598,101 +643,101 @@ export namespace RequestBuilder {
 
             export function createReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRelationTypeCreateReq(
-                    new RelationTypeProto.Create.Req()
+                    new RelationTypeCreateReq()
                 ));
             }
 
             export function getRelatesReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRelationTypeGetRelatesReq(
-                    new RelationTypeProto.GetRelates.Req()
+                    new RelationTypeGetRelatesReq()
                 ));
             }
 
             export function getRelatesExplicitReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRelationTypeGetRelatesExplicitReq(
-                    new RelationTypeProto.GetRelatesExplicit.Req()
+                    new RelationTypeGetRelatesExplicitReq()
                 ));
             }
 
             export function getRelatesByRoleReq(label: Label, roleLabel: string) {
                 return typeReq(newReqBuilder(label).setRelationTypeGetRelatesForRoleLabelReq(
-                    new RelationTypeProto.GetRelatesForRoleLabel.Req().setLabel(roleLabel)
+                    new RelationTypeGetRelatesForRoleLabelReq({ label: roleLabel })
                 ));
             }
 
             export function getRelatesOverridden(label: Label, roleLabel: string) {
                 return typeReq(newReqBuilder(label).setRelationTypeGetRelatesOverriddenReq(
-                    new RelationTypeProto.GetRelatesOverridden.Req().setLabel(roleLabel)
+                    new RelationTypeGetRelatesOverriddenReq({ label: roleLabel })
                 ));
             }
 
             export function setRelatesReq(label: Label, roleLabel: string) {
                 return typeReq(newReqBuilder(label).setRelationTypeSetRelatesReq(
-                    new RelationTypeProto.SetRelates.Req().setLabel(roleLabel)
+                    new RelationTypeSetRelatesReq({ label: roleLabel })
                 ));
             }
 
             export function setRelatesOverriddenReq(label: Label, roleLabel: string, overriddenLabel: string) {
                 return typeReq(newReqBuilder(label).setRelationTypeSetRelatesReq(
-                    new RelationTypeProto.SetRelates.Req().setLabel(roleLabel)
+                    new RelationTypeSetRelatesReq({ label: roleLabel })
                         .setOverriddenLabel(overriddenLabel)
                 ));
             }
 
             export function unsetRelatesReq(label: Label, roleLabel: string) {
                 return typeReq(newReqBuilder(label).setRelationTypeUnsetRelatesReq(
-                    new RelationTypeProto.UnsetRelates.Req().setLabel(roleLabel)
+                    new RelationTypeUnsetRelatesReq({ label: roleLabel })
                 ));
             }
         }
 
         export namespace AttributeType {
 
-            export function getOwnersReq(label: Label, annotations: TypeProto.Annotation[]) {
+            export function getOwnersReq(label: Label, annotations: Type.Annotation[]) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersReq(
-                    new AttributeTypeProto.GetOwners.Req().setAnnotationsList(annotations)
+                    new AttributeTypeGetOwnersReq({ annotations: annotations })
                 ));
             }
 
-            export function getOwnersExplicitReq(label: Label, annotations: TypeProto.Annotation[]) {
+            export function getOwnersExplicitReq(label: Label, annotations: Type.Annotation[]) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersExplicitReq(
-                    new AttributeTypeProto.GetOwnersExplicit.Req().setAnnotationsList(annotations)
+                    new AttributeTypeGetOwnersExplicitReq({ annotations: annotations })
                 ));
             }
 
-            export function putReq(label: Label, value: ConceptValueProto) {
+            export function putReq(label: Label, value: ConceptValue) {
                 return typeReq(newReqBuilder(label).setAttributeTypePutReq(
-                    new AttributeTypeProto.Put.Req().setValue(value)
+                    new AttributeTypePutReq({ value: value })
                 ));
             }
 
-            export function getReq(label: Label, value: ConceptValueProto) {
+            export function getReq(label: Label, value: ConceptValue) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetReq(
-                    new AttributeTypeProto.Get.Req().setValue(value)
+                    new AttributeTypeGetReq({ value: value })
                 ));
             }
 
             export function getRegexReq(label: Label) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetRegexReq(
-                    new AttributeTypeProto.GetRegex.Req()
+                    new AttributeTypeGetRegexReq()
                 ));
             }
 
             export function setRegexReq(label: Label, regex: string) {
                 return typeReq(newReqBuilder(label).setAttributeTypeSetRegexReq(
-                    new AttributeTypeProto.SetRegex.Req().setRegex(regex)
+                    new AttributeTypeSetRegexReq({ regex: regex })
                 ));
             }
         }
 
         export namespace Annotation {
 
-            export function annotationKeyProto(): TypeProto.Annotation {
-                return new TypeProto.Annotation().setKey(new TypeProto.Annotation.Key());
+            export function annotationKey(): Type.Annotation {
+                return new Type.Annotation({ key: new Type.Annotation.Key( }));
             }
 
-            export function annotationUniqueProto() {
-                return new TypeProto.Annotation().setUnique(new TypeProto.Annotation.Unique());
+            export function annotationUnique() {
+                return new Type.Annotation({ unique: new Type.Annotation.Unique( }));
             }
         }
 
@@ -700,85 +745,85 @@ export namespace RequestBuilder {
 
     export namespace Thing {
 
-        function thingReq(req: ThingProto.Req) {
-            return new TransactionProto.Req().setThingReq(req);
+        function thingReq(req: ThingReq) {
+            return new TransactionReq({ thingReq: req });
         }
 
-        export function protoThing(iid: string): ThingProto {
-            return new ThingProto().setIid(Bytes.hexStringToBytes(iid));
+        export function protoThing(iid: string): Thing {
+            return new Thing({ iid: Bytes.hexStringToBytes(iid }));
         }
 
-        export function getHasReqByAnnotations(iid: string, annotations: TypeProto.Annotation[]) {
-            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetHasReq(
-                new ThingProto.GetHas.Req().setAnnotationsList(annotations)
+        export function getHasReqByAnnotations(iid: string, annotations: Type.Annotation[]) {
+            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingGetHasReq(
+                new ThingGetHasReq({ annotations: annotations })
             ));
         }
 
-        export function getHasByTypeReq(iid: string, attributeTypes: TypeProto[]) {
-            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetHasReq(
-                new ThingProto.GetHas.Req().setAttributeTypesList(attributeTypes)
+        export function getHasByTypeReq(iid: string, attributeTypes: Type[]) {
+            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingGetHasReq(
+                new ThingGetHasReq({ attributeTypes: attributeTypes })
             ));
         }
 
-        export function setHasReq(iid: string, attribute: ThingProto) {
-            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingSetHasReq(
-                new ThingProto.SetHas.Req().setAttribute(attribute)
+        export function setHasReq(iid: string, attribute: Thing) {
+            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingSetHasReq(
+                new ThingSetHasReq({ attribute: attribute })
             ));
         }
 
-        export function unsetHasReq(iid: string, attribute: ThingProto) {
-            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingUnsetHasReq(
-                new ThingProto.UnsetHas.Req().setAttribute(attribute)
+        export function unsetHasReq(iid: string, attribute: Thing) {
+            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingUnsetHasReq(
+                new ThingUnsetHasReq({ attribute: attribute })
             ));
         }
 
         export function getPlayingReq(iid: string) {
-            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetPlayingReq(
-                new ThingProto.GetPlaying.Req()
+            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingGetPlayingReq(
+                new ThingGetPlayingReq()
             ));
         }
 
-        export function getRelationsReq(iid: string, roleTypes: TypeProto[]) {
-            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetRelationsReq(
-                new ThingProto.GetRelations.Req().setRoleTypesList(roleTypes)
+        export function getRelationsReq(iid: string, roleTypes: Type[]) {
+            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingGetRelationsReq(
+                new ThingGetRelationsReq({ role_types: roleTypes })
             ));
         }
 
         export function deleteReq(iid: string) {
-            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingDeleteReq(
-                new ThingProto.Delete.Req()
+            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingDeleteReq(
+                new ThingDeleteReq()
             ));
         }
 
         export namespace Relation {
 
-            export function addPlayerReq(iid: string, roleType: TypeProto, player: ThingProto) {
-                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationAddPlayerReq(
-                    new RelationProto.AddPlayer.Req().setRoleType(roleType).setPlayer(player)
+            export function addPlayerReq(iid: string, roleType: Type, player: Thing) {
+                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setRelationAddPlayerReq(
+                    new RelationAddPlayerReq({ roleType: roleType, player: player })
                 ));
             }
 
-            export function removePlayerReq(iid: string, roleType: TypeProto, player: ThingProto) {
-                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationRemovePlayerReq(
-                    new RelationProto.RemovePlayer.Req().setRoleType(roleType).setPlayer(player)
+            export function removePlayerReq(iid: string, roleType: Type, player: Thing) {
+                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setRelationRemovePlayerReq(
+                    new RelationRemovePlayerReq({ roleType: roleType, player: player })
                 ));
             }
 
-            export function getPlayersReq(iid: string, roleTypes: TypeProto[]) {
-                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationGetPlayersReq(
-                    new RelationProto.GetPlayers.Req().setRoleTypesList(roleTypes)
+            export function getPlayersReq(iid: string, roleTypes: Type[]) {
+                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid) }).setRelationGetPlayersReq(
+                    new RelationGetPlayersReq({ roleTypes: roleTypes })
                 ));
             }
 
             export function getPlayersByRoleTypeReq(iid: string) {
-                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationGetPlayersByRoleTypeReq(
-                    new RelationProto.GetPlayersByRoleType.Req()
+                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setRelationGetPlayersByRoleTypeReq(
+                    new RelationGetPlayersByRoleTypeReq()
                 ));
             }
 
             export function getRelatingReq(iid: string) {
-                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setRelationGetRelatingReq(
-                    new RelationProto.GetRelating.Req()
+                return thingReq(new ThingReq({iid: Bytes.hexStringToBytes(iid})).setRelationGetRelatingReq(
+                    new RelationGetRelatingReq()
                 ));
             }
         }
@@ -786,16 +831,17 @@ export namespace RequestBuilder {
         export namespace Attribute {
 
             export function getOwnersReq(iid: string) {
-                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setAttributeGetOwnersReq(
-                    new AttributeProto.GetOwners.Req()
+                return thingReq(new ThingReq({iid: Bytes.hexStringToBytes(iid})).setAttributeGetOwnersReq(
+                    new AttributeGetOwnersReq()
                 ));
             }
 
-            export function getOwnersByTypeReq(iid: string, ownerType: TypeProto) {
-                return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setAttributeGetOwnersReq(
-                    new AttributeProto.GetOwners.Req().setThingType(ownerType)
+            export function getOwnersByTypeReq(iid: string, ownerType: Type) {
+                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setAttributeGetOwnersReq(
+                    new AttributeGetOwnersReq({ thingType: ownerType })
                 ));
             }
         }
     }
+     */
 }
