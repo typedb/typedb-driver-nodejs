@@ -22,55 +22,42 @@
 import {
     CallCredentials,
     ChannelCredentials,
-    ClientDuplexStream,
     credentials,
     Metadata,
     ServiceError
 } from "@grpc/grpc-js";
 import * as fs from "fs";
-import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
-import {ServerManager} from "typedb-protocol/cluster/cluster_server_pb";
-import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
-import {ClusterUser, ClusterUserManager} from "typedb-protocol/cluster/cluster_user_pb";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
-import {
-    CoreDatabase as CoreDatabaseProto,
-    CoreDatabaseManager as CoreDatabaseMgrProto
-} from "typedb-protocol/core/core_database_pb";
 import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
-import {Session} from "typedb-protocol/common/session_pb";
-import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
+import {UserTokenReq} from "typedb-protocol/proto/user";
+import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/service";
 
-function isServiceError(e: Error | ServiceError): e is ServiceError {
+function isServiceError(e: any): e is ServiceError {
     return "code" in e;
 }
 
 export class ClusterServerStub extends TypeDBStub {
-
     private readonly _credential: TypeDBCredential;
     private _token: string;
-    private readonly _stub: TypeDBClient;
-    private readonly _clusterStub: TypeDBClusterClient;
+    private readonly _stub: GRPCStub;
 
     constructor(address: string, credential: TypeDBCredential) {
         super();
         this._credential = credential;
         this._token = null;
         const stubCredentials = this.createChannelCredentials();
-        this._stub = new TypeDBClient(address, stubCredentials);
-        this._clusterStub = new TypeDBClusterClient(address, stubCredentials);
+        this._stub = new GRPCStub(address, stubCredentials);
     }
 
     public async open(): Promise<void> {
         try {
             await this.connectionOpen(RequestBuilder.Connection.openReq());
-            const req = RequestBuilder.Cluster.User.tokenReq(this._credential.username);
+            const req = RequestBuilder.User.tokenReq(this._credential.username);
             this._token = await this.userToken(req);
         } catch (e) {
             if (!isServiceError(e)) throw e;
@@ -101,17 +88,7 @@ export class ClusterServerStub extends TypeDBStub {
         return CallCredentials.createFromMetadataGenerator(metaCallback);
     }
 
-    serversAll(req: ServerManager.All.Req): Promise<ServerManager.All.Res> {
-        return this.mayRenewToken(() =>
-            new Promise<ServerManager.All.Res>((resolve, reject) => {
-                this._clusterStub.servers_all(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve(res);
-                });
-            })
-        );
-    }
-
+    /*
     usersAll(req: ClusterUserManager.All.Req): Promise<ClusterUserManager.All.Res> {
         return this.mayRenewToken(() =>
             new Promise<ClusterUserManager.All.Res>((resolve, reject) => {
@@ -246,15 +223,16 @@ export class ClusterServerStub extends TypeDBStub {
     transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>> {
         return this.mayRenewToken(() => super.transaction());
     }
+     */
 
-    private async mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES> {
+    async mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES> {
         try {
             return await fn();
         } catch (e) {
             if (e instanceof TypeDBClientError && CLUSTER_TOKEN_CREDENTIAL_INVALID === e.messageTemplate) {
                 console.log(`token '${this._token}' expired. renewing...`);
                 this._token = null;
-                const req = RequestBuilder.Cluster.User.tokenReq(this._credential.username);
+                const req = RequestBuilder.User.tokenReq(this._credential.username);
                 this._token = await this.userToken(req);
                 console.log(`token renewed to '${this._token}'`);
                 try {
@@ -268,21 +246,16 @@ export class ClusterServerStub extends TypeDBStub {
         }
     }
 
-    private async userToken(req: ClusterUser.Token.Req): Promise<string> {
+    private async userToken(req: UserTokenReq): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            return this._clusterStub.user_token(req, (err, res) => {
+            return this.stub().user_token(req, (err, res) => {
                 if (err) reject(err);
-                else resolve(res.getToken());
+                else resolve(res.token);
             });
         });
     }
 
-    stub(): TypeDBClient {
+    stub(): GRPCStub {
         return this._stub;
-    }
-
-    close(): void {
-        this._stub.close();
-        this._clusterStub.close();
     }
 }

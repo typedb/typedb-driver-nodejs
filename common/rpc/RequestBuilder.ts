@@ -168,6 +168,7 @@ export namespace RequestBuilder {
             return new UserManagerGetReq({ username: name });
         }
     }
+     */
 
     export namespace User {
         export function passwordUpdateReq(name: string, passwordOld: string, passwordNew: string): UserPasswordUpdateReq {
@@ -178,10 +179,8 @@ export namespace RequestBuilder {
             return new UserTokenReq({ username: username });
         }
     }
-     */
 
     export namespace Connection {
-
         export function openReq() {
             return new ConnectionOpenReq({ version: Version.VERSION })
         }

@@ -19,10 +19,9 @@
  * under the License.
  */
 
-import {ChannelCredentials} from "@grpc/grpc-js";
+import { ChannelCredentials } from "@grpc/grpc-js";
 import { TypeDBClient as GRPCStub } from "typedb-protocol/proto/service";
 import { TypeDBStub } from "../../common/rpc/TypeDBStub";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 
 export class CoreStub extends TypeDBStub {
     private readonly _stub: GRPCStub;
@@ -32,16 +31,8 @@ export class CoreStub extends TypeDBStub {
         this._stub = new GRPCStub(address, ChannelCredentials.createInsecure());
     }
 
-    async open(): Promise<void> {
-        await this.connectionOpen(RequestBuilder.Connection.openReq());
-    }
-
     stub(): GRPCStub {
         return this._stub;
-    }
-
-    close(): void {
-        this._stub.close();
     }
 
     async mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES> {

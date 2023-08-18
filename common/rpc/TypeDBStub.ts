@@ -35,11 +35,17 @@ import {
 } from "typedb-protocol/proto/database";
 import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/service";
 import {TypeDBClientError} from "../errors/TypeDBClientError";
+import {ServerManagerAllReq, ServerManagerAllRes} from "typedb-protocol/proto/server";
+import {RequestBuilder} from "./RequestBuilder";
 
 /*
 TODO implement ResilientCall
  */
 export abstract class TypeDBStub {
+    async open(): Promise<void> {
+        await this.connectionOpen(RequestBuilder.Connection.openReq());
+    }
+
     connectionOpen(req: ConnectionOpenReq): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
@@ -47,6 +53,17 @@ export abstract class TypeDBStub {
                     if (err) reject(new TypeDBClientError(err));
                     else resolve();
                 })
+            })
+        );
+    }
+
+    serversAll(req: ServerManagerAllReq): Promise<ServerManagerAllRes> {
+        return this.mayRenewToken(() =>
+            new Promise<ServerManagerAllRes>((resolve, reject) => {
+                this.stub().servers_all(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res);
+                });
             })
         );
     }
@@ -185,7 +202,9 @@ export abstract class TypeDBStub {
 
     abstract stub(): GRPCStub;
 
-    abstract close(): void;
+    close(): void {
+        this.stub().close();
+    }
 
     abstract mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES>;
 }

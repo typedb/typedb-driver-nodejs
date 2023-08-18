@@ -28,8 +28,8 @@ def behaviour_test_ts_config():
             "module": "commonjs",
             "moduleResolution": "node",
             "esModuleInterop": True,
-            "skipLibCheck": True,
-            "forceConsistentCasingInFileNames": True,
+#            "skipLibCheck": True,
+#            "forceConsistentCasingInFileNames": True,
         }
     }
 

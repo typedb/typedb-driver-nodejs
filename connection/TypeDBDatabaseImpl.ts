@@ -51,6 +51,7 @@ export class TypeDBDatabaseImpl implements Database {
         this._name = name;
         this._client = client;
         this._replicas = replicas;
+        client._database_cache[name] = this;
     }
 
     static get(name: string, client: TypeDBClientImpl): Promise<TypeDBDatabaseImpl> {

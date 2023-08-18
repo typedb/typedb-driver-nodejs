@@ -26,20 +26,22 @@ import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 
 export class CoreClient extends TypeDBClientImpl {
-    private readonly _impl: ServerClient;
+    private readonly _initAddress: string;
 
     constructor(address: string) {
-        const impl = new ServerClient(address);
-        super(new Map([[address, impl]]));
-        this._impl = impl;
+        super(new Map([]));
+        this._initAddress = address;
     }
 
     async open(): Promise<CoreClient> {
-        const stub = new CoreStub(this._impl.address);
+        const stub = new CoreStub(this._initAddress);
         await stub.open();
-        this._impl.stub = stub;
+        const addr = (await stub.serversAll(RequestBuilder.ServerManager.allReq())).servers[0].address;
+        this.serverClients.set(addr, new ServerClient(addr));
+        this.serverClients.get(addr).stub = stub;
         await super.open();
         return this;
     }
@@ -47,7 +49,6 @@ export class CoreClient extends TypeDBClientImpl {
     async close(): Promise<void> {
         if (this.isOpen()) {
             await super.close();
-            this._impl.close();
         }
     }
 }

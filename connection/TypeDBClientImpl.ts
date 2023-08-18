@@ -32,17 +32,20 @@ import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 // import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 // import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
+import {Database} from "../api/connection/database/Database";
 
 export class TypeDBClientImpl implements TypeDBClient {
     // private readonly _sessions: { [id: string]: TypeDBSessionImpl };
     // private _requestTransmitter: RequestTransmitter;
     private readonly _databases: TypeDBDatabaseManagerImpl;
     private readonly _serverClients: Map<string, ServerClient>;
+    _database_cache: { [db: string]: Database };
     private _isOpen: boolean;
 
     protected constructor(serverClients: Map<string, ServerClient>) {
         this._serverClients = serverClients;
         this._databases = new TypeDBDatabaseManagerImpl(this);
+        this._database_cache = {};
         this._isOpen = false
         // this._sessions = {};
     }
@@ -75,7 +78,6 @@ export class TypeDBClientImpl implements TypeDBClient {
     }
 
     get serverClients(): Map<string, ServerClient> {
-        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._serverClients;
     }
 
@@ -84,11 +86,12 @@ export class TypeDBClientImpl implements TypeDBClient {
     // }
 
     async close(): Promise<void> {
-        this._isOpen = false;
-        // for (const session of Object.values(Object.values(this._sessions))) {
-        //     await session.close();
-        // }
-        // this._requestTransmitter.close();
+        if (this.isOpen()) {
+            this._isOpen = false;
+            for (const serverClient of Object.values(this._serverClients)) {
+                await serverClient.close();
+            }
+        }
     }
 
     // closeSession(session: TypeDBSessionImpl): void {

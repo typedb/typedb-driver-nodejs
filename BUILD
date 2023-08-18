@@ -53,9 +53,7 @@ npm_link_package(
 genrule(
     name = "typedb-protocol-override",
     srcs = ["@vaticle_typedb_protocol//grpc/nodejs:typedb-protocol-package"],
-    outs = [
-        "dist/node_modules/typedb-protocol",
-    ],
+    outs = ["dist/node_modules/typedb-protocol"],
     cmd = "cp -r $(SRCS) $(OUTS)",
     visibility = ["//visibility:public"],
 )
@@ -75,6 +73,8 @@ ts_project(
         "connection/TypeDBDatabaseImpl.ts",
         "connection/TypeDBDatabaseManagerImpl.ts",
         "connection/core/*.ts",
+        "connection/cluster/ClusterClient.ts",
+        "connection/cluster/ClusterServerStub.ts",
 #        "concept/**/*.ts",
 #        "logic/**/*.ts",
 #        "query/**/*.ts",
@@ -82,9 +82,7 @@ ts_project(
     ]),
     tsconfig = ":tsconfig.json",
     declaration = True,
-#    data = [":typedb-protocol",],
     deps = [
-#        ":node_modules/typedb-protocol",
         ":typedb-protocol",
 
         ":node_modules/google-protobuf",

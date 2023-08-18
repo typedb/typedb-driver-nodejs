@@ -41,7 +41,11 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
         if (!await this.contains(name)) {
             throw new TypeDBClientError(DB_DOES_NOT_EXIST.message(name));
         }
-        return await TypeDBDatabaseImpl.get(name, this._client);
+        if (name in this._client._database_cache) {
+            return this._client._database_cache[name];
+        } else {
+            return await TypeDBDatabaseImpl.get(name, this._client);
+        }
     }
 
     async contains(name: string): Promise<boolean> {

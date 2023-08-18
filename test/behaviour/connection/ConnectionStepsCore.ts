@@ -20,7 +20,7 @@
  */
 
 import {After, Before, BeforeAll} from "@cucumber/cucumber";
-import {TypeDB, TypeDBClient, TypeDBOptions} from "../../../dist";
+import {TypeDB, TypeDBOptions} from "../../../dist";
 import {
     afterBase,
     beforeBase,
@@ -31,7 +31,6 @@ import {
     setSessionOptions,
     setTransactionOptions
 } from "./ConnectionStepsBase";
-import assert from "assert";
 
 BeforeAll(() => {
     setClientFn(async (username, password) => {
