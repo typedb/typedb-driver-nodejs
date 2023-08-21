@@ -23,8 +23,6 @@ load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//test/behaviour:rules.bzl", "typedb_behaviour_node_test", "behaviour_test_ts_config")
 
-exports_files(["DatabaseSteps.ts"])
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
@@ -48,8 +46,5 @@ ts_project(
 typedb_behaviour_node_test(
     name = "test",
     features = ["@vaticle_typedb_behaviour//connection:database.feature"],
-    data = [
-        ":steps",
-#        "//test/behaviour/connection:steps-base",
-    ],
+    data = [":steps"],
 )

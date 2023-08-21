@@ -28,6 +28,7 @@ import { Thing } from "./Thing";
 export interface Relation extends Thing {
     readonly type: RelationType;
 
+    /*
     addRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void>;
 
     removeRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void>;
@@ -37,4 +38,5 @@ export interface Relation extends Thing {
     getRolePlayers(transaction: TypeDBTransaction): Promise<Map<RoleType, Thing[]>>;
 
     getRelating(transaction: TypeDBTransaction): Stream<RoleType>;
+     */
 }

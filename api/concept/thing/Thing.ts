@@ -37,6 +37,7 @@ export interface Thing extends Concept {
 
     readonly inferred: boolean;
 
+    /*
     getHas(transaction: TypeDBTransaction): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, attributeType: AttributeType): Stream<Attribute>;
@@ -50,6 +51,7 @@ export interface Thing extends Concept {
     getRelations(transaction: TypeDBTransaction, roleTypes: RoleType[]): Stream<Relation>;
 
     getPlaying(transaction: TypeDBTransaction): Stream<RoleType>;
+     */
 }
 
 export namespace Thing {

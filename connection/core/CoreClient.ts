@@ -20,19 +20,14 @@
  */
 
 import {ServerClient, TypeDBClientImpl} from "../TypeDBClientImpl";
-import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {CoreStub} from "./CoreStub";
-import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 
 export class CoreClient extends TypeDBClientImpl {
     private readonly _initAddress: string;
 
     constructor(address: string) {
-        super(new Map([]));
+        super();
         this._initAddress = address;
     }
 

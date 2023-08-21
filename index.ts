@@ -56,16 +56,16 @@ export * from "./api/connection/user/UserManager";
 export * from "./api/connection/TypeDBClient";
 export * from "./api/connection/TypeDBCredential";
 export * from "./api/connection/TypeDBOptions";
-/*
 export * from "./api/connection/TypeDBSession";
 export * from "./api/connection/TypeDBTransaction";
 
+/*
 export * from "./api/logic/Explanation";
 export * from "./api/logic/LogicManager";
 export * from "./api/logic/Rule";
+ */
 
 export * from "./api/query/QueryManager";
- */
 
 export * from "./common/errors/ErrorMessage";
 export * from "./common/errors/TypeDBClientError";

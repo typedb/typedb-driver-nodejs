@@ -21,7 +21,6 @@
 
 import {ClientDuplexStream} from "@grpc/grpc-js";
 import {
-    Transaction,
     TransactionClient,
     TransactionReq,
     TransactionRes,

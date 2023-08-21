@@ -28,8 +28,8 @@ def behaviour_test_ts_config():
             "module": "commonjs",
             "moduleResolution": "node",
             "esModuleInterop": True,
-#            "skipLibCheck": True,
-#            "forceConsistentCasingInFileNames": True,
+            "skipLibCheck": True,
+            "forceConsistentCasingInFileNames": True,
         }
     }
 
@@ -39,6 +39,7 @@ def node_cucumber_test(name, features, data, steps, **kwargs):
         data = [
             "//:node_modules/@cucumber/cucumber",
             "//:typedb-protocol-override",
+            "@//test/behaviour/config:parameters",
         ] + data + features + [steps],
         no_copy_to_bin = features,
         fixed_args = [

@@ -37,6 +37,9 @@ import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/service";
 import {TypeDBClientError} from "../errors/TypeDBClientError";
 import {ServerManagerAllReq, ServerManagerAllRes} from "typedb-protocol/proto/server";
 import {RequestBuilder} from "./RequestBuilder";
+import {SessionCloseReq, SessionOpenReq, SessionOpenRes, SessionPulseReq} from "typedb-protocol/proto/session";
+import {ClientDuplexStream} from "@grpc/grpc-js";
+import {TransactionClient, TransactionServer} from "typedb-protocol/proto/transaction";
 
 /*
 TODO implement ResilientCall
@@ -156,9 +159,8 @@ export abstract class TypeDBStub {
         );
     }
 
-    /*
-    sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res> {
-        return new Promise<Session.Open.Res>((resolve, reject) => {
+    sessionOpen(openReq: SessionOpenReq): Promise<SessionOpenRes> {
+        return new Promise<SessionOpenRes>((resolve, reject) => {
             this.stub().session_open(openReq, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
                 else resolve(res);
@@ -166,9 +168,9 @@ export abstract class TypeDBStub {
         });
     }
 
-    sessionClose(req: Session.Close.Req): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this.stub().session_close(req, (err, res) => {
+    sessionClose(req: SessionCloseReq): Promise<void> {
+        return new Promise<void>((resolve, _reject) => {
+            this.stub().session_close(req, (err, _res) => {
                 if (err) {
                     console.warn("An error has occurred when issuing session close request: %o", err)
                 }
@@ -177,19 +179,19 @@ export abstract class TypeDBStub {
         });
     }
 
-    sessionPulse(pulse: Session.Pulse.Req): Promise<boolean> {
+    sessionPulse(pulse: SessionPulseReq): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.stub().session_pulse(pulse, (err, res) => {
                 if (err) reject(err);
                 else {
-                    resolve(res.getAlive());
+                    resolve(res.alive);
                 }
             });
         });
     }
 
-    transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>> {
-        return new Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>>(
+    transaction(): Promise<ClientDuplexStream<TransactionClient, TransactionServer>> {
+        return new Promise<ClientDuplexStream<TransactionClient, TransactionServer>>(
             (resolve, reject) => {
                 try {
                     resolve(this.stub().transaction());
@@ -198,7 +200,6 @@ export abstract class TypeDBStub {
                 }
             });
     }
-     */
 
     abstract stub(): GRPCStub;
 

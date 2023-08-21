@@ -20,7 +20,7 @@
  */
 
 import {Given, setDefaultTimeout, Then} from "@cucumber/cucumber";
-import {TypeDBClient, /*TypeDBSession, TypeDBTransaction,*/ TypeDBOptions} from "../../../dist";
+import {TypeDBClient, TypeDBSession, TypeDBTransaction, TypeDBOptions} from "../../../dist";
 import assert = require("assert");
 import {assertThrows} from "../util/Util";
 
@@ -34,8 +34,8 @@ export let clientFn: (username: string, password: string) => Promise<TypeDBClien
 export let defaultClientFn: () => Promise<TypeDBClient>;
 
 export let client: TypeDBClient;
-// export const sessions: TypeDBSession[] = [];
-// export const sessionsToTransactions: Map<TypeDBSession, TypeDBTransaction[]> = new Map<TypeDBSession, TypeDBTransaction[]>();
+export const sessions: TypeDBSession[] = [];
+export const sessionsToTransactions: Map<TypeDBSession, TypeDBTransaction[]> = new Map<TypeDBSession, TypeDBTransaction[]>();
 export let sessionOptions: TypeDBOptions;
 export let transactionOptions: TypeDBOptions;
 export const optionSetters: OptionSetters = {
@@ -46,9 +46,9 @@ export const optionSetters: OptionSetters = {
 
 setDefaultTimeout(20000); // Some steps may take longer than the default limit of 5s, eg create parallel dbs
 
-// export function tx(): TypeDBTransaction {
-//     return sessionsToTransactions.get(sessions[0])[0];
-// }
+export function tx(): TypeDBTransaction {
+    return sessionsToTransactions.get(sessions[0])[0];
+}
 
 export function setClientFn(constructor: (username: string, password: string) => Promise<TypeDBClient>) {
     clientFn = constructor;
@@ -75,8 +75,8 @@ export function setTransactionOptions(options: TypeDBOptions) {
 }
 
 export async function beforeBase(): Promise<void> {
-    // sessions.length = 0;
-    // sessionsToTransactions.clear();
+    sessions.length = 0;
+    sessionsToTransactions.clear();
 }
 
 export async function afterBase() {

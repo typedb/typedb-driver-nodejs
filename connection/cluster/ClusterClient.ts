@@ -40,7 +40,7 @@ export class ClusterClient extends TypeDBClientImpl implements TypeDBClient.Clus
     // private _userManager: ClusterUserManager;
 
     constructor(addresses: string[], credential: TypeDBCredential) {
-        super(new Map([]));
+        super();
         this._initAddresses = addresses;
         this._credential = credential;
     }
@@ -117,14 +117,6 @@ export class ClusterClient extends TypeDBClientImpl implements TypeDBClient.Clus
 
     stub(address: string): ClusterServerStub {
         return this._serverClients[address].stub();
-    }
-
-    isCluster(): boolean {
-        return true;
-    }
-
-    asCluster(): TypeDBClient.Cluster {
-        return this;
     }
 
      */

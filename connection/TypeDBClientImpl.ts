@@ -20,38 +20,42 @@
  */
 
 import {TypeDBClient} from "../api/connection/TypeDBClient";
-// import {TypeDBOptions} from "../api/connection/TypeDBOptions";
-// import {SessionType} from "../api/connection/TypeDBSession";
+import {TypeDBOptions} from "../api/connection/TypeDBOptions";
+import {SessionType} from "../api/connection/TypeDBSession";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 // import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {TypeDBStub} from "../common/rpc/TypeDBStub";
-// import {RequestTransmitter} from "../stream/RequestTransmitter";
+import {RequestTransmitter} from "../stream/RequestTransmitter";
 import {TypeDBDatabaseManagerImpl} from "./TypeDBDatabaseManagerImpl";
+import {Database} from "../api/connection/database/Database";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-// import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
-// import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
+import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
+import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 // import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
-import {Database} from "../api/connection/database/Database";
 
-export class TypeDBClientImpl implements TypeDBClient {
-    // private readonly _sessions: { [id: string]: TypeDBSessionImpl };
-    // private _requestTransmitter: RequestTransmitter;
-    private readonly _databases: TypeDBDatabaseManagerImpl;
-    private readonly _serverClients: Map<string, ServerClient>;
-    _database_cache: { [db: string]: Database };
+export abstract class TypeDBClientImpl implements TypeDBClient {
     private _isOpen: boolean;
 
-    protected constructor(serverClients: Map<string, ServerClient>) {
-        this._serverClients = serverClients;
+    private readonly _serverClients: Map<string, ServerClient>;
+
+    private readonly _databases: TypeDBDatabaseManagerImpl;
+    _database_cache: { [db: string]: Database };
+
+    private readonly _sessions: { [id: string]: TypeDBSessionImpl };
+
+    protected constructor() {
+        this._isOpen = false
+
+        this._serverClients = new Map([]);
+
         this._databases = new TypeDBDatabaseManagerImpl(this);
         this._database_cache = {};
-        this._isOpen = false
-        // this._sessions = {};
+
+        this._sessions = {};
     }
 
     protected async open(): Promise<TypeDBClient> {
-        // this._requestTransmitter = new RequestTransmitter();
         this._isOpen = true;
         return this;
     }
@@ -60,17 +64,15 @@ export class TypeDBClientImpl implements TypeDBClient {
         return this._isOpen;
     }
 
-    /*
-    async session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSessionImpl> {
+    async session(databaseName: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSessionImpl> {
         if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
-        if (!options) options = TypeDBOptions.core();
-        const session = new TypeDBSessionImpl(database, type, options, this);
+        if (!options) options = new TypeDBOptions();
+        const session = new TypeDBSessionImpl(databaseName, type, options, this);
         await session.open();
         if (this._sessions[session.id]) throw new TypeDBClientError(SESSION_ID_EXISTS.message(session.id));
         this._sessions[session.id] = session;
         return session;
     }
-    */
 
     get databases(): TypeDBDatabaseManagerImpl {
         if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
@@ -81,10 +83,6 @@ export class TypeDBClientImpl implements TypeDBClient {
         return this._serverClients;
     }
 
-    // transmitter(): RequestTransmitter {
-    //     return this._requestTransmitter;
-    // }
-
     async close(): Promise<void> {
         if (this.isOpen()) {
             this._isOpen = false;
@@ -94,21 +92,27 @@ export class TypeDBClientImpl implements TypeDBClient {
         }
     }
 
-    // closeSession(session: TypeDBSessionImpl): void {
-    //     delete this._sessions[session.id];
-    // }
+    closeSession(session: TypeDBSessionImpl): void {
+        delete this._sessions[session.id];
+    }
 }
 
 export class ServerClient {
     private readonly _address: string;
     stub: TypeDBStub;
+    private _requestTransmitter: RequestTransmitter;
 
     constructor(address: string) {
         this._address = address;
+        this._requestTransmitter = new RequestTransmitter();
     }
 
     get address(): string {
         return this._address;
+    }
+
+    get transmitter(): RequestTransmitter {
+        return this._requestTransmitter;
     }
 
     close(): void {

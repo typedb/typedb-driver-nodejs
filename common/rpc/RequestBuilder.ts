@@ -186,7 +186,6 @@ export namespace RequestBuilder {
         }
     }
 
-    /*
     export namespace Session {
 
         export function openReq(database: string, type: SessionType, options: Options) {
@@ -238,6 +237,7 @@ export namespace RequestBuilder {
 
     }
 
+    /*
     export namespace LogicManager {
 
         export function logicManagerReq(logicReq: LogicManagerReq) {
@@ -282,9 +282,9 @@ export namespace RequestBuilder {
             return ruleReq(new RuleReq({label: label, rule_delete_req: new RuleDeleteReq()}));
         }
     }
+    */
 
     export namespace QueryManager {
-
         function queryManagerReq(queryReq: QueryManagerReq, options: Options) {
             queryReq.options = options;
             return new TransactionReq({query_manager_req: queryReq});
@@ -351,6 +351,7 @@ export namespace RequestBuilder {
         }
     }
 
+    /*
     export namespace ConceptManager {
         function conceptManagerReq(req: ConceptManagerReq): TransactionReq {
             return new TransactionReq({ concept_manager_req: req });

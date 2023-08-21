@@ -19,32 +19,32 @@
  * under the License.
  */
 
-import { Stream } from "../../common/util/Stream";
-import { ConceptMap } from "../answer/ConceptMap";
-import { ConceptMapGroup } from "../answer/ConceptMapGroup";
-import { Numeric } from "../answer/Numeric";
-import { NumericGroup } from "../answer/NumericGroup";
+// import { Stream } from "../../common/util/Stream";
+// import { ConceptMap } from "../answer/ConceptMap";
+// import { ConceptMapGroup } from "../answer/ConceptMapGroup";
+// import { Numeric } from "../answer/Numeric";
+// import { NumericGroup } from "../answer/NumericGroup";
 import { TypeDBOptions } from "../connection/TypeDBOptions";
-import { Explanation } from "../logic/Explanation";
+// import { Explanation } from "../logic/Explanation";
 
 export interface QueryManager {
-    match(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
+    // match(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
-    matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric>;
+    // matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric>;
 
-    matchGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup>;
+    // matchGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup>;
 
-    matchGroupAggregate(query: string, options?: TypeDBOptions): Stream<NumericGroup>;
+    // matchGroupAggregate(query: string, options?: TypeDBOptions): Stream<NumericGroup>;
 
-    insert(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
+    // insert(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
-    delete(query: string, options?: TypeDBOptions): Promise<void>;
+    // delete(query: string, options?: TypeDBOptions): Promise<void>;
 
-    update(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
+    // update(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
     define(query: string, options?: TypeDBOptions): Promise<void>;
 
     undefine(query: string, options?: TypeDBOptions): Promise<void>;
 
-    explain(explainable: ConceptMap.Explainable, options?: TypeDBOptions): Stream<Explanation>;
+    // explain(explainable: ConceptMap.Explainable, options?: TypeDBOptions): Stream<Explanation>;
 }

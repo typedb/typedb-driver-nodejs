@@ -22,23 +22,23 @@
 import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {fail} from "assert";
-import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType, Value} from "../../../dist";
+// import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType, Value} from "../../../dist";
 import {parseBool} from "../config/Parameters";
 import {tx} from "../connection/ConnectionStepsBase";
 import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
 import assert = require("assert");
-import Annotation = ThingType.Annotation;
+// import Annotation = ThingType.Annotation;
 
-export let answers: ConceptMap[] = [];
-let numericAnswer: Numeric;
-let answerGroups: ConceptMapGroup[] = []
-let numericAnswerGroups: NumericGroup[] = []
+// export let answers: ConceptMap[] = [];
+// let numericAnswer: Numeric;
+// let answerGroups: ConceptMapGroup[] = []
+// let numericAnswerGroups: NumericGroup[] = []
 
 function clearAnswers() {
-    answers.length = 0;
-    numericAnswer = null;
-    answerGroups.length = 0;
-    numericAnswerGroups.length = 0;
+    // answers.length = 0;
+    // numericAnswer = null;
+    // answerGroups.length = 0;
+    // numericAnswerGroups.length = 0;
 }
 
 When("typeql define", async (query: string) => {
@@ -65,6 +65,7 @@ Then("typeql undefine; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query.undefine(query));
 });
 
+/*
 When("typeql insert", async (query: string) => {
     await tx().query.insert(query).collect();
 });
@@ -493,3 +494,4 @@ Then("templated typeql match; throws exception", async (template: string) => {
         await assertThrows(async () => await tx().query.match(query).collect());
     }
 });
+ */

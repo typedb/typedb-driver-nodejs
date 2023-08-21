@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { Session } from "typedb-protocol/common/session_pb";
+import { SessionType as SessionTypeProto } from "typedb-protocol/proto/session";
 import { Database } from "./database/Database";
 import { TypeDBOptions } from "./TypeDBOptions";
 import { TransactionType, TypeDBTransaction } from "./TypeDBTransaction";
@@ -39,7 +39,7 @@ export interface TypeDBSession {
 }
 
 export interface SessionType {
-    proto(): Session.Type;
+    proto(): SessionTypeProto;
 
     isData(): boolean;
 
@@ -48,13 +48,13 @@ export interface SessionType {
 
 export namespace SessionType {
     class SessionTypeImpl implements SessionType {
-        private readonly _type: Session.Type;
+        private readonly _type: SessionTypeProto;
 
-        constructor(type: Session.Type) {
+        constructor(type: SessionTypeProto) {
             this._type = type;
         }
 
-        proto(): Session.Type {
+        proto(): SessionTypeProto {
             return this._type;
         }
 
@@ -67,6 +67,6 @@ export namespace SessionType {
         }
     }
 
-    export const DATA = new SessionTypeImpl(Session.Type.DATA);
-    export const SCHEMA = new SessionTypeImpl(Session.Type.SCHEMA);
+    export const DATA = new SessionTypeImpl(SessionTypeProto.DATA);
+    export const SCHEMA = new SessionTypeImpl(SessionTypeProto.SCHEMA);
 }

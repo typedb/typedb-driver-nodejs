@@ -19,18 +19,18 @@
  * under the License.
  */
 
-import {Transaction} from "typedb-protocol/common/transaction_pb";
-import {ConceptManager} from "../api/concept/ConceptManager";
+import {TransactionReq, TransactionRes, TransactionResPart} from "typedb-protocol/proto/transaction";
+// import {ConceptManager} from "../api/concept/ConceptManager";
 import {TypeDBOptions} from "../api/connection/TypeDBOptions";
 import {TransactionType, TypeDBTransaction} from "../api/connection/TypeDBTransaction";
-import {LogicManager} from "../api/logic/LogicManager";
+// import {LogicManager} from "../api/logic/LogicManager";
 import {QueryManager} from "../api/query/QueryManager";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {Stream} from "../common/util/Stream";
-import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
-import {LogicManagerImpl} from "../logic/LogicManagerImpl";
+// import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
+// import {LogicManagerImpl} from "../logic/LogicManagerImpl";
 import {QueryManagerImpl} from "../query/QueryManagerImpl";
 import {BidirectionalStream} from "../stream/BidirectionalStream";
 import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
@@ -43,8 +43,8 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     private readonly _type: TransactionType;
     private readonly _options: TypeDBOptions;
     private _bidirectionalStream: BidirectionalStream;
-    private _conceptManager: ConceptManager;
-    private _logicManager: LogicManager;
+    // private _conceptManager: ConceptManager;
+    // private _logicManager: LogicManager;
     private _queryManager: QueryManager;
 
     constructor(session: TypeDBSessionImpl, type: TransactionType, options: TypeDBOptions) {
@@ -57,8 +57,8 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         const rpcClient = this._session.stub;
         this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter);
         await this._bidirectionalStream.open();
-        this._conceptManager = new ConceptManagerImpl(this);
-        this._logicManager = new LogicManagerImpl(this);
+        // this._conceptManager = new ConceptManagerImpl(this);
+        // this._logicManager = new LogicManagerImpl(this);
         this._queryManager = new QueryManagerImpl(this);
         const openReq = RequestBuilder.Transaction.openReq(this._session.id, this._type.proto(), this._options.proto(), this._session.networkLatency);
         await this.rpcExecute(openReq, false);
@@ -83,13 +83,13 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         await this.rpcExecute(rollbackReq, false);
     }
 
-    public get concepts(): ConceptManager {
-        return this._conceptManager;
-    }
+    // public get concepts(): ConceptManager {
+    //     return this._conceptManager;
+    // }
 
-    public get logic(): LogicManager {
-        return this._logicManager;
-    }
+    // public get logic(): LogicManager {
+    //     return this._logicManager;
+    // }
 
     public get query(): QueryManager {
         return this._queryManager;
@@ -107,13 +107,13 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         return this._bidirectionalStream.isOpen();
     }
 
-    public async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
+    public async rpcExecute(request: TransactionReq, batch?: boolean): Promise<TransactionRes> {
         if (!this.isOpen()) this.throwTransactionClosed()
         const useBatch = batch !== false;
         return this._bidirectionalStream.single(request, useBatch);
     }
 
-    public rpcStream(request: Transaction.Req): Stream<Transaction.ResPart> {
+    public rpcStream(request: TransactionReq): Stream<TransactionResPart> {
         if (!this.isOpen()) this.throwTransactionClosed();
         return this._bidirectionalStream.stream(request);
     }

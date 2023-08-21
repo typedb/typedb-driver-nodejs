@@ -20,18 +20,17 @@
  */
 
 import { Database } from "../../api/connection/database/Database";
-import { TypeDBClusterOptions, TypeDBOptions } from "../../api/connection/TypeDBOptions";
+import { TypeDBOptions } from "../../api/connection/TypeDBOptions";
 import { SessionType, TypeDBSession } from "../../api/connection/TypeDBSession";
 import { TransactionType, TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
 import { TypeDBSessionImpl } from "../TypeDBSessionImpl";
 import { ClusterClient } from "./ClusterClient";
 import { ClusterServerClient } from "./ClusterServerClient";
-import { FailsafeTask } from "../FailsafeTask";
 
 export class ClusterSession implements TypeDBSession {
 
     private readonly _clusterClient: ClusterClient;
-    private _options: TypeDBClusterOptions;
+    private _options: TypeDBOptions;
 
     constructor(clusterClient: ClusterClient, serverAddress: string) {
         this._clusterClient = clusterClient;

@@ -20,8 +20,8 @@
  */
 
 import { DatabaseManager } from "./database/DatabaseManager";
-// import { TypeDBOptions } from "./TypeDBOptions";
-// import { SessionType, TypeDBSession } from "./TypeDBSession";
+import { TypeDBOptions } from "./TypeDBOptions";
+import { SessionType, TypeDBSession } from "./TypeDBSession";
 // import { UserManager } from "./user/UserManager";
 // import { User } from "./user/User";
 
@@ -30,7 +30,7 @@ export interface TypeDBClient {
 
     readonly databases: DatabaseManager;
 
-    // session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSession>;
+    session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSession>;
 
     close(): Promise<void>;
 }
