@@ -93,19 +93,19 @@ export class TypeDBDatabaseImpl implements Database {
     }
 
     async delete(): Promise<void> {
-        await this.runOnPrimaryReplica((db) => db.delete());
+        await this.runOnPrimaryReplica((_, db) => db.delete());
     }
 
     async schema(): Promise<string> {
-        return this.runFailsafe((db) => db.schema());
+        return this.runFailsafe((_, db) => db.schema());
     }
 
     async typeSchema(): Promise<string> {
-        return this.runFailsafe((db) => db.typeSchema());
+        return this.runFailsafe((_, db) => db.typeSchema());
     }
 
     async ruleSchema(): Promise<string> {
-        return this.runFailsafe((db) => db.ruleSchema());
+        return this.runFailsafe((_, db) => db.ruleSchema());
     }
 
     get replicas(): Replica[] {
@@ -116,9 +116,9 @@ export class TypeDBDatabaseImpl implements Database {
         return this._name;
     }
 
-    async runFailsafe<T>(task: (serverDatabase: ServerDatabase, serverClient: ServerClient, isFirstRun: boolean) => Promise<T>): Promise<T> {
+    async runFailsafe<T>(task: (serverClient: ServerClient, serverDatabase: ServerDatabase, isFirstRun: boolean) => Promise<T>): Promise<T> {
         try {
-            return this.runOnAnyReplica(task);
+            return await this.runOnAnyReplica(task);
         } catch (e) {
             if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate) {
                 // debug!("Attempted to run on a non-primary replica, retrying on primary...");
@@ -127,11 +127,11 @@ export class TypeDBDatabaseImpl implements Database {
         }
     }
 
-    async runOnAnyReplica<T>(task: (serverDatabase: ServerDatabase, serverClient: ServerClient, isFirstRun: boolean) => Promise<T>): Promise<T> {
+    async runOnAnyReplica<T>(task: (serverClient: ServerClient, serverDatabase: ServerDatabase, isFirstRun: boolean) => Promise<T>): Promise<T> {
         let isFirstRun = true;
         for (const replica of this.replicas) {
             try {
-                return task(replica.database, this._client.serverClients.get(replica.address), isFirstRun);
+                return await task(this._client.serverClients.get(replica.address), replica.database, isFirstRun);
             } catch (e) {
                 if (e instanceof TypeDBClientError && UNABLE_TO_CONNECT === e.messageTemplate) {
                     // TODO log
@@ -142,14 +142,14 @@ export class TypeDBDatabaseImpl implements Database {
         throw new TypeDBClientError(UNABLE_TO_CONNECT.message());
     }
 
-    async runOnPrimaryReplica<T>(task: (serverDatabase: ServerDatabase, serverClient: ServerClient, isFirstRun: boolean) => Promise<T>): Promise<T> {
+    async runOnPrimaryReplica<T>(task: (serverClient: ServerClient, serverDatabase: ServerDatabase, isFirstRun: boolean) => Promise<T>): Promise<T> {
         if (!this.primaryReplica) {
             await this.seekPrimaryReplica();
         }
         let isFirstRun = true;
         for (const _ of Array(PRIMARY_REPLICA_TASK_MAX_RETRIES)) {
             try {
-                return task(this.primaryReplica.database, this._client.serverClients.get(this.primaryReplica.address), isFirstRun);
+                return await task(this._client.serverClients.get(this.primaryReplica.address), this.primaryReplica.database, isFirstRun);
             } catch (e) {
                 if (e instanceof TypeDBClientError && UNABLE_TO_CONNECT === e.messageTemplate) {
                     // TODO log

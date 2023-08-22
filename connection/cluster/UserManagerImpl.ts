@@ -26,7 +26,6 @@ import { UserImpl } from "../../dependencies_internal";
 import { ClusterClient } from "./ClusterClient";
 import {ServerClient} from "../TypeDBClientImpl";
 import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
 
 export class UserManagerImpl implements UserManager {
     static _SYSTEM_DB = "_system";
@@ -37,26 +36,26 @@ export class UserManagerImpl implements UserManager {
     }
 
     async all(): Promise<User[]> {
-        return this.runFailsafe((client) =>
+        return this.runFailsafe(client =>
             client.stub.usersAll(RequestBuilder.UserManager.allReq())
                 .then((res) => res.users.map(user => UserImpl.of(user, this._client)))
         );
     }
 
     async contains(username: string): Promise<boolean> {
-        return this.runFailsafe((client) =>
+        return this.runFailsafe(client =>
             client.stub.usersContains(RequestBuilder.UserManager.containsReq(username))
         );
     }
 
     async create(username: string, password: string): Promise<void> {
-        return this.runFailsafe((client) =>
+        return this.runFailsafe(client =>
             client.stub.usersCreate(RequestBuilder.UserManager.createReq(username, password))
         );
     }
 
     async delete(username: string): Promise<void> {
-        return this.runFailsafe((client) =>
+        return this.runFailsafe(client =>
             client.stub.usersDelete(RequestBuilder.UserManager.deleteReq(username))
         );
     }
@@ -75,8 +74,6 @@ export class UserManagerImpl implements UserManager {
     }
 
     async runFailsafe<T>(task: (client: ServerClient) => Promise<T>): Promise<T> {
-        return await (
-            await TypeDBDatabaseImpl.get(UserManagerImpl._SYSTEM_DB, this._client)
-        ).runOnPrimaryReplica((_db, client) => task(client));
+        return await (await TypeDBDatabaseImpl.get(UserManagerImpl._SYSTEM_DB, this._client)).runOnPrimaryReplica(task);
     }
 }

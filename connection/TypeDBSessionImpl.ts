@@ -57,9 +57,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
 
     async open(): Promise<void> {
         this._database = await this._client.databases.get(this._databaseName) as TypeDBDatabaseImpl;
-        await this._database.runFailsafe(async (_, serverClient) => {
-            await this.openAt(serverClient);
-        });
+        await this._database.runFailsafe(serverClient => this.openAt(serverClient));
     }
 
     private async openAt(serverClient: ServerClient): Promise<void> {
@@ -96,7 +94,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
     async transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction> {
         if (!this.isOpen()) throw new TypeDBClientError(SESSION_CLOSED);
         if (!options) options = new TypeDBOptions();
-        return this._database.runFailsafe(async (_, serverClient, isFirstRun) => {
+        return this._database.runFailsafe(async (serverClient, _db, isFirstRun) => {
             if (!isFirstRun){
                 await this.close();
                 await this.openAt(serverClient);

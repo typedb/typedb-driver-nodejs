@@ -49,11 +49,15 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
     }
 
     async contains(name: string): Promise<boolean> {
-        return await this.runFailsafe(name, (client => client.stub.databasesContains(RequestBuilder.DatabaseManager.containsReq(name))));
+        return await this.runFailsafe(name, client =>
+            client.stub.databasesContains(RequestBuilder.DatabaseManager.containsReq(name))
+        );
     }
 
     async create(name: string): Promise<void> {
-        return await this.runFailsafe(name, (client => client.stub.databasesCreate(RequestBuilder.DatabaseManager.createReq(name))));
+        return await this.runFailsafe(name, client =>
+            client.stub.databasesCreate(RequestBuilder.DatabaseManager.createReq(name))
+        );
     }
 
     async all(): Promise<Database[]> {
@@ -76,7 +80,7 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
                 return await task(serverClient);
             } catch (e) {
                 if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate) {
-                    return await (await TypeDBDatabaseImpl.get(name, this._client)).runOnPrimaryReplica((_db, client) => task(client));
+                    return await (await TypeDBDatabaseImpl.get(name, this._client)).runOnPrimaryReplica(task);
                 } else errors += `- ${serverClient.address}: ${e}\n`;
             }
         }
