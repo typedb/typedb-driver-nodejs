@@ -19,25 +19,21 @@
  * under the License.
  */
 
-import { Database } from "../../api/connection/database/Database";
 import { TypeDBClient } from "../../api/connection/TypeDBClient";
 import { TypeDBCredential } from "../../api/connection/TypeDBCredential";
-import { TypeDBOptions } from "../../api/connection/TypeDBOptions";
-// import { SessionType } from "../../api/connection/TypeDBSession";
 import { ErrorMessage } from "../../common/errors/ErrorMessage";
 import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
 import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-// import { ClusterUser } from "./ClusterUser";
-// import { ClusterUserManager } from "./ClusterUserManager";
 import {ServerClient, TypeDBClientImpl} from "../TypeDBClientImpl";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-// import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
 import {ClusterServerStub} from "./ClusterServerStub";
+import {UserManagerImpl} from "./UserManagerImpl";
+import {UserImpl} from "./UserImpl";
 
 export class ClusterClient extends TypeDBClientImpl implements TypeDBClient.Cluster {
     private readonly _initAddresses: string[];
     private readonly _credential: TypeDBCredential;
-    // private _userManager: ClusterUserManager;
+    private _userManager: UserManagerImpl;
 
     constructor(addresses: string[], credential: TypeDBCredential) {
         super();
@@ -55,7 +51,7 @@ export class ClusterClient extends TypeDBClientImpl implements TypeDBClient.Clus
             this.serverClients.get(addr).stub = serverStub;
         }
         await Promise.all(openReqs);
-        // this._userManager = new ClusterUserManager(this);
+        this._userManager = new UserManagerImpl(this);
         await super.open();
         return this;
     }
@@ -77,47 +73,11 @@ export class ClusterClient extends TypeDBClientImpl implements TypeDBClient.Clus
         throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
     }
 
-    /*
-    async user(): Promise<ClusterUser> {
+    async user(): Promise<UserImpl> {
         return await this.users.get(this._credential.username)
     }
 
-    get users(): ClusterUserManager {
+    get users(): UserManagerImpl {
         return this._userManager;
     }
-
-    session(database: string, type: SessionType, options: TypeDBClusterOptions = TypeDBOptions.cluster()): Promise<ClusterSession> {
-        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
-        if (options.readAnyReplica) {
-            return this.sessionAnyReplica(database, type, options);
-        } else {
-            return this.sessionPrimaryReplica(database, type, options);
-        }
-    }
-
-    private sessionPrimaryReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
-    }
-
-    private sessionAnyReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
-    }
-
-    clusterServerClients() {
-        return this._serverClients;
-    }
-
-    clusterServerClient(address: string): ClusterServerClient {
-        return this._serverClients[address];
-    }
-
-    clusterServerAddresses(): string[] {
-        return Object.keys(this._serverClients);
-    }
-
-    stub(address: string): ClusterServerStub {
-        return this._serverClients[address].stub();
-    }
-
-     */
 }

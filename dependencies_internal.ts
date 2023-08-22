@@ -50,7 +50,6 @@ export * from "./concept/type/RoleTypeImpl";
 /* concept.value */
 export * from "./concept/value/ValueImpl";
 
-/* cluster components */
-// export * from "./connection/cluster/ClusterDatabase";
-// export * from "./connection/cluster/ClusterUser";
-// export * from "./connection/cluster/ClusterUserManager";
+/* user management */
+export * from "./connection/cluster/UserImpl";
+export * from "./connection/cluster/UserManagerImpl";

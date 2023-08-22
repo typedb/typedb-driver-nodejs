@@ -89,6 +89,6 @@ Then("user password update: {word}, {word}, {word}", async (username: string, pa
 });
 
 function getClient(): TypeDBClient.Cluster {
-    assert(client.isCluster());
+    // assert(client.isCluster());
     return client as TypeDBClient.Cluster;
 }

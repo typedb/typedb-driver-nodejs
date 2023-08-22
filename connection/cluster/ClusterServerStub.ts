@@ -33,8 +33,18 @@ import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
-import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
-import {UserTokenReq} from "typedb-protocol/proto/user";
+import {
+    UserManagerAllReq,
+    UserManagerAllRes,
+    UserManagerContainsReq,
+    UserManagerCreateReq,
+    UserManagerDeleteReq,
+    UserManagerGetReq,
+    UserManagerGetRes,
+    UserManagerPasswordSetReq,
+    UserPasswordUpdateReq,
+    UserTokenReq
+} from "typedb-protocol/proto/user";
 import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/service";
 
 function isServiceError(e: any): e is ServiceError {
@@ -88,11 +98,10 @@ export class ClusterServerStub extends TypeDBStub {
         return CallCredentials.createFromMetadataGenerator(metaCallback);
     }
 
-    /*
-    usersAll(req: ClusterUserManager.All.Req): Promise<ClusterUserManager.All.Res> {
+    usersAll(req: UserManagerAllReq): Promise<UserManagerAllRes> {
         return this.mayRenewToken(() =>
-            new Promise<ClusterUserManager.All.Res>((resolve, reject) => {
-                this._clusterStub.users_all(req, (err, res) => {
+            new Promise<UserManagerAllRes>((resolve, reject) => {
+                this._stub.users_all(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
                     else resolve(res);
                 });
@@ -100,21 +109,21 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    usersContains(req: ClusterUserManager.Contains.Req): Promise<boolean> {
+    usersContains(req: UserManagerContainsReq): Promise<boolean> {
         return this.mayRenewToken(() =>
             new Promise<boolean>((resolve, reject) => {
-                this._clusterStub.users_contains(req, (err, res) => {
+                this._stub.users_contains(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
-                    else resolve(res.getContains());
+                    else resolve(res.contains);
                 })
             })
         );
     }
 
-    usersCreate(req: ClusterUserManager.Create.Req): Promise<void> {
+    usersCreate(req: UserManagerCreateReq): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
-                this._clusterStub.users_create(req, (err, res) => {
+                this._stub.users_create(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
                     else resolve();
                 })
@@ -122,10 +131,10 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    usersDelete(req: ClusterUserManager.Delete.Req): Promise<void> {
+    usersDelete(req: UserManagerDeleteReq): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
-                this._clusterStub.users_delete(req, (err, res) => {
+                this._stub.users_delete(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
                     else resolve();
                 });
@@ -133,10 +142,10 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    usersPasswordSet(req: ClusterUserManager.PasswordSet.Req): Promise<void> {
+    usersPasswordSet(req: UserManagerPasswordSetReq): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
-                this._clusterStub.users_password_set(req, (err, res) => {
+                this._stub.users_password_set(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
                     else resolve();
                 })
@@ -144,10 +153,10 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    usersGet(req: ClusterUserManager.Get.Req): Promise<ClusterUserManager.Get.Res> {
+    usersGet(req: UserManagerGetReq): Promise<UserManagerGetRes> {
         return this.mayRenewToken(() =>
-            new Promise<ClusterUserManager.Get.Res>((resolve, reject) => {
-                this._clusterStub.users_get(req, (err, res) => {
+            new Promise<UserManagerGetRes>((resolve, reject) => {
+                this._stub.users_get(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
                     else resolve(res);
                 });
@@ -155,75 +164,16 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    userPasswordUpdate(req: ClusterUser.PasswordUpdate.Req): Promise<void> {
+    userPasswordUpdate(req: UserPasswordUpdateReq): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
-                this._clusterStub.user_password_update(req, (err, res) => {
+                this._stub.user_password_update(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
                     else resolve();
                 })
             })
         );
     }
-
-    databasesClusterGet(req: ClusterDatabaseManager.Get.Req): Promise<ClusterDatabaseManager.Get.Res> {
-        return this.mayRenewToken(() =>
-            new Promise<ClusterDatabaseManager.Get.Res>((resolve, reject) => {
-                this._clusterStub.databases_get(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve(res);
-                })
-            })
-        );
-    }
-
-    databasesClusterAll(req: ClusterDatabaseManager.All.Req): Promise<ClusterDatabaseManager.All.Res> {
-        return this.mayRenewToken(() =>
-            new Promise<ClusterDatabaseManager.All.Res>((resolve, reject) => {
-                this._clusterStub.databases_all(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve(res);
-                })
-            })
-        );
-    }
-
-    databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
-        return this.mayRenewToken(() => super.databasesCreate(req));
-    }
-
-    databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean> {
-        return this.mayRenewToken(() => super.databasesContains(req));
-    }
-
-    databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]> {
-        return this.mayRenewToken(() => super.databasesAll(req));
-    }
-
-    databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void> {
-        return this.mayRenewToken(() => super.databaseDelete(req));
-    }
-
-    databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string> {
-        return this.mayRenewToken(() => super.databaseSchema(req));
-    }
-
-    sessionOpen(req: Session.Open.Req): Promise<Session.Open.Res> {
-        return this.mayRenewToken(() => super.sessionOpen(req));
-    }
-
-    sessionClose(req: Session.Close.Req): Promise<void> {
-        return this.mayRenewToken(() => super.sessionClose(req));
-    }
-
-    sessionPulse(req: Session.Pulse.Req): Promise<boolean> {
-        return this.mayRenewToken(() => super.sessionPulse(req));
-    }
-
-    transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>> {
-        return this.mayRenewToken(() => super.transaction());
-    }
-     */
 
     async mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES> {
         try {

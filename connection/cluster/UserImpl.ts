@@ -19,15 +19,12 @@
  * under the License.
  */
 
-import { User as UserProto } from "typedb-protocol/cluster/cluster_user_pb";
-import { Database } from "../../api/connection/database/Database";
+import { User as UserProto } from "typedb-protocol/proto/user";
 import { User } from "../../api/connection/user/User";
 import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { ClusterUserManager, FailsafeTask } from "../../dependencies_internal";
 import { ClusterClient } from "./ClusterClient";
 
-export class ClusterUser implements User {
-
+export class UserImpl implements User {
     private readonly _client: ClusterClient;
     private readonly _username: string;
     private readonly _passwordExpirySeconds: number;
@@ -38,11 +35,9 @@ export class ClusterUser implements User {
         this._passwordExpirySeconds = passwordExpirySeconds;
     }
 
-    static of(user: UserProto, client: ClusterClient): ClusterUser {
-        switch (user.getPasswordExpiryCase()) {
-            case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_NOT_SET: return new ClusterUser(client, user.getUsername(), null);
-            case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_SECONDS: return new ClusterUser(client, user.getUsername(), user.getPasswordExpirySeconds());
-        }
+    static of(user: UserProto, client: ClusterClient): UserImpl {
+        if (user.has_password_expiry_seconds) return new UserImpl(client, user.username, user.password_expiry_seconds);
+        else return new UserImpl(client, user.username, null);
     }
 
     get passwordExpirySeconds(): number {
@@ -50,27 +45,12 @@ export class ClusterUser implements User {
     }
 
     async passwordUpdate(oldPassword: string, newPassword: string): Promise<void> {
-        const failsafeTask = new ClusterUserFailsafeTask(this._client, (replica) => {
-            return this._client.stub(replica.address).userPasswordUpdate(RequestBuilder.Cluster.User.passwordUpdateReq(this.username, oldPassword, newPassword));
-        });
-        await failsafeTask.runPrimaryReplica();
+        return this._client.users.runFailsafe((client) =>
+            client.stub.userPasswordUpdate(RequestBuilder.User.passwordUpdateReq(this.username, oldPassword, newPassword))
+        );
     }
 
     get username(): string {
         return this._username;
-    }
-}
-
-class ClusterUserFailsafeTask<T> extends FailsafeTask<T> {
-
-    private readonly _task: (replica: Database.Replica) => Promise<T>;
-
-    constructor(client: ClusterClient, task: (replica: Database.Replica) => Promise<T>) {
-        super(client, ClusterUserManager._SYSTEM_DB);
-        this._task = task;
-    }
-
-    run(replica: Database.Replica): Promise<T> {
-        return this._task(replica);
     }
 }

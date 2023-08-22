@@ -22,8 +22,8 @@
 import { DatabaseManager } from "./database/DatabaseManager";
 import { TypeDBOptions } from "./TypeDBOptions";
 import { SessionType, TypeDBSession } from "./TypeDBSession";
-// import { UserManager } from "./user/UserManager";
-// import { User } from "./user/User";
+import { UserManager } from "./user/UserManager";
+import { User } from "./user/User";
 
 export interface TypeDBClient {
     isOpen(): boolean;
@@ -37,8 +37,8 @@ export interface TypeDBClient {
 
 export namespace TypeDBClient {
     export interface Cluster extends TypeDBClient {
-        // readonly users: UserManager;
+        readonly users: UserManager;
 
-        // user(): Promise<User>;
+        user(): Promise<User>;
     }
 }

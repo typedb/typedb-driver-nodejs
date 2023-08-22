@@ -152,7 +152,6 @@ export namespace RequestBuilder {
         }
     }
 
-    /*
     export namespace UserManager {
         export function containsReq(name: string): UserManagerContainsReq {
             return new UserManagerContainsReq({ username: name });
@@ -178,7 +177,6 @@ export namespace RequestBuilder {
             return new UserManagerGetReq({ username: name });
         }
     }
-     */
 
     export namespace User {
         export function passwordUpdateReq(name: string, passwordOld: string, passwordNew: string): UserPasswordUpdateReq {

@@ -40,6 +40,17 @@ import {RequestBuilder} from "./RequestBuilder";
 import {SessionCloseReq, SessionOpenReq, SessionOpenRes, SessionPulseReq} from "typedb-protocol/proto/session";
 import {ClientDuplexStream} from "@grpc/grpc-js";
 import {TransactionClient, TransactionServer} from "typedb-protocol/proto/transaction";
+import {
+    UserManagerAllReq,
+    UserManagerAllRes,
+    UserManagerContainsReq,
+    UserManagerCreateReq,
+    UserManagerDeleteReq,
+    UserManagerGetReq,
+    UserManagerGetRes,
+    UserManagerPasswordSetReq,
+    UserPasswordUpdateReq
+} from "typedb-protocol/proto/user";
 
 /*
 TODO implement ResilientCall
@@ -199,6 +210,34 @@ export abstract class TypeDBStub {
                     reject(e);
                 }
             });
+    }
+
+    usersAll(req: UserManagerAllReq): Promise<UserManagerAllRes> {
+        throw "TODO";
+    }
+
+    usersContains(req: UserManagerContainsReq): Promise<boolean> {
+        throw "TODO";
+    }
+
+    usersCreate(req: UserManagerCreateReq): Promise<void> {
+        throw "TODO";
+    }
+
+    usersDelete(req: UserManagerDeleteReq): Promise<void> {
+        throw "TODO";
+    }
+
+    usersPasswordSet(req: UserManagerPasswordSetReq): Promise<void> {
+        throw "TODO";
+    }
+
+    usersGet(req: UserManagerGetReq): Promise<UserManagerGetRes> {
+        throw "TODO";
+    }
+
+    userPasswordUpdate(req: UserPasswordUpdateReq): Promise<void> {
+        throw "TODO";
     }
 
     abstract stub(): GRPCStub;
