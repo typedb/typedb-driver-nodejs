@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { Thing as ThingProto } from "typedb-protocol/common/concept_pb";
+import { Relation as RelationProto } from "typedb-protocol/proto/concept";
 import { Relation } from "../../api/concept/thing/Relation";
 import { Thing } from "../../api/concept/thing/Thing";
 import { RelationType } from "../../api/concept/type/RelationType";
@@ -54,10 +54,7 @@ export class RelationImpl extends ThingImpl implements Relation {
         return this;
     }
 
-    protected get className(): string {
-        return "Relation";
-    }
-
+    /*
     async addPlayer(transaction: TypeDBTransaction,roleType: RoleType, player: Thing): Promise<void> {
         const request = RequestBuilder.Thing.Relation.addPlayerReq(this.iid, RoleType.proto(roleType), Thing.proto(player));
         await this.execute(transaction, request);
@@ -114,12 +111,13 @@ export class RelationImpl extends ThingImpl implements Relation {
         }
         return null;
     }
+     */
 }
 
 export namespace RelationImpl {
-    export function of(thingProto: ThingProto) {
-        if (!thingProto) return null;
-        const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
-        return new RelationImpl(iid, thingProto.getInferred(), RelationTypeImpl.of(thingProto.getType()));
+    export function ofRelationProto(proto: RelationProto) {
+        if (!proto) return null;
+        const iid = Bytes.bytesToHexString(proto.iid);
+        return new RelationImpl(iid, proto.inferred, RelationTypeImpl.ofRelationTypeProto(proto.relation_type));
     }
 }

@@ -19,12 +19,12 @@
  * under the License.
  */
 
-import { Thing as ThingProto } from "typedb-protocol/common/concept_pb";
 import { Entity } from "../../api/concept/thing/Entity";
 import { EntityType } from "../../api/concept/type/EntityType";
 import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
 import { Bytes } from "../../common/util/Bytes";
-import { EntityTypeImpl, ThingImpl } from "../../dependencies_internal";
+import {AttributeTypeImpl, EntityTypeImpl, ThingImpl} from "../../dependencies_internal";
+import {Entity as EntityProto} from "typedb-protocol/proto/concept";
 
 export class EntityImpl extends ThingImpl implements Entity {
     private readonly _type: EntityType;
@@ -52,9 +52,9 @@ export class EntityImpl extends ThingImpl implements Entity {
 }
 
 export namespace EntityImpl {
-    export function of(thingProto: ThingProto): Entity {
-        if (!thingProto) return null;
-        const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
-        return new EntityImpl(iid, thingProto.getInferred(), EntityTypeImpl.of(thingProto.getType()));
+    export function ofEntityProto(proto: EntityProto): Entity {
+        if (!proto) return null;
+        const iid = Bytes.bytesToHexString(proto.iid);
+        return new EntityImpl(iid, proto.inferred, EntityTypeImpl.ofEntityTypeProto(proto.entity_type));
     }
 }

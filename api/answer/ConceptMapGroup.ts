@@ -23,7 +23,6 @@ import { Concept } from "../concept/Concept";
 import { ConceptMap } from "./ConceptMap";
 
 export interface ConceptMapGroup {
-
     readonly owner: Concept;
 
     readonly conceptMaps: ConceptMap[];

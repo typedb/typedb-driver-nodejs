@@ -19,7 +19,7 @@
  * under the License.
  */
 
-
+import {TypeAnnotation} from "typedb-protocol/proto/concept";
 import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
 import { Stream } from "../../../common/util/Stream";
 import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
@@ -30,12 +30,12 @@ import { RoleType } from "./RoleType";
 import { Type } from "./Type";
 import { TypeDBClientError } from "../../../common/errors/TypeDBClientError";
 import { ErrorMessage } from "../../../common/errors/ErrorMessage";
-import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
 import BAD_ANNOTATION = ErrorMessage.Concept.BAD_ANNOTATION;
 import Transitivity = Concept.Transitivity;
 import Annotation = ThingType.Annotation;
 
 export interface ThingType extends Type {
+    /*
     getSupertype(transaction: TypeDBTransaction): Promise<ThingType>;
 
     getSupertypes(transaction: TypeDBTransaction): Stream<ThingType>;
@@ -76,6 +76,7 @@ export interface ThingType extends Type {
     unsetPlays(transaction: TypeDBTransaction, role: RoleType): Promise<void>;
 
     getSyntax(transaction: TypeDBTransaction): Promise<string>;
+     */
 }
 
 export namespace ThingType {
@@ -101,18 +102,14 @@ export namespace ThingType {
     }
 
     export namespace Annotation {
-        export function proto(annotation: Annotation): TypeProto.Annotation {
+        export function proto(annotation: Annotation): TypeAnnotation {
             if (annotation == Annotation.KEY) {
-                return RequestBuilder.Type.Annotation.annotationKeyProto();
+                return RequestBuilder.Type.Annotation.annotationKey();
             } else if (annotation == Annotation.UNIQUE) {
-                return RequestBuilder.Type.Annotation.annotationUniqueProto();
+                return RequestBuilder.Type.Annotation.annotationUnique();
             } else {
                 throw new TypeDBClientError((BAD_ANNOTATION.message(annotation)));
             }
         }
-    }
-
-    export function proto(thingType: ThingType) {
-        return RequestBuilder.Type.ThingType.protoThingType(thingType.label, Type.encoding(thingType));
     }
 }

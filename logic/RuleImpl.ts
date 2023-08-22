@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { Rule as RuleProto } from "typedb-protocol/common/logic_pb";
+import { Rule as RuleProto } from "typedb-protocol/proto/logic";
 import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
 import { RemoteRule, Rule } from "../api/logic/Rule";
 import { RequestBuilder } from "../common/rpc/RequestBuilder";
@@ -96,6 +96,6 @@ export namespace RuleImpl {
     }
 
     export function of(ruleProto: RuleProto) {
-        return new RuleImpl(ruleProto.getLabel(), ruleProto.getWhen(), ruleProto.getThen());
+        return new RuleImpl(ruleProto.label, ruleProto.when, ruleProto.then);
     }
 }

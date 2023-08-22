@@ -26,8 +26,10 @@ import { Relation } from "../thing/Relation";
 import { RoleType } from "./RoleType";
 import { ThingType } from "./ThingType";
 import Transitivity = Concept.Transitivity;
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface RelationType extends ThingType {
+    /*
     create(transaction: TypeDBTransaction): Promise<Relation>;
 
     getSupertype(transaction: TypeDBTransaction): Promise<RelationType | null>;
@@ -50,4 +52,11 @@ export interface RelationType extends ThingType {
 
     setRelates(transaction: TypeDBTransaction, roleLabel: string, overriddenLabel?: string): Promise<void>;
     unsetRelates(transaction: TypeDBTransaction, roleLabel: string): Promise<void>;
+    */
+}
+
+export namespace RelationType {
+    export function proto(relationType: RelationType) {
+        return RequestBuilder.Type.RelationType.protoRelationType(relationType.label);
+    }
 }

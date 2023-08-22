@@ -20,14 +20,21 @@
  */
 
 import {
+    Attribute as AttributeProto,
     AttributeGetOwnersReq,
+    AttributeType as AttributeTypeProto,
     ConceptManagerPutAttributeTypeReq,
     ConceptManagerPutEntityTypeReq,
     ConceptManagerPutRelationTypeReq,
     ConceptManagerReq,
+    Entity as EntityProto,
+    EntityType as EntityTypeProto,
+    Relation as RelationProto,
     RelationGetPlayersByRoleTypeReq,
     RelationGetRelatingReq,
-    Thing,
+    RelationType as RelationTypeProto,
+    RoleType as RoleTypeProto,
+    Thing as ThingProto,
     ThingDeleteReq,
     ThingGetHasReq,
     ThingGetPlayingReq,
@@ -36,6 +43,9 @@ import {
     ThingSetHasReq,
     ThingUnsetHasReq,
     Type,
+    TypeAnnotation,
+    TypeAnnotationKey,
+    TypeAnnotationUnique,
     ValueType
 } from "typedb-protocol/proto/concept";
 import {
@@ -187,7 +197,6 @@ export namespace RequestBuilder {
     }
 
     export namespace Session {
-
         export function openReq(database: string, type: SessionType, options: Options) {
             return new SessionOpenReq({ database: database, type: type, options: options });
         }
@@ -199,11 +208,9 @@ export namespace RequestBuilder {
         export function pulseReq(id: string) {
             return new SessionPulseReq({ session_id: Bytes.hexStringToBytes(id) });
         }
-
     }
 
     export namespace Transaction {
-
         export function clientReq(reqs: TransactionReq[]) {
             return new TransactionClient({ reqs: reqs });
         }
@@ -234,12 +241,9 @@ export namespace RequestBuilder {
                 stream_req: new TransactionStreamReq()
             });
         }
-
     }
 
-    /*
     export namespace LogicManager {
-
         export function logicManagerReq(logicReq: LogicManagerReq) {
             return new TransactionReq({ logic_manager_req: logicReq });
         }
@@ -266,7 +270,6 @@ export namespace RequestBuilder {
     }
 
     export namespace Rule {
-
         export function ruleReq(request: RuleReq) {
             return new TransactionReq({ rule_req: request });
         }
@@ -282,7 +285,6 @@ export namespace RequestBuilder {
             return ruleReq(new RuleReq({label: label, rule_delete_req: new RuleDeleteReq()}));
         }
     }
-    */
 
     export namespace QueryManager {
         function queryManagerReq(queryReq: QueryManagerReq, options: Options) {
@@ -411,9 +413,10 @@ export namespace RequestBuilder {
         }
 
     }
+    */
 
     export namespace Type {
-
+        /*
         function typeReq(req: TypeReq): Transaction.Req {
             return new TransactionReq({ typeReq: req });
         }
@@ -453,13 +456,14 @@ export namespace RequestBuilder {
                 new TypeDeleteReq()
             ));
         }
+         */
 
         export namespace RoleType {
-
-            export function protoRoleType(label: Label, encoding: Type.Encoding) {
-                return new Type({ scope: label.scope }).setLabel(label.name).setEncoding(encoding);
+            export function protoRoleType(label: Label) {
+                return new RoleTypeProto({ scope: label.scope, label: label.name });
             }
 
+            /*
             export function getRelationTypesReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRoleTypeGetRelationTypesReq(
                     new RoleTypeGetRelationTypesReq()
@@ -501,10 +505,11 @@ export namespace RequestBuilder {
                     new RoleTypeGetPlayerInstancesExplicitReq()
                 ));
             }
+            */
         }
 
         export namespace ThingType {
-
+            /*
             export function protoThingType(label: Label, encoding: Type.Encoding) {
                 return new Type({ label: label.name }).setEncoding(encoding);
             }
@@ -628,19 +633,29 @@ export namespace RequestBuilder {
             export function getSyntaxReq(label: Label) {
                 return typeReq(newReqBuilder(label).setThingTypeGetSyntaxReq(new ThingTypeGetSyntaxReq()));
             }
+            */
         }
 
         export namespace EntityType {
+            export function protoEntityType(label: Label): EntityTypeProto {
+                return new EntityTypeProto({label: label.name});
+            }
 
+            /*
             export function createReq(label: Label) {
                 return typeReq(newReqBuilder(label).setEntityTypeCreateReq(
                     new EntityTypeCreateReq()
                 ));
             }
+            */
         }
 
         export namespace RelationType {
+            export function protoRelationType(label: Label): RelationTypeProto {
+                return new RelationTypeProto({label: label.name});
+            }
 
+            /*
             export function createReq(label: Label) {
                 return typeReq(newReqBuilder(label).setRelationTypeCreateReq(
                     new RelationTypeCreateReq()
@@ -689,10 +704,15 @@ export namespace RequestBuilder {
                     new RelationTypeUnsetRelatesReq({ label: roleLabel })
                 ));
             }
+            */
         }
 
         export namespace AttributeType {
+            export function protoAttributeType(label: Label): AttributeTypeProto {
+                return new AttributeTypeProto({label: label.name});
+            }
 
+            /*
             export function getOwnersReq(label: Label, annotations: Type.Annotation[]) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersReq(
                     new AttributeTypeGetOwnersReq({ annotations: annotations })
@@ -728,43 +748,33 @@ export namespace RequestBuilder {
                     new AttributeTypeSetRegexReq({ regex: regex })
                 ));
             }
+            */
         }
 
         export namespace Annotation {
-
-            export function annotationKey(): Type.Annotation {
-                return new Type.Annotation({ key: new Type.Annotation.Key( }));
+            export function annotationKey(): TypeAnnotation {
+                return new TypeAnnotation({key: new TypeAnnotationKey()});
             }
 
             export function annotationUnique() {
-                return new Type.Annotation({ unique: new Type.Annotation.Unique( }));
+                return new TypeAnnotation({unique: new TypeAnnotationUnique()});
             }
         }
-
     }
 
     export namespace Thing {
-
         function thingReq(req: ThingReq) {
-            return new TransactionReq({ thingReq: req });
+            return new TransactionReq({ thing_req: req });
         }
 
-        export function protoThing(iid: string): Thing {
-            return new Thing({ iid: Bytes.hexStringToBytes(iid }));
+        export function getHasReq(iid: string, attributeTypes: AttributeTypeProto[], annotations: TypeAnnotation[]) {
+            return thingReq(new ThingReq({
+                iid: Bytes.hexStringToBytes(iid),
+                thing_get_has_req: new ThingGetHasReq({annotations: annotations, attribute_types: attributeTypes})
+            }));
         }
 
-        export function getHasReqByAnnotations(iid: string, annotations: Type.Annotation[]) {
-            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingGetHasReq(
-                new ThingGetHasReq({ annotations: annotations })
-            ));
-        }
-
-        export function getHasByTypeReq(iid: string, attributeTypes: Type[]) {
-            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingGetHasReq(
-                new ThingGetHasReq({ attributeTypes: attributeTypes })
-            ));
-        }
-
+        /*
         export function setHasReq(iid: string, attribute: Thing) {
             return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingSetHasReq(
                 new ThingSetHasReq({ attribute: attribute })
@@ -794,9 +804,20 @@ export namespace RequestBuilder {
                 new ThingDeleteReq()
             ));
         }
+        */
+
+        export namespace Entity {
+            export function protoEntity(iid: string): EntityProto {
+                return new EntityProto({iid: Bytes.hexStringToBytes(iid)});
+            }
+        }
 
         export namespace Relation {
+            export function protoRelation(iid: string): RelationProto {
+                return new RelationProto({iid: Bytes.hexStringToBytes(iid)});
+            }
 
+            /*
             export function addPlayerReq(iid: string, roleType: Type, player: Thing) {
                 return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setRelationAddPlayerReq(
                     new RelationAddPlayerReq({ roleType: roleType, player: player })
@@ -826,10 +847,15 @@ export namespace RequestBuilder {
                     new RelationGetRelatingReq()
                 ));
             }
+             */
         }
 
         export namespace Attribute {
+            export function protoAttribute(iid: string): AttributeProto {
+                return new AttributeProto({iid: Bytes.hexStringToBytes(iid)});
+            }
 
+            /*
             export function getOwnersReq(iid: string) {
                 return thingReq(new ThingReq({iid: Bytes.hexStringToBytes(iid})).setAttributeGetOwnersReq(
                     new AttributeGetOwnersReq()
@@ -841,7 +867,7 @@ export namespace RequestBuilder {
                     new AttributeGetOwnersReq({ thingType: ownerType })
                 ));
             }
+            */
         }
     }
-     */
 }

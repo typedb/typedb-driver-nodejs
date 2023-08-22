@@ -21,21 +21,21 @@
 
 import {QueryManagerRes, QueryManagerResPart} from "typedb-protocol/proto/query";
 import {TransactionReq} from "typedb-protocol/proto/transaction";
-// import {ConceptMap} from "../api/answer/ConceptMap";
-// import {ConceptMapGroup} from "../api/answer/ConceptMapGroup";
-// import {Numeric} from "../api/answer/Numeric";
-// import {NumericGroup} from "../api/answer/NumericGroup";
+import {ConceptMap} from "../api/answer/ConceptMap";
+import {ConceptMapGroup} from "../api/answer/ConceptMapGroup";
+import {Numeric} from "../api/answer/Numeric";
+import {NumericGroup} from "../api/answer/NumericGroup";
 import {TypeDBOptions} from "../api/connection/TypeDBOptions";
 import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
-// import {Explanation} from "../api/logic/Explanation";
+import {Explanation} from "../api/logic/Explanation";
 import {QueryManager} from "../api/query/QueryManager";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {Stream} from "../common/util/Stream";
-// import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
-// import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
-// import {NumericGroupImpl} from "../concept/answer/NumericGroupImpl";
-// import {NumericImpl} from "../concept/answer/NumericImpl";
-// import {ExplanationImpl} from "../logic/ExplanationImpl";
+import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
+import {NumericGroupImpl} from "../concept/answer/NumericGroupImpl";
+import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
+import {NumericImpl} from "../concept/answer/NumericImpl";
+import {ExplanationImpl} from "../logic/ExplanationImpl";
 
 export class QueryManagerImpl implements QueryManager {
     private _transaction: TypeDBTransaction.Extended;
@@ -44,7 +44,6 @@ export class QueryManagerImpl implements QueryManager {
         this._transaction = transaction;
     }
 
-    /*
     match(query: string, options?: TypeDBOptions): Stream<ConceptMap> {
         if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.matchReq(query, options.proto());
@@ -101,7 +100,6 @@ export class QueryManagerImpl implements QueryManager {
                 .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto))
         );
     }
-     */
 
     define(query: string, options?: TypeDBOptions): Promise<void> {
         if (!options) options = new TypeDBOptions();
@@ -115,7 +113,6 @@ export class QueryManagerImpl implements QueryManager {
         return this.query(request).then(() => null);
     }
 
-    /*
     explain(explainable: ConceptMap.Explainable, options?: TypeDBOptions): Stream<Explanation> {
         if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.explainReq(explainable.id, options.proto());
@@ -123,7 +120,6 @@ export class QueryManagerImpl implements QueryManager {
             .flatMap((resPart) => Stream.array(resPart.explain_res_part.explanations))
             .map((explanationProto) => ExplanationImpl.of(explanationProto));
     }
-     */
 
     private query(req: TransactionReq): Promise<QueryManagerRes> {
         return this._transaction.rpcExecute(req).then((res) => res.query_manager_res);

@@ -31,7 +31,7 @@ import { RelationType } from "./type/RelationType";
 import { RoleType } from "./type/RoleType";
 import { ThingType } from "./type/ThingType";
 import { Type } from "./type/Type";
-import { ValueType as ValueTypeProto } from "typedb-protocol/common/concept_pb";
+import { ValueType as ValueTypeProto } from "typedb-protocol/proto/concept";
 import { Value } from "./value/Value";
 
 export interface Concept {
@@ -71,9 +71,9 @@ export interface Concept {
 
     equals(concept: Concept): boolean;
 
-    delete(transaction: TypeDBTransaction): Promise<void>;
+    // delete(transaction: TypeDBTransaction): Promise<void>;
 
-    isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
+    // isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
 
     toJSONRecord(): Record<string, boolean | string | number>;
 }
@@ -114,6 +114,17 @@ export namespace Concept {
         export const DOUBLE = new Impl(ValueTypeProto.DOUBLE, "DOUBLE");
         export const STRING = new Impl(ValueTypeProto.STRING, "STRING");
         export const DATETIME = new Impl(ValueTypeProto.DATETIME, "DATETIME");
+
+        export function of(proto: ValueTypeProto): ValueType {
+            switch (proto) {
+                case ValueTypeProto.OBJECT: return OBJECT;
+                case ValueTypeProto.BOOLEAN: return BOOLEAN;
+                case ValueTypeProto.LONG: return LONG;
+                case ValueTypeProto.DOUBLE: return DOUBLE;
+                case ValueTypeProto.STRING: return STRING;
+                case ValueTypeProto.DATETIME: return DATETIME;
+            }
+        }
     }
 
     export interface Transitivity {}

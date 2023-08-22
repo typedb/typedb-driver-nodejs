@@ -21,7 +21,6 @@
 
 // Any symbols exported from here will be importable via `import { } from "typedb-client"`
 
-/*
 export * from "./api/answer/ConceptMap";
 export * from "./api/answer/ConceptMapGroup";
 export * from "./api/answer/Numeric";
@@ -42,8 +41,7 @@ export * from "./api/concept/type/ThingType";
 export * from "./api/concept/type/Type";
 
 export * from "./api/concept/Concept";
-export * from "./api/concept/ConceptManager";
- */
+// export * from "./api/concept/ConceptManager";
 
 export * from "./api/connection/database/Database";
 export * from "./api/connection/database/DatabaseManager";

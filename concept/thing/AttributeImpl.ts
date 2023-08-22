@@ -19,29 +19,36 @@
  * under the License.
  */
 
-import {Thing as ThingProto, ValueType as ValueTypeProto} from "typedb-protocol/common/concept_pb";
 import {Attribute} from "../../api/concept/thing/Attribute";
-import {Thing} from "../../api/concept/thing/Thing";
 import {AttributeType} from "../../api/concept/type/AttributeType";
-import {ThingType} from "../../api/concept/type/ThingType";
 import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Bytes} from "../../common/util/Bytes";
 import {Stream} from "../../common/util/Stream";
-import {AttributeTypeImpl, ThingImpl} from "../../dependencies_internal";
+import {
+    AttributeTypeImpl, EntityImpl,
+    EntityTypeImpl, RelationImpl,
+    RelationTypeImpl,
+    RoleTypeImpl,
+    ThingImpl, ThingTypeImpl
+} from "../../dependencies_internal";
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import {Attribute as AttributeProto} from "typedb-protocol/proto/concept";
+import {ValueImpl} from "../value/ValueImpl";
+import {Value} from "../../api/concept/value/Value";
 
 export class AttributeImpl extends ThingImpl implements Attribute {
     private readonly _type: AttributeType;
 
-    private readonly _value: boolean | string | number | Date;
+    private readonly _value: Value;
 
-    protected constructor(iid: string, inferred: boolean, type: AttributeType) {
+    constructor(iid: string, inferred: boolean, type: AttributeType, value: Value) {
         super(iid, inferred);
         this._type = type;
+        this._value = value;
     }
 
     isAttribute(): boolean {
@@ -52,14 +59,19 @@ export class AttributeImpl extends ThingImpl implements Attribute {
         return this;
     }
 
+    protected get className(): string {
+        return "Attribute";
+    }
+
     get type(): AttributeType {
         return this._type;
     }
 
-    get value(): boolean | string | number | Date {
+    get value(): Value {
         return this._value;
     }
 
+    /*
     getOwners(transaction: TypeDBTransaction, ownerType?: ThingType): Stream<Thing> {
         let request;
         if (!ownerType) {
@@ -71,15 +83,26 @@ export class AttributeImpl extends ThingImpl implements Attribute {
             .flatMap((resPart) => Stream.array(resPart.getAttributeGetOwnersResPart().getThingsList()))
             .map((thingProto) => ThingImpl.of(thingProto));
     }
+     */
 
     toJSONRecord(): Record<string, boolean | string | number> {
-        let value;
-        if (this.value instanceof Date) value = this.value.toISOString().slice(0, -1);
-        else value = this.value;
         return {
             type: this.type.label.name,
             value_type: this.type.valueType.name(),
-            value: value
+            value: this._value.toJSONRecord()["value"]
         };
+    }
+}
+
+export namespace AttributeImpl {
+    export function ofAttributeProto(proto: AttributeProto): Attribute {
+        if (!proto) return null;
+        const iid = Bytes.bytesToHexString(proto.iid);
+        return new AttributeImpl(
+            iid,
+            proto.inferred,
+            AttributeTypeImpl.ofAttributeTypeProto(proto.attribute_type),
+            ValueImpl.ofValueProto(proto.value),
+        );
     }
 }

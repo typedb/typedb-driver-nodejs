@@ -22,23 +22,23 @@
 import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {fail} from "assert";
-// import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType, Value} from "../../../dist";
+import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType, Value} from "../../../dist";
 import {parseBool} from "../config/Parameters";
 import {tx} from "../connection/ConnectionStepsBase";
 import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
 import assert = require("assert");
-// import Annotation = ThingType.Annotation;
+import Annotation = ThingType.Annotation;
 
-// export let answers: ConceptMap[] = [];
-// let numericAnswer: Numeric;
-// let answerGroups: ConceptMapGroup[] = []
-// let numericAnswerGroups: NumericGroup[] = []
+export let answers: ConceptMap[] = [];
+let numericAnswer: Numeric;
+let answerGroups: ConceptMapGroup[] = []
+let numericAnswerGroups: NumericGroup[] = []
 
 function clearAnswers() {
-    // answers.length = 0;
-    // numericAnswer = null;
-    // answerGroups.length = 0;
-    // numericAnswerGroups.length = 0;
+    answers.length = 0;
+    numericAnswer = null;
+    answerGroups.length = 0;
+    numericAnswerGroups.length = 0;
 }
 
 When("typeql define", async (query: string) => {
@@ -65,7 +65,6 @@ Then("typeql undefine; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query.undefine(query));
 });
 
-/*
 When("typeql insert", async (query: string) => {
     await tx().query.insert(query).collect();
 });
@@ -206,14 +205,15 @@ abstract class AttributeMatcher implements ConceptMatcher {
     }
 
     check(attribute: Attribute) {
-        if (attribute.isBoolean()) return attribute.asBoolean().value === parseBool(this.value);
-        else if (attribute.isLong()) return attribute.asLong().value === parseInt(this.value);
-        else if (attribute.isDouble()) return attribute.asDouble().value === parseFloat(this.value);
-        else if (attribute.isString()) return attribute.asString().value === this.value;
-        else if (attribute.isDateTime()){
+        let value = attribute.value;
+        if (value.isBoolean()) return value.asBoolean() === parseBool(this.value);
+        else if (value.isLong()) return value.asLong() === parseInt(this.value);
+        else if (value.isDouble()) return value.asDouble() === parseFloat(this.value);
+        else if (value.isString()) return value.asString() === this.value;
+        else if (value.isDateTime()){
             const date = new Date(this.value)
             const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-            return attribute.asDateTime().value.getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
+            return value.asDateTime().getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
         }
         else throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
     }
@@ -235,11 +235,10 @@ class AttributeValueMatcher extends AttributeMatcher {
 }
 
 class ThingKeyMatcher extends AttributeMatcher {
-
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isThing()) return false;
 
-        const keys = await concept.asThing().asRemote(tx()).getHas([Annotation.KEY]).collect();
+        const keys = await concept.asThing().getHas(tx(), [Annotation.KEY]).collect();
 
         for (const key of keys) {
             if (key.type.label.scopedName === this.typeLabel) {
@@ -252,7 +251,6 @@ class ThingKeyMatcher extends AttributeMatcher {
 }
 
 class ValueMatcher implements ConceptMatcher {
-
     private readonly _valueType: string;
     private readonly _value: string;
 
@@ -271,11 +269,11 @@ class ValueMatcher implements ConceptMatcher {
     }
 
     check(value: Value) {
-        if (value.isBoolean()) return value.asBoolean().value === parseBool(this.value);
-        else if (value.isLong()) return value.asLong().value === parseInt(this.value);
-        else if (value.isDouble()) return value.asDouble().value === parseFloat(this.value);
-        else if (value.isString()) return value.asString().value === this.value;
-        else if (value.isDateTime()) return value.asDateTime().value.getTime() === new Date(this.value).getTime();
+        if (value.isBoolean()) return value.asBoolean() === parseBool(this.value);
+        else if (value.isLong()) return value.asLong() === parseInt(this.value);
+        else if (value.isDouble()) return value.asDouble() === parseFloat(this.value);
+        else if (value.isString()) return value.asString() === this.value;
+        else if (value.isDateTime()) return value.asDateTime().getTime() === new Date(this.value).getTime();
         else throw new Error(`Unrecognised value type ${value.valueType}`);
     }
 
@@ -494,4 +492,3 @@ Then("templated typeql match; throws exception", async (template: string) => {
         await assertThrows(async () => await tx().query.match(query).collect());
     }
 });
- */

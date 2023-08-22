@@ -23,14 +23,14 @@ import {TransactionReq, TransactionRes, TransactionResPart} from "typedb-protoco
 // import {ConceptManager} from "../api/concept/ConceptManager";
 import {TypeDBOptions} from "../api/connection/TypeDBOptions";
 import {TransactionType, TypeDBTransaction} from "../api/connection/TypeDBTransaction";
-// import {LogicManager} from "../api/logic/LogicManager";
+import {LogicManager} from "../api/logic/LogicManager";
 import {QueryManager} from "../api/query/QueryManager";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {Stream} from "../common/util/Stream";
 // import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
-// import {LogicManagerImpl} from "../logic/LogicManagerImpl";
+import {LogicManagerImpl} from "../logic/LogicManagerImpl";
 import {QueryManagerImpl} from "../query/QueryManagerImpl";
 import {BidirectionalStream} from "../stream/BidirectionalStream";
 import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
@@ -44,7 +44,7 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     private readonly _options: TypeDBOptions;
     private _bidirectionalStream: BidirectionalStream;
     // private _conceptManager: ConceptManager;
-    // private _logicManager: LogicManager;
+    private _logicManager: LogicManager;
     private _queryManager: QueryManager;
 
     constructor(session: TypeDBSessionImpl, type: TransactionType, options: TypeDBOptions) {
@@ -58,7 +58,7 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter);
         await this._bidirectionalStream.open();
         // this._conceptManager = new ConceptManagerImpl(this);
-        // this._logicManager = new LogicManagerImpl(this);
+        this._logicManager = new LogicManagerImpl(this);
         this._queryManager = new QueryManagerImpl(this);
         const openReq = RequestBuilder.Transaction.openReq(this._session.id, this._type.proto(), this._options.proto(), this._session.networkLatency);
         await this.rpcExecute(openReq, false);
@@ -87,9 +87,9 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     //     return this._conceptManager;
     // }
 
-    // public get logic(): LogicManager {
-    //     return this._logicManager;
-    // }
+    public get logic(): LogicManager {
+        return this._logicManager;
+    }
 
     public get query(): QueryManager {
         return this._queryManager;

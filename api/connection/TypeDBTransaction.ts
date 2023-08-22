@@ -26,7 +26,7 @@ import {
 } from "typedb-protocol/proto/transaction";
 import { Stream } from "../../common/util/Stream";
 // import { ConceptManager } from "../concept/ConceptManager";
-// import { LogicManager } from "../logic/LogicManager";
+import { LogicManager } from "../logic/LogicManager";
 import { QueryManager } from "../query/QueryManager";
 import { TypeDBOptions } from "./TypeDBOptions";
 
@@ -39,7 +39,7 @@ export interface TypeDBTransaction {
 
     // readonly concepts: ConceptManager;
 
-    // readonly logic: LogicManager;
+    readonly logic: LogicManager;
 
     readonly query: QueryManager;
 

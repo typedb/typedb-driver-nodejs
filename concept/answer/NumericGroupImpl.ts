@@ -19,16 +19,25 @@
  * under the License.
  */
 
-import {NumericGroup as NumericGroupProto} from "typedb-protocol/common/answer_pb";
+import {NumericGroup as NumericGroupProto} from "typedb-protocol/proto/answer";
 import {Numeric} from "../../api/answer/Numeric";
 import {NumericGroup} from "../../api/answer/NumericGroup";
 import {Concept} from "../../api/concept/Concept";
-import {ThingImpl, TypeImpl} from "../../dependencies_internal";
+import {
+    AttributeImpl, AttributeTypeImpl,
+    ConceptImpl, EntityImpl, EntityTypeImpl,
+    RelationImpl,
+    RelationTypeImpl,
+    RoleTypeImpl,
+    ThingImpl, ThingTypeImpl,
+    TypeImpl
+} from "../../dependencies_internal";
 import {NumericImpl} from "./NumericImpl";
 import {ValueImpl} from "../value/ValueImpl";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 
 export class NumericGroupImpl implements NumericGroup {
-
     private readonly _owner: Concept;
     private readonly _numeric: Numeric;
 
@@ -47,12 +56,23 @@ export class NumericGroupImpl implements NumericGroup {
 }
 
 export namespace NumericGroupImpl {
+    import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
     export function of(numericGroupProto: NumericGroupProto) {
-        let concept: Concept;
-        if (numericGroupProto.getOwner().hasThing()) concept = ThingImpl.of(numericGroupProto.getOwner().getThing());
-        else if (numericGroupProto.getOwner().hasType()) concept = TypeImpl.of(numericGroupProto.getOwner().getType());
-        else concept = ValueImpl.of(numericGroupProto.getOwner().getValue());
-        return new NumericGroupImpl(concept, NumericImpl.of(numericGroupProto.getNumber()))
+        let owner = numericGroupProto.owner;
+
+        let concept: Concept;  // FIXME WET
+        if (owner.has_entity_type) concept = EntityTypeImpl.ofEntityTypeProto(owner.entity_type);
+        else if (owner.has_relation_type) concept = RelationTypeImpl.ofRelationTypeProto(owner.relation_type);
+        else if (owner.has_attribute_type) concept = AttributeTypeImpl.ofAttributeTypeProto(owner.attribute_type);
+        else if (owner.has_role_type) concept = RoleTypeImpl.ofRoleTypeProto(owner.role_type);
+        else if (owner.has_thing_type_root) concept = ThingTypeImpl.Root.ofThingTypeRootProto(owner.thing_type_root);
+        else if (owner.has_entity) concept = EntityImpl.ofEntityProto(owner.entity);
+        else if (owner.has_relation) concept = RelationImpl.ofRelationProto(owner.relation);
+        else if (owner.has_attribute) concept = AttributeImpl.ofAttributeProto(owner.attribute);
+        else if (owner.has_value) concept = ValueImpl.ofValueProto(owner.value);
+        else throw new TypeDBClientError(BAD_ENCODING.message(owner));
+
+        return new NumericGroupImpl(concept, NumericImpl.of(numericGroupProto.number))
     }
 }

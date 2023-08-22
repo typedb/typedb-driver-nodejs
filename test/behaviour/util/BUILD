@@ -21,6 +21,7 @@
 
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "behaviour_test_ts_config")
 
 ts_project(
     name = "util",
@@ -28,6 +29,18 @@ ts_project(
     tsconfig = {},
     declaration = True,
     deps = [
+        "//:node_modules/@types/node",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "steps",
+    srcs = ["UtilSteps.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    declaration = True,
+    deps = [
+        "//:node_modules/@cucumber/cucumber",
         "//:node_modules/@types/node",
     ],
     visibility = ["//visibility:public"],

@@ -25,6 +25,7 @@ import { AttributeType } from "../type/AttributeType";
 import { ThingType } from "../type/ThingType";
 import { Thing } from "./Thing";
 import { Value } from "../value/Value";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Attribute extends Thing {
     readonly type: AttributeType;
@@ -32,4 +33,10 @@ export interface Attribute extends Thing {
     readonly value: Value;
 
     // getOwners(transaction: TypeDBTransaction, ownerType?: ThingType): Stream<Thing>;
+}
+
+export namespace Attribute {
+    export function proto(relation: Attribute) {
+        return RequestBuilder.Thing.Attribute.protoAttribute(relation.iid);
+    }
 }

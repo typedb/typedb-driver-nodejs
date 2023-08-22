@@ -24,10 +24,10 @@ import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
 import { RelationType } from "../type/RelationType";
 import { RoleType } from "../type/RoleType";
 import { Thing } from "./Thing";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Relation extends Thing {
     readonly type: RelationType;
-
     /*
     addRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void>;
 
@@ -39,4 +39,10 @@ export interface Relation extends Thing {
 
     getRelating(transaction: TypeDBTransaction): Stream<RoleType>;
      */
+}
+
+export namespace Relation {
+    export function proto(relation: Relation) {
+        return RequestBuilder.Thing.Relation.protoRelation(relation.iid);
+    }
 }

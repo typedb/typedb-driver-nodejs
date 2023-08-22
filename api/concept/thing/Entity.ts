@@ -21,7 +21,14 @@
 
 import { EntityType } from "../type/EntityType";
 import { Thing } from "./Thing";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Entity extends Thing {
     readonly type: EntityType;
+}
+
+export namespace Entity {
+    export function proto(relation: Entity) {
+        return RequestBuilder.Thing.Entity.protoEntity(relation.iid);
+    }
 }

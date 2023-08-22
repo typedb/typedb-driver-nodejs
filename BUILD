@@ -63,14 +63,17 @@ ts_project(
     srcs = glob([
         "*.ts",
 #        "api/**/*.ts",
-#        "api/answer/*.ts",
+        "api/answer/*.ts",
 #        "api/concept/**/*.ts",
-#        "api/concept/*/*.ts",
-#        "api/concept/Concept.ts",
+        "api/concept/*/*.ts",
+        "api/concept/Concept.ts",
         "api/connection/*.ts",
         "api/connection/database/*.ts",
+        "api/logic/*.ts",
         "api/query/*.ts",
+
         "common/**/*.ts",
+
 #        "connection/**/*.ts",
         "connection/TypeDBClientImpl.ts",
         "connection/TypeDBDatabaseImpl.ts",
@@ -80,8 +83,15 @@ ts_project(
         "connection/core/*.ts",
         "connection/cluster/ClusterClient.ts",
         "connection/cluster/ClusterServerStub.ts",
+
 #        "concept/**/*.ts",
-#        "logic/**/*.ts",
+        "concept/answer/*.ts",
+        "concept/thing/*.ts",
+        "concept/type/*.ts",
+        "concept/value/*.ts",
+        "concept/ConceptImpl.ts",
+
+        "logic/**/*.ts",
         "query/**/*.ts",
         "stream/**/*.ts",
     ]),

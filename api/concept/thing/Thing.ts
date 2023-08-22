@@ -37,13 +37,13 @@ export interface Thing extends Concept {
 
     readonly inferred: boolean;
 
-    /*
     getHas(transaction: TypeDBTransaction): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, attributeType: AttributeType): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, attributeTypes: AttributeType[]): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, attributeTypes: AttributeType[], annotations: Annotation[]): Stream<Attribute>;
 
+    /*
     setHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void>;
     unsetHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void>;
 
@@ -52,10 +52,4 @@ export interface Thing extends Concept {
 
     getPlaying(transaction: TypeDBTransaction): Stream<RoleType>;
      */
-}
-
-export namespace Thing {
-    export function proto(thing: Thing) {
-        return RequestBuilder.Thing.protoThing(thing.iid);
-    }
 }

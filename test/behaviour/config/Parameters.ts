@@ -21,9 +21,8 @@
 
 import {defineParameterType} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {TransactionType} from "../../../dist/api/connection/TypeDBTransaction";
-// import {Concept, ThingType} from "../../../dist";
-// import Annotation = ThingType.Annotation;
+import {TransactionType, Concept, ThingType} from "../../../dist";
+import Annotation = ThingType.Annotation;
 
 export function parseBool(value: string): boolean {
     return value === "true";
@@ -116,7 +115,6 @@ defineParameterType({
     transformer: ScopedLabel.parse,
 });
 
-/*
 defineParameterType({
     name: "value_type",
     regexp: /long|double|string|boolean|datetime/,
@@ -137,7 +135,6 @@ defineParameterType({
         }
     },
 });
- */
 
 defineParameterType({
     name: "var",
@@ -155,7 +152,6 @@ defineParameterType({
     transformer: s => s
 });
 
-/*
 defineParameterType({
     name: "annotations",
     regexp: new RegExp("(\\s*([\\w\\-_]+,\\s*)*[\\w\\-_]*\\s*)"),
@@ -163,7 +159,6 @@ defineParameterType({
         return s.split(',').map(a => Annotation.parse(a.trim()));
     }
 });
- */
 
 defineParameterType({
     name: "transaction_type",

@@ -19,8 +19,6 @@
  * under the License.
  */
 
-import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
-import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
 import { Concept } from "../../api/concept/Concept";
 import { Type } from "../../api/concept/type/Type";
 import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
@@ -45,8 +43,6 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
         this._root = root;
         this._abstract = abstract;
     }
-
-    abstract asRemote(transaction: TypeDBTransaction): Type.Remote;
 
     get root(): boolean {
         return this._root;
@@ -83,16 +79,7 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 }
 
 export namespace TypeImpl {
-    export function of(typeProto: TypeProto) {
-        if (!typeProto) return null;
-        switch (typeProto.getEncoding()) {
-            case TypeProto.Encoding.ROLE_TYPE:
-                return RoleTypeImpl.of(typeProto);
-            default:
-                return ThingTypeImpl.of(typeProto);
-        }
-    }
-
+    /*
     export abstract class Remote extends ConceptImpl.Remote implements Type.Remote {
 
         private _label: Label;
@@ -181,4 +168,5 @@ export namespace TypeImpl {
             return resPartStream.map((res) => res.getTypeResPart());
         }
     }
+     */
 }

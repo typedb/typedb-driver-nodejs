@@ -25,8 +25,10 @@ import { Concept } from "../Concept";
 import { Entity } from "../thing/Entity";
 import { ThingType } from "./ThingType";
 import Transitivity = Concept.Transitivity;
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface EntityType extends ThingType {
+    /*
     create(transaction: TypeDBTransaction): Promise<Entity>;
 
     getSupertype(transaction: TypeDBTransaction): Promise<EntityType>;
@@ -39,4 +41,11 @@ export interface EntityType extends ThingType {
 
     getInstances(transaction: TypeDBTransaction): Stream<Entity>;
     getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Entity>;
+     */
+}
+
+export namespace EntityType {
+    export function proto(entityType: EntityType) {
+        return RequestBuilder.Type.EntityType.protoEntityType(entityType.label);
+    }
 }

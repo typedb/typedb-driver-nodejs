@@ -20,11 +20,7 @@
  */
 
 
-import {
-    ConceptValue as ConceptValueProto,
-    Type as TypeProto,
-    ValueType as ValueTypeProto
-} from "typedb-protocol/common/concept_pb";
+import { AttributeType as AttributeTypeProto, } from "typedb-protocol/proto/concept";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {ThingType} from "../../api/concept/type/ThingType";
@@ -41,8 +37,11 @@ import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
-    constructor(name: string, root: boolean, abstract: boolean) {
+    private readonly _valueType: Concept.ValueType;
+
+    constructor(name: string, root: boolean, abstract: boolean, valueType: Concept.ValueType) {
         super(name, root, abstract);
+        this._valueType = valueType;
     }
 
     protected get className(): string {
@@ -50,7 +49,7 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     get valueType(): Concept.ValueType {
-        return Concept.ValueType.OBJECT;
+        return this._valueType;
     }
 
     isAttributeType(): boolean {
@@ -63,8 +62,8 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 }
 
 export namespace AttributeTypeImpl {
-    export function of(attributeTypeProto: TypeProto): AttributeType {
-        if (!attributeTypeProto) return null;
-        return new AttributeTypeImpl(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
+    export function ofAttributeTypeProto(proto: AttributeTypeProto): AttributeType {
+        if (!proto) return null;
+        return new AttributeTypeImpl(proto.label, proto.is_root, proto.is_abstract, Concept.ValueType.of(proto.value_type));
     }
 }

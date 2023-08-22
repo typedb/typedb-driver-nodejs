@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { EntityType as EntityTypeProto } from "typedb-protocol/proto/concept";
 import { Entity } from "../../api/concept/thing/Entity";
 import { EntityType } from "../../api/concept/type/EntityType";
 import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
@@ -38,10 +38,6 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         return "EntityType";
     }
 
-    asRemote(transaction: TypeDBTransaction): EntityType.Remote {
-        return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
-    }
-
     isEntityType(): boolean {
         return true;
     }
@@ -52,11 +48,12 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 }
 
 export namespace EntityTypeImpl {
-    export function of(entityTypeProto: TypeProto) {
-        if (!entityTypeProto) return null;
-        return new EntityTypeImpl(entityTypeProto.getLabel(), entityTypeProto.getIsRoot(), entityTypeProto.getIsAbstract());
+    export function ofEntityTypeProto(proto: EntityTypeProto): EntityType {
+        if (!proto) return null;
+        return new EntityTypeImpl(proto.label, proto.is_root, proto.is_abstract);
     }
 
+    /*
     export class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
         constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
@@ -96,4 +93,5 @@ export namespace EntityTypeImpl {
             return super.getSubtypes() as Stream<EntityType>;
         }
     }
+     */
 }

@@ -20,14 +20,11 @@
  */
 
 
-import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
 import { ErrorMessage } from "../../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../../common/errors/TypeDBClientError";
 import { Label } from "../../../common/Label";
 import { Stream } from "../../../common/util/Stream";
 import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
 import { Concept } from "../Concept";
-import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export interface Type extends Concept {
     readonly label: Label;
@@ -36,6 +33,7 @@ export interface Type extends Concept {
 
     readonly abstract: boolean;
 
+    /*
     setLabel(transaction: TypeDBTransaction, label: string): Promise<void>;
 
     getSupertype(transaction: TypeDBTransaction): Promise<Type>;
@@ -43,22 +41,5 @@ export interface Type extends Concept {
     getSupertypes(transaction: TypeDBTransaction): Stream<Type>;
 
     getSubtypes(transaction: TypeDBTransaction): Stream<Type>;
-}
-
-export namespace Type {
-    export function encoding(type: Type): TypeProto.Encoding {
-        if (type.isEntityType()) {
-            return TypeProto.Encoding.ENTITY_TYPE;
-        } else if (type.isRelationType()) {
-            return TypeProto.Encoding.RELATION_TYPE;
-        } else if (type.isAttributeType()) {
-            return TypeProto.Encoding.ATTRIBUTE_TYPE;
-        } else if (type.isRoleType()) {
-            return TypeProto.Encoding.ROLE_TYPE;
-        } else if (type.isThingType()) {
-            return TypeProto.Encoding.THING_TYPE;
-        } else {
-            throw new TypeDBClientError(BAD_ENCODING);
-        }
-    }
+     */
 }

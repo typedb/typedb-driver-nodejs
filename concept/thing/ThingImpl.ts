@@ -19,8 +19,6 @@
  * under the License.
  */
 
-import {Thing as ThingProto, Type as TypeProto} from "typedb-protocol/common/concept_pb";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
 import {Concept} from "../../api/concept/Concept";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {Relation} from "../../api/concept/thing/Relation";
@@ -37,12 +35,20 @@ import {
     AttributeImpl,
     AttributeTypeImpl,
     ConceptImpl,
-    EntityImpl,
-    RelationImpl,
-    RoleTypeImpl
+    EntityImpl, EntityTypeImpl,
+    RelationImpl, RelationTypeImpl,
+    RoleTypeImpl, ThingTypeImpl
 } from "../../dependencies_internal";
 import Annotation = ThingType.Annotation;
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
+import {
+    AttributeType as AttributeTypeProto,
+    Thing as ThingProto,
+    ThingResPart,
+    TypeAnnotation
+} from "typedb-protocol/proto/concept";
+import assert from "assert";
+import {TransactionReq} from "typedb-protocol/proto/transaction";
 
 export abstract class ThingImpl extends ConceptImpl implements Thing {
     private readonly _iid: string;
@@ -86,39 +92,53 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         return {type: this.type.label.name};
     }
 
+    /*
     async delete(transaction: TypeDBTransaction): Promise<void> {
         const request = RequestBuilder.Thing.deleteReq(this.iid);
         await this.execute(transaction, request);
     }
+    */
 
     getHas(transaction: TypeDBTransaction): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, attributeType: AttributeType): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, attributeTypes: AttributeType[]): Stream<Attribute>;
-    getHas(transaction: TypeDBTransaction, annotationOrAttrTypeOrAttrTypes?: Annotation[] | AttributeType | AttributeType[]): Stream<Attribute> {
-        let request;
+    getHas(transaction: TypeDBTransaction, attributeTypes: AttributeType[], annotations: Annotation[]): Stream<Attribute>;
+    getHas(
+        transaction: TypeDBTransaction,
+        annotationOrAttrTypeOrAttrTypes?: Annotation[] | AttributeType | AttributeType[],
+        maybeAnnotations?: Annotation[],
+    ): Stream<Attribute> {
+        let attributeTypes: AttributeTypeProto[] = [];
+        let annotations: TypeAnnotation[] = [];
+
         if (typeof annotationOrAttrTypeOrAttrTypes === "undefined") {
-            request = RequestBuilder.Thing.getHasReqByAnnotations(this.iid, []);
+            assert(typeof maybeAnnotations === "undefined");
         } else if (Array.isArray(annotationOrAttrTypeOrAttrTypes)) {
             const asArray = annotationOrAttrTypeOrAttrTypes as Array<any>;
             if (asArray.length == 0 || asArray[0] instanceof AttributeTypeImpl) {
-                request = RequestBuilder.Thing.getHasByTypeReq(
-                    this.iid,
-                    (annotationOrAttrTypeOrAttrTypes as AttributeType[]).map(attrType => ThingType.proto(attrType)));
+                attributeTypes = (annotationOrAttrTypeOrAttrTypes as AttributeType[]).map(attrType => AttributeType.proto(attrType));
             } else {
-                request = RequestBuilder.Thing.getHasReqByAnnotations(
-                    this.iid,
-                    (annotationOrAttrTypeOrAttrTypes as Annotation[]).map(annotation => Annotation.proto(annotation))
-                );
+                assert(typeof maybeAnnotations === "undefined");
+                maybeAnnotations = annotationOrAttrTypeOrAttrTypes as Annotation[];
             }
         } else {
-            request = RequestBuilder.Thing.getHasByTypeReq(this.iid, [ThingType.proto(annotationOrAttrTypeOrAttrTypes)]);
+            assert(annotationOrAttrTypeOrAttrTypes instanceof AttributeTypeImpl);
+            assert(typeof maybeAnnotations === "undefined");
+            attributeTypes = [AttributeType.proto(annotationOrAttrTypeOrAttrTypes)];
         }
+
+        if (Array.isArray(maybeAnnotations)) {
+            annotations = maybeAnnotations.map(annotation => Annotation.proto(annotation));
+        }
+
+        let request = RequestBuilder.Thing.getHasReq(this.iid, attributeTypes, annotations);
         return this.stream(transaction, request).flatMap(
-            (resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList())
-        ).map((attrProto) => AttributeImpl.of(attrProto));
+            (resPart) => Stream.array(resPart.thing_get_has_res_part.attributes)
+        ).map((attrProto) => AttributeImpl.ofAttributeProto(attrProto));
     }
 
+    /*
     getPlaying(transaction: TypeDBTransaction): Stream<RoleType> {
         const request = RequestBuilder.Thing.getPlayingReq(this.iid);
         return this.stream(transaction, request)
@@ -152,24 +172,19 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         let ext = transaction as TypeDBTransaction.Extended;
         return (await ext.rpcExecute(request, false)).getThingRes();
     }
+     */
 
-    protected stream(transaction: TypeDBTransaction, request: TransactionProto.Req): Stream<ThingProto.ResPart> {
+    protected stream(transaction: TypeDBTransaction, request: TransactionReq): Stream<ThingResPart> {
         let ext = transaction as TypeDBTransaction.Extended;
-        return ext.rpcStream(request).map((res) => res.getThingResPart());
+        return ext.rpcStream(request).map((res) => res.thing_res_part);
     }
 }
 
 export namespace ThingImpl {
-    export function of(thingProto: ThingProto): Thing {
-        switch (thingProto.getType().getEncoding()) {
-            case TypeProto.Encoding.ENTITY_TYPE:
-                return EntityImpl.of(thingProto);
-            case TypeProto.Encoding.RELATION_TYPE:
-                return RelationImpl.of(thingProto);
-            case TypeProto.Encoding.ATTRIBUTE_TYPE:
-                return AttributeImpl.of(thingProto);
-            default:
-                throw new TypeDBClientError(BAD_ENCODING.message(thingProto.getType().getEncoding()));
-        }
+    export function ofThingProto(proto: ThingProto): Thing {
+        if (proto.has_entity) return EntityImpl.ofEntityProto(proto.entity);
+        else if (proto.has_relation) return RelationImpl.ofRelationProto(proto.relation);
+        else if (proto.has_attribute) return AttributeImpl.ofAttributeProto(proto.attribute);
+        else throw new TypeDBClientError(BAD_ENCODING.message(proto));
     }
 }

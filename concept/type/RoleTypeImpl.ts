@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { RoleType as RoleTypeProto } from "typedb-protocol/proto/concept";
 import { Relation } from "../../api/concept/thing/Relation";
 import { Thing } from "../../api/concept/thing/Thing";
 import { RelationType } from "../../api/concept/type/RelationType";
@@ -41,10 +41,6 @@ export class RoleTypeImpl extends TypeImpl implements RoleType {
         return "RoleType";
     }
 
-    asRemote(transaction: TypeDBTransaction): RoleType.Remote {
-        return new RoleTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
-    }
-
     isRoleType(): boolean {
         return true;
     }
@@ -55,12 +51,12 @@ export class RoleTypeImpl extends TypeImpl implements RoleType {
 }
 
 export namespace RoleTypeImpl {
-
-    export function of(typeProto: TypeProto) {
-        if (!typeProto) return null;
-        return new RoleTypeImpl(typeProto.getScope(), typeProto.getLabel(), typeProto.getIsRoot(), typeProto.getIsAbstract());
+    export function ofRoleTypeProto(proto: RoleTypeProto) {
+        if (!proto) return null;
+        return new RoleTypeImpl(proto.scope, proto.label, proto.is_root, proto.is_abstract);
     }
 
+    /*
     export class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
         constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
@@ -153,4 +149,5 @@ export namespace RoleTypeImpl {
             return !(relationType) || (!(await relationType.asRemote(this.transaction).getRelates(this.label.name)));
         }
     }
+     */
 }

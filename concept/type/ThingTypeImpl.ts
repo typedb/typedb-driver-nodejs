@@ -19,7 +19,6 @@
  * under the License.
  */
 
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
 import {Thing} from "../../api/concept/thing/Thing";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {RoleType} from "../../api/concept/type/RoleType";
@@ -41,19 +40,16 @@ import {
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import Annotation = ThingType.Annotation;
 import {Concept} from "../../api/concept/Concept";
+import {ThingTypeRoot as ThingTypeRootProto, ThingType as ThingTypeProto} from "typedb-protocol/proto/concept";
+import {Concept as ConceptProto} from "typedb-protocol/proto/concept"
 
-export class ThingTypeImpl extends TypeImpl implements ThingType {
-
-    constructor(name: string, root: boolean, abstract: boolean) {
+export abstract class ThingTypeImpl extends TypeImpl implements ThingType {
+    protected constructor(name: string, root: boolean, abstract: boolean) {
         super(Label.of(name), root, abstract);
     }
 
     protected get className(): string {
         return "ThingType";
-    }
-
-    asRemote(transaction: TypeDBTransaction): ThingType.Remote {
-        return new ThingTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
     }
 
     isThingType(): boolean {
@@ -66,24 +62,27 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
 }
 
 export namespace ThingTypeImpl {
-
-
-    export function of(thingTypeProto: TypeProto) {
-        if (!thingTypeProto) return null;
-        switch (thingTypeProto.getEncoding()) {
-            case TypeProto.Encoding.ENTITY_TYPE:
-                return EntityTypeImpl.of(thingTypeProto);
-            case TypeProto.Encoding.RELATION_TYPE:
-                return RelationTypeImpl.of(thingTypeProto);
-            case TypeProto.Encoding.ATTRIBUTE_TYPE:
-                return AttributeTypeImpl.of(thingTypeProto);
-            case TypeProto.Encoding.THING_TYPE:
-                return new ThingTypeImpl(thingTypeProto.getLabel(), thingTypeProto.getIsRoot(), thingTypeProto.getIsAbstract());
-            default:
-                throw new TypeDBClientError(BAD_ENCODING.message(thingTypeProto.getEncoding()));
+    export class Root extends ThingTypeImpl {
+        constructor() {
+            super("thing", true, true);
         }
     }
 
+    export namespace Root {
+        export function ofThingTypeRootProto(_: ThingTypeRootProto): Root {
+            return new Root();
+        }
+    }
+
+    export function ofThingTypeProto(proto: ThingTypeProto): ThingType {
+        if (proto.has_entity_type) return EntityTypeImpl.ofEntityTypeProto(proto.entity_type);
+        else if (proto.has_relation_type) return RelationTypeImpl.ofRelationTypeProto(proto.relation_type);
+        else if (proto.has_attribute_type) return AttributeTypeImpl.ofAttributeTypeProto(proto.attribute_type);
+        else if (proto.has_thing_type_root) return ThingTypeImpl.Root.ofThingTypeRootProto(proto.thing_type_root);
+        else throw new TypeDBClientError(BAD_ENCODING.message(proto));
+    }
+
+    /*
     export class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
         constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
@@ -278,4 +277,5 @@ export namespace ThingTypeImpl {
             return (await this.execute(request)).getThingTypeGetSyntaxRes().getSyntax();
         }
     }
+     */
 }

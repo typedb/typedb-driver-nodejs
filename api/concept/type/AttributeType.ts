@@ -28,10 +28,12 @@ import { Value } from "../value/Value";
 import Annotation = ThingType.Annotation;
 import Transitivity = Concept.Transitivity;
 import ValueType = Concept.ValueType;
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface AttributeType extends ThingType {
     readonly valueType: ValueType;
 
+    /*
     put(transaction: TypeDBTransaction, value: Value): Attribute;
     get(transaction: TypeDBTransaction, value: Value): Attribute;
 
@@ -56,4 +58,11 @@ export interface AttributeType extends ThingType {
     getRegex(): Promise<string>;
     setRegex(regex: string): Promise<void>;
     unsetRegex(transaction: TypeDBTransaction): Promise<void>;
+     */
+}
+
+export namespace AttributeType {
+    export function proto(attributeType: AttributeType) {
+        return RequestBuilder.Type.AttributeType.protoAttributeType(attributeType.label);
+    }
 }
