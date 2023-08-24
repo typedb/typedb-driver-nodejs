@@ -51,12 +51,12 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     async create(transaction: TypeDBTransaction): Promise<Entity> {
-        let res = await this.execute(transaction, RequestBuilder.Type.EntityType.createReq(this.label));
+        const res = await this.execute(transaction, RequestBuilder.Type.EntityType.createReq(this.label));
         return EntityImpl.ofEntityProto(res.entity_type_create_res.entity);
     }
 
     async getSupertype(transaction: TypeDBTransaction): Promise<EntityType> {
-        let res = await this.execute(transaction, RequestBuilder.Type.EntityType.getSupertypeReq(this.label));
+        const res = await this.execute(transaction, RequestBuilder.Type.EntityType.getSupertypeReq(this.label));
         return EntityTypeImpl.ofEntityTypeProto(res.entity_type_get_supertype_res.entity_type);
     }
 

@@ -59,7 +59,7 @@ export namespace NumericGroupImpl {
     import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
     export function of(numericGroupProto: NumericGroupProto) {
-        let owner = numericGroupProto.owner;
+        const owner = numericGroupProto.owner;
 
         let concept: Concept;  // FIXME WET
         if (owner.has_entity_type) concept = EntityTypeImpl.ofEntityTypeProto(owner.entity_type);

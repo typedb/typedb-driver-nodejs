@@ -132,7 +132,7 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
             annotations = maybeAnnotations.map(annotation => Annotation.proto(annotation));
         }
 
-        let request = RequestBuilder.Thing.getHasReq(this.iid, attributeTypes, annotations);
+        const request = RequestBuilder.Thing.getHasReq(this.iid, attributeTypes, annotations);
         return this.stream(transaction, request).flatMap(
             (resPart) => Stream.array(resPart.thing_get_has_res_part.attributes)
         ).map((attrProto) => AttributeImpl.ofAttributeProto(attrProto));
@@ -164,12 +164,12 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
     }
 
     protected async execute(transaction: TypeDBTransaction, request: TransactionReq): Promise<ThingRes> {
-        let ext = transaction as TypeDBTransaction.Extended;
+        const ext = transaction as TypeDBTransaction.Extended;
         return (await ext.rpcExecute(request, false)).thing_res;
     }
 
     protected stream(transaction: TypeDBTransaction, request: TransactionReq): Stream<ThingResPart> {
-        let ext = transaction as TypeDBTransaction.Extended;
+        const ext = transaction as TypeDBTransaction.Extended;
         return ext.rpcStream(request).map((res) => res.thing_res_part);
     }
 }

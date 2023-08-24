@@ -52,12 +52,12 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     async create(transaction: TypeDBTransaction): Promise<Relation> {
-        let res = await this.execute(transaction, RequestBuilder.Type.RelationType.createReq(this.label));
+        const res = await this.execute(transaction, RequestBuilder.Type.RelationType.createReq(this.label));
         return RelationImpl.ofRelationProto(res.relation_type_create_res.relation);
     }
 
     async getSupertype(transaction: TypeDBTransaction): Promise<RelationType> {
-        let res = await this.execute(transaction, RequestBuilder.Type.RelationType.getSupertypeReq(this.label));
+        const res = await this.execute(transaction, RequestBuilder.Type.RelationType.getSupertypeReq(this.label));
         return RelationTypeImpl.ofRelationTypeProto(res.relation_type_get_supertype_res.relation_type);
     }
 
@@ -99,12 +99,12 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     async getRelatesForRoleLabel(transaction: TypeDBTransaction, roleLabel: string): Promise<RoleType | null> {
-        let res = await this.execute(transaction, RequestBuilder.Type.RelationType.getRelatesForRoleLabel(this.label, roleLabel));
+        const res = await this.execute(transaction, RequestBuilder.Type.RelationType.getRelatesForRoleLabel(this.label, roleLabel));
         return RoleTypeImpl.ofRoleTypeProto(res.relation_type_get_relates_for_role_label_res.role_type);
     }
 
     async getRelatesOverridden(transaction: TypeDBTransaction, roleLabel: string): Promise<RoleType | null> {
-        let res = await this.execute(transaction, RequestBuilder.Type.RelationType.getRelatesOverriddenReq(this.label, roleLabel));
+        const res = await this.execute(transaction, RequestBuilder.Type.RelationType.getRelatesOverriddenReq(this.label, roleLabel));
         return RoleTypeImpl.ofRoleTypeProto(res.relation_type_get_relates_overridden_res.role_type);
     }
 

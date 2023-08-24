@@ -127,12 +127,12 @@ export class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     protected async execute(transaction: TypeDBTransaction,request: TransactionReq): Promise<RoleTypeRes> {
-        let ext = transaction as TypeDBTransaction.Extended;
+        const ext = transaction as TypeDBTransaction.Extended;
         return (await ext.rpcExecute(request, false)).type_res.role_type_res;
     }
 
     protected stream(transaction: TypeDBTransaction,request: TransactionReq): Stream<RoleTypeResPart> {
-        let ext = transaction as TypeDBTransaction.Extended;
+        const ext = transaction as TypeDBTransaction.Extended;
         return ext.rpcStream(request).map((res) => res.type_res_part.role_type_res_part);
     }
 }

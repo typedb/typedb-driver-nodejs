@@ -140,14 +140,14 @@ export abstract class ThingTypeImpl extends TypeImpl implements ThingType {
             transitivity = valueTypeOrAnnotationsOrTransitivity.proto();
         }
 
-        let request = RequestBuilder.Type.ThingType.getOwnsReq(this.label, valueType, annotations, transitivity);
+        const request = RequestBuilder.Type.ThingType.getOwnsReq(this.label, valueType, annotations, transitivity);
         return this.stream(transaction, request).flatMap(
             resPart => Stream.array(resPart.thing_type_get_owns_res_part.attribute_types)
         ).map(AttributeTypeImpl.ofAttributeTypeProto);
     }
 
     async getOwnsOverridden(transaction: TypeDBTransaction, attributeType: AttributeType): Promise<AttributeType> {
-        let res = await this.execute(transaction, RequestBuilder.Type.ThingType.getOwnsOverriddenReq(this.label, AttributeType.proto(attributeType)));
+        const res = await this.execute(transaction, RequestBuilder.Type.ThingType.getOwnsOverriddenReq(this.label, AttributeType.proto(attributeType)));
         return AttributeTypeImpl.ofAttributeTypeProto(res.thing_type_get_owns_overridden_res.attribute_type);
     }
 
@@ -200,7 +200,7 @@ export abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     async getPlaysOverridden(transaction: TypeDBTransaction, role: RoleType): Promise<RoleType> {
-        let res = await this.execute(transaction, RequestBuilder.Type.ThingType.getPlaysOverriddenReq(this.label, RoleType.proto(role)));
+        const res = await this.execute(transaction, RequestBuilder.Type.ThingType.getPlaysOverriddenReq(this.label, RoleType.proto(role)));
         return RoleTypeImpl.ofRoleTypeProto(res.thing_type_get_plays_overridden_res.role_type);
     }
 
@@ -217,17 +217,17 @@ export abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     async getSyntax(transaction: TypeDBTransaction): Promise<string> {
-        let res = await this.execute(transaction, RequestBuilder.Type.ThingType.getSyntaxReq(this.label));
+        const res = await this.execute(transaction, RequestBuilder.Type.ThingType.getSyntaxReq(this.label));
         return res.thing_type_get_syntax_res.syntax;
     }
 
     protected async execute(transaction: TypeDBTransaction, request: TransactionReq): Promise<ThingTypeRes> {
-        let ext = transaction as TypeDBTransaction.Extended;
+        const ext = transaction as TypeDBTransaction.Extended;
         return (await ext.rpcExecute(request, false)).type_res.thing_type_res;
     }
 
     protected stream(transaction: TypeDBTransaction, request: TransactionReq): Stream<ThingTypeResPart> {
-        let ext = transaction as TypeDBTransaction.Extended;
+        const ext = transaction as TypeDBTransaction.Extended;
         return ext.rpcStream(request).map((res) => res.type_res_part.thing_type_res_part);
     }
 }
@@ -254,7 +254,7 @@ export namespace ThingTypeImpl {
         getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<ThingType>;
         getSubtypes(transaction: TypeDBTransaction, transitivity?: Transitivity): Stream<ThingType> {
             if (!transitivity) transitivity = Transitivity.TRANSITIVE;
-            let roots: Stream<ThingType> = Stream.promises([
+            const roots: Stream<ThingType> = Stream.promises([
                 transaction.concepts.getRootEntityType() as Promise<ThingType>,
                 transaction.concepts.getRootRelationType() as Promise<ThingType>,
                 transaction.concepts.getRootAttributeType() as Promise<ThingType>,
@@ -269,7 +269,7 @@ export namespace ThingTypeImpl {
             if (!transitivity) transitivity = Transitivity.TRANSITIVE;
             if (transitivity == Transitivity.EXPLICIT) return Stream.array([]);
             else {
-                let roots: Stream<ThingType> = Stream.promises([
+                const roots: Stream<ThingType> = Stream.promises([
                     transaction.concepts.getRootEntityType() as Promise<ThingType>,
                     transaction.concepts.getRootRelationType() as Promise<ThingType>,
                     transaction.concepts.getRootAttributeType() as Promise<ThingType>,

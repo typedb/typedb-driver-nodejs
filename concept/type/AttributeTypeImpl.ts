@@ -114,7 +114,7 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     async getSupertype(transaction: TypeDBTransaction): Promise<AttributeType> {
-        let res = await this.execute(transaction, RequestBuilder.Type.AttributeType.getSupertypeReq(this.label));
+        const res = await this.execute(transaction, RequestBuilder.Type.AttributeType.getSupertypeReq(this.label));
         return AttributeTypeImpl.ofAttributeTypeProto(res.attribute_type_get_supertype_res.attribute_type);
     }
 
@@ -192,7 +192,7 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             transitivity = annotationsOrTransitivity.proto();
         }
 
-        let request = RequestBuilder.Type.AttributeType.getOwnersReq(this.label, transitivity, annotations);
+        const request = RequestBuilder.Type.AttributeType.getOwnersReq(this.label, transitivity, annotations);
         return this.stream(transaction, request).flatMap(
             resPart => Stream.array(resPart.attribute_type_get_owners_res_part.thing_types)
         ).map(ThingTypeImpl.ofThingTypeProto);

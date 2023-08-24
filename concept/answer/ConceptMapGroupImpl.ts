@@ -59,7 +59,7 @@ export namespace ConceptMapGroupImpl {
     import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
     export function of(mapGroupProto: MapGroupProto): ConceptMapGroup {
-        let owner = mapGroupProto.owner;
+        const owner = mapGroupProto.owner;
 
         let concept: Concept;  // FIXME WET
         if (owner.has_entity_type) concept = EntityTypeImpl.ofEntityTypeProto(owner.entity_type);

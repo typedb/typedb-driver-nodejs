@@ -61,7 +61,7 @@ export class UserManagerImpl implements UserManager {
     }
 
     async get(username: string): Promise<UserImpl> {
-        let user = (await this.runFailsafe((client) =>
+        const user = (await this.runFailsafe((client) =>
             client.stub.usersGet(RequestBuilder.UserManager.getReq(username))
         )).user;
         return UserImpl.of(user, this._client);

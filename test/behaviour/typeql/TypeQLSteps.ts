@@ -205,7 +205,7 @@ abstract class AttributeMatcher implements ConceptMatcher {
     }
 
     check(attribute: Attribute) {
-        let value = attribute.value;
+        const value = attribute.value;
         if (value.isBoolean()) return value.asBoolean() === parseBool(this.value);
         else if (value.isLong()) return value.asLong() === parseInt(this.value);
         else if (value.isDouble()) return value.asDouble() === parseFloat(this.value);
