@@ -176,7 +176,7 @@ checkstyle_test(
         "LICENSE",
         "VERSION",
         "dist/**/*.*",
-        "yarn.lock",
+        "pnpm-lock.yaml",
     ]),
     license_type = "apache-header",
 )
