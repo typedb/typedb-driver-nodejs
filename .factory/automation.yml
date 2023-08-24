@@ -42,7 +42,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel build //... --spawn_strategy=local
+        bazel build //...
         bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
         npm run lint
