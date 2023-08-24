@@ -11,7 +11,7 @@
     "url": "https://github.com/vaticle/typedb-client-nodejs"
   },
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "./node_modules/rimraf/bin.js dist",
     "build": "npm run clean && tsc",
     "pretest": "npm run build",
     "test": "npm run test-concept && npm run test-connection && npm run test-query",
@@ -22,7 +22,6 @@
     "test-stream": "node test/integration/test-stream.js",
     "lint": "eslint . --ext .ts",
     "compile-tests": "tsc --build test/tsconfig.json",
-    "rimraf": "./node_modules/rimraf/bin.js"
   },
   "dependencies": {
     "@grpc/grpc-js": "1.9.0",
