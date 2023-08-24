@@ -20,6 +20,7 @@
 # under the License.
 #
 
-set -e
+set -xe
 
+jps | awk '/TypeDBServer/ {print $1}'
 kill $(jps | awk '/TypeDBServer/ {print $1}')
