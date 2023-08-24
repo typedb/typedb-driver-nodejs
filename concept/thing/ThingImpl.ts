@@ -135,7 +135,7 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         const request = RequestBuilder.Thing.getHasReq(this.iid, attributeTypes, annotations);
         return this.stream(transaction, request).flatMap(
             (resPart) => Stream.array(resPart.thing_get_has_res_part.attributes)
-        ).map((attrProto) => AttributeImpl.ofAttributeProto(attrProto));
+        ).map(AttributeImpl.ofAttributeProto);
     }
 
     async setHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void> {
