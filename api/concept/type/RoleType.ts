@@ -31,7 +31,6 @@ import {Concept} from "../Concept";
 import Transitivity = Concept.Transitivity;
 
 export interface RoleType extends Type {
-    /*
     getSupertype(transaction: TypeDBTransaction): Promise<RoleType | null>;
 
     getSupertypes(transaction: TypeDBTransaction): Stream<RoleType>;
@@ -49,7 +48,6 @@ export interface RoleType extends Type {
 
     getPlayerInstances(transaction: TypeDBTransaction): Stream<Thing>;
     getPlayerInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Thing>;
-     */
 }
 
 export namespace RoleType {

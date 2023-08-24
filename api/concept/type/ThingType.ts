@@ -35,14 +35,15 @@ import Transitivity = Concept.Transitivity;
 import Annotation = ThingType.Annotation;
 
 export interface ThingType extends Type {
-    /*
     getSupertype(transaction: TypeDBTransaction): Promise<ThingType>;
 
     getSupertypes(transaction: TypeDBTransaction): Stream<ThingType>;
 
     getSubtypes(transaction: TypeDBTransaction): Stream<ThingType>;
+    getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<ThingType>;
 
     getInstances(transaction: TypeDBTransaction): Stream<Thing>;
+    getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Thing>;
 
     setAbstract(transaction: TypeDBTransaction): Promise<void>;
     unsetAbstract(transaction: TypeDBTransaction): Promise<void>;
@@ -76,10 +77,16 @@ export interface ThingType extends Type {
     unsetPlays(transaction: TypeDBTransaction, role: RoleType): Promise<void>;
 
     getSyntax(transaction: TypeDBTransaction): Promise<string>;
-     */
 }
 
 export namespace ThingType {
+    export function proto(thing_type: ThingType) {
+        if (thing_type.isEntity()) return RequestBuilder.Type.ThingType.protoThingTypeEntityType(thing_type.label);
+        else if (thing_type.isRelation()) return RequestBuilder.Type.ThingType.protoThingTypeRelationType(thing_type.label);
+        else if (thing_type.isAttribute()) return RequestBuilder.Type.ThingType.protoThingTypeAttributeType(thing_type.label);
+        else throw "TODO";
+    }
+
     export class Annotation {
         public static KEY = new Annotation("key");
         public static UNIQUE = new Annotation("unique");

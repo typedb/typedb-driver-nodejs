@@ -23,7 +23,7 @@ import { Entity } from "../../api/concept/thing/Entity";
 import { EntityType } from "../../api/concept/type/EntityType";
 import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
 import { Bytes } from "../../common/util/Bytes";
-import {AttributeTypeImpl, EntityTypeImpl, ThingImpl} from "../../dependencies_internal";
+import {EntityTypeImpl, ThingImpl} from "../../dependencies_internal";
 import {Entity as EntityProto} from "typedb-protocol/proto/concept";
 
 export class EntityImpl extends ThingImpl implements Entity {
@@ -48,6 +48,10 @@ export class EntityImpl extends ThingImpl implements Entity {
 
     asEntity(): Entity {
         return this;
+    }
+
+    async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
+        return !(await transaction.concepts.getEntity(this.iid));
     }
 }
 

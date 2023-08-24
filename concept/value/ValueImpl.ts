@@ -22,16 +22,13 @@
 import {Value} from "../../api/concept/value/Value";
 import {ConceptImpl} from "../ConceptImpl";
 import {Concept} from "../../api/concept/Concept";
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {Value as ValueProto, ValueType as ValueTypeProto} from "typedb-protocol/proto/concept";
+import {Value as ValueProto} from "typedb-protocol/proto/concept";
 import ValueType = Concept.ValueType;
-import VALUE_HAS_NO_REMOTE = ErrorMessage.Concept.VALUE_HAS_NO_REMOTE;
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
-import STRING = Concept.ValueType.STRING;
 
 export class ValueImpl extends ConceptImpl implements Value {
     private readonly _valueType: ValueType;

@@ -23,13 +23,13 @@ import { EntityType as EntityTypeProto } from "typedb-protocol/proto/concept";
 import { Entity } from "../../api/concept/thing/Entity";
 import { EntityType } from "../../api/concept/type/EntityType";
 import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { Label } from "../../common/Label";
 import { RequestBuilder } from "../../common/rpc/RequestBuilder";
 import { Stream } from "../../common/util/Stream";
 import { EntityImpl, ThingTypeImpl } from "../../dependencies_internal";
+import {Concept} from "../../api/concept/Concept";
+import Transitivity = Concept.Transitivity;
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
-
     constructor(name: string, root: boolean, abstract: boolean) {
         super(name, root, abstract);
     }
@@ -45,6 +45,48 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     asEntityType(): EntityType {
         return this;
     }
+
+    async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
+        return !(await transaction.concepts.getEntityType(this.label.name));
+    }
+
+    async create(transaction: TypeDBTransaction): Promise<Entity> {
+        let res = await this.execute(transaction, RequestBuilder.Type.EntityType.createReq(this.label));
+        return EntityImpl.ofEntityProto(res.entity_type_create_res.entity);
+    }
+
+    async getSupertype(transaction: TypeDBTransaction): Promise<EntityType> {
+        let res = await this.execute(transaction, RequestBuilder.Type.EntityType.getSupertypeReq(this.label));
+        return EntityTypeImpl.ofEntityTypeProto(res.entity_type_get_supertype_res.entity_type);
+    }
+
+    async setSupertype(transaction: TypeDBTransaction, superEntityType: EntityType): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.EntityType.setSupertypeReq(this.label, EntityType.proto(superEntityType)));
+    }
+
+    getSupertypes(transaction: TypeDBTransaction): Stream<EntityType> {
+        return this.stream(transaction, RequestBuilder.Type.EntityType.getSupertypesReq(this.label)).flatMap(
+            resPart => Stream.array(resPart.entity_type_get_supertypes_res_part.entity_types)
+        ).map(EntityTypeImpl.ofEntityTypeProto);
+    }
+
+    getSubtypes(transaction: TypeDBTransaction): Stream<EntityType>;
+    getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<EntityType>;
+    getSubtypes(transaction: TypeDBTransaction, transitivity?: Transitivity): Stream<EntityType> {
+        if (!transitivity) transitivity = Transitivity.TRANSITIVE;
+        return this.stream(transaction, RequestBuilder.Type.EntityType.getSubtypesReq(this.label, transitivity.proto())).flatMap(
+            resPart => Stream.array(resPart.entity_type_get_subtypes_res_part.entity_types)
+        ).map(EntityTypeImpl.ofEntityTypeProto);
+    }
+
+    getInstances(transaction: TypeDBTransaction): Stream<Entity>;
+    getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Entity>;
+    getInstances(transaction: TypeDBTransaction, transitivity?: Transitivity): Stream<Entity> {
+        if (!transitivity) transitivity = Transitivity.TRANSITIVE;
+        return this.stream(transaction, RequestBuilder.Type.EntityType.getInstancesReq(this.label, transitivity.proto())).flatMap(
+            resPart => Stream.array(resPart.entity_type_get_instances_res_part.entities)
+        ).map(EntityImpl.ofEntityProto);
+    }
 }
 
 export namespace EntityTypeImpl {
@@ -52,46 +94,4 @@ export namespace EntityTypeImpl {
         if (!proto) return null;
         return new EntityTypeImpl(proto.label, proto.is_root, proto.is_abstract);
     }
-
-    /*
-    export class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
-
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
-            super(transaction, label, root, abstract);
-        }
-
-        protected get className(): string {
-            return "EntityType";
-        }
-
-        asRemote(transaction: TypeDBTransaction): EntityType.Remote {
-            return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
-        }
-
-        isEntityType(): boolean {
-            return true;
-        }
-
-        asEntityType(): EntityType.Remote {
-            return this;
-        }
-
-        create(): Promise<Entity> {
-            const request = RequestBuilder.Type.EntityType.createReq(this.label);
-            return this.execute(request).then((res) => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
-        }
-
-        setSupertype(superEntityType: EntityType): Promise<void> {
-            return super.setSupertype(superEntityType);
-        }
-
-        getInstances(): Stream<Entity> {
-            return super.getInstances() as Stream<Entity>;
-        }
-
-        getSubtypes(): Stream<EntityType> {
-            return super.getSubtypes() as Stream<EntityType>;
-        }
-    }
-     */
 }

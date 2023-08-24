@@ -21,6 +21,7 @@
 
 
 import { Concept } from "../Concept";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Value extends Concept {
     readonly valueType: Concept.ValueType;
@@ -38,4 +39,10 @@ export interface Value extends Concept {
     asDouble(): number;
     asString(): string;
     asDateTime(): Date;
+}
+
+export namespace Value {
+    export function proto(value: Value) {
+        return RequestBuilder.Value.protoValue(value.valueType.proto(), value.value);
+    }
 }

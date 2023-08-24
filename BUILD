@@ -62,25 +62,10 @@ ts_project(
     name = "client-nodejs",
     srcs = glob([
         "*.ts",
-#        "api/**/*.ts",
-        "api/answer/*.ts",
-#        "api/concept/**/*.ts",
-        "api/concept/*/*.ts",
-        "api/concept/Concept.ts",
-        "api/connection/**/*.ts",
-        "api/logic/*.ts",
-        "api/query/*.ts",
-
+        "api/**/*.ts",
         "common/**/*.ts",
         "connection/**/*.ts",
-
-#        "concept/**/*.ts",
-        "concept/answer/*.ts",
-        "concept/thing/*.ts",
-        "concept/type/*.ts",
-        "concept/value/*.ts",
-        "concept/ConceptImpl.ts",
-
+        "concept/**/*.ts",
         "logic/**/*.ts",
         "query/**/*.ts",
         "stream/**/*.ts",

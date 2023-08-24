@@ -25,6 +25,7 @@ import { Label } from "../../../common/Label";
 import { Stream } from "../../../common/util/Stream";
 import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
 import { Concept } from "../Concept";
+import Transitivity = Concept.Transitivity;
 
 export interface Type extends Concept {
     readonly label: Label;
@@ -33,7 +34,9 @@ export interface Type extends Concept {
 
     readonly abstract: boolean;
 
-    /*
+    delete(transaction: TypeDBTransaction): Promise<void>;
+    isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
+
     setLabel(transaction: TypeDBTransaction, label: string): Promise<void>;
 
     getSupertype(transaction: TypeDBTransaction): Promise<Type>;
@@ -41,5 +44,5 @@ export interface Type extends Concept {
     getSupertypes(transaction: TypeDBTransaction): Stream<Type>;
 
     getSubtypes(transaction: TypeDBTransaction): Stream<Type>;
-     */
+    getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Type>;
 }

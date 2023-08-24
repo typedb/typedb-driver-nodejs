@@ -19,7 +19,6 @@
  * under the License.
  */
 
-import {Concept as ConceptProto} from "typedb-protocol/proto/concept"
 import { Attribute } from "../api/concept/thing/Attribute";
 import { AttributeType } from "../api/concept/type/AttributeType";
 import { Concept } from "../api/concept/Concept";
@@ -33,21 +32,9 @@ import { Thing } from "../api/concept/thing/Thing";
 import { ThingType } from "../api/concept/type/ThingType";
 import { Type } from "../api/concept/type/Type";
 import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
-import {
-    AttributeImpl,
-    AttributeTypeImpl,
-    EntityImpl,
-    EntityTypeImpl,
-    RelationImpl,
-    RelationTypeImpl,
-    RoleTypeImpl,
-    ThingTypeImpl,
-    ValueImpl
-} from "../dependencies_internal";
 import {Value} from "../api/concept/value/Value";
-import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
 
 export abstract class ConceptImpl implements Concept {
     protected abstract get className(): string;
@@ -144,65 +131,3 @@ export abstract class ConceptImpl implements Concept {
 
     abstract toJSONRecord(): Record<string, boolean | string | number>;
 }
-
-/*
-export namespace ConceptImpl {
-    export abstract class Remote extends ConceptImpl implements Concept.Remote {
-        private readonly _transaction: TypeDBTransaction.Extended;
-
-        protected constructor(transaction: TypeDBTransaction.Extended, ..._: any) {
-            super();
-            if (!transaction) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_TRANSACTION);
-            this._transaction = transaction;
-        }
-
-        protected get transaction() {
-            return this._transaction;
-        }
-
-        abstract delete(): Promise<void>;
-
-        abstract isDeleted(): Promise<boolean>;
-
-        asAttribute(): Attribute.Remote {
-            return super.asAttribute() as Attribute.Remote;
-        }
-
-        asAttributeType(): AttributeType.Remote {
-            return super.asAttributeType() as AttributeType.Remote;
-        }
-
-        asEntity(): Entity.Remote {
-            return super.asEntity() as Entity.Remote;
-        }
-
-        asEntityType(): EntityType.Remote {
-            return super.asEntityType() as EntityType.Remote;
-        }
-
-        asRelation(): Relation.Remote {
-            return super.asRelation() as Relation.Remote;
-        }
-
-        asRelationType(): RelationType.Remote {
-            return super.asRelationType() as RelationType.Remote;
-        }
-
-        asRoleType(): RoleType.Remote {
-            return super.asRoleType() as RoleType.Remote;
-        }
-
-        asThing(): Thing.Remote {
-            return super.asThing() as Thing.Remote;
-        }
-
-        asThingType(): ThingType.Remote {
-            return super.asThingType() as ThingType.Remote;
-        }
-
-        asType(): Type.Remote {
-            return super.asType() as Type.Remote;
-        }
-    }
-}
- */

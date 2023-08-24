@@ -28,17 +28,17 @@ import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Relation extends Thing {
     readonly type: RelationType;
-    /*
+
     addRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void>;
 
     removeRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void>;
 
+    getPlayersByRoleType(transaction: TypeDBTransaction): Stream<Thing>;
     getPlayersByRoleType(transaction: TypeDBTransaction, roleTypes: RoleType[]): Stream<Thing>;
 
     getRolePlayers(transaction: TypeDBTransaction): Promise<Map<RoleType, Thing[]>>;
 
     getRelating(transaction: TypeDBTransaction): Stream<RoleType>;
-     */
 }
 
 export namespace Relation {

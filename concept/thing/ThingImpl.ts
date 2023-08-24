@@ -35,15 +35,15 @@ import {
     AttributeImpl,
     AttributeTypeImpl,
     ConceptImpl,
-    EntityImpl, EntityTypeImpl,
-    RelationImpl, RelationTypeImpl,
-    RoleTypeImpl, ThingTypeImpl
+    EntityImpl,
+    RelationImpl,
+    RoleTypeImpl,
 } from "../../dependencies_internal";
 import Annotation = ThingType.Annotation;
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import {
     AttributeType as AttributeTypeProto,
-    Thing as ThingProto,
+    Thing as ThingProto, ThingRes,
     ThingResPart,
     TypeAnnotation
 } from "typedb-protocol/proto/concept";
@@ -92,12 +92,12 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         return {type: this.type.label.name};
     }
 
-    /*
     async delete(transaction: TypeDBTransaction): Promise<void> {
         const request = RequestBuilder.Thing.deleteReq(this.iid);
         await this.execute(transaction, request);
     }
-    */
+
+    abstract isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
 
     getHas(transaction: TypeDBTransaction): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<Attribute>;
@@ -138,41 +138,35 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         ).map((attrProto) => AttributeImpl.ofAttributeProto(attrProto));
     }
 
-    /*
+    async setHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void> {
+        const request = RequestBuilder.Thing.setHasReq(this.iid, Attribute.proto(attribute));
+        await this.execute(transaction, request);
+    }
+
+    async unsetHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void> {
+        const request = RequestBuilder.Thing.unsetHasReq(this.iid, Attribute.proto(attribute));
+        await this.execute(transaction, request);
+    }
+
     getPlaying(transaction: TypeDBTransaction): Stream<RoleType> {
         const request = RequestBuilder.Thing.getPlayingReq(this.iid);
         return this.stream(transaction, request)
-            .flatMap((resPart) => Stream.array(resPart.getThingGetPlayingResPart().getRoleTypesList()))
-            .map((res) => RoleTypeImpl.of(res));
+            .flatMap((resPart) => Stream.array(resPart.thing_get_playing_res_part.role_types))
+            .map((res) => RoleTypeImpl.ofRoleTypeProto(res));
     }
 
     getRelations(transaction: TypeDBTransaction, roleTypes?: RoleType[]): Stream<Relation> {
         if (!roleTypes) roleTypes = [];
         const request = RequestBuilder.Thing.getRelationsReq(this.iid, roleTypes.map((roleType) => RoleType.proto(roleType)));
         return this.stream(transaction, request)
-            .flatMap((resPart) => Stream.array(resPart.getThingGetRelationsResPart().getRelationsList()))
-            .map((res) => RelationImpl.of(res));
+            .flatMap((resPart) => Stream.array(resPart.thing_get_relations_res_part.relations))
+            .map((res) => RelationImpl.ofRelationProto(res));
     }
 
-    async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
-        return !(await transaction.concepts.getThing(this.iid));
-    }
-
-    async setHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void> {
-        const request = RequestBuilder.Thing.setHasReq(this.iid, Thing.proto(attribute));
-        await this.execute(transaction, request);
-    }
-
-    async unsetHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void> {
-        const request = RequestBuilder.Thing.unsetHasReq(this.iid, Thing.proto(attribute));
-        await this.execute(transaction, request);
-    }
-
-    protected async execute(transaction: TypeDBTransaction, request: TransactionProto.Req): Promise<ThingProto.Res> {
+    protected async execute(transaction: TypeDBTransaction, request: TransactionReq): Promise<ThingRes> {
         let ext = transaction as TypeDBTransaction.Extended;
-        return (await ext.rpcExecute(request, false)).getThingRes();
+        return (await ext.rpcExecute(request, false)).thing_res;
     }
-     */
 
     protected stream(transaction: TypeDBTransaction, request: TransactionReq): Stream<ThingResPart> {
         let ext = transaction as TypeDBTransaction.Extended;

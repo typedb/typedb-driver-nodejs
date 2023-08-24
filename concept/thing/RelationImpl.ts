@@ -54,29 +54,36 @@ export class RelationImpl extends ThingImpl implements Relation {
         return this;
     }
 
-    /*
-    async addPlayer(transaction: TypeDBTransaction,roleType: RoleType, player: Thing): Promise<void> {
-        const request = RequestBuilder.Thing.Relation.addPlayerReq(this.iid, RoleType.proto(roleType), Thing.proto(player));
+    async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
+        return !(await transaction.concepts.getRelation(this.iid));
+    }
+
+    async addRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void> {
+        const request = RequestBuilder.Thing.Relation.addRolePlayerReq(this.iid, RoleType.proto(roleType), Thing.proto(player));
         await this.execute(transaction, request);
     }
 
-    getPlayers(transaction: TypeDBTransaction,roleTypes?: RoleType[]): Stream<Thing> {
-        if (!roleTypes) roleTypes = []
-        const roleTypesProtos = roleTypes.map((roleType) => RoleType.proto(roleType));
-        const request = RequestBuilder.Thing.Relation.getPlayersReq(this.iid, roleTypesProtos);
-        return this.stream(transaction, request)
-            .flatMap((resPart) => Stream.array(resPart.getRelationGetPlayersResPart().getThingsList()))
-            .map((thingProto) => ThingImpl.of(thingProto));
+    async removeRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void> {
+        const request = RequestBuilder.Thing.Relation.removeRolePlayerReq(this.iid, RoleType.proto(roleType), Thing.proto(player));
+        await this.execute(transaction, request);
     }
 
-    async getPlayersByRoleType(transaction: TypeDBTransaction,): Promise<Map<RoleType, Thing[]>> {
-        const request = RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq(this.iid);
+    getPlayersByRoleType(transaction: TypeDBTransaction, roleTypes?: RoleType[]): Stream<Thing> {
+        if (!roleTypes) roleTypes = []
+        const request = RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq(this.iid, roleTypes.map(RoleType.proto));
+        return this.stream(transaction, request)
+            .flatMap((resPart) => Stream.array(resPart.relation_get_players_by_role_type_res_part.things))
+            .map((thingProto) => ThingImpl.ofThingProto(thingProto));
+    }
+
+    async getRolePlayers(transaction: TypeDBTransaction): Promise<Map<RoleType, Thing[]>> {
+        const request = RequestBuilder.Thing.Relation.getRolePlayersReq(this.iid);
         const rolePlayersMap = new Map<RoleType, Thing[]>();
         await this.stream(transaction, request)
-            .flatMap((resPart) => Stream.array(resPart.getRelationGetPlayersByRoleTypeResPart().getRoleTypesWithPlayersList()))
+            .flatMap((resPart) => Stream.array(resPart.relation_get_role_players_res_part.role_players))
             .forEach((roleTypeWithPlayerList) => {
-                const role = RoleTypeImpl.of(roleTypeWithPlayerList.getRoleType());
-                const player = ThingImpl.of(roleTypeWithPlayerList.getPlayer());
+                const role = RoleTypeImpl.ofRoleTypeProto(roleTypeWithPlayerList.role_type);
+                const player = ThingImpl.ofThingProto(roleTypeWithPlayerList.player);
                 let key = this.findRole(rolePlayersMap, role);
                 if (key == null) {
                     rolePlayersMap.set(role, []);
@@ -87,16 +94,11 @@ export class RelationImpl extends ThingImpl implements Relation {
         return rolePlayersMap;
     }
 
-    async removePlayer(transaction: TypeDBTransaction,roleType: RoleType, player: Thing): Promise<void> {
-        const request = RequestBuilder.Thing.Relation.removePlayerReq(this.iid, RoleType.proto(roleType), Thing.proto(player));
-        await this.execute(transaction, request);
-    }
-
     getRelating(transaction: TypeDBTransaction): Stream<RoleType> {
         const request = RequestBuilder.Thing.Relation.getRelatingReq(this.iid);
         return this.stream(transaction, request)
-            .flatMap((resPart) => Stream.array(resPart.getRelationGetRelatingResPart().getRoleTypesList()))
-            .map((roleTypeProto) => RoleTypeImpl.of(roleTypeProto));
+            .flatMap((resPart) => Stream.array(resPart.relation_get_relating_res_part.role_types))
+            .map((roleTypeProto) => RoleTypeImpl.ofRoleTypeProto(roleTypeProto));
     }
 
     private findRole(map: Map<RoleType, Thing[]>, role: RoleType) {
@@ -111,7 +113,6 @@ export class RelationImpl extends ThingImpl implements Relation {
         }
         return null;
     }
-     */
 }
 
 export namespace RelationImpl {

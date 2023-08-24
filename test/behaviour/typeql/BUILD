@@ -42,6 +42,7 @@ ts_project(
         "//test/behaviour/connection:steps-base",
         "//test/behaviour/util:util",
     ],
+    declaration = True,
     resolve_json_module = True,
     visibility = ["//visibility:public"],
 )

@@ -39,6 +39,8 @@ import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import {Attribute as AttributeProto} from "typedb-protocol/proto/concept";
 import {ValueImpl} from "../value/ValueImpl";
 import {Value} from "../../api/concept/value/Value";
+import {ThingType} from "../../api/concept/type/ThingType";
+import {Thing} from "../../api/concept/thing/Thing";
 
 export class AttributeImpl extends ThingImpl implements Attribute {
     private readonly _type: AttributeType;
@@ -71,19 +73,21 @@ export class AttributeImpl extends ThingImpl implements Attribute {
         return this._value;
     }
 
-    /*
+    async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
+        return !(await transaction.concepts.getAttribute(this.iid));
+    }
+
     getOwners(transaction: TypeDBTransaction, ownerType?: ThingType): Stream<Thing> {
         let request;
         if (!ownerType) {
             request = RequestBuilder.Thing.Attribute.getOwnersReq(this.iid);
         } else {
-            request = RequestBuilder.Thing.Attribute.getOwnersByTypeReq(this.iid, ThingType.proto(ownerType));
+            request = RequestBuilder.Thing.Attribute.getOwnersReq(this.iid, ThingType.proto(ownerType));
         }
         return this.stream(transaction, request)
-            .flatMap((resPart) => Stream.array(resPart.getAttributeGetOwnersResPart().getThingsList()))
-            .map((thingProto) => ThingImpl.of(thingProto));
+            .flatMap((resPart) => Stream.array(resPart.attribute_get_owners_res_part.things))
+            .map((thingProto) => ThingImpl.ofThingProto(thingProto));
     }
-     */
 
     toJSONRecord(): Record<string, boolean | string | number> {
         return {

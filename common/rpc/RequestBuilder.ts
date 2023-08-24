@@ -23,17 +23,66 @@ import {
     Attribute as AttributeProto,
     AttributeGetOwnersReq,
     AttributeType as AttributeTypeProto,
+    AttributeTypeGetInstancesReq,
+    AttributeTypeGetOwnersReq,
+    AttributeTypeGetRegexReq,
+    AttributeTypeGetReq,
+    AttributeTypeGetSubtypesReq,
+    AttributeTypeGetSupertypeReq,
+    AttributeTypeGetSupertypesReq,
+    AttributeTypePutReq,
+    AttributeTypeSetRegexReq,
+    AttributeTypeSetSupertypeReq,
+    ConceptManagerGetAttributeReq,
+    ConceptManagerGetAttributeTypeReq,
+    ConceptManagerGetEntityReq,
+    ConceptManagerGetEntityTypeReq,
+    ConceptManagerGetRelationReq,
+    ConceptManagerGetRelationTypeReq,
+    ConceptManagerGetSchemaExceptionsReq,
     ConceptManagerPutAttributeTypeReq,
     ConceptManagerPutEntityTypeReq,
     ConceptManagerPutRelationTypeReq,
     ConceptManagerReq,
     Entity as EntityProto,
     EntityType as EntityTypeProto,
+    EntityTypeCreateReq,
+    EntityTypeGetInstancesReq,
+    EntityTypeGetSubtypesReq,
+    EntityTypeGetSupertypeReq,
+    EntityTypeGetSupertypesReq,
+    EntityTypeSetSupertypeReq,
     Relation as RelationProto,
+    RelationAddRolePlayerReq,
     RelationGetPlayersByRoleTypeReq,
     RelationGetRelatingReq,
+    RelationGetRolePlayersReq,
+    RelationRemoveRolePlayerReq,
+    RelationRolePlayer,
     RelationType as RelationTypeProto,
+    RelationTypeCreateReq,
+    RelationTypeGetInstancesReq,
+    RelationTypeGetRelatesForRoleLabelReq,
+    RelationTypeGetRelatesOverriddenReq,
+    RelationTypeGetRelatesReq,
+    RelationTypeGetSubtypesReq,
+    RelationTypeGetSupertypeReq,
+    RelationTypeGetSupertypesReq,
+    RelationTypeSetRelatesReq,
+    RelationTypeSetSupertypeReq,
+    RelationTypeUnsetRelatesReq,
     RoleType as RoleTypeProto,
+    RoleType,
+    RoleTypeDeleteReq,
+    RoleTypeGetPlayerInstancesReq,
+    RoleTypeGetPlayerTypesReq,
+    RoleTypeGetRelationInstancesReq,
+    RoleTypeGetRelationTypesReq,
+    RoleTypeGetSubtypesReq,
+    RoleTypeGetSupertypeReq,
+    RoleTypeGetSupertypesReq,
+    RoleTypeReq,
+    RoleTypeSetLabelReq,
     Thing as ThingProto,
     ThingDeleteReq,
     ThingGetHasReq,
@@ -41,12 +90,29 @@ import {
     ThingGetRelationsReq,
     ThingReq,
     ThingSetHasReq,
+    ThingType as ThingTypeProto,
+    ThingTypeDeleteReq,
+    ThingTypeGetOwnsOverriddenReq,
+    ThingTypeGetOwnsReq,
+    ThingTypeGetPlaysOverriddenReq,
+    ThingTypeGetPlaysReq,
+    ThingTypeGetSyntaxReq,
+    ThingTypeReq,
+    ThingTypeSetAbstractReq,
+    ThingTypeSetLabelReq,
+    ThingTypeSetOwnsReq,
+    ThingTypeSetPlaysReq,
+    ThingTypeUnsetAbstractReq,
+    ThingTypeUnsetOwnsReq,
+    ThingTypeUnsetPlaysReq,
     ThingUnsetHasReq,
-    Type,
     TypeAnnotation,
     TypeAnnotationKey,
     TypeAnnotationUnique,
-    ValueType
+    TypeReq,
+    TypeTransitivity,
+    Value as ValueProto,
+    ValueType,
 } from "typedb-protocol/proto/concept";
 import {
     LogicManagerGetRuleReq,
@@ -112,15 +178,15 @@ import {SessionCloseReq, SessionOpenReq, SessionPulseReq, SessionType} from "typ
 export namespace RequestBuilder {
     export namespace DatabaseManager {
         export function getReq(name: string) {
-            return new DatabaseManagerGetReq({ name: name });
+            return new DatabaseManagerGetReq({name: name});
         }
 
         export function createReq(name: string) {
-            return new DatabaseManagerCreateReq({ name: name });
+            return new DatabaseManagerCreateReq({name: name});
         }
 
         export function containsReq(name: string) {
-            return new DatabaseManagerContainsReq({ name: name });
+            return new DatabaseManagerContainsReq({name: name});
         }
 
         export function allReq() {
@@ -130,19 +196,19 @@ export namespace RequestBuilder {
 
     export namespace Database {
         export function schemaReq(name: string) {
-            return new DatabaseSchemaReq({ name: name });
+            return new DatabaseSchemaReq({name: name});
         }
 
         export function typeSchemaReq(name: string) {
-            return new DatabaseTypeSchemaReq({ name: name });
+            return new DatabaseTypeSchemaReq({name: name});
         }
 
         export function ruleSchemaReq(name: string) {
-            return new DatabaseRuleSchemaReq({ name: name });
+            return new DatabaseRuleSchemaReq({name: name});
         }
 
         export function deleteReq(name: string) {
-            return new DatabaseDeleteReq({ name: name });
+            return new DatabaseDeleteReq({name: name});
         }
     }
 
@@ -154,15 +220,15 @@ export namespace RequestBuilder {
 
     export namespace UserManager {
         export function containsReq(name: string): UserManagerContainsReq {
-            return new UserManagerContainsReq({ username: name });
+            return new UserManagerContainsReq({username: name});
         }
 
         export function createReq(name: string, password: string): UserManagerCreateReq {
-            return new UserManagerCreateReq({ username: name, password: password });
+            return new UserManagerCreateReq({username: name, password: password});
         }
 
         export function deleteReq(name: string): UserManagerDeleteReq {
-            return new UserManagerDeleteReq({ username: name });
+            return new UserManagerDeleteReq({username: name});
         }
 
         export function allReq(): UserManagerAllReq {
@@ -170,47 +236,47 @@ export namespace RequestBuilder {
         }
 
         export function passwordSetReq(name: string, password: string): UserManagerPasswordSetReq {
-            return new UserManagerPasswordSetReq({ username: name, password: password });
+            return new UserManagerPasswordSetReq({username: name, password: password});
         }
 
         export function getReq(name: string): UserManagerGetReq {
-            return new UserManagerGetReq({ username: name });
+            return new UserManagerGetReq({username: name});
         }
     }
 
     export namespace User {
         export function passwordUpdateReq(name: string, passwordOld: string, passwordNew: string): UserPasswordUpdateReq {
-            return new UserPasswordUpdateReq({ username: name, password_old: passwordOld, password_new: passwordNew });
+            return new UserPasswordUpdateReq({username: name, password_old: passwordOld, password_new: passwordNew});
         }
 
         export function tokenReq(username: string) {
-            return new UserTokenReq({ username: username });
+            return new UserTokenReq({username: username});
         }
     }
 
     export namespace Connection {
         export function openReq() {
-            return new ConnectionOpenReq({ version: Version.VERSION })
+            return new ConnectionOpenReq({version: Version.VERSION})
         }
     }
 
     export namespace Session {
         export function openReq(database: string, type: SessionType, options: Options) {
-            return new SessionOpenReq({ database: database, type: type, options: options });
+            return new SessionOpenReq({database: database, type: type, options: options});
         }
 
         export function closeReq(id: string) {
-            return new SessionCloseReq({ session_id: Bytes.hexStringToBytes(id) });
+            return new SessionCloseReq({session_id: Bytes.hexStringToBytes(id)});
         }
 
         export function pulseReq(id: string) {
-            return new SessionPulseReq({ session_id: Bytes.hexStringToBytes(id) });
+            return new SessionPulseReq({session_id: Bytes.hexStringToBytes(id)});
         }
     }
 
     export namespace Transaction {
         export function clientReq(reqs: TransactionReq[]) {
-            return new TransactionClient({ reqs: reqs });
+            return new TransactionClient({reqs: reqs});
         }
 
         export function openReq(sessionId: string, type: TransactionType, options: Options, latencyMillis: number) {
@@ -243,7 +309,7 @@ export namespace RequestBuilder {
 
     export namespace LogicManager {
         export function logicManagerReq(logicReq: LogicManagerReq) {
-            return new TransactionReq({ logic_manager_req: logicReq });
+            return new TransactionReq({logic_manager_req: logicReq});
         }
 
         export function putRuleReq(label: string, when: string, then: string) {
@@ -258,7 +324,7 @@ export namespace RequestBuilder {
 
         export function getRuleReq(label: string) {
             return logicManagerReq(new LogicManagerReq({
-                get_rule_req: new LogicManagerGetRuleReq({ label: label })
+                get_rule_req: new LogicManagerGetRuleReq({label: label})
             }));
         }
 
@@ -269,7 +335,7 @@ export namespace RequestBuilder {
 
     export namespace Rule {
         export function ruleReq(request: RuleReq) {
-            return new TransactionReq({ rule_req: request });
+            return new TransactionReq({rule_req: request});
         }
 
         export function setLabelReq(currentLabel: string, newLabel: string) {
@@ -351,10 +417,9 @@ export namespace RequestBuilder {
         }
     }
 
-    /*
     export namespace ConceptManager {
         function conceptManagerReq(req: ConceptManagerReq): TransactionReq {
-            return new TransactionReq({ concept_manager_req: req });
+            return new TransactionReq({concept_manager_req: req});
         }
 
         export function putEntityTypeReq(label: string) {
@@ -365,273 +430,260 @@ export namespace RequestBuilder {
 
         export function putRelationTypeReq(label: string) {
             return conceptManagerReq(new ConceptManagerReq({
-                put_relation_type_req: new ConceptManagerPutRelationTypeReq({ label: label })
+                put_relation_type_req: new ConceptManagerPutRelationTypeReq({label: label})
             }));
         }
 
         export function putAttributeTypeReq(label: string, valueType: ValueType) {
             return conceptManagerReq(new ConceptManagerReq({
-                put_attribute_type_req: new ConceptManagerPutAttributeTypeReq({ label: label, valueType: valueType })
+                put_attribute_type_req: new ConceptManagerPutAttributeTypeReq({label: label, value_type: valueType})
             }));
         }
 
-        export function getThingTypeReq(label: string) {
-            return conceptManagerReq(new ConceptManagerReq( {
-                    get_entity_type_req: new ConceptManagerGetThingTypeReq({label: label})
-                } ));
+        export function getEntityTypeReq(label: string) {
+            return conceptManagerReq(new ConceptManagerReq({
+                get_entity_type_req: new ConceptManagerGetEntityTypeReq({label: label})
+            }));
         }
 
-        export function getThingReq(iid: string) {
-            return conceptManagerReq(new ConceptManagerReq().setGetThingReq(
-                new ConceptManagerGetThingReq({ iid: Bytes.hexStringToBytes(iid }))
-            ));
+        export function getRelationTypeReq(label: string) {
+            return conceptManagerReq(new ConceptManagerReq({
+                get_relation_type_req: new ConceptManagerGetRelationTypeReq({label: label})
+            }));
+        }
+
+        export function getAttributeTypeReq(label: string) {
+            return conceptManagerReq(new ConceptManagerReq({
+                get_attribute_type_req: new ConceptManagerGetAttributeTypeReq({label: label})
+            }));
+        }
+
+        export function getEntityReq(iid: string) {
+            return conceptManagerReq(new ConceptManagerReq({
+                get_entity_req: new ConceptManagerGetEntityReq({iid: Bytes.hexStringToBytes(iid)})
+            }));
+        }
+
+        export function getRelationReq(iid: string) {
+            return conceptManagerReq(new ConceptManagerReq({
+                get_relation_req: new ConceptManagerGetRelationReq({iid: Bytes.hexStringToBytes(iid)})
+            }));
+        }
+
+        export function getAttributeReq(iid: string) {
+            return conceptManagerReq(new ConceptManagerReq({
+                get_attribute_req: new ConceptManagerGetAttributeReq({iid: Bytes.hexStringToBytes(iid)})
+            }));
+        }
+
+        export function getSchemaExceptions() {
+            return conceptManagerReq(new ConceptManagerReq({
+                get_schema_exceptions_req: new ConceptManagerGetSchemaExceptionsReq()
+            }));
         }
     }
-
-    export namespace Concept {
-
-        export function conceptValueBoolean(value: boolean): ConceptValue {
-            return new ConceptValue({ boolean: value });
-        }
-
-        export function conceptValueLong(value: number): ConceptValue {
-            return new ConceptValue({ long: value });
-        }
-
-        export function conceptValueDouble(value: number): ConceptValue {
-            return new ConceptValue({ double: value });
-        }
-
-        export function conceptValueString(value: string): ConceptValue {
-            return new ConceptValue({ string: value });
-        }
-
-        export function conceptValueDateTime(value: Date): ConceptValue {
-            return new ConceptValue({ dateTime: value.getTime( }));
-        }
-
-    }
-    */
 
     export namespace Type {
-        /*
-        function typeReq(req: TypeReq): Transaction.Req {
-            return new TransactionReq({ typeReq: req });
-        }
-
-        function newReqBuilder(label: Label) {
-            const builder = new TypeReq({ label: label.name });
-            if (label.scope) builder.setScope(label.scope);
-            return builder;
-        }
-
-        export function setLabelReq(label: Label, newLabel: string) {
-            return typeReq(newReqBuilder(label).setTypeSetLabelReq(
-                new TypeSetLabelReq({ label: newLabel })
-            ));
-        }
-
-        export function getSupertypesReq(label: Label) {
-            return typeReq(newReqBuilder(label).setTypeGetSupertypesReq(
-                new TypeGetSupertypesReq()
-            ));
-        }
-
-        export function getSubtypesReq(label: Label) {
-            return typeReq(newReqBuilder(label).setTypeGetSubtypesReq(
-                new TypeGetSubtypesReq()
-            ));
-        }
-
-        export function getSupertypeReq(label: Label) {
-            return typeReq(newReqBuilder(label).setTypeGetSupertypeReq(
-                new TypeGetSupertypeReq()
-            ));
-        }
-
-        export function deleteReq(label: Label) {
-            return typeReq(newReqBuilder(label).setTypeDeleteReq(
-                new TypeDeleteReq()
-            ));
-        }
-         */
-
         export namespace RoleType {
+            function roleTypeReq(req: RoleTypeReq): TransactionReq {
+                return new TransactionReq({type_req: new TypeReq({role_type_req: req})});
+            }
+
+            function newReqBuilder(label: Label) {
+                return {label: label.name, scope: label.scope};
+            }
+
             export function protoRoleType(label: Label) {
-                return new RoleTypeProto({ scope: label.scope, label: label.name });
+                return new RoleTypeProto({scope: label.scope, label: label.name});
             }
 
-            /*
+            export function deleteReq(label: Label) {
+                return roleTypeReq(new RoleTypeReq({
+                    ...newReqBuilder(label),
+                    role_type_delete_req: new RoleTypeDeleteReq(),
+                }));
+            }
+
+            export function setLabelReq(label: Label, newLabel: string) {
+                return roleTypeReq(new RoleTypeReq({
+                    ...newReqBuilder(label),
+                    role_type_set_label_req: new RoleTypeSetLabelReq({label: newLabel}),
+                }));
+            }
+
+            export function getSupertypeReq(label: Label) {
+                return roleTypeReq(new RoleTypeReq({
+                    ...newReqBuilder(label),
+                    role_type_get_supertype_req: new RoleTypeGetSupertypeReq(),
+                }));
+            }
+
+            export function getSupertypesReq(label: Label) {
+                return roleTypeReq(new RoleTypeReq({
+                    ...newReqBuilder(label),
+                    role_type_get_supertypes_req: new RoleTypeGetSupertypesReq(),
+                }));
+            }
+
+            export function getSubtypesReq(label: Label, transitivity: TypeTransitivity) {
+                return roleTypeReq(new RoleTypeReq({
+                    ...newReqBuilder(label),
+                    role_type_get_subtypes_req: new RoleTypeGetSubtypesReq({transitivity: transitivity}),
+                }));
+            }
+
             export function getRelationTypesReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRoleTypeGetRelationTypesReq(
-                    new RoleTypeGetRelationTypesReq()
-                ));
+                return roleTypeReq(new RoleTypeReq({
+                    ...newReqBuilder(label),
+                    role_type_get_relation_types_req: new RoleTypeGetRelationTypesReq(),
+                }));
             }
 
-            export function getPlayerTypesReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerTypesReq(
-                    new RoleTypeGetPlayerTypesReq()
-                ));
+            export function getPlayerTypesReq(label: Label, transitivity: TypeTransitivity) {
+                return roleTypeReq(new RoleTypeReq({
+                    ...newReqBuilder(label),
+                    role_type_get_player_types_req: new RoleTypeGetPlayerTypesReq({transitivity: transitivity}),
+                }));
             }
 
-            export function getPlayerTypesExplicitReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerTypesExplicitReq(
-                    new RoleTypeGetPlayerTypesExplicitReq()
-                ));
+            export function getRelationInstancesReq(label: Label, transitivity: TypeTransitivity) {
+                return roleTypeReq(new RoleTypeReq({
+                    ...newReqBuilder(label),
+                    role_type_get_relation_instances_req: new RoleTypeGetRelationInstancesReq({transitivity: transitivity}),
+                }));
             }
 
-            export function getRelationInstancesReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRoleTypeGetRelationInstancesReq(
-                    new RoleTypeGetRelationInstancesReq()
-                ));
+            export function getPlayerInstancesReq(label: Label, transitivity: TypeTransitivity) {
+                return roleTypeReq(new RoleTypeReq({
+                    ...newReqBuilder(label),
+                    role_type_get_player_instances_req: new RoleTypeGetPlayerInstancesReq({transitivity: transitivity}),
+                }));
             }
+        }
 
-            export function getRelationInstancesExplicitReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRoleTypeGetRelationInstancesExplicitReq(
-                    new RoleTypeGetRelationInstancesExplicitReq()
-                ));
-            }
-
-            export function getPlayerInstancesReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerInstancesReq(
-                    new RoleTypeGetPlayerInstancesReq()
-                ));
-            }
-
-            export function getPlayerInstancesExplicitReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerInstancesExplicitReq(
-                    new RoleTypeGetPlayerInstancesExplicitReq()
-                ));
-            }
-            */
+        function thingTypeReq(req: ThingTypeReq): TransactionReq {
+            return new TransactionReq({type_req: new TypeReq({thing_type_req: req})});
         }
 
         export namespace ThingType {
-            /*
-            export function protoThingType(label: Label, encoding: Type.Encoding) {
-                return new Type({ label: label.name }).setEncoding(encoding);
+            export function protoThingTypeEntityType(label: Label): ThingTypeProto {
+                return new ThingTypeProto({entity_type: EntityType.protoEntityType(label)});
+            }
+
+            export function protoThingTypeRelationType(label: Label): ThingTypeProto {
+                return new ThingTypeProto({relation_type: RelationType.protoRelationType(label)});
+            }
+
+            export function protoThingTypeAttributeType(label: Label): ThingTypeProto {
+                return new ThingTypeProto({attribute_type: AttributeType.protoAttributeType(label)});
+            }
+
+            export function deleteReq(label: Label) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_delete_req: new ThingTypeDeleteReq(),
+                }));
+            }
+
+            export function setLabelReq(label: Label, newLabel: string) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_set_label_req: new ThingTypeSetLabelReq({label: newLabel}),
+                }));
             }
 
             export function setAbstractReq(label: Label) {
-                return typeReq(newReqBuilder(label).setThingTypeSetAbstractReq(
-                    new ThingTypeSetAbstractReq()
-                ));
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_set_abstract_req: new ThingTypeSetAbstractReq(),
+                }));
             }
 
             export function unsetAbstractReq(label: Label) {
-                return typeReq(newReqBuilder(label).setThingTypeUnsetAbstractReq(
-                    new ThingTypeUnsetAbstractReq()
-                ));
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_unset_abstract_req: new ThingTypeUnsetAbstractReq(),
+                }));
             }
 
-            export function setSupertypeReq(label: Label, supertype: Type) {
-                return typeReq(newReqBuilder(label).setTypeSetSupertypeReq(
-                    new TypeSetSupertypeReq({ type: supertype })
-                ));
+            export function getOwnsReq(label: Label, value_type: ValueType, annotations: TypeAnnotation[], transitivity: TypeTransitivity) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_get_owns_req: new ThingTypeGetOwnsReq({
+                        value_type: value_type,
+                        annotations: annotations,
+                        transitivity: transitivity,
+                    }),
+                }));
             }
 
-            export function getPlaysReq(label: Label) {
-                return typeReq(newReqBuilder(label).setThingTypeGetPlaysReq(
-                    new ThingTypeGetPlaysReq()
-                ));
+            export function getOwnsOverriddenReq(label: Label, attributeType: AttributeTypeProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_get_owns_overridden_req: new ThingTypeGetOwnsOverriddenReq({attribute_type: attributeType}),
+                }));
             }
 
-            export function getPlaysExplicitReq(label: Label) {
-                return typeReq(newReqBuilder(label).setThingTypeGetPlaysExplicitReq(
-                    new ThingTypeGetPlaysExplicitReq()
-                ));
+            export function setOwnsReq(
+                label: Label,
+                attributeType: AttributeTypeProto,
+                overriddenType: AttributeTypeProto | null,
+                annotations: TypeAnnotation[],
+            ) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_set_owns_req: new ThingTypeSetOwnsReq({
+                        attribute_type: attributeType,
+                        overridden_type: overriddenType,
+                        annotations: annotations,
+                    }),
+                }));
             }
 
-            export function getPlaysOverriddenReq(label: Label) {
-                return typeReq(newReqBuilder(label).setThingTypeGetPlaysOverriddenReq(
-                    new ThingTypeGetPlaysOverriddenReq()
-                ));
+            export function unsetOwnsReq(label: Label, attributeType: AttributeTypeProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_unset_owns_req: new ThingTypeUnsetOwnsReq({attribute_type: attributeType}),
+                }));
             }
 
-            export function setPlaysReq(label: Label, roleType: Type) {
-                return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                    new ThingTypeSetPlaysReq({ roleType: roleType })
-                ));
+            export function getPlaysReq(label: Label, transitivity: TypeTransitivity) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_get_plays_req: new ThingTypeGetPlaysReq({transitivity: transitivity}),
+                }));
             }
 
-            export function setPlaysOverriddenReq(label: Label, roleType: Type, overriddenRoleType: Type) {
-                return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                    new ThingTypeSetPlaysReq({ roleType: roleType })
-                        .setOverriddenType(overriddenRoleType)
-                ));
+            export function getPlaysOverriddenReq(label: Label, roleType: RoleTypeProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_get_plays_overridden_req: new ThingTypeGetPlaysOverriddenReq({role_type: roleType}),
+                }));
             }
 
-            export function unsetPlaysReq(label: Label, roleType: Type) {
-                return typeReq(newReqBuilder(label).setThingTypeUnsetPlaysReq(
-                    new ThingTypeUnsetPlaysReq({ roleType: roleType })
-                ));
+            export function setPlaysReq(label: Label, roleType: RoleTypeProto, overriddenType?: RoleTypeProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_set_plays_req: new ThingTypeSetPlaysReq({
+                        role_type: roleType,
+                        overridden_role_type: overriddenType,
+                    }),
+                }));
             }
 
-            export function getOwnsReq(label: Label, annotations: Type.Annotation[]) {
-                return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-                    new ThingTypeGetOwnsReq({ annotations: annotations })
-                ));
-            }
-
-            export function getOwnsByTypeReq(label: Label, valueType: ValueType, annotations: Type.Annotation[]) {
-                return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-                    new ThingTypeGetOwnsReq({ annotations: annotations })
-                        .setValueType(valueType)
-                ));
-            }
-
-            export function getOwnsExplicitReq(label: Label, annotations: Type.Annotation[]) {
-                return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
-                    new ThingTypeGetOwnsExplicitReq({ annotations: annotations })
-                ));
-            }
-
-            export function getOwnsExplicitByTypeReq(label: Label, valueType: ValueType, annotations: Type.Annotation[]) {
-                return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
-                    new ThingTypeGetOwnsExplicitReq({ annotations: annotations })
-                        .setValueType(valueType)
-                ));
-            }
-
-            export function setOwnsReq(label: Label, attributeType: Type, annotations: Type.Annotation[]) {
-                return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
-                    new ThingTypeSetOwnsReq()
-                        .setAttributeType(attributeType)
-                        .setAnnotations(annotations)
-                ));
-            }
-
-            export function setOwnsOverriddenReq(label: Label, attributeType: Type, overriddenType: Type, annotations: Type.Annotation[]) {
-                return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
-                    new ThingTypeSetOwnsReq()
-                        .setAttributeType(attributeType)
-                        .setOverriddenType(overriddenType)
-                        .setAnnotations(annotations)
-                ));
-            }
-
-            export function unsetOwnsReq(label: Label, attributeType: Type) {
-                return typeReq(newReqBuilder(label).setThingTypeUnsetOwnsReq(
-                    new ThingTypeUnsetOwnsReq({ attributeType: attributeType })
-                ));
-            }
-
-            export function getInstancesReq(label: Label) {
-                return typeReq(newReqBuilder(label).setThingTypeGetInstancesReq(
-                    new ThingTypeGetInstancesReq()
-                ));
-            }
-
-            export function getOwnsOverriddenReq(label: Label, attributeType: Type) {
-                return typeReq(newReqBuilder(label).setThingTypeGetOwnsOverriddenReq(
-                    new ThingTypeGetOwnsOverriddenReq({ attributeType: attributeType })
-                ));
+            export function unsetPlaysReq(label: Label, roleType: RoleTypeProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_unset_plays_req: new ThingTypeUnsetPlaysReq({role_type: roleType}),
+                }));
             }
 
             export function getSyntaxReq(label: Label) {
-                return typeReq(newReqBuilder(label).setThingTypeGetSyntaxReq(new ThingTypeGetSyntaxReq()));
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    thing_type_get_syntax_req: new ThingTypeGetSyntaxReq(),
+                }));
             }
-            */
         }
 
         export namespace EntityType {
@@ -639,13 +691,47 @@ export namespace RequestBuilder {
                 return new EntityTypeProto({label: label.name});
             }
 
-            /*
             export function createReq(label: Label) {
-                return typeReq(newReqBuilder(label).setEntityTypeCreateReq(
-                    new EntityTypeCreateReq()
-                ));
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    entity_type_create_req: new EntityTypeCreateReq(),
+                }));
             }
-            */
+
+            export function getSupertypeReq(label: Label) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    entity_type_get_supertype_req: new EntityTypeGetSupertypeReq(),
+                }));
+            }
+
+            export function setSupertypeReq(label: Label, supertype: EntityTypeProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    entity_type_set_supertype_req: new EntityTypeSetSupertypeReq({entity_type: supertype}),
+                }));
+            }
+
+            export function getSupertypesReq(label: Label) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    entity_type_get_supertypes_req: new EntityTypeGetSupertypesReq(),
+                }));
+            }
+
+            export function getSubtypesReq(label: Label, transitivity: TypeTransitivity) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    entity_type_get_subtypes_req: new EntityTypeGetSubtypesReq({transitivity: transitivity}),
+                }));
+            }
+
+            export function getInstancesReq(label: Label, transitivity: TypeTransitivity) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    entity_type_get_instances_req: new EntityTypeGetInstancesReq({transitivity: transitivity}),
+                }));
+            }
         }
 
         export namespace RelationType {
@@ -653,56 +739,85 @@ export namespace RequestBuilder {
                 return new RelationTypeProto({label: label.name});
             }
 
-            /*
             export function createReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRelationTypeCreateReq(
-                    new RelationTypeCreateReq()
-                ));
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_create_req: new RelationTypeCreateReq(),
+                }));
             }
 
-            export function getRelatesReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesReq(
-                    new RelationTypeGetRelatesReq()
-                ));
+            export function getSupertypeReq(label: Label) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_get_supertype_req: new RelationTypeGetSupertypeReq(),
+                }));
             }
 
-            export function getRelatesExplicitReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesExplicitReq(
-                    new RelationTypeGetRelatesExplicitReq()
-                ));
+            export function setSupertypeReq(label: Label, supertype: RelationTypeProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_set_supertype_req: new RelationTypeSetSupertypeReq({relation_type: supertype}),
+                }));
             }
 
-            export function getRelatesByRoleReq(label: Label, roleLabel: string) {
-                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesForRoleLabelReq(
-                    new RelationTypeGetRelatesForRoleLabelReq({ label: roleLabel })
-                ));
+            export function getSupertypesReq(label: Label) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_get_supertypes_req: new RelationTypeGetSupertypesReq(),
+                }));
             }
 
-            export function getRelatesOverridden(label: Label, roleLabel: string) {
-                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesOverriddenReq(
-                    new RelationTypeGetRelatesOverriddenReq({ label: roleLabel })
-                ));
+            export function getSubtypesReq(label: Label, transitivity: TypeTransitivity) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_get_subtypes_req: new RelationTypeGetSubtypesReq({transitivity: transitivity}),
+                }));
             }
 
-            export function setRelatesReq(label: Label, roleLabel: string) {
-                return typeReq(newReqBuilder(label).setRelationTypeSetRelatesReq(
-                    new RelationTypeSetRelatesReq({ label: roleLabel })
-                ));
+            export function getInstancesReq(label: Label, transitivity: TypeTransitivity) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_get_instances_req: new RelationTypeGetInstancesReq({transitivity: transitivity}),
+                }));
             }
 
-            export function setRelatesOverriddenReq(label: Label, roleLabel: string, overriddenLabel: string) {
-                return typeReq(newReqBuilder(label).setRelationTypeSetRelatesReq(
-                    new RelationTypeSetRelatesReq({ label: roleLabel })
-                        .setOverriddenLabel(overriddenLabel)
-                ));
+            export function getRelatesReq(label: Label, transitivity: TypeTransitivity) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_get_relates_req: new RelationTypeGetRelatesReq({transitivity: transitivity}),
+                }));
+            }
+
+            export function getRelatesForRoleLabel(label: Label, roleLabel: string) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_get_relates_for_role_label_req: new RelationTypeGetRelatesForRoleLabelReq({label: roleLabel}),
+                }));
+            }
+
+            export function getRelatesOverriddenReq(label: Label, roleLabel: string) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_get_relates_overridden_req: new RelationTypeGetRelatesOverriddenReq({label: roleLabel}),
+                }));
+            }
+
+            export function setRelatesReq(label: Label, roleLabel: string, overriddenLabel?: string) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_set_relates_req: new RelationTypeSetRelatesReq({
+                        label: roleLabel,
+                        overridden_label: overriddenLabel,
+                    })
+                }));
             }
 
             export function unsetRelatesReq(label: Label, roleLabel: string) {
-                return typeReq(newReqBuilder(label).setRelationTypeUnsetRelatesReq(
-                    new RelationTypeUnsetRelatesReq({ label: roleLabel })
-                ));
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    relation_type_unset_relates_req: new RelationTypeUnsetRelatesReq({label: roleLabel})
+                }));
             }
-            */
         }
 
         export namespace AttributeType {
@@ -710,43 +825,81 @@ export namespace RequestBuilder {
                 return new AttributeTypeProto({label: label.name});
             }
 
-            /*
-            export function getOwnersReq(label: Label, annotations: Type.Annotation[]) {
-                return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersReq(
-                    new AttributeTypeGetOwnersReq({ annotations: annotations })
-                ));
+            export function putReq(label: Label, value: ValueProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_put_req: new AttributeTypePutReq({value: value}),
+                }));
             }
 
-            export function getOwnersExplicitReq(label: Label, annotations: Type.Annotation[]) {
-                return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersExplicitReq(
-                    new AttributeTypeGetOwnersExplicitReq({ annotations: annotations })
-                ));
+            export function getReq(label: Label, value: ValueProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_get_req: new AttributeTypeGetReq({value: value}),
+                }));
             }
 
-            export function putReq(label: Label, value: ConceptValue) {
-                return typeReq(newReqBuilder(label).setAttributeTypePutReq(
-                    new AttributeTypePutReq({ value: value })
-                ));
+            export function getSupertypeReq(label: Label) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_get_supertype_req: new AttributeTypeGetSupertypeReq(),
+                }));
             }
 
-            export function getReq(label: Label, value: ConceptValue) {
-                return typeReq(newReqBuilder(label).setAttributeTypeGetReq(
-                    new AttributeTypeGetReq({ value: value })
-                ));
+            export function setSupertypeReq(label: Label, supertype: AttributeTypeProto) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_set_supertype_req: new AttributeTypeSetSupertypeReq({attribute_type: supertype}),
+                }));
+            }
+
+            export function getSupertypesReq(label: Label) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_get_supertypes_req: new AttributeTypeGetSupertypesReq(),
+                }));
+            }
+
+            export function getSubtypesReq(label: Label, transitivity: TypeTransitivity, valueType?: ValueType) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_get_subtypes_req: new AttributeTypeGetSubtypesReq({
+                        transitivity: transitivity,
+                        value_type: valueType,
+                    }),
+                }));
+            }
+
+            export function getInstancesReq(label: Label, transitivity: TypeTransitivity) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_get_instances_req: new AttributeTypeGetInstancesReq({transitivity: transitivity}),
+                }));
             }
 
             export function getRegexReq(label: Label) {
-                return typeReq(newReqBuilder(label).setAttributeTypeGetRegexReq(
-                    new AttributeTypeGetRegexReq()
-                ));
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_get_regex_req: new AttributeTypeGetRegexReq(),
+                }));
             }
 
             export function setRegexReq(label: Label, regex: string) {
-                return typeReq(newReqBuilder(label).setAttributeTypeSetRegexReq(
-                    new AttributeTypeSetRegexReq({ regex: regex })
-                ));
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_set_regex_req: new AttributeTypeSetRegexReq({regex: regex}),
+                }));
             }
-            */
+
+            export function getOwnersReq(label: Label, transitivity: TypeTransitivity, annotations: TypeAnnotation[]) {
+                return thingTypeReq(new ThingTypeReq({
+                    label: label.name,
+                    attribute_type_get_owners_req: new AttributeTypeGetOwnersReq({
+                        transitivity: transitivity,
+                        annotations: annotations,
+                    }),
+                }));
+            }
         }
 
         export namespace Annotation {
@@ -761,8 +914,20 @@ export namespace RequestBuilder {
     }
 
     export namespace Thing {
+        export function protoThingEntity(iid: string): ThingProto {
+            return new ThingProto({entity: Entity.protoEntity(iid)});
+        }
+
+        export function protoThingRelation(iid: string): ThingProto {
+            return new ThingProto({relation: Relation.protoRelation(iid)});
+        }
+
+        export function protoThingAttribute(iid: string): ThingProto {
+            return new ThingProto({attribute: Attribute.protoAttribute(iid)});
+        }
+
         function thingReq(req: ThingReq) {
-            return new TransactionReq({ thing_req: req });
+            return new TransactionReq({thing_req: req});
         }
 
         export function getHasReq(iid: string, attributeTypes: AttributeTypeProto[], annotations: TypeAnnotation[]) {
@@ -772,37 +937,40 @@ export namespace RequestBuilder {
             }));
         }
 
-        /*
-        export function setHasReq(iid: string, attribute: Thing) {
-            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingSetHasReq(
-                new ThingSetHasReq({ attribute: attribute })
-            ));
+        export function setHasReq(iid: string, attribute: AttributeProto) {
+            return thingReq(new ThingReq({
+                iid: Bytes.hexStringToBytes(iid),
+                thing_set_has_req: new ThingSetHasReq({attribute: attribute}),
+            }));
         }
 
-        export function unsetHasReq(iid: string, attribute: Thing) {
-            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingUnsetHasReq(
-                new ThingUnsetHasReq({ attribute: attribute })
-            ));
+        export function unsetHasReq(iid: string, attribute: AttributeProto) {
+            return thingReq(new ThingReq({
+                iid: Bytes.hexStringToBytes(iid),
+                thing_unset_has_req: new ThingUnsetHasReq({attribute: attribute}),
+            }));
         }
 
         export function getPlayingReq(iid: string) {
-            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingGetPlayingReq(
-                new ThingGetPlayingReq()
-            ));
+            return thingReq(new ThingReq({
+                iid: Bytes.hexStringToBytes(iid),
+                thing_get_playing_req: new ThingGetPlayingReq(),
+            }));
         }
 
-        export function getRelationsReq(iid: string, roleTypes: Type[]) {
-            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingGetRelationsReq(
-                new ThingGetRelationsReq({ role_types: roleTypes })
-            ));
+        export function getRelationsReq(iid: string, roleTypes: RoleType[]) {
+            return thingReq(new ThingReq({
+                iid: Bytes.hexStringToBytes(iid),
+                thing_get_relations_req: new ThingGetRelationsReq({role_types: roleTypes}),
+            }));
         }
 
         export function deleteReq(iid: string) {
-            return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setThingDeleteReq(
-                new ThingDeleteReq()
-            ));
+            return thingReq(new ThingReq({
+                iid: Bytes.hexStringToBytes(iid),
+                thing_delete_req: new ThingDeleteReq(),
+            }));
         }
-        */
 
         export namespace Entity {
             export function protoEntity(iid: string): EntityProto {
@@ -815,37 +983,44 @@ export namespace RequestBuilder {
                 return new RelationProto({iid: Bytes.hexStringToBytes(iid)});
             }
 
-            /*
-            export function addPlayerReq(iid: string, roleType: Type, player: Thing) {
-                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setRelationAddPlayerReq(
-                    new RelationAddPlayerReq({ roleType: roleType, player: player })
-                ));
+            export function protoRolePlayer(roleType: RoleType, player: ThingProto): RelationRolePlayer {
+                return new RelationRolePlayer({role_type: roleType, player: player});
             }
 
-            export function removePlayerReq(iid: string, roleType: Type, player: Thing) {
-                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setRelationRemovePlayerReq(
-                    new RelationRemovePlayerReq({ roleType: roleType, player: player })
-                ));
+            export function addRolePlayerReq(iid: string, roleType: RoleType, player: ThingProto) {
+                return thingReq(new ThingReq({
+                    iid: Bytes.hexStringToBytes(iid),
+                    relation_add_role_player_req: new RelationAddRolePlayerReq({role_player: protoRolePlayer(roleType, player)})
+                }));
             }
 
-            export function getPlayersReq(iid: string, roleTypes: Type[]) {
-                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid) }).setRelationGetPlayersReq(
-                    new RelationGetPlayersReq({ roleTypes: roleTypes })
-                ));
+            export function removeRolePlayerReq(iid: string, roleType: RoleType, player: ThingProto) {
+                return thingReq(new ThingReq({
+                    iid: Bytes.hexStringToBytes(iid),
+                    relation_remove_role_player_req: new RelationRemoveRolePlayerReq({role_player: protoRolePlayer(roleType, player)})
+                }));
             }
 
-            export function getPlayersByRoleTypeReq(iid: string) {
-                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setRelationGetPlayersByRoleTypeReq(
-                    new RelationGetPlayersByRoleTypeReq()
-                ));
+            export function getPlayersByRoleTypeReq(iid: string, roleTypes: RoleType[]) {
+                return thingReq(new ThingReq({
+                    iid: Bytes.hexStringToBytes(iid),
+                    relation_get_players_by_role_type_req: new RelationGetPlayersByRoleTypeReq({role_types: roleTypes})
+                }));
+            }
+
+            export function getRolePlayersReq(iid: string) {
+                return thingReq(new ThingReq({
+                    iid: Bytes.hexStringToBytes(iid),
+                    relation_get_role_players_req: new RelationGetRolePlayersReq(),
+                }));
             }
 
             export function getRelatingReq(iid: string) {
-                return thingReq(new ThingReq({iid: Bytes.hexStringToBytes(iid})).setRelationGetRelatingReq(
-                    new RelationGetRelatingReq()
-                ));
+                return thingReq(new ThingReq({
+                    iid: Bytes.hexStringToBytes(iid),
+                    relation_get_relating_req: new RelationGetRelatingReq(),
+                }));
             }
-             */
         }
 
         export namespace Attribute {
@@ -853,19 +1028,25 @@ export namespace RequestBuilder {
                 return new AttributeProto({iid: Bytes.hexStringToBytes(iid)});
             }
 
-            /*
-            export function getOwnersReq(iid: string) {
-                return thingReq(new ThingReq({iid: Bytes.hexStringToBytes(iid})).setAttributeGetOwnersReq(
-                    new AttributeGetOwnersReq()
-                ));
+            export function getOwnersReq(iid: string, ownerType?: ThingTypeProto) {
+                return thingReq(new ThingReq({
+                    iid: Bytes.hexStringToBytes(iid),
+                    attribute_get_owners_req: new AttributeGetOwnersReq({thing_type: ownerType}),
+                }));
             }
+        }
+    }
 
-            export function getOwnersByTypeReq(iid: string, ownerType: Type) {
-                return thingReq(new ThingReq({ iid: Bytes.hexStringToBytes(iid })).setAttributeGetOwnersReq(
-                    new AttributeGetOwnersReq({ thingType: ownerType })
-                ));
+    export namespace Value {
+        export function protoValue(valueType: ValueType, value: boolean | string | number | Date): ValueProto {
+            switch (valueType) {
+                case ValueType.BOOLEAN: return new ValueProto({boolean: value as boolean});
+                case ValueType.LONG: return new ValueProto({long: value as number});
+                case ValueType.DOUBLE: return new ValueProto({double: value as number});
+                case ValueType.STRING: return new ValueProto({string: value as string});
+                case ValueType.DATETIME: return new ValueProto({date_time: (value as Date).getTime()});
+                default: throw "TODO";
             }
-            */
         }
     }
 }

@@ -37,13 +37,15 @@ export interface Thing extends Concept {
 
     readonly inferred: boolean;
 
+    delete(transaction: TypeDBTransaction): Promise<void>;
+    isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
+
     getHas(transaction: TypeDBTransaction): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, attributeType: AttributeType): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, attributeTypes: AttributeType[]): Stream<Attribute>;
     getHas(transaction: TypeDBTransaction, attributeTypes: AttributeType[], annotations: Annotation[]): Stream<Attribute>;
 
-    /*
     setHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void>;
     unsetHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void>;
 
@@ -51,5 +53,13 @@ export interface Thing extends Concept {
     getRelations(transaction: TypeDBTransaction, roleTypes: RoleType[]): Stream<Relation>;
 
     getPlaying(transaction: TypeDBTransaction): Stream<RoleType>;
-     */
+}
+
+export namespace Thing {
+    export function proto(thing: Thing) {
+        if (thing.isEntity()) return RequestBuilder.Thing.protoThingEntity(thing.iid);
+        else if (thing.isRelation()) return RequestBuilder.Thing.protoThingRelation(thing.iid);
+        else if (thing.isAttribute()) return RequestBuilder.Thing.protoThingAttribute(thing.iid);
+        else throw "TODO";
+    }
 }

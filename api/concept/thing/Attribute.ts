@@ -32,7 +32,7 @@ export interface Attribute extends Thing {
 
     readonly value: Value;
 
-    // getOwners(transaction: TypeDBTransaction, ownerType?: ThingType): Stream<Thing>;
+    getOwners(transaction: TypeDBTransaction, ownerType?: ThingType): Stream<Thing>;
 }
 
 export namespace Attribute {

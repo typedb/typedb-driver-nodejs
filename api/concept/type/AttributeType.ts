@@ -33,9 +33,19 @@ import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 export interface AttributeType extends ThingType {
     readonly valueType: ValueType;
 
-    /*
-    put(transaction: TypeDBTransaction, value: Value): Attribute;
-    get(transaction: TypeDBTransaction, value: Value): Attribute;
+    put(transaction: TypeDBTransaction, value: Value): Promise<Attribute>;
+    putBoolean(transaction: TypeDBTransaction, value: boolean): Promise<Attribute>;
+    putLong(transaction: TypeDBTransaction, value: number): Promise<Attribute>;
+    putDouble(transaction: TypeDBTransaction, value: number): Promise<Attribute>;
+    putString(transaction: TypeDBTransaction, value: string): Promise<Attribute>;
+    putDateTime(transaction: TypeDBTransaction, value: Date): Promise<Attribute>;
+
+    get(transaction: TypeDBTransaction, value: Value): Promise<Attribute>;
+    getBoolean(transaction: TypeDBTransaction, value: boolean): Promise<Attribute>;
+    getLong(transaction: TypeDBTransaction, value: number): Promise<Attribute>;
+    getDouble(transaction: TypeDBTransaction, value: number): Promise<Attribute>;
+    getString(transaction: TypeDBTransaction, value: string): Promise<Attribute>;
+    getDateTime(transaction: TypeDBTransaction, value: Date): Promise<Attribute>;
 
     getSupertype(transaction: TypeDBTransaction): Promise<AttributeType>;
     setSupertype(transaction: TypeDBTransaction, type: AttributeType): Promise<void>;
@@ -55,10 +65,9 @@ export interface AttributeType extends ThingType {
     getOwners(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<ThingType>;
     getOwners(transaction: TypeDBTransaction, annotations: Annotation[], transitivity: Transitivity): Stream<ThingType>;
 
-    getRegex(): Promise<string>;
-    setRegex(regex: string): Promise<void>;
+    getRegex(transaction: TypeDBTransaction): Promise<string>;
+    setRegex(transaction: TypeDBTransaction, regex: string): Promise<void>;
     unsetRegex(transaction: TypeDBTransaction): Promise<void>;
-     */
 }
 
 export namespace AttributeType {
