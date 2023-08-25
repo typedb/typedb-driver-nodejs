@@ -128,9 +128,7 @@ export namespace Concept {
             return this._transitivity;
         }
     }
-}
 
-export namespace Concept {
     export namespace Transitivity {
         export const TRANSITIVE = new Transitivity(TransitivityProto.TRANSITIVE);
         export const EXPLICIT = new Transitivity(TransitivityProto.EXPLICIT);
