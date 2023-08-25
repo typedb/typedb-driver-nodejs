@@ -173,6 +173,10 @@ import {
 import {ServerManagerAllReq} from "typedb-protocol/proto/server";
 import {ConnectionOpenReq} from "typedb-protocol/proto/connection";
 import {SessionCloseReq, SessionOpenReq, SessionPulseReq, SessionType} from "typedb-protocol/proto/session";
+import {ErrorMessage} from "../errors/ErrorMessage";
+import {TypeDBClientError} from "../errors/TypeDBClientError";
+import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
+
 
 /* eslint no-inner-declarations: "off" */
 export namespace RequestBuilder {
@@ -1045,7 +1049,7 @@ export namespace RequestBuilder {
                 case ValueType.DOUBLE: return new ValueProto({double: value as number});
                 case ValueType.STRING: return new ValueProto({string: value as string});
                 case ValueType.DATETIME: return new ValueProto({date_time: (value as Date).getTime()});
-                default: throw "TODO";
+                default: throw new TypeDBClientError(BAD_VALUE_TYPE.message());
             }
         }
     }

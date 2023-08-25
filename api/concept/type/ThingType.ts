@@ -31,8 +31,10 @@ import { Type } from "./Type";
 import { TypeDBClientError } from "../../../common/errors/TypeDBClientError";
 import { ErrorMessage } from "../../../common/errors/ErrorMessage";
 import BAD_ANNOTATION = ErrorMessage.Concept.BAD_ANNOTATION;
+import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
 import Transitivity = Concept.Transitivity;
 import Annotation = ThingType.Annotation;
+
 
 export interface ThingType extends Type {
     getSupertype(transaction: TypeDBTransaction): Promise<ThingType>;
@@ -84,7 +86,7 @@ export namespace ThingType {
         if (thing_type.isEntity()) return RequestBuilder.Type.ThingType.protoThingTypeEntityType(thing_type.label);
         else if (thing_type.isRelation()) return RequestBuilder.Type.ThingType.protoThingTypeRelationType(thing_type.label);
         else if (thing_type.isAttribute()) return RequestBuilder.Type.ThingType.protoThingTypeAttributeType(thing_type.label);
-        else throw "TODO";
+        else throw new TypeDBClientError(ILLEGAL_STATE.message());
     }
 
     export class Annotation {

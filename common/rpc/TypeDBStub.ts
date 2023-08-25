@@ -51,6 +51,8 @@ import {
     UserManagerPasswordSetReq,
     UserPasswordUpdateReq
 } from "typedb-protocol/proto/user";
+import {ErrorMessage} from "../errors/ErrorMessage";
+import RPC_METHOD_UNAVAILABLE = ErrorMessage.Client.RPC_METHOD_UNAVAILABLE;
 
 /*
 TODO implement ResilientCall
@@ -213,31 +215,31 @@ export abstract class TypeDBStub {
     }
 
     usersAll(req: UserManagerAllReq): Promise<UserManagerAllRes> {
-        throw "TODO";
+        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
     }
 
     usersContains(req: UserManagerContainsReq): Promise<boolean> {
-        throw "TODO";
+        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
     }
 
     usersCreate(req: UserManagerCreateReq): Promise<void> {
-        throw "TODO";
+        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
     }
 
     usersDelete(req: UserManagerDeleteReq): Promise<void> {
-        throw "TODO";
+        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
     }
 
     usersPasswordSet(req: UserManagerPasswordSetReq): Promise<void> {
-        throw "TODO";
+        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
     }
 
     usersGet(req: UserManagerGetReq): Promise<UserManagerGetRes> {
-        throw "TODO";
+        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
     }
 
     userPasswordUpdate(req: UserPasswordUpdateReq): Promise<void> {
-        throw "TODO";
+        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
     }
 
     abstract stub(): GRPCStub;

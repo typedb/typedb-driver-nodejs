@@ -19,16 +19,19 @@
  * under the License.
  */
 
-import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Concept } from "../Concept";
-import { AttributeType } from "../type/AttributeType";
-import { RoleType } from "../type/RoleType";
-import { ThingType } from "../type/ThingType";
-import { Attribute } from "./Attribute";
-import { Relation } from "./Relation";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Concept} from "../Concept";
+import {AttributeType} from "../type/AttributeType";
+import {RoleType} from "../type/RoleType";
+import {ThingType} from "../type/ThingType";
+import {Attribute} from "./Attribute";
+import {Relation} from "./Relation";
+import {ErrorMessage} from "../../../common/errors/ErrorMessage";
 import Annotation = ThingType.Annotation;
+import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
+import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
 
 export interface Thing extends Concept {
     readonly iid: string;
@@ -38,18 +41,25 @@ export interface Thing extends Concept {
     readonly inferred: boolean;
 
     delete(transaction: TypeDBTransaction): Promise<void>;
+
     isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
 
     getHas(transaction: TypeDBTransaction): Stream<Attribute>;
+
     getHas(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<Attribute>;
+
     getHas(transaction: TypeDBTransaction, attributeType: AttributeType): Stream<Attribute>;
+
     getHas(transaction: TypeDBTransaction, attributeTypes: AttributeType[]): Stream<Attribute>;
+
     getHas(transaction: TypeDBTransaction, attributeTypes: AttributeType[], annotations: Annotation[]): Stream<Attribute>;
 
     setHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void>;
+
     unsetHas(transaction: TypeDBTransaction, attribute: Attribute): Promise<void>;
 
     getRelations(transaction: TypeDBTransaction): Stream<Relation>;
+
     getRelations(transaction: TypeDBTransaction, roleTypes: RoleType[]): Stream<Relation>;
 
     getPlaying(transaction: TypeDBTransaction): Stream<RoleType>;
@@ -60,6 +70,6 @@ export namespace Thing {
         if (thing.isEntity()) return RequestBuilder.Thing.protoThingEntity(thing.iid);
         else if (thing.isRelation()) return RequestBuilder.Thing.protoThingRelation(thing.iid);
         else if (thing.isAttribute()) return RequestBuilder.Thing.protoThingAttribute(thing.iid);
-        else throw "TODO";
+        else throw new TypeDBClientError(ILLEGAL_STATE.message());
     }
 }
