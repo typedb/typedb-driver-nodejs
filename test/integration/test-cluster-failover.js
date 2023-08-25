@@ -99,6 +99,10 @@ async function run() {
         await session.close();
 
         for (let iteration = 1; iteration <= 10; iteration++) {
+            const client = await TypeDB.clusterClient(
+                ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"],
+                new TypeDBCredential("admin", "password", process.env.ROOT_CA)
+            );
             primaryReplica = await seekPrimaryReplica(client.databases);
             console.info(`Stopping primary replica (test ${iteration}/10)...`);
             const port = primaryReplica.address.substring(10,15);

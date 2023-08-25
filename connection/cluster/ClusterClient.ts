@@ -52,7 +52,9 @@ export class ClusterClient extends TypeDBClientImpl implements TypeDBClient.Clus
         }
         try {
             await Promise.all(openReqs);
-        } catch (e) {}
+        } catch (e) {
+            console.info(e);
+        }
         this._userManager = new UserManagerImpl(this);
         await super.open();
         return this;
