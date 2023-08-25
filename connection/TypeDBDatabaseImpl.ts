@@ -57,11 +57,10 @@ export class TypeDBDatabaseImpl implements Database {
                 return res.database.replicas.map(
                     proto => Replica.of(proto, new ServerDatabase(name, client.serverClients.get(proto.address)))
                 );
-            } catch (err) {
-                if (err !instanceof TypeDBClientError) {
+            } catch (err: any) {
+                if (!("messageTemplate" in err)) {
                     throw err;
                 }
-                assert(err instanceof TypeDBClientError);
                 if (err.messageTemplate === DATABASE_DOES_NOT_EXIST || err.messageTemplate === UNABLE_TO_CONNECT) {
                     console.info(`Failed to fetch the list of replicas from ${serverClient.address}, trying next one`);
                 } else throw err;
@@ -154,6 +153,7 @@ export class TypeDBDatabaseImpl implements Database {
                 if (e instanceof TypeDBClientError &&
                     (UNABLE_TO_CONNECT === e.messageTemplate || CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate)
                 ) {
+                    await this.waitForPrimaryReplicaSelection();
                     await this.seekPrimaryReplica();
                 } else throw e;
             }
@@ -168,6 +168,7 @@ export class TypeDBDatabaseImpl implements Database {
             if (this.primaryReplica) {
                 return this.primaryReplica;
             } else {
+                console.info(`No primary replica elected yet, waiting ${WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS} ms...`);
                 await this.waitForPrimaryReplicaSelection();
             }
         }

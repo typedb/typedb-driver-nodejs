@@ -50,7 +50,9 @@ export class ClusterClient extends TypeDBClientImpl implements TypeDBClient.Clus
             this.serverClients.set(addr, new ServerClient(addr));
             this.serverClients.get(addr).stub = serverStub;
         }
-        await Promise.all(openReqs);
+        try {
+            await Promise.all(openReqs);
+        } catch (e) {}
         this._userManager = new UserManagerImpl(this);
         await super.open();
         return this;
