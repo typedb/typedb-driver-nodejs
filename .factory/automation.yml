@@ -54,7 +54,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //...
-        ln -sf bazel-bin/node_modules
+        cp -rf bazel-bin/node_modules .
         ln -s bazel-bin/dist
         ./test/common/start-core-server.sh
         sleep 10
@@ -70,7 +70,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //...
-        ln -sf bazel-bin/node_modules
+        cp -rf bazel-bin/node_modules .
         ln -s bazel-bin/dist
         source test/common/start-cluster-servers.sh 3 # use source to receive export vars
         npm install
