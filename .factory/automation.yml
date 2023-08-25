@@ -54,8 +54,8 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //...
-        cp -rf bazel-bin/node_modules .
-        ln -s bazel-bin/dist
+        cp -rL bazel-bin/node_modules .
+        cp -rL bazel-bin/dist .
         ./test/common/start-core-server.sh
         sleep 10
         node test/integration/test-concept.js &&
@@ -71,8 +71,8 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //...
-        cp -rf bazel-bin/node_modules .
-        ln -s bazel-bin/dist
+        cp -rL bazel-bin/node_modules .
+        cp -rL bazel-bin/dist .
         source test/common/start-cluster-servers.sh 3 # use source to receive export vars
         node test/integration/test-cluster-failover.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
