@@ -58,8 +58,9 @@ build:
         ln -s bazel-bin/dist
         ./test/common/start-core-server.sh
         sleep 10
-        npm install
-        npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        node test/integration/test-concept.js &&
+        node test/integration/test-connection.js &&
+        node test/integration/test-query.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-core-server.sh
         exit $TEST_SUCCESS
     test-cluster-failover:
@@ -73,8 +74,7 @@ build:
         cp -rf bazel-bin/node_modules .
         ln -s bazel-bin/dist
         source test/common/start-cluster-servers.sh 3 # use source to receive export vars
-        npm install
-        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        node test/integration/test-cluster-failover.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     test-behaviour-connection-core:
