@@ -49,7 +49,6 @@ build:
         npm run lint
     test-integration:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -59,13 +58,13 @@ build:
         ln -s bazel-bin/dist
         ./test/common/start-core-server.sh
         sleep 10
+        npm install
         npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-core-server.sh
         exit $TEST_SUCCESS
     test-cluster-failover:
       machine: 4-core-16-gb
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -74,12 +73,12 @@ build:
         ln -sf bazel-bin/node_modules
         ln -s bazel-bin/dist
         source test/common/start-cluster-servers.sh # use source to receive export vars
+        npm install
         npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     test-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -92,7 +91,6 @@ build:
         exit $TEST_SUCCESS
     test-behaviour-connection-cluster:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -106,7 +104,6 @@ build:
         exit $TEST_SUCCESS
     test-behaviour-concept-core:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -117,7 +114,6 @@ build:
         exit $TEST_SUCCESS
     test-behaviour-concept-cluster:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -129,7 +125,6 @@ build:
     # TODO: Delete --jobs=1 once tests are parallelisable
     test-behaviour-match-core:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -142,7 +137,6 @@ build:
         exit $TEST_SUCCESS
     test-behaviour-match-cluster:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -155,7 +149,6 @@ build:
         exit $TEST_SUCCESS
     test-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -168,7 +161,6 @@ build:
         exit $TEST_SUCCESS
     test-behaviour-writable-cluster:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -181,7 +173,6 @@ build:
         exit $TEST_SUCCESS
     test-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -193,7 +184,6 @@ build:
         exit $TEST_SUCCESS
     test-behaviour-definable-cluster:
       image: vaticle-ubuntu-22.04
-      dependencies: [build]
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
