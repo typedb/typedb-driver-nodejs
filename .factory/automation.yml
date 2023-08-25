@@ -72,7 +72,7 @@ build:
         bazel build //...
         ln -sf bazel-bin/node_modules
         ln -s bazel-bin/dist
-        source test/common/start-cluster-servers.sh # use source to receive export vars
+        source test/common/start-cluster-servers.sh 3 # use source to receive export vars
         npm install
         npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
