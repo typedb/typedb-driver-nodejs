@@ -96,10 +96,10 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source test/common/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //test/behaviour/connection/transaction/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //test/behaviour/connection/user/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     test-behaviour-concept-core:
@@ -119,7 +119,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source test/common/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //test/behaviour/concept/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     # TODO: Delete --jobs=1 once tests are parallelisable
@@ -142,9 +142,9 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source test/common/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //test/behaviour/typeql/language/expression/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //test/behaviour/typeql/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //test/behaviour/typeql/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //test/behaviour/typeql/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     test-behaviour-writable-core:
@@ -166,9 +166,9 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source test/common/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //test/behaviour/typeql/language/update/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //test/behaviour/typeql/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //test/behaviour/typeql/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //test/behaviour/typeql/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     test-behaviour-definable-core:
@@ -189,8 +189,8 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source test/common/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //test/behaviour/typeql/language/define/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //test/behaviour/typeql/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     deploy-npm-snapshot:
