@@ -63,7 +63,7 @@ export class TypeDBDatabaseImpl implements Database {
                 }
                 assert(err instanceof TypeDBClientError);
                 if (err.messageTemplate === DATABASE_DOES_NOT_EXIST || err.messageTemplate === UNABLE_TO_CONNECT) {
-                    // TODO log
+                    console.info(`Failed to fetch the list of replicas from ${serverClient.address}, trying next one`);
                 } else throw err;
             }
         }
@@ -151,9 +151,9 @@ export class TypeDBDatabaseImpl implements Database {
             try {
                 return await task(this._client.serverClients.get(this.primaryReplica.address), this.primaryReplica.database, isFirstRun);
             } catch (e) {
-                if (e instanceof TypeDBClientError && UNABLE_TO_CONNECT === e.messageTemplate) {
-                    // TODO log
-                } else if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate) {
+                if (e instanceof TypeDBClientError &&
+                    (UNABLE_TO_CONNECT === e.messageTemplate || CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate)
+                ) {
                     await this.seekPrimaryReplica();
                 } else throw e;
             }
