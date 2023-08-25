@@ -22,5 +22,4 @@
 
 set -xe
 
-jps | awk '/TypeDBServer/ {print $1}'
-kill $(jps | awk '/TypeDBServer/ {print $1}')
+kill $(ps aux | awk '/TypeDBServe[r]/ {print $2}')
