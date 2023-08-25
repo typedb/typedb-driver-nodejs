@@ -316,7 +316,7 @@ async function run() {
         const firstLionWorkEmails = (await firstLion.getHas(tx, workEmail).collect()).map(x => x.value);
         assert(!firstLionWorkEmails.length);
         const firstFamily = await lionFamily.create(tx);
-        await firstFamily.addPlayer(tx, lionCub, firstLion);
+        await firstFamily.addRolePlayer(tx, lionCub, firstLion);
         const firstLionPlaying = (await firstLion.getPlaying(tx).collect()).map(x => x.label.scopedName);
         assert(firstLionPlaying.length === 1);
         assert(firstLionPlaying[0] === "lion-family:lion-cub");
@@ -340,17 +340,17 @@ async function run() {
     try {
         tx = await session.transaction(TransactionType.WRITE);
         const firstLionFamily = (await lionFamily.getInstances(tx).collect())[0];
-        const firstLion = (await firstLionFamily.getPlayers(tx).collect())[0];
+        const firstLion = (await firstLionFamily.getPlayersByRoleType(tx).collect())[0];
         const firstLionFamily2 = (await firstLion.getRelations(tx).collect())[0];
         assert(firstLionFamily2);
-        let players = await firstLionFamily.getPlayers(tx).collect();
+        let players = await firstLionFamily.getPlayersByRoleType(tx).collect();
         assert(players.length === 1);
-        const lionCubPlayers = await firstLionFamily.getPlayers(tx, [lionCub]).collect();
+        const lionCubPlayers = await firstLionFamily.getPlayersByRoleType(tx, [lionCub]).collect();
         assert(lionCubPlayers.length === 1);
-        const playersByRoleType = (await firstLionFamily.getPlayersByRoleType(tx)).keys();
+        const playersByRoleType = (await firstLionFamily.getRolePlayers(tx)).keys();
         const firstPlayer = playersByRoleType.next().value;
         assert(firstPlayer.label.scopedName === "lion-family:lion-cub");
-        await firstLionFamily.removePlayer(tx, lionCub, firstLion);
+        await firstLionFamily.removeRolePlayer(tx, lionCub, firstLion);
         const lionFamilyCleanedUp = await firstLionFamily.isDeleted(tx);
         assert(lionFamilyCleanedUp);
         await tx.rollback();
