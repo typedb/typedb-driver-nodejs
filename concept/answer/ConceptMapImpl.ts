@@ -41,16 +41,16 @@ export class ConceptMapImpl implements ConceptMap {
         this._explainables = explainables;
     }
 
+    variables(): IterableIterator<string> {
+        return this._concepts.keys();
+    }
+
     concepts(): IterableIterator<Concept> {
         return this._concepts.values();
     }
 
     get(variable: string): Concept {
         return this._concepts.get(variable);
-    }
-
-    get map(): Map<string, Concept> {
-        return this._concepts;
     }
 
     get explainables(): ConceptMap.Explainables {

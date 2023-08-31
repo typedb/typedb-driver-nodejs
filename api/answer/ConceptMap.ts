@@ -22,7 +22,7 @@
 import {Concept} from "../concept/Concept";
 
 export interface ConceptMap {
-    readonly map: Map<string, Concept>;
+    variables(): IterableIterator<string>;
 
     concepts(): IterableIterator<Concept>
 

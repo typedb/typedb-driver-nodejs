@@ -473,7 +473,7 @@ function applyQueryTemplate(template: string, answer: ConceptMap): string {
     while ((match = pattern.exec(template))) {
         const requiredVariable = variableFromTemplatePlaceholder(match[1]);
         query += template.substring(i, match.index);
-        if (answer.map.has(requiredVariable)) {
+        if (Array.from(answer.variables()).includes(requiredVariable)) {
             const concept = answer.get(requiredVariable);
             if (!concept.isThing()) throw new TypeError("Cannot apply IID templating to Types");
             query += concept.asThing().iid;
