@@ -20,20 +20,30 @@
  */
 
 import {TypeDBClient} from "../api/connection/TypeDBClient";
+import {TypeDBCredential} from "../api/connection/TypeDBCredential";
 import {TypeDBOptions} from "../api/connection/TypeDBOptions";
 import {SessionType} from "../api/connection/TypeDBSession";
+import {Database} from "../api/connection/database/Database";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {RequestTransmitter} from "../stream/RequestTransmitter";
+import {UserImpl} from "../user/UserImpl";
+import {UserManagerImpl} from "../user/UserManagerImpl";
 import {TypeDBDatabaseManagerImpl} from "./TypeDBDatabaseManagerImpl";
-import {Database} from "../api/connection/database/Database";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
-import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
+import {TypeDBStubImpl} from "./TypeDBStubImpl";
 import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
+import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 
-export abstract class TypeDBClientImpl implements TypeDBClient {
+export class TypeDBClientImpl implements TypeDBClient {
     private _isOpen: boolean;
+
+    private readonly _initAddresses: string[];
+    private readonly _credential: TypeDBCredential;
+    private _userManager: UserManagerImpl;
 
     private readonly _serverClients: Map<string, ServerClient>;
 
@@ -42,20 +52,52 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
 
     private readonly _sessions: { [id: string]: TypeDBSessionImpl };
 
-    protected constructor() {
+    constructor(addresses: string | string[], credential?: TypeDBCredential) {
+        if (typeof addresses === 'string') addresses = [addresses];
+        this._initAddresses = addresses;
+        this._credential = credential;
+
         this._isOpen = false
-
         this._serverClients = new Map([]);
-
         this._databases = new TypeDBDatabaseManagerImpl(this);
         this._database_cache = {};
-
         this._sessions = {};
     }
 
-    protected async open(): Promise<TypeDBClient> {
+    async open(): Promise<TypeDBClient> {
+        const serverAddresses = await this.fetchClusterServers();
+        const openReqs: Promise<void>[] = []
+        for (const addr of serverAddresses) {
+            const serverStub = new TypeDBStubImpl(addr, this._credential);
+            openReqs.push(serverStub.open());
+            this.serverClients.set(addr, new ServerClient(addr));
+            this.serverClients.get(addr).stub = serverStub;
+        }
+        try {
+            await Promise.all(openReqs);
+        } catch (e) {
+            console.info(e);
+        }
+        this._userManager = new UserManagerImpl(this);
         this._isOpen = true;
         return this;
+    }
+
+    private async fetchClusterServers(): Promise<string[]> {
+        for (const address of this._initAddresses) {
+            try {
+                console.info(`Fetching list of cluster servers from ${address}...`);
+                const stub = new TypeDBStubImpl(address, this._credential);
+                await stub.open();
+                const res = await stub.serversAll(RequestBuilder.ServerManager.allReq());
+                const members = res.servers.map(x => x.address);
+                console.info(`The cluster servers are ${members}`);
+                return members;
+            } catch (e) {
+                console.error(`Fetching cluster servers from ${address} failed.`, e);
+            }
+        }
+        throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
     }
 
     isOpen(): boolean {
@@ -75,6 +117,16 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
     get databases(): TypeDBDatabaseManagerImpl {
         if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._databases;
+    }
+
+    async user(): Promise<UserImpl> {
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
+        return await this.users.get(this._credential.username)
+    }
+
+    get users(): UserManagerImpl {
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
+        return this._userManager;
     }
 
     get serverClients(): Map<string, ServerClient> {

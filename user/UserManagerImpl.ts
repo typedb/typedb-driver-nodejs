@@ -19,19 +19,18 @@
  * under the License.
  */
 
-import { User } from "../api/connection/user/User";
-import { UserManager } from "../api/connection/user/UserManager";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
-import { UserImpl } from "../dependencies_internal";
-import { ClusterClient } from "../connection/cluster/ClusterClient";
-import {ServerClient} from "../connection/TypeDBClientImpl";
+import {User} from "../api/connection/user/User";
+import {UserManager} from "../api/connection/user/UserManager";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {UserImpl} from "../dependencies_internal";
+import {ServerClient, TypeDBClientImpl} from "../connection/TypeDBClientImpl";
 import {TypeDBDatabaseImpl} from "../connection/TypeDBDatabaseImpl";
 
 export class UserManagerImpl implements UserManager {
     static _SYSTEM_DB = "_system";
-    private readonly _client: ClusterClient;
+    private readonly _client: TypeDBClientImpl;
 
-    constructor(client: ClusterClient) {
+    constructor(client: TypeDBClientImpl) {
         this._client = client;
     }
 

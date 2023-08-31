@@ -27,11 +27,11 @@ import {
     ServiceError
 } from "@grpc/grpc-js";
 import * as fs from "fs";
-import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {TypeDBStub} from "../../common/rpc/TypeDBStub";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBCredential} from "../api/connection/TypeDBCredential";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
 import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
 import {
     UserManagerAllReq,
@@ -51,17 +51,21 @@ function isServiceError(e: any): e is ServiceError {
     return "code" in e;
 }
 
-export class ClusterServerStub extends TypeDBStub {
+export class TypeDBStubImpl extends TypeDBStub {
     private readonly _credential: TypeDBCredential;
     private _token: string;
     private readonly _stub: GRPCStub;
 
-    constructor(address: string, credential: TypeDBCredential) {
+    constructor(address: string, credential?: TypeDBCredential) {
         super();
         this._credential = credential;
         this._token = null;
-        const stubCredentials = this.createChannelCredentials();
-        this._stub = new GRPCStub(address, stubCredentials);
+        if (credential) {
+            const stubCredentials = this.createChannelCredentials();
+            this._stub = new GRPCStub(address, stubCredentials);
+        } else {
+            this._stub = new GRPCStub(address, null);
+        }
     }
 
     public async open(): Promise<void> {
@@ -98,87 +102,11 @@ export class ClusterServerStub extends TypeDBStub {
         return CallCredentials.createFromMetadataGenerator(metaCallback);
     }
 
-    usersAll(req: UserManagerAllReq): Promise<UserManagerAllRes> {
-        return this.mayRenewToken(() =>
-            new Promise<UserManagerAllRes>((resolve, reject) => {
-                this._stub.users_all(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve(res);
-                });
-            })
-        );
-    }
-
-    usersContains(req: UserManagerContainsReq): Promise<boolean> {
-        return this.mayRenewToken(() =>
-            new Promise<boolean>((resolve, reject) => {
-                this._stub.users_contains(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve(res.contains);
-                })
-            })
-        );
-    }
-
-    usersCreate(req: UserManagerCreateReq): Promise<void> {
-        return this.mayRenewToken(() =>
-            new Promise<void>((resolve, reject) => {
-                this._stub.users_create(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve();
-                })
-            })
-        );
-    }
-
-    usersDelete(req: UserManagerDeleteReq): Promise<void> {
-        return this.mayRenewToken(() =>
-            new Promise<void>((resolve, reject) => {
-                this._stub.users_delete(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve();
-                });
-            })
-        );
-    }
-
-    usersPasswordSet(req: UserManagerPasswordSetReq): Promise<void> {
-        return this.mayRenewToken(() =>
-            new Promise<void>((resolve, reject) => {
-                this._stub.users_password_set(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve();
-                })
-            })
-        );
-    }
-
-    usersGet(req: UserManagerGetReq): Promise<UserManagerGetRes> {
-        return this.mayRenewToken(() =>
-            new Promise<UserManagerGetRes>((resolve, reject) => {
-                this._stub.users_get(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve(res);
-                });
-            })
-        );
-    }
-
-    userPasswordUpdate(req: UserPasswordUpdateReq): Promise<void> {
-        return this.mayRenewToken(() =>
-            new Promise<void>((resolve, reject) => {
-                this._stub.user_password_update(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
-                    else resolve();
-                })
-            })
-        );
-    }
-
     async mayRenewToken<RES>(fn: () => Promise<RES>): Promise<RES> {
         try {
             return await fn();
         } catch (e) {
+            if (!this._credential) throw e;  // core stub
             if (e instanceof TypeDBClientError && CLUSTER_TOKEN_CREDENTIAL_INVALID === e.messageTemplate) {
                 console.log(`token '${this._token}' expired. renewing...`);
                 this._token = null;
@@ -194,15 +122,6 @@ export class ClusterServerStub extends TypeDBStub {
                 }
             } else throw e;
         }
-    }
-
-    private async userToken(req: UserTokenReq): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            return this.stub().user_token(req, (err, res) => {
-                if (err) reject(err);
-                else resolve(res.token);
-            });
-        });
     }
 
     stub(): GRPCStub {

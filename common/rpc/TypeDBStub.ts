@@ -49,7 +49,7 @@ import {
     UserManagerGetReq,
     UserManagerGetRes,
     UserManagerPasswordSetReq,
-    UserPasswordUpdateReq
+    UserPasswordUpdateReq, UserTokenReq
 } from "typedb-protocol/proto/user";
 import {ErrorMessage} from "../errors/ErrorMessage";
 import RPC_METHOD_UNAVAILABLE = ErrorMessage.Client.RPC_METHOD_UNAVAILABLE;
@@ -215,31 +215,89 @@ export abstract class TypeDBStub {
     }
 
     usersAll(req: UserManagerAllReq): Promise<UserManagerAllRes> {
-        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
+        return this.mayRenewToken(() =>
+            new Promise<UserManagerAllRes>((resolve, reject) => {
+                this.stub().users_all(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res);
+                });
+            })
+        );
     }
 
     usersContains(req: UserManagerContainsReq): Promise<boolean> {
-        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
+        return this.mayRenewToken(() =>
+            new Promise<boolean>((resolve, reject) => {
+                this.stub().users_contains(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res.contains);
+                })
+            })
+        );
     }
 
     usersCreate(req: UserManagerCreateReq): Promise<void> {
-        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
+        return this.mayRenewToken(() =>
+            new Promise<void>((resolve, reject) => {
+                this.stub().users_create(req, (err, _res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve();
+                })
+            })
+        );
     }
 
     usersDelete(req: UserManagerDeleteReq): Promise<void> {
-        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
+        return this.mayRenewToken(() =>
+            new Promise<void>((resolve, reject) => {
+                this.stub().users_delete(req, (err, _res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve();
+                });
+            })
+        );
     }
 
     usersPasswordSet(req: UserManagerPasswordSetReq): Promise<void> {
-        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
+        return this.mayRenewToken(() =>
+            new Promise<void>((resolve, reject) => {
+                this.stub().users_password_set(req, (err, _res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve();
+                })
+            })
+        );
     }
 
     usersGet(req: UserManagerGetReq): Promise<UserManagerGetRes> {
-        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
+        return this.mayRenewToken(() =>
+            new Promise<UserManagerGetRes>((resolve, reject) => {
+                this.stub().users_get(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res);
+                });
+            })
+        );
     }
 
     userPasswordUpdate(req: UserPasswordUpdateReq): Promise<void> {
-        throw new TypeDBClientError(RPC_METHOD_UNAVAILABLE.message("User management is only available with TypeDB Enterprise."));
+        return this.mayRenewToken(() =>
+            new Promise<void>((resolve, reject) => {
+                this.stub().user_password_update(req, (err, _res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve();
+                })
+            })
+        );
+    }
+
+    userToken(req: UserTokenReq): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            return this.stub().user_token(req, (err, res) => {
+                if (err) reject(err);
+                else resolve(res.token);
+            });
+        });
     }
 
     abstract stub(): GRPCStub;

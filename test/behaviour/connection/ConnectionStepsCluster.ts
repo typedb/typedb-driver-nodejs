@@ -62,10 +62,10 @@ async function clearDB() {
         await db.delete();
     }
     // assert(client.isCluster());
-    const users = await (client as TypeDBClient.Cluster).users.all();
+    const users = await client.users.all();
     for (const user of users) {
         if (user.username != "admin") {
-            await (client as TypeDBClient.Cluster).users.delete(user.username);
+            await client.users.delete(user.username);
         }
     }
     await client.close();

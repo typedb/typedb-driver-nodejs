@@ -19,23 +19,23 @@
  * under the License.
  */
 
-import { User as UserProto } from "typedb-protocol/proto/user";
-import { User } from "../api/connection/user/User";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
-import { ClusterClient } from "../connection/cluster/ClusterClient";
+import {User as UserProto} from "typedb-protocol/proto/user";
+import {User} from "../api/connection/user/User";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {TypeDBClientImpl} from "../connection/TypeDBClientImpl";
 
 export class UserImpl implements User {
-    private readonly _client: ClusterClient;
+    private readonly _client: TypeDBClientImpl;
     private readonly _username: string;
     private readonly _passwordExpirySeconds: number;
 
-    constructor(client: ClusterClient, username: string, passwordExpirySeconds: number) {
+    constructor(client: TypeDBClientImpl, username: string, passwordExpirySeconds: number) {
         this._client = client;
         this._username = username;
         this._passwordExpirySeconds = passwordExpirySeconds;
     }
 
-    static of(user: UserProto, client: ClusterClient): UserImpl {
+    static of(user: UserProto, client: TypeDBClientImpl): UserImpl {
         if (user.has_password_expiry_seconds) return new UserImpl(client, user.username, user.password_expiry_seconds);
         else return new UserImpl(client, user.username, null);
     }

@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import { DatabaseManager } from "./database/DatabaseManager";
-import { TypeDBOptions } from "./TypeDBOptions";
-import { SessionType, TypeDBSession } from "./TypeDBSession";
-import { UserManager } from "./user/UserManager";
-import { User } from "./user/User";
+import {DatabaseManager} from "./database/DatabaseManager";
+import {TypeDBOptions} from "./TypeDBOptions";
+import {SessionType, TypeDBSession} from "./TypeDBSession";
+import {UserManager} from "./user/UserManager";
+import {User} from "./user/User";
 
 export interface TypeDBClient {
     isOpen(): boolean;
@@ -33,12 +33,8 @@ export interface TypeDBClient {
     session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSession>;
 
     close(): Promise<void>;
-}
 
-export namespace TypeDBClient {
-    export interface Cluster extends TypeDBClient {
-        readonly users: UserManager;
+    readonly users: UserManager;
 
-        user(): Promise<User>;
-    }
+    user(): Promise<User>;
 }
