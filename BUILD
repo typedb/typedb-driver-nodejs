@@ -167,6 +167,7 @@ checkstyle_test(
         "logic/**/*.ts",
         "query/**/*.ts",
         "stream/**/*.ts",
+        "user/**/*.ts",
     ]),
     exclude = glob([
         "*.json",
