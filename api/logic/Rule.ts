@@ -28,15 +28,9 @@ export interface Rule {
 
     readonly then: string;
 
-    isRemote(): boolean;
+    setLabel(transaction: TypeDBTransaction, label: string): Promise<void>;
 
-    asRemote(transaction: TypeDBTransaction): RemoteRule;
-}
+    delete(transaction: TypeDBTransaction): Promise<void>;
 
-export interface RemoteRule extends Rule {
-    setLabel(label: string): Promise<void>;
-
-    delete(): Promise<void>;
-
-    isDeleted(): Promise<boolean>;
+    isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
 }
