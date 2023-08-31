@@ -70,8 +70,7 @@ export class TypeDBClientImpl implements TypeDBClient {
         for (const addr of serverAddresses) {
             const serverStub = new TypeDBStubImpl(addr, this._credential);
             openReqs.push(serverStub.open());
-            this.serverClients.set(addr, new ServerClient(addr));
-            this.serverClients.get(addr).stub = serverStub;
+            this.serverClients.set(addr, new ServerClient(addr, serverStub));
         }
         try {
             await Promise.any(openReqs);
@@ -149,16 +148,21 @@ export class TypeDBClientImpl implements TypeDBClient {
 
 export class ServerClient {
     private readonly _address: string;
-    stub: TypeDBStub;
-    private _requestTransmitter: RequestTransmitter;
+    private readonly _stub: TypeDBStub;
+    private readonly _requestTransmitter: RequestTransmitter;
 
-    constructor(address: string) {
+    constructor(address: string, stub: TypeDBStub) {
         this._address = address;
+        this._stub = stub;
         this._requestTransmitter = new RequestTransmitter();
     }
 
     get address(): string {
         return this._address;
+    }
+
+    get stub():TypeDBStub {
+        return this._stub;
     }
 
     get transmitter(): RequestTransmitter {
