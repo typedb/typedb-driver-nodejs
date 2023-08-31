@@ -23,20 +23,8 @@ import {ConceptMapGroup as MapGroupProto} from "typedb-protocol/proto/answer";
 import {ConceptMap} from "../../api/answer/ConceptMap";
 import {ConceptMapGroup} from "../../api/answer/ConceptMapGroup";
 import {Concept} from "../../api/concept/Concept";
-import {
-    AttributeImpl,
-    AttributeTypeImpl,
-    EntityImpl,
-    EntityTypeImpl,
-    RelationImpl,
-    RelationTypeImpl,
-    RoleTypeImpl,
-    ThingTypeImpl
-} from "../../dependencies_internal";
 import {ConceptMapImpl} from "./ConceptMapImpl";
-import {ValueImpl} from "../value/ValueImpl";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {ResponseReader} from "../../common/rpc/ResponseReader";
 
 export class ConceptMapGroupImpl implements ConceptMapGroup {
     private readonly _owner: Concept;
@@ -57,23 +45,10 @@ export class ConceptMapGroupImpl implements ConceptMapGroup {
 }
 
 export namespace ConceptMapGroupImpl {
-    import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
-
     export function of(mapGroupProto: MapGroupProto): ConceptMapGroup {
-        const owner = mapGroupProto.owner;
-
-        let concept: Concept;  // FIXME WET
-        if (owner.has_entity_type) concept = EntityTypeImpl.ofEntityTypeProto(owner.entity_type);
-        else if (owner.has_relation_type) concept = RelationTypeImpl.ofRelationTypeProto(owner.relation_type);
-        else if (owner.has_attribute_type) concept = AttributeTypeImpl.ofAttributeTypeProto(owner.attribute_type);
-        else if (owner.has_role_type) concept = RoleTypeImpl.ofRoleTypeProto(owner.role_type);
-        else if (owner.has_thing_type_root) concept = ThingTypeImpl.Root.ofThingTypeRootProto(owner.thing_type_root);
-        else if (owner.has_entity) concept = EntityImpl.ofEntityProto(owner.entity);
-        else if (owner.has_relation) concept = RelationImpl.ofRelationProto(owner.relation);
-        else if (owner.has_attribute) concept = AttributeImpl.ofAttributeProto(owner.attribute);
-        else if (owner.has_value) concept = ValueImpl.ofValueProto(owner.value);
-        else throw new TypeDBClientError(BAD_ENCODING.message(owner));
-
-        return new ConceptMapGroupImpl(concept, mapGroupProto.concept_maps.map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto)));
+        return new ConceptMapGroupImpl(
+            ResponseReader.Concept.of(mapGroupProto.owner),
+            mapGroupProto.concept_maps.map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto))
+        );
     }
 }

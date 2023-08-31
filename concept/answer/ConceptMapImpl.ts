@@ -30,15 +30,7 @@ import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {EntityTypeImpl} from "../type/EntityTypeImpl";
-import {RelationTypeImpl} from "../type/RelationTypeImpl";
-import {AttributeTypeImpl} from "../type/AttributeTypeImpl";
-import {RoleTypeImpl} from "../type/RoleTypeImpl";
-import {ThingTypeImpl} from "../type/ThingTypeImpl";
-import {EntityImpl} from "../thing/EntityImpl";
-import {RelationImpl} from "../thing/RelationImpl";
-import {AttributeImpl} from "../thing/AttributeImpl";
-import {ValueImpl} from "../value/ValueImpl";
+import {ResponseReader} from "../../common/rpc/ResponseReader";
 
 export class ConceptMapImpl implements ConceptMap {
     private readonly _concepts: Map<string, Concept>;
@@ -78,24 +70,10 @@ export class ConceptMapImpl implements ConceptMap {
 export namespace ConceptMapImpl {
     import NONEXISTENT_EXPLAINABLE_CONCEPT = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_CONCEPT;
     import NONEXISTENT_EXPLAINABLE_OWNERSHIP = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
-    import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
     export function of(proto: ConceptMapProto): ConceptMap {
         const variableMap = new Map<string, Concept>();
-        proto.map.forEach((proto: ConceptProto, resLabel: string) => {
-            let concept: Concept;  // FIXME WET
-            if (proto.has_entity_type) concept = EntityTypeImpl.ofEntityTypeProto(proto.entity_type);
-            else if (proto.has_relation_type) concept = RelationTypeImpl.ofRelationTypeProto(proto.relation_type);
-            else if (proto.has_attribute_type) concept = AttributeTypeImpl.ofAttributeTypeProto(proto.attribute_type);
-            else if (proto.has_role_type) concept = RoleTypeImpl.ofRoleTypeProto(proto.role_type);
-            else if (proto.has_thing_type_root) concept = ThingTypeImpl.Root.ofThingTypeRootProto(proto.thing_type_root);
-            else if (proto.has_entity) concept = EntityImpl.ofEntityProto(proto.entity);
-            else if (proto.has_relation) concept = RelationImpl.ofRelationProto(proto.relation);
-            else if (proto.has_attribute) concept = AttributeImpl.ofAttributeProto(proto.attribute);
-            else if (proto.has_value) concept = ValueImpl.ofValueProto(proto.value);
-            else throw new TypeDBClientError(BAD_ENCODING.message(proto));
-            variableMap.set(resLabel, concept)
-        });
+        proto.map.forEach((proto: ConceptProto, resLabel: string) => variableMap.set(resLabel, ResponseReader.Concept.of(proto)));
         const explainables = proto.has_explainables ? ofExplainables(proto.explainables) : emptyExplainables();
         return new ConceptMapImpl(variableMap, explainables);
     }
