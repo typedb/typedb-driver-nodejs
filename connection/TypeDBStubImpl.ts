@@ -33,18 +33,6 @@ import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
-import {
-    UserManagerAllReq,
-    UserManagerAllRes,
-    UserManagerContainsReq,
-    UserManagerCreateReq,
-    UserManagerDeleteReq,
-    UserManagerGetReq,
-    UserManagerGetRes,
-    UserManagerPasswordSetReq,
-    UserPasswordUpdateReq,
-    UserTokenReq
-} from "typedb-protocol/proto/user";
 import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/service";
 
 function isServiceError(e: any): e is ServiceError {
@@ -71,8 +59,10 @@ export class TypeDBStubImpl extends TypeDBStub {
     public async open(): Promise<void> {
         try {
             await this.connectionOpen(RequestBuilder.Connection.openReq());
-            const req = RequestBuilder.User.tokenReq(this._credential.username);
-            this._token = await this.userToken(req);
+            if (this._credential) {
+                const req = RequestBuilder.User.tokenReq(this._credential.username);
+                this._token = await this.userToken(req);
+            }
         } catch (e) {
             if (!isServiceError(e)) throw e;
         }
