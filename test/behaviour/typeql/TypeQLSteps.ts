@@ -28,6 +28,7 @@ import {tx} from "../connection/ConnectionStepsBase";
 import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
 import assert = require("assert");
 import Annotation = ThingType.Annotation;
+import ValueType = Concept.ValueType;
 
 export let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -205,17 +206,18 @@ abstract class AttributeMatcher implements ConceptMatcher {
     }
 
     check(attribute: Attribute) {
-        const value = attribute.value;
-        if (value.isBoolean()) return value.asBoolean() === parseBool(this.value);
-        else if (value.isLong()) return value.asLong() === parseInt(this.value);
-        else if (value.isDouble()) return value.asDouble() === parseFloat(this.value);
-        else if (value.isString()) return value.asString() === this.value;
-        else if (value.isDateTime()){
-            const date = new Date(this.value)
-            const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-            return value.asDateTime().getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
+        switch (attribute.valueType) {
+            case ValueType.BOOLEAN: return attribute.value === parseBool(this.value);
+            case ValueType.LONG: return attribute.value === parseInt(this.value);
+            case ValueType.DOUBLE: return attribute.value === parseFloat(this.value);
+            case ValueType.STRING: return attribute.value === this.value;
+            case ValueType.DATETIME: {
+                const date = new Date(this.value)
+                const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+                return (attribute.value as Date).getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
+            }
+            default: throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
         }
-        else throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
     }
 
     abstract matches(concept: Concept): Promise<boolean>;

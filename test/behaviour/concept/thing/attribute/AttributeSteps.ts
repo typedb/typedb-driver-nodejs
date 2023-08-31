@@ -104,21 +104,21 @@ When("{var} = attribute\\({type_label}) as\\(datetime) get: {datetime}", async (
 });
 
 When("attribute {var} has boolean value: {bool}", async (var0: string, value: boolean) => {
-    assert.strictEqual(value, get(var0).asAttribute().value.asBoolean());
+    assert.strictEqual(value, get(var0).asAttribute().value);
 });
 
 When("attribute {var} has long value: {int}", async (var0: string, value: number) => {
-    assert.strictEqual(value, get(var0).asAttribute().value.asLong());
+    assert.strictEqual(value, get(var0).asAttribute().value);
 });
 
 When("attribute {var} has double value: {float}", async (var0: string, value: number) => {
-    assert.strictEqual(value, get(var0).asAttribute().value.asDouble());
+    assert.strictEqual(value, get(var0).asAttribute().value);
 });
 
 When("attribute {var} has string value: {word}", async (var0: string, value: string) => {
-    assert.strictEqual(value, get(var0).asAttribute().value.asString());
+    assert.strictEqual(value, get(var0).asAttribute().value);
 });
 
 When("attribute {var} has datetime value: {datetime}", async (var0: string, value: Date) => {
-    assert.strictEqual(value.getTime(), get(var0).asAttribute().value.asDateTime().getTime());
+    assert.strictEqual(value.getTime(), (get(var0).asAttribute().value as Date).getTime());
 });

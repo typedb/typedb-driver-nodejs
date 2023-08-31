@@ -19,18 +19,21 @@
  * under the License.
  */
 
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { AttributeType } from "../type/AttributeType";
-import { ThingType } from "../type/ThingType";
-import { Thing } from "./Thing";
-import { Value } from "../value/Value";
+import {AttributeType} from "../type/AttributeType";
+import {Stream} from "../../../common/util/Stream";
+import {Thing} from "./Thing";
+import {ThingType} from "../type/ThingType";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Concept} from "../Concept";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import ValueType = Concept.ValueType;
 
 export interface Attribute extends Thing {
     readonly type: AttributeType;
 
-    readonly value: Value;
+    readonly valueType: ValueType;
+
+    readonly value: boolean | number | string | Date;
 
     getOwners(transaction: TypeDBTransaction, ownerType?: ThingType): Stream<Thing>;
 }

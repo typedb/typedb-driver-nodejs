@@ -307,10 +307,10 @@ async function run() {
         const lionType = await firstLion.type;
         const age42 = await age.putLong(tx, 42);
         await firstLion.setHas(tx, age42);
-        const firstLionAttrs = (await firstLion.getHas(tx).collect()).map(x => x.value.asLong());
+        const firstLionAttrs = (await firstLion.getHas(tx).collect()).map(x => x.value);
         assert(firstLionAttrs.length === 1);
         assert(firstLionAttrs[0] === 42);
-        const firstLionAges = (await firstLion.getHas(tx, age).collect()).map(x => x.value.asLong());
+        const firstLionAges = (await firstLion.getHas(tx, age).collect()).map(x => x.value);
         assert(firstLionAges.length === 1)
         assert(firstLionAges[0] === 42);
         const firstLionWorkEmails = (await firstLion.getHas(tx, workEmail).collect()).map(x => x.value);

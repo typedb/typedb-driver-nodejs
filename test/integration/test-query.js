@@ -172,7 +172,7 @@ async function run() {
         let lionNames = [];
         for await (let lion of lionType.getInstances(tx)) {
             for await (let lionName of lion.getHas(tx, nameType)) {
-                lionNames.push(lionName.value.asString());
+                lionNames.push(lionName.value);
             }
         }
         // await tx.commit();

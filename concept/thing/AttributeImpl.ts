@@ -19,28 +19,20 @@
  * under the License.
  */
 
-import {Attribute} from "../../api/concept/thing/Attribute";
-import {AttributeType} from "../../api/concept/type/AttributeType";
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Bytes} from "../../common/util/Bytes";
-import {Stream} from "../../common/util/Stream";
-import {
-    AttributeTypeImpl, EntityImpl,
-    EntityTypeImpl, RelationImpl,
-    RelationTypeImpl,
-    RoleTypeImpl,
-    ThingImpl, ThingTypeImpl
-} from "../../dependencies_internal";
-import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
-import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import {Attribute as AttributeProto} from "typedb-protocol/proto/concept";
-import {ValueImpl} from "../value/ValueImpl";
-import {Value} from "../../api/concept/value/Value";
+import {AttributeTypeImpl, ThingImpl} from "../../dependencies_internal";
+import {AttributeType} from "../../api/concept/type/AttributeType";
+import {Attribute} from "../../api/concept/thing/Attribute";
+import {Bytes} from "../../common/util/Bytes";
+import {Concept} from "../../api/concept/Concept";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {Stream} from "../../common/util/Stream";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {Thing} from "../../api/concept/thing/Thing";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {ValueImpl} from "../value/ValueImpl";
+import {Value} from "../../api/concept/value/Value";
+import ValueType = Concept.ValueType;
 
 export class AttributeImpl extends ThingImpl implements Attribute {
     private readonly _type: AttributeType;
@@ -69,8 +61,12 @@ export class AttributeImpl extends ThingImpl implements Attribute {
         return this._type;
     }
 
-    get value(): Value {
-        return this._value;
+    get valueType(): ValueType {
+        return this._type.valueType;
+    }
+
+    get value(): boolean | number | string | Date {
+        return this._value.value;
     }
 
     async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
