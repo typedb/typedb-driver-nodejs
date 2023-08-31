@@ -27,8 +27,8 @@ import { RequestBuilder } from "../../common/rpc/RequestBuilder";
 import {ServerClient, TypeDBClientImpl} from "../TypeDBClientImpl";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import {ClusterServerStub} from "./ClusterServerStub";
-import {UserManagerImpl} from "./UserManagerImpl";
-import {UserImpl} from "./UserImpl";
+import {UserManagerImpl} from "../../user/UserManagerImpl";
+import {UserImpl} from "../../user/UserImpl";
 
 export class ClusterClient extends TypeDBClientImpl implements TypeDBClient.Cluster {
     private readonly _initAddresses: string[];

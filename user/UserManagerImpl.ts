@@ -19,13 +19,13 @@
  * under the License.
  */
 
-import { User } from "../../api/connection/user/User";
-import { UserManager } from "../../api/connection/user/UserManager";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { UserImpl } from "../../dependencies_internal";
-import { ClusterClient } from "./ClusterClient";
-import {ServerClient} from "../TypeDBClientImpl";
-import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
+import { User } from "../api/connection/user/User";
+import { UserManager } from "../api/connection/user/UserManager";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { UserImpl } from "../dependencies_internal";
+import { ClusterClient } from "../connection/cluster/ClusterClient";
+import {ServerClient} from "../connection/TypeDBClientImpl";
+import {TypeDBDatabaseImpl} from "../connection/TypeDBDatabaseImpl";
 
 export class UserManagerImpl implements UserManager {
     static _SYSTEM_DB = "_system";

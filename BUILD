@@ -68,6 +68,7 @@ ts_project(
         "logic/**/*.ts",
         "query/**/*.ts",
         "stream/**/*.ts",
+        "user/**/*.ts",
     ]),
     tsconfig = ":tsconfig.json",
     declaration = True,

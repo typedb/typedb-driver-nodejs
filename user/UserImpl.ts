@@ -20,9 +20,9 @@
  */
 
 import { User as UserProto } from "typedb-protocol/proto/user";
-import { User } from "../../api/connection/user/User";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { ClusterClient } from "./ClusterClient";
+import { User } from "../api/connection/user/User";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { ClusterClient } from "../connection/cluster/ClusterClient";
 
 export class UserImpl implements User {
     private readonly _client: ClusterClient;

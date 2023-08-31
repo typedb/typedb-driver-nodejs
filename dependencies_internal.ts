@@ -51,5 +51,5 @@ export * from "./concept/type/RoleTypeImpl";
 export * from "./concept/value/ValueImpl";
 
 /* user management */
-export * from "./connection/cluster/UserImpl";
-export * from "./connection/cluster/UserManagerImpl";
+export * from "./user/UserImpl";
+export * from "./user/UserManagerImpl";
