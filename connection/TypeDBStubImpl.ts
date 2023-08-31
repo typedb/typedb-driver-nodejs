@@ -64,7 +64,7 @@ export class TypeDBStubImpl extends TypeDBStub {
             const stubCredentials = this.createChannelCredentials();
             this._stub = new GRPCStub(address, stubCredentials);
         } else {
-            this._stub = new GRPCStub(address, null);
+            this._stub = new GRPCStub(address, ChannelCredentials.createInsecure());
         }
     }
 
