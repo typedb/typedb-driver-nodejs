@@ -26,7 +26,6 @@ exports_files([
     "package-lock.json",
     "RELEASE_TEMPLATE.md",
     "VERSION",
-    "typedb_protocol-2.20.0.tgz",
 ])
 
 #load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm", "nodejs_binary")
