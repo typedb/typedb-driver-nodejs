@@ -19,10 +19,10 @@
  * under the License.
  */
 
-import { Rule as RuleProto } from "typedb-protocol/proto/logic";
-import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
-import { RemoteRule, Rule } from "../api/logic/Rule";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import {Rule as RuleProto} from "typedb-protocol/proto/logic";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
+import {RemoteRule, Rule} from "../api/logic/Rule";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import deleteReq = RequestBuilder.Rule.deleteReq;
 import setLabelReq = RequestBuilder.Rule.setLabelReq;
 

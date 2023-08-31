@@ -19,20 +19,20 @@
  * under the License.
  */
 
-import {RoleType as RoleTypeProto, RoleTypeReq, RoleTypeRes, RoleTypeResPart} from "typedb-protocol/proto/concept";
-import { Relation } from "../../api/concept/thing/Relation";
-import { Thing } from "../../api/concept/thing/Thing";
-import { RelationType } from "../../api/concept/type/RelationType";
-import { RoleType } from "../../api/concept/type/RoleType";
-import { ThingType } from "../../api/concept/type/ThingType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { Label } from "../../common/Label";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { Stream } from "../../common/util/Stream";
-import { RelationImpl, RelationTypeImpl, ThingImpl, ThingTypeImpl, TypeImpl } from "../../dependencies_internal";
+import {RoleType as RoleTypeProto, RoleTypeRes, RoleTypeResPart} from "typedb-protocol/proto/concept";
+import {Relation} from "../../api/concept/thing/Relation";
+import {Thing} from "../../api/concept/thing/Thing";
+import {RelationType} from "../../api/concept/type/RelationType";
+import {RoleType} from "../../api/concept/type/RoleType";
+import {ThingType} from "../../api/concept/type/ThingType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {Label} from "../../common/Label";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {Stream} from "../../common/util/Stream";
+import {RelationImpl, RelationTypeImpl, ThingImpl, ThingTypeImpl, TypeImpl} from "../../dependencies_internal";
 import {Concept} from "../../api/concept/Concept";
-import Transitivity = Concept.Transitivity;
 import {TransactionReq} from "typedb-protocol/proto/transaction";
+import Transitivity = Concept.Transitivity;
 
 export class RoleTypeImpl extends TypeImpl implements RoleType {
     constructor(scope: string, label: string, root: boolean, abstract: boolean) {

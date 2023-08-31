@@ -19,13 +19,13 @@
  * under the License.
  */
 
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Concept } from "../Concept";
-import { Entity } from "../thing/Entity";
-import { ThingType } from "./ThingType";
-import Transitivity = Concept.Transitivity;
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Concept} from "../Concept";
+import {Entity} from "../thing/Entity";
+import {ThingType} from "./ThingType";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import Transitivity = Concept.Transitivity;
 
 export interface EntityType extends ThingType {
     create(transaction: TypeDBTransaction): Promise<Entity>;

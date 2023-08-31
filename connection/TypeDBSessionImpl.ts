@@ -30,8 +30,8 @@ import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {RequestTransmitter} from "../stream/RequestTransmitter";
 import {TypeDBTransactionImpl} from "./TypeDBTransactionImpl";
 import {ServerClient, TypeDBClientImpl} from "./TypeDBClientImpl";
-import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
+import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 
 export class TypeDBSessionImpl implements TypeDBSession {
     private readonly _client: TypeDBClientImpl;

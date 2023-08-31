@@ -24,13 +24,14 @@ import {Numeric} from "../../api/answer/Numeric";
 import {NumericGroup} from "../../api/answer/NumericGroup";
 import {Concept} from "../../api/concept/Concept";
 import {
-    AttributeImpl, AttributeTypeImpl,
-    ConceptImpl, EntityImpl, EntityTypeImpl,
+    AttributeImpl,
+    AttributeTypeImpl,
+    EntityImpl,
+    EntityTypeImpl,
     RelationImpl,
     RelationTypeImpl,
     RoleTypeImpl,
-    ThingImpl, ThingTypeImpl,
-    TypeImpl
+    ThingTypeImpl
 } from "../../dependencies_internal";
 import {NumericImpl} from "./NumericImpl";
 import {ValueImpl} from "../value/ValueImpl";

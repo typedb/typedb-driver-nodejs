@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import { Options } from "typedb-protocol/proto/options";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import {Options} from "typedb-protocol/proto/options";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import NEGATIVE_VALUE_NOT_ALLOWED = ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
 
 export interface Opts {

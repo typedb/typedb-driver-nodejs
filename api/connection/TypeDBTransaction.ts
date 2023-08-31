@@ -21,14 +21,15 @@
 
 import {
     TransactionReq,
-    TransactionRes, TransactionResPart,
+    TransactionRes,
+    TransactionResPart,
     TransactionType as TransactionTypeProto
 } from "typedb-protocol/proto/transaction";
-import { Stream } from "../../common/util/Stream";
-import { ConceptManager } from "../concept/ConceptManager";
-import { LogicManager } from "../logic/LogicManager";
-import { QueryManager } from "../query/QueryManager";
-import { TypeDBOptions } from "./TypeDBOptions";
+import {Stream} from "../../common/util/Stream";
+import {ConceptManager} from "../concept/ConceptManager";
+import {LogicManager} from "../logic/LogicManager";
+import {QueryManager} from "../query/QueryManager";
+import {TypeDBOptions} from "./TypeDBOptions";
 
 export interface TypeDBTransaction {
     isOpen(): boolean;

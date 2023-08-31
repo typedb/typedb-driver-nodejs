@@ -28,32 +28,25 @@ import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
-import {
-    AttributeTypeImpl,
-    EntityTypeImpl,
-    RelationTypeImpl,
-    RoleTypeImpl,
-    TypeImpl
-} from "../../dependencies_internal";
-import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
-import Annotation = ThingType.Annotation;
+import {AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, RoleTypeImpl, TypeImpl} from "../../dependencies_internal";
 import {Concept} from "../../api/concept/Concept";
 import {
     AttributeType as AttributeTypeProto,
-    ThingTypeRoot as ThingTypeRootProto,
     ThingType as ThingTypeProto,
-    ThingTypeResPart,
     ThingTypeRes,
-    ValueType as ValueTypeProto,
+    ThingTypeResPart,
+    ThingTypeRoot as ThingTypeRootProto,
     TypeAnnotation,
     TypeTransitivity,
+    ValueType as ValueTypeProto,
 } from "typedb-protocol/proto/concept";
 import {TransactionReq} from "typedb-protocol/proto/transaction";
-import Transitivity = Concept.Transitivity;
-import ValueType = Concept.ValueType;
 import assert from "assert";
 import {Thing} from "../../api/concept/thing/Thing";
-import * as Process from "process";
+import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
+import Annotation = ThingType.Annotation;
+import Transitivity = Concept.Transitivity;
+import ValueType = Concept.ValueType;
 
 export abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     protected constructor(name: string, root: boolean, abstract: boolean) {

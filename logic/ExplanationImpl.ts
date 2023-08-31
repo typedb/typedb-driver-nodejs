@@ -20,11 +20,11 @@
  */
 
 import {Explanation as ExplanationProto, ExplanationVarList} from "typedb-protocol/proto/logic";
-import { ConceptMap } from "../api/answer/ConceptMap";
-import { Explanation } from "../api/logic/Explanation";
-import { Rule } from "../api/logic/Rule";
-import { ConceptMapImpl } from "../concept/answer/ConceptMapImpl";
-import { RuleImpl } from "./RuleImpl";
+import {ConceptMap} from "../api/answer/ConceptMap";
+import {Explanation} from "../api/logic/Explanation";
+import {Rule} from "../api/logic/Rule";
+import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
+import {RuleImpl} from "./RuleImpl";
 
 export class ExplanationImpl implements Explanation {
     private readonly _rule: Rule;

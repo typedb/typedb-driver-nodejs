@@ -19,15 +19,15 @@
  * under the License.
  */
 
-import { Attribute } from "./thing/Attribute";
-import { Entity } from "./thing/Entity";
-import { Relation } from "./thing/Relation";
-import { AttributeType } from "./type/AttributeType";
-import { EntityType } from "./type/EntityType";
-import { RelationType } from "./type/RelationType";
-import { ThingType } from "./type/ThingType";
-import { Concept } from "./Concept";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import {Attribute} from "./thing/Attribute";
+import {Entity} from "./thing/Entity";
+import {Relation} from "./thing/Relation";
+import {AttributeType} from "./type/AttributeType";
+import {EntityType} from "./type/EntityType";
+import {RelationType} from "./type/RelationType";
+import {ThingType} from "./type/ThingType";
+import {Concept} from "./Concept";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 
 export interface ConceptManager {
     getRootThingType(): Promise<ThingType>;

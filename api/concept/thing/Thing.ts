@@ -29,9 +29,9 @@ import {ThingType} from "../type/ThingType";
 import {Attribute} from "./Attribute";
 import {Relation} from "./Relation";
 import {ErrorMessage} from "../../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
 import Annotation = ThingType.Annotation;
 import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
-import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
 
 export interface Thing extends Concept {
     readonly iid: string;

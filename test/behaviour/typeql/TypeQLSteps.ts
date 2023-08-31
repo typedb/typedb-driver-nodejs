@@ -207,16 +207,21 @@ abstract class AttributeMatcher implements ConceptMatcher {
 
     check(attribute: Attribute) {
         switch (attribute.valueType) {
-            case ValueType.BOOLEAN: return attribute.value === parseBool(this.value);
-            case ValueType.LONG: return attribute.value === parseInt(this.value);
-            case ValueType.DOUBLE: return attribute.value === parseFloat(this.value);
-            case ValueType.STRING: return attribute.value === this.value;
+            case ValueType.BOOLEAN:
+                return attribute.value === parseBool(this.value);
+            case ValueType.LONG:
+                return attribute.value === parseInt(this.value);
+            case ValueType.DOUBLE:
+                return attribute.value === parseFloat(this.value);
+            case ValueType.STRING:
+                return attribute.value === this.value;
             case ValueType.DATETIME: {
                 const date = new Date(this.value)
                 const userTimezoneOffset = date.getTimezoneOffset() * 60000;
                 return (attribute.value as Date).getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
             }
-            default: throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
+            default:
+                throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
         }
     }
 

@@ -25,12 +25,11 @@ import {
     Explainables as ExplainablesProto,
     ExplainablesOwned as ExplainablesOwnedProto
 } from "typedb-protocol/proto/answer";
-import { Concept as ConceptProto } from "typedb-protocol/proto/concept";
-import { ConceptMap } from "../../api/answer/ConceptMap";
-import { Concept } from "../../api/concept/Concept";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
-import { ConceptImpl } from "../ConceptImpl";
+import {Concept as ConceptProto} from "typedb-protocol/proto/concept";
+import {ConceptMap} from "../../api/answer/ConceptMap";
+import {Concept} from "../../api/concept/Concept";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {EntityTypeImpl} from "../type/EntityTypeImpl";
 import {RelationTypeImpl} from "../type/RelationTypeImpl";
 import {AttributeTypeImpl} from "../type/AttributeTypeImpl";

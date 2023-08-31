@@ -24,8 +24,8 @@ import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {parseList, ScopedLabel} from "../../../config/Parameters";
 import {tx} from "../../../connection/ConnectionStepsBase";
 import {assertThrows} from "../../../util/Util";
-import assert = require("assert");
 import {Concept} from "../../../../../dist";
+import assert = require("assert");
 import EXPLICIT = Concept.Transitivity.EXPLICIT;
 
 

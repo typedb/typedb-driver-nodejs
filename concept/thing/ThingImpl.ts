@@ -39,16 +39,17 @@ import {
     RelationImpl,
     RoleTypeImpl,
 } from "../../dependencies_internal";
-import Annotation = ThingType.Annotation;
-import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import {
     AttributeType as AttributeTypeProto,
-    Thing as ThingProto, ThingRes,
+    Thing as ThingProto,
+    ThingRes,
     ThingResPart,
     TypeAnnotation
 } from "typedb-protocol/proto/concept";
 import assert from "assert";
 import {TransactionReq} from "typedb-protocol/proto/transaction";
+import Annotation = ThingType.Annotation;
+import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export abstract class ThingImpl extends ConceptImpl implements Thing {
     private readonly _iid: string;

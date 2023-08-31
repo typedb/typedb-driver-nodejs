@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { Concept } from "../concept/Concept";
+import {Concept} from "../concept/Concept";
 
 export interface ConceptMap {
     readonly map: Map<string, Concept>;

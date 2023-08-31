@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { Database } from "./Database";
+import {Database} from "./Database";
 
 export interface DatabaseManager {
     get(name: string): Promise<Database>;

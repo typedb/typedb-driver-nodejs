@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { TypeDBClientError } from "../errors/TypeDBClientError";
+import {TypeDBClientError} from "../errors/TypeDBClientError";
 
 export abstract class Stream<T> implements AsyncIterable<T> {
 

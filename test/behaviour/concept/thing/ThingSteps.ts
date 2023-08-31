@@ -20,8 +20,7 @@
  */
 
 import {After, When} from "@cucumber/cucumber";
-import {Thing} from "../../../../dist";
-import {Concept, ThingType} from "../../../../dist";
+import {Concept, Thing, ThingType} from "../../../../dist";
 import {RootLabel, ScopedLabel} from "../../config/Parameters";
 import {tx} from "../../connection/ConnectionStepsBase";
 import {assertThrows} from "../../util/Util";

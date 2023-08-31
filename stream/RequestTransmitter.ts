@@ -20,7 +20,7 @@
  */
 
 import {ClientDuplexStream} from "@grpc/grpc-js";
-import { TransactionClient, TransactionReq, TransactionServer } from "typedb-protocol/proto/transaction";
+import {TransactionClient, TransactionReq, TransactionServer} from "typedb-protocol/proto/transaction";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 
 export class BatchDispatcher {

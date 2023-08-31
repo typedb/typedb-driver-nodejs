@@ -19,8 +19,8 @@
  * under the License.
  */
 
-import { EntityType } from "../type/EntityType";
-import { Thing } from "./Thing";
+import {EntityType} from "../type/EntityType";
+import {Thing} from "./Thing";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Entity extends Thing {

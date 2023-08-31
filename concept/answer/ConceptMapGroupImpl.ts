@@ -24,13 +24,14 @@ import {ConceptMap} from "../../api/answer/ConceptMap";
 import {ConceptMapGroup} from "../../api/answer/ConceptMapGroup";
 import {Concept} from "../../api/concept/Concept";
 import {
-    AttributeImpl, AttributeTypeImpl,
-    EntityImpl, EntityTypeImpl,
+    AttributeImpl,
+    AttributeTypeImpl,
+    EntityImpl,
+    EntityTypeImpl,
     RelationImpl,
     RelationTypeImpl,
     RoleTypeImpl,
-    ThingImpl, ThingTypeImpl,
-    TypeImpl
+    ThingTypeImpl
 } from "../../dependencies_internal";
 import {ConceptMapImpl} from "./ConceptMapImpl";
 import {ValueImpl} from "../value/ValueImpl";

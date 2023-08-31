@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import { Database } from "../api/connection/database/Database";
-import { DatabaseManager } from "../api/connection/database/DatabaseManager";
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import {Database} from "../api/connection/database/Database";
+import {DatabaseManager} from "../api/connection/database/DatabaseManager";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ServerClient, TypeDBClientImpl} from "./TypeDBClientImpl";
 import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;

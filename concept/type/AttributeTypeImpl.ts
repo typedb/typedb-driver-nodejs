@@ -29,11 +29,11 @@ import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
 import {AttributeImpl, ThingTypeImpl, ValueImpl} from "../../dependencies_internal";
 import {Concept} from "../../api/concept/Concept";
-import Annotation = ThingType.Annotation;
 import {Value} from "../../api/concept/value/Value";
+import assert from "assert";
+import Annotation = ThingType.Annotation;
 import Transitivity = Concept.Transitivity;
 import ValueType = Concept.ValueType;
-import assert from "assert";
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     private readonly _valueType: Concept.ValueType;

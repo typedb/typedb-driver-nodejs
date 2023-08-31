@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { RelationType } from "../type/RelationType";
-import { RoleType } from "../type/RoleType";
-import { Thing } from "./Thing";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {RelationType} from "../type/RelationType";
+import {RoleType} from "../type/RoleType";
+import {Thing} from "./Thing";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Relation extends Thing {

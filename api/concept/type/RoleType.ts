@@ -19,14 +19,14 @@
  * under the License.
  */
 
-import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Relation } from "../thing/Relation";
-import { Thing } from "../thing/Thing";
-import { RelationType } from "./RelationType";
-import { ThingType } from "./ThingType";
-import { Type } from "./Type";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Relation} from "../thing/Relation";
+import {Thing} from "../thing/Thing";
+import {RelationType} from "./RelationType";
+import {ThingType} from "./ThingType";
+import {Type} from "./Type";
 import {Concept} from "../Concept";
 import Transitivity = Concept.Transitivity;
 

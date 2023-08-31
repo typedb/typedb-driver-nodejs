@@ -19,16 +19,16 @@
  * under the License.
  */
 
-import { Relation as RelationProto } from "typedb-protocol/proto/concept";
-import { Relation } from "../../api/concept/thing/Relation";
-import { Thing } from "../../api/concept/thing/Thing";
-import { RelationType } from "../../api/concept/type/RelationType";
-import { RoleType } from "../../api/concept/type/RoleType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { Bytes } from "../../common/util/Bytes";
-import { Stream } from "../../common/util/Stream";
-import { RelationTypeImpl, RoleTypeImpl, ThingImpl } from "../../dependencies_internal";
+import {Relation as RelationProto} from "typedb-protocol/proto/concept";
+import {Relation} from "../../api/concept/thing/Relation";
+import {Thing} from "../../api/concept/thing/Thing";
+import {RelationType} from "../../api/concept/type/RelationType";
+import {RoleType} from "../../api/concept/type/RoleType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {Bytes} from "../../common/util/Bytes";
+import {Stream} from "../../common/util/Stream";
+import {RelationTypeImpl, RoleTypeImpl, ThingImpl} from "../../dependencies_internal";
 
 export class RelationImpl extends ThingImpl implements Relation {
     private readonly _type: RelationType;

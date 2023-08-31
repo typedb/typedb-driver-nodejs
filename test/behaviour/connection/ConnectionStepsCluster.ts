@@ -20,7 +20,7 @@
  */
 
 import {After, Before, BeforeAll} from "@cucumber/cucumber";
-import {TypeDB, TypeDBClient, TypeDBCredential, TypeDBOptions} from "../../../dist";
+import {TypeDB, TypeDBCredential, TypeDBOptions} from "../../../dist";
 import {
     afterBase,
     beforeBase,
@@ -31,7 +31,6 @@ import {
     setSessionOptions,
     setTransactionOptions
 } from "./ConnectionStepsBase";
-import assert from "assert";
 
 BeforeAll(async () => {
     setDefaultClientFn(async () =>
@@ -61,7 +60,6 @@ async function clearDB() {
     for (const db of databases) {
         await db.delete();
     }
-    // assert(client.isCluster());
     const users = await client.users.all();
     for (const user of users) {
         if (user.username != "admin") {

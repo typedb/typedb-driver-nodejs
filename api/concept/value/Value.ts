@@ -20,7 +20,7 @@
  */
 
 
-import { Concept } from "../Concept";
+import {Concept} from "../Concept";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Value extends Concept {

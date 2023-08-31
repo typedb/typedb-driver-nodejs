@@ -49,10 +49,10 @@ import {
     UserManagerGetReq,
     UserManagerGetRes,
     UserManagerPasswordSetReq,
-    UserPasswordUpdateReq, UserTokenReq
+    UserPasswordUpdateReq,
+    UserTokenReq
 } from "typedb-protocol/proto/user";
 import {ErrorMessage} from "../errors/ErrorMessage";
-import RPC_METHOD_UNAVAILABLE = ErrorMessage.Client.RPC_METHOD_UNAVAILABLE;
 
 /*
 TODO implement ResilientCall

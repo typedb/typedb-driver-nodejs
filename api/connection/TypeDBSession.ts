@@ -19,10 +19,10 @@
  * under the License.
  */
 
-import { SessionType as SessionTypeProto } from "typedb-protocol/proto/session";
-import { Database } from "./database/Database";
-import { TypeDBOptions } from "./TypeDBOptions";
-import { TransactionType, TypeDBTransaction } from "./TypeDBTransaction";
+import {SessionType as SessionTypeProto} from "typedb-protocol/proto/session";
+import {Database} from "./database/Database";
+import {TypeDBOptions} from "./TypeDBOptions";
+import {TransactionType, TypeDBTransaction} from "./TypeDBTransaction";
 
 export interface TypeDBSession {
     isOpen(): boolean;

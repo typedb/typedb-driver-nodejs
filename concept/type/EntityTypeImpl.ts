@@ -19,13 +19,13 @@
  * under the License.
  */
 
-import { EntityType as EntityTypeProto } from "typedb-protocol/proto/concept";
-import { Entity } from "../../api/concept/thing/Entity";
-import { EntityType } from "../../api/concept/type/EntityType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { Stream } from "../../common/util/Stream";
-import { EntityImpl, ThingTypeImpl } from "../../dependencies_internal";
+import {EntityType as EntityTypeProto} from "typedb-protocol/proto/concept";
+import {Entity} from "../../api/concept/thing/Entity";
+import {EntityType} from "../../api/concept/type/EntityType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {Stream} from "../../common/util/Stream";
+import {EntityImpl, ThingTypeImpl} from "../../dependencies_internal";
 import {Concept} from "../../api/concept/Concept";
 import Transitivity = Concept.Transitivity;
 

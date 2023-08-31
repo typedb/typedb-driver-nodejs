@@ -21,7 +21,6 @@
 
 import {When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {AttributeType, Relation} from "../../../../../dist";
 import {parseVar} from "../../../config/Parameters";
 import {tx} from "../../../connection/ConnectionStepsBase";
 import {assertThrows} from "../../../util/Util";

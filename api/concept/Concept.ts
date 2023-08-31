@@ -19,20 +19,18 @@
  * under the License.
  */
 
-
-import { TypeDBTransaction } from "../connection/TypeDBTransaction";
-import { Attribute } from "./thing/Attribute";
-import { Entity } from "./thing/Entity";
-import { Relation } from "./thing/Relation";
-import { Thing } from "./thing/Thing";
-import { AttributeType } from "./type/AttributeType";
-import { EntityType } from "./type/EntityType";
-import { RelationType } from "./type/RelationType";
-import { RoleType } from "./type/RoleType";
-import { ThingType } from "./type/ThingType";
-import { Type } from "./type/Type";
-import { ValueType as ValueTypeProto, TypeTransitivity as TransitivityProto } from "typedb-protocol/proto/concept";
-import { Value } from "./value/Value";
+import {Attribute} from "./thing/Attribute";
+import {Entity} from "./thing/Entity";
+import {Relation} from "./thing/Relation";
+import {Thing} from "./thing/Thing";
+import {AttributeType} from "./type/AttributeType";
+import {EntityType} from "./type/EntityType";
+import {RelationType} from "./type/RelationType";
+import {RoleType} from "./type/RoleType";
+import {ThingType} from "./type/ThingType";
+import {Type} from "./type/Type";
+import {TypeTransitivity as TransitivityProto, ValueType as ValueTypeProto} from "typedb-protocol/proto/concept";
+import {Value} from "./value/Value";
 
 export interface Concept {
     isType(): boolean;

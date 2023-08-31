@@ -19,21 +19,21 @@
  * under the License.
  */
 
-import { ConceptManager } from "../api/concept/ConceptManager";
-import { Thing } from "../api/concept/thing/Thing";
-import { AttributeType } from "../api/concept/type/AttributeType";
-import { EntityType } from "../api/concept/type/EntityType";
-import { RelationType } from "../api/concept/type/RelationType";
-import { ThingType } from "../api/concept/type/ThingType";
-import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import {ConceptManager} from "../api/concept/ConceptManager";
+import {AttributeType} from "../api/concept/type/AttributeType";
+import {EntityType} from "../api/concept/type/EntityType";
+import {RelationType} from "../api/concept/type/RelationType";
+import {ThingType} from "../api/concept/type/ThingType";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {
     AttributeImpl,
     AttributeTypeImpl,
     EntityImpl,
     EntityTypeImpl,
     RelationImpl,
-    RelationTypeImpl, ThingTypeImpl,
+    RelationTypeImpl,
+    ThingTypeImpl,
 } from "../dependencies_internal";
 import {Concept} from "../api/concept/Concept";
 import {ConceptManagerRes} from "typedb-protocol/proto/concept";

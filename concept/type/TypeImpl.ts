@@ -19,14 +19,14 @@
  * under the License.
  */
 
-import { Concept } from "../../api/concept/Concept";
-import { Type } from "../../api/concept/type/Type";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
-import { Label } from "../../common/Label";
-import { Stream } from "../../common/util/Stream";
-import { ConceptImpl } from "../../dependencies_internal";
+import {Concept} from "../../api/concept/Concept";
+import {Type} from "../../api/concept/type/Type";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {Label} from "../../common/Label";
+import {Stream} from "../../common/util/Stream";
+import {ConceptImpl} from "../../dependencies_internal";
 import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
 
 export abstract class TypeImpl extends ConceptImpl implements Type {

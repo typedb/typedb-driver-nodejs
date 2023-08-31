@@ -19,15 +19,17 @@
  * under the License.
  */
 
-import { DatabaseReplicas as DatabaseProto, DatabaseReplicasReplica as ReplicaProto } from "typedb-protocol/proto/database";
-import { Database } from "../api/connection/database/Database";
+import {
+    DatabaseReplicas as DatabaseProto,
+    DatabaseReplicasReplica as ReplicaProto
+} from "typedb-protocol/proto/database";
+import {Database} from "../api/connection/database/Database";
 import {ServerClient, TypeDBClientImpl} from "./TypeDBClientImpl";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 import DATABASE_DOES_NOT_EXIST = ErrorMessage.Client.DATABASE_DOES_NOT_EXIST;
-import assert from "assert";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 
 const PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;

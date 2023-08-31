@@ -19,10 +19,10 @@
  * under the License.
  */
 
-import { Entity } from "../../api/concept/thing/Entity";
-import { EntityType } from "../../api/concept/type/EntityType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { Bytes } from "../../common/util/Bytes";
+import {Entity} from "../../api/concept/thing/Entity";
+import {EntityType} from "../../api/concept/type/EntityType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {Bytes} from "../../common/util/Bytes";
 import {EntityTypeImpl, ThingImpl} from "../../dependencies_internal";
 import {Entity as EntityProto} from "typedb-protocol/proto/concept";
 

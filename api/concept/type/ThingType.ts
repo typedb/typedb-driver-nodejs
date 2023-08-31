@@ -20,16 +20,16 @@
  */
 
 import {TypeAnnotation} from "typedb-protocol/proto/concept";
-import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Concept } from "../Concept";
-import { Thing } from "../thing/Thing";
-import { AttributeType } from "./AttributeType";
-import { RoleType } from "./RoleType";
-import { Type } from "./Type";
-import { TypeDBClientError } from "../../../common/errors/TypeDBClientError";
-import { ErrorMessage } from "../../../common/errors/ErrorMessage";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Concept} from "../Concept";
+import {Thing} from "../thing/Thing";
+import {AttributeType} from "./AttributeType";
+import {RoleType} from "./RoleType";
+import {Type} from "./Type";
+import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
+import {ErrorMessage} from "../../../common/errors/ErrorMessage";
 import BAD_ANNOTATION = ErrorMessage.Concept.BAD_ANNOTATION;
 import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
 import Transitivity = Concept.Transitivity;

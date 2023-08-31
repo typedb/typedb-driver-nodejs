@@ -19,16 +19,16 @@
  * under the License.
  */
 
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Attribute } from "../thing/Attribute";
-import { ThingType } from "./ThingType";
-import { Concept } from "../Concept";
-import { Value } from "../value/Value";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Attribute} from "../thing/Attribute";
+import {ThingType} from "./ThingType";
+import {Concept} from "../Concept";
+import {Value} from "../value/Value";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 import Annotation = ThingType.Annotation;
 import Transitivity = Concept.Transitivity;
 import ValueType = Concept.ValueType;
-import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface AttributeType extends ThingType {
     readonly valueType: ValueType;

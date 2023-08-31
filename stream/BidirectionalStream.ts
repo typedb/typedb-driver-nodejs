@@ -24,7 +24,8 @@ import {
     TransactionClient,
     TransactionReq,
     TransactionRes,
-    TransactionResPart, TransactionServer
+    TransactionResPart,
+    TransactionServer
 } from "typedb-protocol/proto/transaction";
 import * as uuid from "uuid";
 import {ErrorMessage} from "../common/errors/ErrorMessage";

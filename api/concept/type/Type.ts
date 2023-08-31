@@ -20,11 +20,10 @@
  */
 
 
-import { ErrorMessage } from "../../../common/errors/ErrorMessage";
-import { Label } from "../../../common/Label";
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Concept } from "../Concept";
+import {Label} from "../../../common/Label";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Concept} from "../Concept";
 import Transitivity = Concept.Transitivity;
 
 export interface Type extends Concept {

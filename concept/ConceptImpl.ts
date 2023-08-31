@@ -19,22 +19,21 @@
  * under the License.
  */
 
-import { Attribute } from "../api/concept/thing/Attribute";
-import { AttributeType } from "../api/concept/type/AttributeType";
-import { Concept } from "../api/concept/Concept";
-import { Entity } from "../api/concept/thing/Entity";
-import { EntityType } from "../api/concept/type/EntityType";
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { Relation } from "../api/concept/thing/Relation";
-import { RelationType } from "../api/concept/type/RelationType";
-import { RoleType } from "../api/concept/type/RoleType";
-import { Thing } from "../api/concept/thing/Thing";
-import { ThingType } from "../api/concept/type/ThingType";
-import { Type } from "../api/concept/type/Type";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import {Attribute} from "../api/concept/thing/Attribute";
+import {AttributeType} from "../api/concept/type/AttributeType";
+import {Concept} from "../api/concept/Concept";
+import {Entity} from "../api/concept/thing/Entity";
+import {EntityType} from "../api/concept/type/EntityType";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {Relation} from "../api/concept/thing/Relation";
+import {RelationType} from "../api/concept/type/RelationType";
+import {RoleType} from "../api/concept/type/RoleType";
+import {Thing} from "../api/concept/thing/Thing";
+import {ThingType} from "../api/concept/type/ThingType";
+import {Type} from "../api/concept/type/Type";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {Value} from "../api/concept/value/Value";
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
 
 export abstract class ConceptImpl implements Concept {
     protected abstract get className(): string;

@@ -20,12 +20,12 @@
  */
 
 import {TransactionReq} from "typedb-protocol/proto/transaction";
-import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
-import { LogicManager } from "../api/logic/LogicManager";
-import { Rule } from "../api/logic/Rule";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
-import { Stream } from "../common/util/Stream";
-import { RuleImpl } from "./RuleImpl";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
+import {LogicManager} from "../api/logic/LogicManager";
+import {Rule} from "../api/logic/Rule";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {Stream} from "../common/util/Stream";
+import {RuleImpl} from "./RuleImpl";
 
 export class LogicManagerImpl implements LogicManager {
     private _transaction: TypeDBTransaction.Extended;
