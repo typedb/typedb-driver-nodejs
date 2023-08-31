@@ -41,7 +41,7 @@ export * from "./api/concept/type/ThingType";
 export * from "./api/concept/type/Type";
 
 export * from "./api/concept/Concept";
-// export * from "./api/concept/ConceptManager";
+export * from "./api/concept/ConceptManager";
 
 export * from "./api/connection/database/Database";
 export * from "./api/connection/database/DatabaseManager";
