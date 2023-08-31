@@ -50,7 +50,7 @@ export class ResponsePartIterator implements AsyncIterable<TransactionResPart> {
 
     async next(): Promise<TransactionResPart> {
         const res = await this._responseCollector.take();
-        if (res.has_stream_res_part){
+        if (res.has_stream_res_part) {
             switch (res.stream_res_part.state) {
                 case TransactionStreamState.DONE:
                     return null;
