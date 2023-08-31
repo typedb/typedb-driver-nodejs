@@ -74,9 +74,9 @@ export class TypeDBClientImpl implements TypeDBClient {
             this.serverClients.get(addr).stub = serverStub;
         }
         try {
-            await Promise.all(openReqs);
+            await Promise.any(openReqs);
         } catch (e) {
-            console.info(e);
+            throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(e));
         }
         this._userManager = new UserManagerImpl(this);
         this._isOpen = true;
