@@ -1,3 +1,7 @@
+# THIS REPOSITORY HAS BEEN ARCHIVED. Please visit: [@vaticle/typedb-driver/nodejs](https://github.com/vaticle/typedb-driver/tree/development/nodejs)
+
+---
+
 # TypeDB Client for Node.js
 
 [![Factory](https://factory.vaticle.com/api/status/vaticle/typedb-client-nodejs/badge.svg)](https://factory.vaticle.com/vaticle/typedb-client-nodejs)
